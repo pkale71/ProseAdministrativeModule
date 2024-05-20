@@ -1,0 +1,180 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-list"></i>&nbsp;Lession Plan Detail&nbsp;
+            <i class="fa fa-spin fa-spinner" *ngIf="searchLessonPlan"></i> <span class="badge bg-primary"> Academic Year : {{lessonPlan.academicYear.year}}</span>&nbsp;<span class="{{lessonPlan.status == 'Created' ? 'badge bg-black' : lessonPlan.status == 'Approved' ? 'badge bg-success' : 'badge bg-danger'}}"> Status : {{lessonPlan.status}}</span>
+          </h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="back()">Back</button>
+          <button type="button" class="btn btn-rounded btn-warning float-end" style="margin-top: 0rem;"
+          *ngIf="isCurrent == 1 && lessonPlan.status != 'Approved' && lessonPlan.status != 'Rejected' && (userTypeCode == 'SCHPL' || userTypeCode == 'SCHVP')" (click)="changeStatus(lessonPlan)">Approve/Reject</button>
+          <button type="button" class="btn btn-rounded btn-warning float-end" style="margin-top: 0rem;"
+           *ngIf="lessonPlan.status == 'Approved' && isCurrent == 0" (click)="addAsNewLessonPlan(lessonPlan.uuid)">Add As New Lesson Plan</button>
+        </div>
+        <div class="card-body">
+            <ngb-accordion [closeOthers]="true" activeIds="static-1">
+                <ngb-panel id="static-1">
+                    <ng-template ngbPanelTitle>
+                      <a href="javascript:">Lesson Plan</a>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                        <form [formGroup]="lessonPlanMasterForm" id="lessonPlanMasterForm" autocomplete="off">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="grade">Grade&nbsp;<span style="color: red;">*</span>&nbsp;
+                                        </label>
+                                        <div formGroupName="grade">
+                                            <input class="form-control input-md" id="grade" type="text" readonly
+                                            formControlName="name"/>
+                                        </div>
+                                    </div>  
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="subject">Subject&nbsp;<span style="color: red;">*</span>&nbsp;
+                                        </label>
+                                        <div formGroupName="subject">
+                                            <input class="form-control input-md" id="subject" type="text" readonly
+                                            formControlName="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="chapter">Chapter&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchChapter"></i>
+                                        </label>
+                                        <div formGroupName="chapter">
+                                            <input class="form-control input-md" id="chapter" type="text" readonly
+                                            formControlName="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="topic">Topic&nbsp;<span style="color: red;">*</span>&nbsp;
+                                        </label>
+                                        <div formGroupName="topic">
+                                            <input class="form-control input-md" id="topic" type="text" readonly
+                                            formControlName="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="duration">Duration (In Min.)&nbsp;<span style="color: red;">*</span>&nbsp;</label>
+                                        <input class="form-control input-md" id="duration" type="text" readonly
+                                        formControlName="duration"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="numberOfPeriods">Total Periods&nbsp;<span style="color: red;">*</span></label>
+                                        <input class="form-control input-md" id="numberOfPeriods" type="text" readonly
+                                        formControlName="numberOfPeriods"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="prerequisite">Prerequisites&nbsp;<span style="color: red;">*</span></label>
+                                        <input class="form-control input-md" id="prerequisite" type="text" readonly
+                                        formControlName="prerequisite"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="skills">Skills&nbsp;<span style="color: red;">*</span></label>
+                                        <input class="form-control input-md" id="skills" type="text" readonly
+                                        formControlName="skills"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="methodology">Methodology/Approach&nbsp;<span style="color: red;">*</span></label>
+                                        <input class="form-control input-md" id="methodology" type="text" readonly
+                                        formControlName="methodology" />
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="learningOutcome">Learning Outcome&nbsp;<span style="color: red;">*</span></label>
+                                        <textarea class="form-control input-md" id="learningOutcome" readonly rows="3"
+                                        formControlName="learningOutcome">
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="lessonPlan.rejectedOn">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="rejectReason">Reject Reason&nbsp;<span style="color: red;">*</span></label>
+                                        <input class="form-control input-md" id="rejectReason" type="text" readonly
+                                        formControlName="rejectReason" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="rejectedOn">Rejected On&nbsp;<span style="color: red;">*</span></label>
+                                        <input class="form-control input-md" id="rejectedOn" type="text" readonly
+                                        [value]="lessonPlanMasterForm.get('rejectedOn').value | date : 'dd/MM/yyyy'"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="rejectedBy">Rejected By&nbsp;<span style="color: red;">*</span></label>
+                                        <div formGroupName="rejectedBy">
+                                            <input class="form-control input-md" id="name" type="text" readonly
+                                            formControlName="name" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </ng-template>
+                </ngb-panel> 
+                <ngb-panel id="static-2">
+                    <ng-template ngbPanelTitle>
+                      <a href="javascript:">Description of Topic</a>
+                    </ng-template>     
+                    <ng-template ngbPanelContent>   
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-striped row-border table-hover pt-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Sno</th>
+                                                <th>Sequence</th>
+                                                <th>Teacjhing Aid</th>
+                                                <th>Resources</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let lessonPlanDescription of lessonPlanDescriptions let i=index" style="height: 10px;">
+                                                <td>{{i+1}}</td>
+                                                <td [innerHtml]="lessonPlanDescription.sequence | safeHtml"></td>
+                                                <td [innerHtml]="lessonPlanDescription.teachingAid | safeHtml"></td>
+                                                <td>
+                                                    <span *ngFor="let curriculumUpload of lessonPlanDescription.curriculumUploads let k=index">
+                                                        <label class="badge bg-dark">
+                                                            {{curriculumUpload?.fileName | slice : 0 : 40}}...
+                                                        </label><br/>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-panel>  
+            </ngb-accordion>
+        </div>
+    </div>
+</div>

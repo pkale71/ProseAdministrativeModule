@@ -1,0 +1,85 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="subjectAddModal"><i class="fa fa-check"></i>&nbsp;Apply Lesson Plan
+    &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchLessionPlan"></i>
+    </h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<div class="modal-body">    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="attachDate">Lesson Attach Date&nbsp;<span style="color: red;">*</span></label>
+                <label class="form-control input-md">
+                    {{attachDate | date : 'dd/MM/yyyy'}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="chapter">Grade-Section&nbsp;<span style="color: red;">*</span></label>
+                <label class="form-control input-md">
+                    {{teachingScheduleDetail.grade.name}}-{{teachingScheduleDetail.section.name}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="chapter">Subject&nbsp;<span style="color: red;">*</span></label>
+                <label class="form-control input-md">
+                    {{teachingScheduleDetail.subject.name}}
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table datatable id="tblLessonPlan" class="table table-striped row-border table-hover pt-10">
+            <thead>
+                <tr>
+                <th></th>
+                <th>Chapter</th>
+                <th>Topic</th>
+                <th>Plan Number</th>
+                <th>Duration</th>
+                <th>Periods</th>
+                <th>Methodology</th>
+                <th>Prerequisite</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let lessonPlan of lessonPlans let i=index">
+                <td><input type="checkbox" id="chk_{{i+1}}" (click)="getSelectedLessonPlan(lessonPlan.uuid)"/></td>
+                <td title="{{lessonPlan.chapter?.name}}">{{lessonPlan.chapter?.name | slice : 0 : 20}}...</td>
+                <td title="{{lessonPlan.topic?.name}}">{{lessonPlan.topic?.name | slice : 0 : 20}}...</td>
+                <td>{{lessonPlan.lessonPlanNumber}}</td>
+                <td>{{lessonPlan.duration}} Min.</td>
+                <td>{{lessonPlan.numberOfPeriods}}</td>
+                <td>{{lessonPlan.methodology}}</td>
+                <td>{{lessonPlan.prerequisite}}</td>                  
+                </tr>
+                <tr *ngIf="lessonPlans.length == 0">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>No record(s) found</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+    <button type="button" class="btn btn-rounded btn-success" *ngIf="!saveClicked" 
+    (click)="attachLessonPlan()"><i class="fa fa-check"></i>Apply </button>
+    <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+        <i class="fa fa-spin fa-spinner"></i>Applying...</button>
+</div>

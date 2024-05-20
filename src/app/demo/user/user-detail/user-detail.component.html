@@ -1,0 +1,419 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header" style="padding: 10px 25px;">
+        <h5 style="margin-top: 0.8rem;"><i class="fa fa-user"></i>&nbsp;User&nbsp;
+          <span [ngClass]="user.active?'badge bg-success':'badge bg-danger'"> Active : {{user.active?'Yes':'No'}}</span>
+        </h5>
+        <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+          (click)="back()">Back</button>
+      </div>
+      <div class="card-body">
+        <ngb-accordion [closeOthers]="true" activeIds="static-1">
+          <ngb-panel id="static-1">
+            <ng-template ngbPanelTitle>
+              <a href="javascript:">User Information</a>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <div class="row">
+                  <div class="col-md-3">
+                      <div class="form-group">
+                          <label class="form-control-label">Full Name</label>
+                          <label class="form-control">{{user.fullName}}</label>
+                      </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-control-label">Email</label>
+                        <label class="form-control">{{user.email}}</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-control-label">Mobile</label>
+                        <label class="form-control">{{user.mobile}}</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-control-label">Gender</label>
+                        <label class="form-control">{{user.gender}}</label>
+                    </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-md-3">
+                      <div class="form-group">
+                          <label class="form-control-label">Role</label>
+                          <label class="form-control">{{user.role.name}}</label>
+                      </div>
+                  </div>
+                  <div class="col-md-3">
+                      <div class="form-group">
+                          <label class="form-control-label">User Type</label>
+                          <label class="form-control">{{user.userType.name}}</label>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group">
+                          <label>Schools</label>
+                          <label class="form-control">
+                            <span class="btn btn-sm bg-info m-r-5 m-t-5 text-white" *ngFor="let school of user.schools">
+                              {{school.name}}
+                            </span>
+                          </label>
+                      </div>
+                  </div>
+              </div>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="static-2" *ngIf="user?.userType?.code == 'SCHCD' || user?.userType?.code == 'SUBHD' || user?.userType?.code == 'TECHR'">
+            <ng-template ngbPanelTitle>
+              <a href="javascript:">Assigned Grade/Subject/Sections</a>
+            </ng-template>     
+            <ng-template ngbPanelContent>
+              <div class="row" *ngIf="user?.userType?.code == 'SCHCD' || user?.userType?.code == 'SUBHD' || user?.userType?.code == 'TECHR'">
+                <div class="col-sm-6" *ngIf="user?.userType?.code == 'SCHCD' || user?.userType?.code == 'SUBHD'">
+                    <div class="card" style="margin-bottom: 10px;">
+                      <div class="card-header" style="padding: 10px 25px;">
+                        <h5 style="margin-top: 0.8rem;">{{user.userType.code == 'SCHCD' ? 'Assigned Supervise Grades' : 'Assigned Supervise Subjects'}}</h5>
+                        <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                        *ngIf="user?.userType?.code == 'SCHCD'" (click)="addAssignGrades()">Assign Grades</button>
+              
+                        <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                        *ngIf="user?.userType?.code == 'SUBHD'" (click)="addAssignGradeSubjects()">Assign Subjects</button>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form [formGroup]="academicYearForm1">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="academicYear">Academic Year</label>
+                                        <select class="form-control" required id="academicYear" formControlName="academicYear">
+                                            <option value="{{academicYear.uuid}}" *ngFor="let academicYear of academicYears">{{academicYear.year}}</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                              <form [formGroup]="schoolForm1">
+                                  <div class="form-group">
+                                      <label class="form-control-label" for="school">School</label>
+                                      <select class="form-control" required id="school" formControlName="school">
+                                          <option value="{{school.uuid}}" *ngFor="let school of schools">{{school.name}}</option>
+                                      </select>
+                                  </div>
+                              </form>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-end">
+                              <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked && user?.userType?.code == 'SCHCD'"
+                              (click)="getUserAssignedGrades(academicYearForm1.controls['academicYear'].value, user.uuid, schoolForm1.controls['school'].value)"><i class="fa fa-search"></i>&nbsp;Search</button>
+                              <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked && user?.userType?.code == 'SCHCD'">
+                                <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+              
+                              <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked2 && user?.userType?.code == 'SUBHD'"
+                              (click)="getUserAssignedGradeSubjects(academicYearForm1.controls['academicYear'].value, user.uuid, schoolForm1.controls['school'].value)"><i class="fa fa-search"></i>&nbsp;Search</button>
+                              <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked2 && user?.userType?.code == 'SUBHD'">
+                                <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12" *ngIf="user.userType.code == 'SCHCD'">      
+                              <div class="table-responsive">
+                                  <table datatable id="tblAssignedGrade" class="table table-striped row-border table-hover pt-10">
+                                    <thead>
+                                      <tr>
+                                        <th>Sno</th>
+                                        <th>Grade Category</th>
+                                        <th>Assigned Grades</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let assignedGrade of assignedGrades let i=index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{assignedGrade.name}}</td>
+                                        <td>
+                                          <span [ngClass]="'badge bg-primary text-white m-r-5 m-t-5'" *ngFor="let userSuperviseGrade of assignedGrade.userSuperviseGrades">
+                                            {{userSuperviseGrade.assignedGrade?.name}}<i class="fa fa-times m-l-5" style="cursor: pointer;" 
+                                            *ngIf="isCurrentAcademicYear"
+                                            (click)="deleteAssignedGrade(userSuperviseGrade.uuid, userSuperviseGrade.assignedGrade?.name)"></i>
+                                          </span>
+                                        </td>
+                                      </tr>
+                                      <tr *ngIf="assignedGrades.length == 0">
+                                        <td></td>
+                                        <td>No record(s) found</td>
+                                        <td></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                              </div>
+                            </div>
+              
+                            <div class="col-md-12" *ngIf="user.userType.code == 'SUBHD'">      
+                              <div class="table-responsive">
+                                  <table datatable id="tblAssignedGradeSubject" class="table table-striped row-border table-hover pt-10">
+                                    <thead>
+                                      <tr>
+                                        <th>Sno</th>
+                                        <th>Grade</th>
+                                        <th>Assigned Subjects</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let assignedGradeSubject of assignedGradeSubjects let i=index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{assignedGradeSubject.name}}</td>
+                                        <td>
+                                          <span [ngClass]="'badge bg-primary text-white m-r-5 m-t-5'" *ngFor="let userAssignedSubject of assignedGradeSubject.userAssignedSubjects">
+                                            {{userAssignedSubject.assignedSubject?.name}}<i class="fa fa-times m-l-5" style="cursor: pointer;" 
+                                            *ngIf="isCurrentAcademicYear2"
+                                            (click)="deleteAssignedSubject(userAssignedSubject.uuid, assignedGradeSubject.name, userAssignedSubject.assignedSubject?.name)"></i>
+                                          </span>
+                                        </td>
+                                      </tr>
+                                      <tr *ngIf="assignedGrades.length == 0">
+                                        <td></td>
+                                        <td>No record(s) found</td>
+                                        <td></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              <!-- Teaching Sections -->
+                <div class="{{user?.userType?.code == 'TECHR' ? 'col-sm-12' : 'col-sm-6'}}" *ngIf="user?.userType?.code == 'SCHCD' || user?.userType?.code == 'SUBHD' || user?.userType?.code == 'TECHR'">
+                    <div class="card" style="margin-bottom: 10px;">
+                      <div class="card-header" style="padding: 10px 25px;">
+                        <h5 style="margin-top: 0.8rem;">Assigned Grade Sections</h5>
+                        <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                              (click)="addAssignGradeSections()">Assign Sections</button>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form [formGroup]="academicYearForm">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="academicYear">Academic Year</label>
+                                        <select class="form-control" required id="academicYear" formControlName="academicYear">
+                                            <option value="{{academicYear.uuid}}" *ngFor="let academicYear of academicYears">{{academicYear.year}}</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                              <form [formGroup]="schoolForm2">
+                                  <div class="form-group">
+                                      <label class="form-control-label" for="school">School</label>
+                                      <select class="form-control" required id="school" formControlName="school">
+                                          <option value="{{school.uuid}}" *ngFor="let school of schools">{{school.name}}</option>
+                                      </select>
+                                  </div>
+                              </form>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12 text-end">
+                              <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked1"
+                              (click)="getUserAssignedGradeSections(academicYearForm.controls['academicYear'].value, user.uuid, schoolForm2.controls['school'].value)"><i class="fa fa-search"></i>&nbsp;Search</button>
+                              <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked1">
+                                <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">      
+                              <div class="table-responsive">
+                                <table datatable id="tblAssignedGradeSection" class="table table-striped row-border table-hover pt-10">
+                                  <thead>
+                                    <tr>
+                                      <th>Sno</th>
+                                      <th>Grade</th>
+                                      <th>Subject</th>
+                                      <th>Assigned Sections</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let assignedGradeSection of assignedGradeSections let i=index">
+                                      <td>{{i+1}}</td>
+                                      <td>{{assignedGradeSection.grade?.name}}</td>
+                                      <td>{{assignedGradeSection.name}}</td>
+                                      <td>
+                                        <span [ngClass]="'badge bg-primary text-white m-r-5 m-t-5'" *ngFor="let userAssignedSection of assignedGradeSection?.grade?.userAssignedSections">
+                                          {{userAssignedSection?.assignedSection?.name}}<i class="fa fa-times m-l-5" style="cursor: pointer;"
+                                          *ngIf="isCurrentAcademicYear1"
+                                          (click)="deleteAssignedGradeSection(userAssignedSection.uuid, assignedGradeSection.grade?.name, userAssignedSection?.assignedSection?.name)"></i> 
+                                        </span>
+                                      </td>
+                                    </tr>
+                                    <tr *ngIf="assignedGradeSections.length == 0">
+                                      <td></td>
+                                      <td>No record(s) found</td>
+                                      <td></td>
+                                      <td></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="static-3" *ngIf="user.role.name == 'School' && loginUser?.role.name != 'Head' && user?.userType?.code != 'STUDT'">
+            <ng-template ngbPanelTitle>
+              <a href="javascript:">Engaged Grades</a>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <form [formGroup]="addEngagedForm" autocomplete="off">
+                <div class="row">
+                  <div class="col-md-3">
+                    <form [formGroup]="academicYearForm2">
+                        <div class="form-group">
+                            <label class="form-control-label" for="academicYear">Academic Year</label>
+                            <select class="form-control" required id="academicYear" formControlName="academicYear">
+                                <option value="{{academicYear.uuid}}" *ngFor="let academicYear of academicYears">{{academicYear.year}}</option>
+                            </select>
+                        </div>
+                    </form>
+                  </div>
+                  <div class="col-md-3">                
+                    <div class="form-group">
+                      <label class="form-control-label" for="fromDate">Engaged From</label>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input
+                                    class="form-control"
+                                    autocomplete="off"
+                                    placeholder="dd/mm/yyyy"
+                                    formControlName="fromDate"
+                                    [minDate] = minDate
+                                    [maxDate]=maxDate
+                                    ngbDatepicker
+                                    #d="ngbDatepicker" 
+                                    [ngClass]="{'is-invalid': !addEngagedForm.controls['fromDate'].valid && !isValidForm}"/>
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="d.toggle()" style="min-height: 45px;">
+                                    <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <label style="color: red;"
+                            *ngIf="addEngagedForm.controls['fromDate'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please enter from date.</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">                
+                    <div class="form-group">
+                      <label class="form-control-label" for="toDate">Engaged To</label>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input
+                                    class="form-control"
+                                    autocomplete="off"
+                                    placeholder="dd/mm/yyyy"
+                                    formControlName="toDate"
+                                    [minDate] = minDate
+                                    [maxDate]=maxDate
+                                    ngbDatepicker
+                                    #d1="ngbDatepicker" 
+                                    [ngClass]="{'is-invalid': !addEngagedForm.controls['toDate'].valid && !isValidForm}" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="d1.toggle()" style="min-height: 45px;">
+                                    <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <label style="color: red;"
+                            *ngIf="addEngagedForm.controls['toDate'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please enter to date.</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <br/>
+                    <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchTeachingScheduleClicked"
+                    (click)="getTeachingSchedule(academicYearForm2.controls['academicYear'].value, user.uuid, nav1)"><i class="fa fa-search"></i>&nbsp;Search</button>
+                    <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchTeachingScheduleClicked">
+                      <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <ul class="nav nav-pills mb-3" ngbNav #nav1="ngbNav">
+                    <li class="nav-item" *ngFor="let teachingScheduleMaster of teachingScheduleMasters let i=index" 
+                    [ngbNavItem]="i+1" (click)="showSchedulePeriods(teachingScheduleMaster, nav1, (i + 1))">
+                      <a class="nav-link" ngbNavLink aria-controls="pills-home" 
+                      aria-selected="false">
+                        <i class="fa fa-calendar"></i>&nbsp;{{teachingScheduleMaster.scheduleDate | date : "dd/MM/yyyy"}}
+                      </a>
+                    </li>
+                  </ul>
+                  <div class="col-md-12" *ngIf="teachingScheduleMasters.length > 0">      
+                    <div class="table-responsive">
+                      <table class="table table-striped row-border table-hover pt-10">
+                        <thead>
+                          <tr>
+                            <th>Period</th>
+                            <th>Time</th>
+                            <th>Grade-Section</th>
+                            <th>Subject</th>
+                            <th>Engaged By</th>
+                            <th><input type="checkbox" checked="{{isPresent == 1 ? 'checked': ''}}" (click)="setIsPresent()">&nbsp;Is Present</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let teachingScheduleDetail of teachingScheduleDetails let k=index" [formGroup]="engagedUsersForm[k]">
+                            <td>P-{{teachingScheduleDetail.periodNumber}}</td>
+                            <td>{{teachingScheduleDetail?.startTime | convert12HrsTimeFormat}}-{{teachingScheduleDetail?.endTime | convert12HrsTimeFormat}}</td>
+                            <td>{{teachingScheduleDetail.grade?.name}}-{{teachingScheduleDetail.section?.name}}</td>
+                            <td>{{teachingScheduleDetail.subject?.name}}</td>
+                            <td>
+                              <select class="form-control" *ngIf="selDate >= todayDate" id="engagedUser_{{k}}" formControlName="engagedUser">
+                                <option value="{{engagedUser.uuid}}" *ngFor="let engagedUser of engagedUsers">{{engagedUser.fullName}}</option>
+                              </select>
+                              {{selDate < todayDate ? 
+                                (teachingScheduleDetail.engagedBy.uuid ? teachingScheduleDetail.engagedBy.name : "---") : ""}}
+                            </td>
+                            <td>
+                              <i class="fa fa-save" (click)="saveEngageData(teachingScheduleDetail.uuid, k)" 
+                              title="Save" style="cursor: pointer;" *ngIf="(userTypeCode == 'SCHPL' || userTypeCode == 'SCHVP') && !engageSaveClicked[k] && selDate >= todayDate"></i>
+                              &nbsp;<i class="fa fa-trash-alt" (click)="deleteEngageData(teachingScheduleDetail.uuid, k)" 
+                              title="Delete" style="cursor: pointer;" *ngIf="teachingScheduleDetail.engagedBy.uuid && (userTypeCode == 'SCHPL' || userTypeCode == 'SCHVP') && !engageSaveClicked[k] && selDate >= todayDate"></i>
+                              <i class="fa fa-spin fa-spinner" *ngIf="engageSaveClicked[k]"></i>
+                            </td>
+                          </tr>
+                          <tr *ngIf="assignedGradeSections.length == 0">
+                            <td></td>
+                            <td>No record(s) found</td>
+                            <td></td>
+                            <td></td>
+                          </tr> 
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>   
+                </div>     
+              </form>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,40 @@
+﻿import { AcademicYear } from "./academic-year";
+import { Grade } from "./grade";
+import { School } from "./school";
+import { User } from "./user";
+import { SyllabusGradeSubject } from "./syllabus-grade-subject";
+import { SyllabusGradeSubjectChapter } from "./syllabus-grade-subject-chapter";
+import { SyllabusSubjectChapterTopic } from "./syllabus-subject-chapter-topic";
+import { LessonPlanDescription } from "./lessonPlanDescription";
+
+export class LessonPlanMaster {
+  id?: number;
+  uuid?:string;
+  oldLessonPlan?: LessonPlanMaster;
+  academicYear?:AcademicYear;
+  school?: School;
+  grade?: Grade;
+  subject?:SyllabusGradeSubject;
+  chapter?:SyllabusGradeSubjectChapter;
+  topic?:SyllabusSubjectChapterTopic;
+  duration?:number;
+  numberOfPeriods?:number;
+  lessonPlanNumber?:number;
+  methodology?: string;
+  prerequisite?: string;
+  skills?: string;
+  learningOutcome?: string;
+  myReflection?: string;
+  isResourceAvailable?: number;
+  status?: string;
+  createdOn?: Date;
+  createdBy?: User;
+  modifyOn?: Date;
+  modifyBy?: User;
+  approvedOn?: Date;
+  approvedBy?: User;
+  rejectedOn?: Date;
+  rejectedBy?: User;
+  rejectReason?: string; 
+  lessonPlanDescriptions : LessonPlanDescription[];
+}

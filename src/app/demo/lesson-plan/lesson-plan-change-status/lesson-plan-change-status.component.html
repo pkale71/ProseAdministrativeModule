@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="LessonPlanStatusChangeModal"><i class="fa fa-recycle"></i>&nbsp;Change Status</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="changeLessonPlanStatusForm" id="changeLessonPlanStatusForm" (ngSubmit)="changeLessonPlanStatus()" autoComplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="isApproved">Is Approved&nbsp;<span style="color: red;">*</span></label>
+                    <select class="form-control input-md" id="isApproved" formControlName="isApproved" (change)="checkIsApproved()">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="rejectReason">Reject Reason&nbsp;<span style="color: red;">*</span></label>
+                    <textarea class="form-control input-md" id="rejectReason" rows="3" formControlName="rejectReason">
+                    </textarea>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!changeStatusClicked"><i class="fa fa-check"></i>Apply </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="changeStatusClicked">
+            <i class="fa fa-spin fa-spinner"></i>Processing...</button>
+    </div>
+</form>

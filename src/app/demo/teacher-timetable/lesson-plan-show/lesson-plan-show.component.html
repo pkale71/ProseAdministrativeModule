@@ -1,0 +1,159 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="subjectAddModal"><i class="fa fa-eye"></i>&nbsp;Show Lesson Plan
+    &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchLessionPlanMapping"></i>
+    </h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<div class="modal-body">    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="attachDate">Lesson Attach Date&nbsp;<span style="color: red;">*</span></label>
+                <label class="form-control input-md">
+                    {{attachDate | date : 'dd/MM/yyyy'}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="chapter">Grade-Section&nbsp;<span style="color: red;">*</span></label>
+                <label class="form-control input-md">
+                    {{teachingScheduleDetail.grade.name}}-{{teachingScheduleDetail.section.name}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="chapter">Subject&nbsp;<span style="color: red;">*</span></label>
+                <label class="form-control input-md">
+                    {{teachingScheduleDetail.subject.name}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <br/>
+                <button type="button" class="btn btn-rounded btn-primary" *ngIf="isFutureDate"
+                    (click)="attachLessonPlan()"><i class="fa fa-check"></i>Attach Lesson Plan </button>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table datatable id="tblLessonPlan" class="table table-striped row-border table-hover pt-10">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Chapter</th>
+                    <th>Topic</th>
+                    <th>Methodology</th>
+                    <th>Prerequisite</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let lessonPlanMapping of lessonPlanMappings let i=index" [formGroup]="lessonPlanMappingForm[i]">
+                    <td>
+                        <div class="btn-group" ngbDropdown [placement]="'bottom-left'" 
+                        *ngIf="!saveClicked[i] && !deleteClicked[i]">
+                            <button class="badge drp-icon btn-rounded btn-outline-primary" ngbDropdownToggle type="button">
+                              <i class="feather icon-more-vertical"></i>
+                            </button>
+                            <div ngbDropdownMenu>
+                              <a class="dropdown-item" href="javascript:" 
+                              *ngIf="((!lessonPlanMapping.startDate  || !lessonPlanMapping.endDate) || 
+                              (lessonPlanMapping.startDate && lessonPlanMapping.endDate) && isSameDate)"
+                              (click)="saveLessonPlanMappping(i, lessonPlanMappingForm[i].value)"><i class="fa fa-save"></i>&nbsp;Save</a>
+                              <a class="dropdown-item" href="javascript:" (click)="deleteLessonPlanMapping(i, lessonPlanMapping.uuid)"
+                              *ngIf="!saveClicked[i] && !deleteClicked[i] && !lessonPlanMapping.startDate"><i class="fa fa-trash"></i>&nbsp;Delete</a>
+                              <a class="dropdown-item" href="javascript:" *ngIf="!saveClicked[i] && !deleteClicked[i] 
+                              && lessonPlanMapping.startDate && lessonPlanMapping.lessonPlanMaster?.isResourceAvailable == 1" (click)="playLessonPlan(lessonPlanMapping.lessonPlanMaster?.uuid)"><i class="fa fa-play"></i>&nbsp;Play</a>
+                            </div>
+                        </div>
+                        <button class="badge drp-icon btn-rounded btn-outline-primary" *ngIf="saveClicked[i] || deleteClicked[i]">
+                            <i class="fa fa-spin fa-spinner"></i>&nbsp;Processing...</button>
+                    </td>
+                    <td>
+                <!--If Start Date And End Date Is Filled-->
+                        <label *ngIf="lessonPlanMapping.startDate && lessonPlanMapping.endDate && !isSameDate">
+                            {{lessonPlanMapping.startDate | date : 'dd/MM/yyyy'}} 
+                        </label>
+                <!--If Start Date And End Date Not Filled-->
+                        <div class="col-md-12" style="width: 200px;" 
+                        *ngIf="((!lessonPlanMapping.startDate || !lessonPlanMapping.endDate) || 
+                        (lessonPlanMapping.startDate && lessonPlanMapping.endDate) && isSameDate)">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input (ngModelChange)="setMinDate(i, $event)" style="height: 35px;"
+                                        class="form-control"
+                                        autocomplete="off"
+                                        placeholder="dd/mm/yyyy"
+                                        formControlName="startDate"
+                                        [maxDate]=maxDate
+                                        ngbDatepicker
+                                        #d="ngbDatepicker" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="d.toggle()" style="min-height: 35px;">
+                                        <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <!--If Start Date And End Date Is Filled-->
+                        <label *ngIf="lessonPlanMapping.startDate && lessonPlanMapping.endDate && !isSameDate">
+                            {{lessonPlanMapping.endDate | date : "dd/MM/yyyy"}}
+                        </label>
+                <!--If Start Date And End Date Not Filled-->
+                        <div class="col-md-12" style="width: 200px;" 
+                        *ngIf="((!lessonPlanMapping.startDate|| !lessonPlanMapping.endDate) || 
+                        (lessonPlanMapping.startDate&& lessonPlanMapping.endDate) && isSameDate)">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input style="height: 35px;"
+                                        class="form-control"
+                                        autocomplete="off"
+                                        placeholder="dd/mm/yyyy"
+                                        formControlName="endDate"
+                                        [minDate]= "lessonPlanMappingForm[i].controls['minDate'].value"
+                                        [maxDate]= maxDate
+                                        ngbDatepicker
+                                        #d1="ngbDatepicker" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="d1.toggle()" style="min-height: 35px;">
+                                        <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td title="{{lessonPlanMapping?.lessonPlanMaster?.chapter?.name}}">{{lessonPlanMapping?.lessonPlanMaster?.chapter?.name | slice : 0 : 20}}...</td>
+                    <td title="{{lessonPlanMapping?.lessonPlanMaster?.topic?.name}}">{{lessonPlanMapping?.lessonPlanMaster?.topic?.name | slice : 0 : 20}}...</td>
+                    <td>{{lessonPlanMapping?.lessonPlanMaster?.methodology | slice : 0:20}}...</td>
+                    <td>{{lessonPlanMapping?.lessonPlanMaster?.prerequisite | slice : 0:20}}...</td>             
+                </tr>
+                <tr *ngIf="lessonPlanMappings.length == 0">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+</div>

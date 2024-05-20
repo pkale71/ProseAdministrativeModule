@@ -1,0 +1,79 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="weeklyTimeTableAdd"><i class="fa fa-plus"></i>&nbsp;Teacher Allotment</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addWeeklyTimeTableForm" id="addWeeklyTimeTableForm" (ngSubmit)="saveWeeklyTimeTable()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="gradeSection">Grade-Section&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="gradeSection" type="text" required 
+                    formControlName="gradeSection" maxlength="40"
+                    [ngClass]="{'is-invalid': !addWeeklyTimeTableForm.controls['gradeSection'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addWeeklyTimeTableForm.controls['gradeSection'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter grade-section.</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="period">Period&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="period" type="text" required 
+                    formControlName="period" maxlength="40"
+                    [ngClass]="{'is-invalid': !addWeeklyTimeTableForm.controls['period'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addWeeklyTimeTableForm.controls['period'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter period.</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <form [formGroup]="subjectForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="subject">Subject&nbsp;<span style="color: red;">*</span>
+                            &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="subjectClicked"></i></label>
+                        <select class="form-control" required id="subject" formControlName="subject" 
+                            [ngClass]="{'is-invalid': !subjectForm.controls['subject'].valid && !isValidForm}"
+                            (change)="filterTeachers($event.target.value)">
+                                <option value="{{subject.uuid}}" *ngFor="let subject of subjects">{{subject.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="subjectForm.controls['subject'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select subject.</label>
+                    </div>
+                </form>
+            </div>            
+            <div class="col-md-5">
+                <form [formGroup]="teacherForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="allocateTo">Allocate To&nbsp;<span style="color: red;">*</span>
+                            &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="teacherClicked"></i></label>
+                        <select class="form-control" required id="allocateTo" formControlName="allocateTo" 
+                        [ngClass]="{'is-invalid': !teacherForm.controls['allocateTo'].valid && !isValidForm}">
+                            <option value="{{teacher.uuid}}" *ngFor="let teacher of teachers">{{teacher.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="teacherForm.controls['allocateTo'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select allocate to.</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>
