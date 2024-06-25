@@ -1,0 +1,172 @@
+<div class="container">
+    <div class="container-fluid">
+        <div class="m-4">
+            <img src="./assets/images/logo/logo.png" style="width: 180px; margin-left: 0px; margin-top: -7px;">
+        </div>
+        <div class="m-3">
+            <div class="row justify-content-md-center" style="text-align: center;">
+                <div class="col-md-12">
+                  <h4 class="wow fadeInUp" data-wow-delay="0s"><i class="fa fa-address-card" ></i>&nbsp;User Profile</h4>
+                </div>
+            </div>            
+        </div> 
+
+        <div class="card" *ngIf="loadingClicked || profileClicked">
+            <div class="card-body text-center">
+                <h5 *ngIf="loadingClicked"><i class="fa fa-spin fa-spinner" ></i> Loading Data...</h5>
+                <h5 *ngIf="profileClicked"><i class="{{iconClass}}"></i>&nbsp;<label class="{{colorClass}}"> {{message}}</label></h5>
+                
+            </div>
+        </div>
+        <div class="card" *ngIf = "!loadingClicked && !profileClicked">
+            <form [formGroup] = "userProfileForm"  id = "userProfileForm" (ngSubmit)="saveUser()" autocomplete="off">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4"> 
+                            <div class="form-group">
+                                <label class="form-control-label" for="firstName">First Name&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="firstName" type="text" required 
+                                formControlName="firstName" maxlength="40"
+                                [ngClass]="{'is-invalid': !userProfileForm.controls['firstName'].valid && !isValidForm}"/>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['firstName'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter first name.</label>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['firstName'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid first name.</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="lastName">Last Name&nbsp;</label>
+                                <input class="form-control input-md" id="lastName" type="text"  
+                                formControlName="lastName" maxlength="40"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="email">Email&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="email" type="text" required  readonly
+                                formControlName="email" maxlength="100"
+                                [ngClass]="{'is-invalid': !userProfileForm.controls['email'].valid && !isValidForm}"
+                                />
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['email'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter email.</label>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['email'].hasError('email') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid email.</label>
+                            </div>
+                        </div> 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="mobile">Mobile&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="mobile" type="number" required  readonly
+                                formControlName="mobile" maxlength="10"
+                                [ngClass]="{'is-invalid': !userProfileForm.controls['mobile'].valid && !isValidForm}"
+                                />
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['mobile'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter mobile.</label>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['mobile'].hasError('minlength') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Mobile number should be 10 digits long</label>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['mobile'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid mobile number</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="password">Password&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="password" type="password" required 
+                                formControlName="password" minlength="6" maxlength="40"
+                                [ngClass]="{'is-invalid': !userProfileForm.controls['password'].valid && !isValidForm}"
+                                autocomplete="false" readonly onfocus="this.removeAttribute('readonly');"/>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['password'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Enter password.</label>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['password'].hasError('minlength') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Password should be 6 characters long.</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="gender">Gender&nbsp;<span style="color: red;">*</span></label>
+                                <select class="form-control input-md" required id="gender" formControlName="gender"
+                                [ngClass]="{'is-invalid': !userProfileForm.controls['gender'].valid && !isValidForm}" >
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['gender'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please select gender.</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="userGrade">Grade&nbsp;<span style="color: red;">*</span></label>
+                                <select class="form-control" id="userGrade" required 
+                                [ngClass]="{'is-invalid': !userProfileForm.controls['userGrade'].valid && !isValidForm}" formControlName="userGrade" (change)="filterUserCategories()"
+                                >
+                                <option value="{{userGrade.id}}" *ngFor="let userGrade of userGrades">{{userGrade.name}}</option>
+                                </select>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['userGrade'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please select grade.</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="userCategory" >Category&nbsp;
+                                    <span style="color: red;" *ngIf = "isRequired">*</span>
+                                </label>
+                                <select class="form-control" id="userCategory" [ngRequired] = "isRequired"  
+                                [ngClass]="{'is-invalid': !userProfileForm.controls['userCategory'].valid && !isValidForm}" formControlName="userCategory">                       
+                                <option value="{{userCategory.id}}" *ngFor="let userCategory of userCategories">
+                                    {{userCategory.name}}
+                                </option>
+                                </select>
+                                <label style="color: red;"
+                                *ngIf="userProfileForm.controls['userCategory'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please select user type.</label>
+                            </div>
+                        </div>
+                            <!-- profile pic -->
+                        <div class="col-md-4">
+                            <form [formGroup]="profileForm">
+                                <label class="form-control-label">Profile Picture&nbsp;
+                                <span style="color: red;">[ JPEG/PNG, Max File Size : 1 MB ]</span>
+                                </label>
+                                <div class="avatar-xl mx-auto">
+                                    <file-upload class="form-control" [multiple]="false" [accept]="'image/png, image/jpeg'" maxsize="1 MB"
+                                    formControlName="profilePic" id="profilePic" (change)="onSelectProfile($event)"></file-upload>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+                            <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+                                <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+                        </div>                        
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
