@@ -7,9 +7,9 @@ export class UserService {
   constructor(private apiService: ApiService) { }
 
   // json file
-  public assignModuleRoles = [
-          { id: 1, module: { id: 1, name: "LMS" }, role: { id: 1, name: "admin" }, userType: { id: 1, name: 'staff' } }, 
-          { id: 2, module: { id: 2, name: "Addmission" }, role: { id: 2, name: "hr admin" }, userType: { id: 2, name: 'parent' } }]
+  // public assignModuleRoles = [
+  //         { id: 1, module: { id: 1, name: "LMS" }, role: { id: 1, name: "admin" }, userType: { id: 1, name: 'staff' } }, 
+  //         { id: 2, module: { id: 2, name: "Addmission" }, role: { id: 2, name: "hr admin" }, userType: { id: 2, name: 'parent' } }]
 
   
   authenticateUser(authParams : any) 
@@ -68,17 +68,12 @@ export class UserService {
     return this.apiService.get(`/user/getOnBoardingLink/${code}`);
   }
 
-
-  // getUser(uuid : string)
-  // {
-  //   return this.apiService.get('/user/getUser/' + uuid);
-  // }
-
   checkDuplicateEmailMobile(data : any)
   {
     return this.apiService.post('/user/checkDuplicateEmailMobile', data);
   }
 
+  //user
   getUsers(userGradeId : number, userCategoryId : number, action : string)
   {
     return this.apiService.get('/user/getUsers/' + userGradeId + '/' + userCategoryId + '/' + action);
@@ -114,95 +109,106 @@ export class UserService {
     return this.apiService.post('/user/deleteUser', user);
   }
 
+  //user module
   saveUserModule(userModule : any)
   {
     return this.apiService.post('/user/saveUserModule', userModule);
   }
 
-  getUserModule(userUUID : any)
+  getUserModule(userUUID : string, action : string)
   {
-    return this.apiService.get('/user/getUserModules/' + userUUID);
+    return this.apiService.get('/user/getUserModules/' + userUUID + '/' + action);
+  }
+
+  approveDenyUserModule(userModule : any)
+  {
+    return this.apiService.post('/user/approveDenyUserModule', userModule);
+  }
+
+  deleteUserModule(userModule : any)
+  {
+    return this.apiService.post('/user/deleteUserModule', userModule);
   }
 
   ////User Assigned Grades
-  getUnassignedGrades(academicYearUUID : string, schoolUUID : string, gradeCategoryId : number)
-  {
-    return this.apiService.get('/user/getUnassignedGrades/' + academicYearUUID + '/' + schoolUUID + '/' + gradeCategoryId);
-  }
-
-  saveUserAssignGrade(userSuperviceGrade : any)
-  {
-    return this.apiService.post('/user/saveAssignedGrades', userSuperviceGrade);
-  }
-
-  deleteUserAssignGrade(userSuperviceGrade : any)
-  {
-    return this.apiService.post('/user/deleteAssignedGrades', userSuperviceGrade);
-  }
-
-  getAssignedGrades(userUUID : string, academicYearUUID : string)
-  {
-    return this.apiService.get('/user/getAssignedGrades/' + userUUID + '/' + academicYearUUID)
-    // + '/' + schoolUUID);
-  }
-
-  ////User Assigned Grade Subjects
-  getUnassignedGradeSubjects(academicYearUUID : string, schoolUUID : string, gradeId : number)
-  {
-    return this.apiService.get('/user/getUnassignedGradeSubjects/' + academicYearUUID + '/' + gradeId + '/' + schoolUUID);
-  }
-
-  saveUserAssignGradeSubject(userSuperviceGradeSubject : any)
-  {
-    return this.apiService.post('/user/saveAssignedGradeSubjects', userSuperviceGradeSubject);
-  }
-
-  deleteUserAssignGradeSubject(userSuperviceGradeSubject : any)
-  {
-    return this.apiService.post('/user/deleteAssignedGradeSubjects', userSuperviceGradeSubject);
-  }
-
-  getAssignedGradeSubjects(userUUID : string, academicYearUUID : string,)
-  {
-    return this.apiService.get('/user/getAssignedGradeSubjects/' + userUUID + '/' + academicYearUUID)
-    // + '/' + schoolUUID);
-  }
-
-  ////User Assigned Grade Sections =  assigned module role
-  getUnassignedGradeSections(academicYearUUID : string,)
-  // gradeId : number, subjectUUID : string, schoolUUID : string)
-  {
-    return this.apiService.get('/user/getUnassignedGradeSubjectSections/' + academicYearUUID )
-    //+ '/' + gradeId + '/' + subjectUUID + '/' + schoolUUID);
-  }
-
-  // saveUserAssignGradeSection(userAssignGradeSection : any)
+  // getUnassignedGrades(academicYearUUID : string, schoolUUID : string, gradeCategoryId : number)
   // {
-  //   return this.apiService.post('/user/saveAssignedGradeSections', userAssignGradeSection);
+  //   return this.apiService.get('/user/getUnassignedGrades/' + academicYearUUID + '/' + schoolUUID + '/' + gradeCategoryId);
   // }
 
-  saveUserAssignModuleRole(userAssignGradeSection : any)
-  {
-    return of({ "status_code" : 200, "message": "success" });
-    // return this.apiService.post('/user/saveAssignedGradeSections', userAssignGradeSection);
-  }
+  // saveUserAssignGrade(userSuperviceGrade : any)
+  // {
+  //   return this.apiService.post('/user/saveAssignedGrades', userSuperviceGrade);
+  // }
 
-  deleteUserAssignGradeSection(userAssignGradeSection : any)
-  {
-    return this.apiService.post('/user/deleteAssignedGradeSections', userAssignGradeSection);
-  }
+  // deleteUserAssignGrade(userSuperviceGrade : any)
+  // {
+  //   return this.apiService.post('/user/deleteAssignedGrades', userSuperviceGrade);
+  // }
+
+  // getAssignedGrades(userUUID : string, academicYearUUID : string)
+  // {
+  //   return this.apiService.get('/user/getAssignedGrades/' + userUUID + '/' + academicYearUUID)
+  //   // + '/' + schoolUUID);
+  // }
+
+  // ////User Assigned Grade Subjects
+  // getUnassignedGradeSubjects(academicYearUUID : string, schoolUUID : string, gradeId : number)
+  // {
+  //   return this.apiService.get('/user/getUnassignedGradeSubjects/' + academicYearUUID + '/' + gradeId + '/' + schoolUUID);
+  // }
+
+  // saveUserAssignGradeSubject(userSuperviceGradeSubject : any)
+  // {
+  //   return this.apiService.post('/user/saveAssignedGradeSubjects', userSuperviceGradeSubject);
+  // }
+
+  // deleteUserAssignGradeSubject(userSuperviceGradeSubject : any)
+  // {
+  //   return this.apiService.post('/user/deleteAssignedGradeSubjects', userSuperviceGradeSubject);
+  // }
+
+  // getAssignedGradeSubjects(userUUID : string, academicYearUUID : string,)
+  // {
+  //   return this.apiService.get('/user/getAssignedGradeSubjects/' + userUUID + '/' + academicYearUUID)
+  //   // + '/' + schoolUUID);
+  // }
+
+  // ////User Assigned Grade Sections =  assigned module role
+  // getUnassignedGradeSections(academicYearUUID : string,)
+  // // gradeId : number, subjectUUID : string, schoolUUID : string)
+  // {
+  //   return this.apiService.get('/user/getUnassignedGradeSubjectSections/' + academicYearUUID )
+  //   //+ '/' + gradeId + '/' + subjectUUID + '/' + schoolUUID);
+  // }
+
+  // // saveUserAssignGradeSection(userAssignGradeSection : any)
+  // // {
+  // //   return this.apiService.post('/user/saveAssignedGradeSections', userAssignGradeSection);
+  // // }
+
+  // saveUserAssignModuleRole(userAssignGradeSection : any)
+  // {
+  //   return of({ "status_code" : 200, "message": "success" });
+  //   // return this.apiService.post('/user/saveAssignedGradeSections', userAssignGradeSection);
+  // }
+
+  // deleteUserAssignGradeSection(userAssignGradeSection : any)
+  // {
+  //   return this.apiService.post('/user/deleteAssignedGradeSections', userAssignGradeSection);
+  // }
 
   // getAssignedGradeSections(userUUID : string, academicYearUUID : string, schoolUUID : string, gradeId : number)
   // {
   //   return this.apiService.get('/user/getAssignedGradeSections/' + userUUID + '/' + academicYearUUID + '/' + schoolUUID + "/" + gradeId);
   // }
 
-  getAssignedModuleRoles(userUUID : string, academicYearUUID : string,)
-  {
-    return of({ "status_code" : 200, "message": "success", "data" : { "assignModuleRoles" : this.assignModuleRoles} });
-    //return this.apiService.get('/user/getAssignedGradeSections/' + userUUID + '/' + academicYearUUID)
-    // + '/' + schoolUUID + "/" + gradeId);
-  }
+  // getAssignedModuleRoles(userUUID : string, academicYearUUID : string,)
+  // {
+  //   return of({ "status_code" : 200, "message": "success", "data" : { "assignModuleRoles" : this.assignModuleRoles} });
+  //   //return this.apiService.get('/user/getAssignedGradeSections/' + userUUID + '/' + academicYearUUID)
+  //   // + '/' + schoolUUID + "/" + gradeId);
+  // }
 
   ////User Assigned Grade Sections APIS For Curriculum Completion
   getTeachGrades(userUUID : string, schoolUUID : string)

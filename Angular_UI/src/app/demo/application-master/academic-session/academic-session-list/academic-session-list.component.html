@@ -43,7 +43,7 @@
                     title="Copy" style="cursor: pointer;"></i>&nbsp;
                     <i class="fa fa-edit" (click)="editAcademicSession(academicSession)" 
                     title="Edit" style="cursor: pointer;"></i>&nbsp;
-                    <i class="fa fa-trash-alt" (click)="deleteAcademicSession(academicSession)" 
+                    <i class="fa fa-trash-alt" (click)="deleteAcademicSession(academicSession)" *ngIf = "academicSession.isExist == 0"
                     title="Delete" style="cursor: pointer;"></i>&nbsp;
                   </td>
                 </tr>

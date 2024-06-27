@@ -34,7 +34,6 @@ export class UserListComponent
   userGradeForm : FormGroup;
   userCategoryForm : FormGroup;
   searchClicked : boolean;
-  loginUser : any;
   isRequired : boolean;
   
   masterUserGrades : any[];
@@ -196,7 +195,7 @@ export class UserListComponent
     {
       let userGradeId = this.userGradeForm.get("userGrade").value;
       let userCategoryId = this.userCategoryForm.get("userCategory").value;
-      if(userGradeId != undefined && userGradeId != '' && userCategoryId != undefined && userCategoryId != '')
+      if(userGradeId != undefined && userGradeId != '')
       {
         this.searchClicked = true;
         let response = await this.userService.getUsers(userGradeId, userCategoryId, 'All').toPromise();
@@ -247,8 +246,8 @@ export class UserListComponent
       allowOutsideClick: false,
       showCloseButton: true,
       showCancelButton: true 
-    }).then(async (willDelete) => {
-      if (willDelete.dismiss) 
+    }).then(async (willUpdate) => {
+      if (willUpdate.dismiss) 
       {
       } 
       else 
@@ -305,14 +304,14 @@ export class UserListComponent
     this.router.navigateByUrl("/user/detail/" + uuid);
   }
 
-  deleteUser(uuid)
+  deleteUser(uuid : string)
   {
     Swal.fire({
       customClass: {
         container: 'my-swal'
       },
       title: 'Confirmation',
-      text: 'Are you sure to delete event?',
+      text: 'Are you sure to delete user?',
       icon: 'warning',
       showCloseButton: true,
       showCancelButton: true

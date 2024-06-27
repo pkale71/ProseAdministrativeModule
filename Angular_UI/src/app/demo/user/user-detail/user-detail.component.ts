@@ -42,14 +42,13 @@ export class UserDetailComponent {
       this.uuid = this.route.params['value'].userUUID;
     }
 
-    ngOnInit() 
-    {
-      this.searchClicked = false;
-      this.user = [];
-      this.userModules = [];
-      this.getUser(this.uuid);
-      this.getUserModules(this.uuid);
-    }
+  ngOnInit() 
+  {
+    this.searchClicked = false;
+    this.userModules = [];
+    this.getUser(this.uuid);
+    this.getUserModules(this.uuid, 'All');
+  }
 
   showNotification(type: string, message: string): void 
   {
@@ -61,7 +60,7 @@ export class UserDetailComponent {
   public userAssignedGradeSectionResult:any = this.commonSharedService.userModulesListObject.subscribe(res =>{
     if(res.result == "success")
     {
-      this.getUserModules(this.uuid);
+      this.getUserModules(this.uuid, 'All');
       // let userUUID = res.userUUID;
     }
   })
@@ -86,10 +85,14 @@ export class UserDetailComponent {
   async getUser(uuid : string) 
   {
     this.searchClicked = true;
-    let response = await this.userService.getUser(uuid).toPromise();
+    let response = await this.userService.getUser(uuid).toPromise(); 
     if (response.status_code == 200 && response.message == 'success') 
     {
+      $('#tblUser').DataTable().destroy();
       this.user = response.user;
+      setTimeout(function(){
+        $('#tblUser').DataTable();
+      },800);
       this.searchClicked = false;
       this.modalService.dismissAll();
     }
@@ -101,12 +104,16 @@ export class UserDetailComponent {
     }
   }
 
-  async getUserModules(userUUID : string) 
+  async getUserModules(userUUID : string, action : string) 
   {
-    let response = await this.userService.getUserModule(userUUID).toPromise();
+    let response = await this.userService.getUserModule(userUUID, 'All').toPromise();
     if (response.status_code == 200 && response.message == 'success') 
     {
+      $('#tblUserModule').DataTable().destroy();
       this.userModules = response.userModules;
+      setTimeout(function(){
+        $('#tblUserModule').DataTable();
+      },800);
       this.modalService.dismissAll();
     }
     else
@@ -119,6 +126,48 @@ export class UserDetailComponent {
   back()
   {
     this.location.back();
+  }
+
+  approveUserModule(userModule : any)
+  {
+    // Swal.fire({
+    //   customClass: {
+    //     container: 'my-swal'
+    //   },
+    //   title: 'Confirmation',
+    //   text: 'Are you sure to ' + (userModule.isModuleAdminApproved == 1 ? 'deny' : 'approve') + ' the user module?',
+    //   icon: 'warning',
+    //   allowOutsideClick: false,
+    //   showCloseButton: true,
+    //   showCancelButton: true 
+    // }).then(async (willUpdate) => {
+    //   if (willUpdate.dismiss) 
+    //   {
+    //   } 
+    //   else 
+    //   {        
+    //     try
+    //     {
+    //       let tempJson = {
+    //         id : userModule.id,
+    //         action : userModule.isModuleAdminApproved == 1 ? 'Deny' : 'Approve'
+    //       }
+    //       this.showNotification("info", "Please wait...");
+    //       let response = await this.userService.approveDenyUserModule(tempJson).toPromise();
+    //       if (response.status_code == 200 && response.message == 'success') 
+    //       {
+    //         this.showNotification("success", "User Module Updated");
+    //         this.commonSharedService.userModulesListObject.next({
+    //           result : "success"
+    //         });
+    //       }
+    //     }
+    //     catch(e)
+    //     {
+    //       this.showNotification("error", e);
+    //     }
+    //   }
+    // });   
   }
 
   updateStatus(userModule : any)
@@ -161,6 +210,48 @@ export class UserDetailComponent {
         }
       }
     });   
+  }
+
+  deleteUserModule(userModule : any)
+  {
+    Swal.fire({
+      customClass: {
+        container: 'my-swal'
+      },
+      title: 'Confirmation',
+      text: 'Are you sure to delete user module?',
+      icon: 'warning',
+      showCloseButton: true,
+      showCancelButton: true
+    }).then(async (willDelete) => {
+      if (willDelete.dismiss) 
+      {
+        
+      } 
+      else 
+      {
+        this.showNotification("info", "Please wait...");
+        let tempJSON = { 
+          "id" : userModule.id,
+          "user" : {
+            "uuid" : this.uuid
+          }
+        };
+        try
+        {
+          let response = await this.userService.deleteUserModule(tempJSON).toPromise();
+          if (response.status_code == 200 && response.message == 'success') 
+          {
+            this.showNotification("success", "User Module Deleted.");
+            this.commonSharedService.userModulesListObject.next({result : "success"});
+          }
+        }
+        catch(e)
+        {
+          this.showNotification("error", e);
+        }
+      }
+    });
   }
 
 }

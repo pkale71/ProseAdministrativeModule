@@ -104,7 +104,7 @@ export class UserModuleComponent {
       if(moduleId != undefined && moduleId != "")
       {
         this.searchClicked = true;
-        let response = await this.commonService.getUserRoles(moduleId).toPromise();
+        let response = await this.commonService.getUserRoles(moduleId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.masterUserRoles = response.userRoles;
@@ -142,7 +142,7 @@ export class UserModuleComponent {
       if(moduleId != undefined && moduleId != '' && userRoleId != undefined && userRoleId != '')
       {
         this.searchClicked = true;
-        let response = await this.commonService.getUserTypes(moduleId, userRoleId).toPromise();
+        let response = await this.commonService.getUserTypes(moduleId, userRoleId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.masterUserTypes = response.userTypes;

@@ -62,7 +62,7 @@
                     </span>
                   </td>                
                   <td style="width:40px;text-align: right;">
-                    <i class="fa fa-trash-alt" (click)="deleteSyllabus(syllabus)" 
+                    <i class="fa fa-trash-alt" (click)="deleteSyllabus(syllabus)" *ngIf = "syllabus.isExist == 0"
                     title="Delete" style="cursor: pointer;"></i>
                   </td>
                 </tr>

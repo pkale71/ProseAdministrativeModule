@@ -43,16 +43,9 @@ export class CommonService {
     return this.apiService.post('/common/saveUserRole', userRole);
   }
 
-  getUserRoles(moduleId : number) 
+  getUserRoles(moduleId : number, action : string) 
   {
-    if(moduleId > 0)
-    {
-      return this.apiService.get('/common/getUserRoles/' + moduleId);
-    }
-    else
-    {
-      return this.apiService.get('/common/getUserRoles');
-    }
+    return this.apiService.get('/common/getUserRoles/' + moduleId + '/' + action);
   }
 
   deleteUserRole(userRole: any) 
@@ -66,9 +59,9 @@ export class CommonService {
     return this.apiService.post('/common/saveUserType', userType);
   }
 
-  getUserTypes(moduleId : number, userRoleId : number) 
+  getUserTypes(moduleId : number, userRoleId : number, action : string) 
   {
-    return this.apiService.get('/common/getUserTypes/' + moduleId + '/' + userRoleId);
+    return this.apiService.get('/common/getUserTypes/' + moduleId + '/' + userRoleId + '/' + action);
   }
 
   deleteUserType(id) 
@@ -103,16 +96,9 @@ export class CommonService {
     return this.apiService.post('/common/saveSchoolingProgram', schoolingProgram);
   }
 
-  getSchoolingPrograms(academicSessionId : number) 
+  getSchoolingPrograms(academicSessionId : number, action : string) 
   {
-    if(academicSessionId > 0)
-    {
-      return this.apiService.get('/common/getSchoolingPrograms/' + academicSessionId);
-    }
-    else
-    {
-      return this.apiService.get('/common/getSchoolingPrograms');
-    }  
+    return this.apiService.get('/common/getSchoolingPrograms/' + academicSessionId + '/' + action);  
   }
 
   deleteSchoolingProgram(schoolingProgram : any) 
@@ -121,16 +107,9 @@ export class CommonService {
   }
 
   //Syllabus
-  getSyllabuses(academicSessionId : number, schoolingProgramId : number) 
+  getSyllabuses(academicSessionId : number, schoolingProgramId : number, action : string) 
   {
-    if(academicSessionId > 0 && schoolingProgramId > 0)
-    {
-      return this.apiService.get('/common/getSyllabuses/' + academicSessionId + "/" + schoolingProgramId );
-    }
-    else
-    {
-      return this.apiService.get('/common/getSyllabuses');
-    }  
+    return this.apiService.get('/common/getSyllabuses/' + academicSessionId + "/" + schoolingProgramId + '/' + action);  
   }
 
   saveSyllabus(syllabus: any) 
@@ -149,9 +128,9 @@ export class CommonService {
     return this.apiService.post('/common/saveGradeCategory', gradeCategory);
   }
 
-  getGradeCategories() 
+  getGradeCategories(action : string) 
   {
-    return this.apiService.get('/common/getGradeCategories');
+    return this.apiService.get('/common/getGradeCategories/' + action);
   }
 
   deleteGradeCategory(gradeCategory : any) 
@@ -165,16 +144,9 @@ export class CommonService {
     return this.apiService.post('/common/saveGrade', grade);
   }
 
-  getGrades(gradeCategoryId: number) 
+  getGrades(gradeCategoryId: number, action : string) 
   {
-    if(gradeCategoryId > 0)
-    {
-      return this.apiService.get('/common/getGrades/' + gradeCategoryId);
-    }
-    else
-    {
-      return this.apiService.get('/common/getGrades');
-    }  
+    return this.apiService.get('/common/getGrades/' + gradeCategoryId + '/' + action);
   }
 
   getGrade(id: number) 
@@ -198,9 +170,9 @@ export class CommonService {
     return this.apiService.post('/common/saveGradeWiseSyllabus', gradeWiseSyllabuse);
   }
 
-  getGradeWiseSyllabuses(academicSessionId : number, gradeId : number) 
+  getGradeWiseSyllabuses(academicSessionId : number, gradeId : number, action : string) 
   {
-    return this.apiService.get('/common/getGradeWiseSyllabuses/' + academicSessionId + "/" + gradeId ); 
+    return this.apiService.get('/common/getGradeWiseSyllabuses/' + academicSessionId + "/" + gradeId + '/' + action); 
   }
 
   updateGradeWiseSyllabus(gradeWiseSyllabus : any) 
@@ -219,9 +191,9 @@ export class CommonService {
     return this.apiService.post('/common/saveSyllabusWiseSubject', syllabusWiseSubject);
   }
 
-  getSyllabusWiseSubjects(academicSessionId : number, syllabusId : number, gradeId : number) 
+  getSyllabusWiseSubjects(academicSessionId : number, syllabusId : number, gradeId : number, action : string) 
   {
-    return this.apiService.get("/common/getSyllabusWiseSubjects/" + academicSessionId + '/' + syllabusId + '/' + gradeId);
+    return this.apiService.get("/common/getSyllabusWiseSubjects/" + academicSessionId + '/' + syllabusId + '/' + gradeId + '/' + action);
   }
 
   updateSyllabusWiseSubject(syllabusWiseSubject: any) 
@@ -240,9 +212,9 @@ export class CommonService {
     return this.apiService.post("/common/saveSubjectWiseChapter", subjectWiseChapter);
   }
 
-  getSubjectWiseChapters(academicSessionId : number, syllabusId : number, gradeId : number, subjectId : number) 
+  getSubjectWiseChapters(academicSessionId : number, syllabusId : number, gradeId : number, subjectId : number, action : string) 
   {
-    return this.apiService.get("/common/getSubjectWiseChapters/" + academicSessionId + '/' + syllabusId + '/' + gradeId + '/' + subjectId);
+    return this.apiService.get("/common/getSubjectWiseChapters/" + academicSessionId + '/' + syllabusId + '/' + gradeId + '/' + subjectId + '/' + action);
   }
 
   updateSubjectWiseChapter(subjectWiseChapter : any) 
@@ -261,9 +233,9 @@ export class CommonService {
     return this.apiService.post('/common/saveChapterWiseTopic', chapterWiseTopic);
   }
 
-  getChapterWiseTopics(academicSessionId : number, syllabusId : number, gradeId : number, subjectId : number, chapterId : number) 
+  getChapterWiseTopics(academicSessionId : number, syllabusId : number, gradeId : number, subjectId : number, chapterId : number, action : string) 
   {
-    return this.apiService.get('/common/getChapterWiseTopics/' + academicSessionId + '/' + syllabusId + '/' + gradeId + '/' + subjectId + '/' + chapterId);  
+    return this.apiService.get('/common/getChapterWiseTopics/' + academicSessionId + '/' + syllabusId + '/' + gradeId + '/' + subjectId + '/' + chapterId + '/' + action);  
   }
 
   updateChapterWiseTopic(chapterWiseTopic : any) 

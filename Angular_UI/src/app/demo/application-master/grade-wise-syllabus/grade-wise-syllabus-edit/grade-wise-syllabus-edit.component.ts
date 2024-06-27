@@ -56,7 +56,7 @@ export class GradeWiseSyllabusEditComponent {
     this.saveClicked = false;
     this.getAcademicSessions();
     this.getGradeCategories();
-    this.getSyllabuses(0,0);
+    this.getSyllabuses(0,0,'All');
 
     this.editGradeWiseSyllabusForm = this.formbuilder.group({
       id: [''],
@@ -123,7 +123,7 @@ export class GradeWiseSyllabusEditComponent {
    try
    {
      this.saveClicked = false;
-     let response = await this.commonService.getGradeCategories().toPromise();
+     let response = await this.commonService.getGradeCategories('All').toPromise();
      if (response.status_code == 200 && response.message == 'success') 
      {
        this.gradeCategories = response.gradeCategories;
@@ -150,7 +150,7 @@ export class GradeWiseSyllabusEditComponent {
         if(gradeCategoryId != undefined && gradeCategoryId != "")
         {  
           this.saveClicked = true;
-          let response = await this.commonService.getGrades(gradeCategoryId).toPromise();
+          let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
             this.masterGrades = response.grades;
@@ -177,11 +177,11 @@ export class GradeWiseSyllabusEditComponent {
   }
 
   //get syllabuses
-   async getSyllabuses(academicSessionId : number, schoolingProgramId : number) 
+   async getSyllabuses(academicSessionId : number, schoolingProgramId : number, action : string) 
   {
     try
       {
-        let response = await this.commonService.getSyllabuses(academicSessionId, schoolingProgramId).toPromise();
+        let response = await this.commonService.getSyllabuses(academicSessionId, schoolingProgramId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.syllabuses = response.syllabuses;

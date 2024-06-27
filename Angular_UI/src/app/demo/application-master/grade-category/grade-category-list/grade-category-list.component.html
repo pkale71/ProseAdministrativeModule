@@ -28,7 +28,7 @@
                     </span>
                   </td>   
                   <td style="width:40px;text-align: right;">
-                    <i class="fa fa-trash-alt" (click)="deleteGradeCategory(gradeCategory)" 
+                    <i class="fa fa-trash-alt" (click)="deleteGradeCategory(gradeCategory)" *ngIf="gradeCategory.isExist == 0"
                     title="Delete" style="cursor: pointer;"></i>&nbsp;
                   </td>
                 </tr>

@@ -39,13 +39,13 @@ export class GradeCategoryListComponent {
   {
     this.searchClicked = false;
     this.gradeCategories = [];
-    this.getGradeCategories();
+    this.getGradeCategories('All');
   }
 
   public gradeAddResult:any = this.commonSharedService.gradeCategoryListObject.subscribe(res =>{
     if(res.result == "success")
     {
-      this.getGradeCategories();
+      this.getGradeCategories('All');
     }
   })
 
@@ -55,12 +55,12 @@ export class GradeCategoryListComponent {
     this.notifier.notify(type, message);
   }
 
-  async getGradeCategories() 
+  async getGradeCategories(action : string) 
   {
     try 
       {
         this.searchClicked = true;
-        let response = await this.commonService.getGradeCategories().toPromise();
+        let response = await this.commonService.getGradeCategories('All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           $('#tblGradeCategory').DataTable().destroy();

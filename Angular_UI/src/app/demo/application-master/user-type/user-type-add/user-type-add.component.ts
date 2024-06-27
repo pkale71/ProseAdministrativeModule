@@ -97,7 +97,7 @@ export class UserTypeAddComponent {
       let moduleId = this.moduleForm.get("module").value;
       if(moduleId != null && moduleId != undefined)
       {
-        let response = await this.commonService.getUserRoles(moduleId).toPromise();
+        let response = await this.commonService.getUserRoles(moduleId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.masterUserRoles = response.userRoles;

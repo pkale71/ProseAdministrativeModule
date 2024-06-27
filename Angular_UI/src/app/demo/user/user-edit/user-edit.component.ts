@@ -135,105 +135,105 @@ export class UserEditComponent {
     }
   }
 
-   //get user Grades
-   async getUserGrades()
-   {
-     try 
-     {
-       let response = await this.commonService.getUserGrades().toPromise();
-       if (response.status_code == 200 && response.message == 'success') 
-       {
-         this.masterUserGrades = response.userGrades;
-         this.userGrades = this.masterUserGrades;
-         this.userGrades.unshift({ id : "", name : "Select User Grade"});
-         this.filterUserCategories(this.user.userCategory.id);
-       }
-       else
-       {
-         this.userGrades = [];
-       }
-     } 
-     catch (error) 
-     {
-       this.showNotification("error", error);
-     }
-   }
- 
-   //get user category
-   async getUserCategories()
-   {
-     try 
-     {
-       let response = await this.commonService.getUserCategories().toPromise();
-       if (response.status_code == 200 && response.message == 'success') 
-       {
-         this.masterUserCategories = response.userCategories;
-         this.userCategories = this.masterUserCategories;
-       }
-       else
-       {
-         this.userGrades = [];
-       }
-     } 
-     catch (error) 
-     {
-       this.showNotification("error", error);
-     }
-   } 
- 
-   filterUserCategories(userCategoryId : string)
-   {
-      try
+  //get user Grades
+  async getUserGrades()
+  {
+    try 
+    {
+      let response = await this.commonService.getUserGrades().toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
       {
-        let userGradeId = this.userGradeForm.get("userGrade").value;
-        let userGrades = this.masterUserGrades.filter(userGrade => userGrade.id == userGradeId);
-        if(userGrades.length > 0)
-        {    
-          if(userGrades[0].code == "MOADM")
-          {
-            this.isRequired = true;
-            this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code == "STFUSR");
-            this.userCategories.unshift({ id : "", name : "Select User Category"});
-            this.userCategoryForm.controls["userCategory"].enable();
-            this.userCategoryForm.controls["userCategory"].addValidators(Validators.required);
-            this.userCategoryForm.updateValueAndValidity();
-            this.userCategoryForm.get("userCategory").setValue(userCategoryId);
-          }
-          else if(userGrades[0].code == "MOUSR")
-          {
-            this.isRequired = true;
-            this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code != "STFUSR");
-            this.userCategories.unshift({ id : "", name : "Select User Category"});
-            this.userCategoryForm.controls["userCategory"].enable();
-            this.userCategoryForm.controls["userCategory"].addValidators(Validators.required);
-            this.userCategoryForm.updateValueAndValidity();
-            this.userCategoryForm.get("userCategory").setValue(userCategoryId);
-          }
-          else
-          {
-            this.userCategories = [];
-            this.isRequired = false;
-            this.userCategoryForm.controls["userCategory"].disable();
-            this.userCategoryForm.controls["userCategory"].clearAsyncValidators();
-            this.userCategoryForm.updateValueAndValidity();
-            this.userCategoryForm.get("userCategory").setValue(userCategoryId);
-          }
-          
-          if(this.userCategories.length == 2)
-          {
-            this.userCategoryForm.get("userCategory").setValue(this.userCategories[1].id);
-          }
-          else
-          {
-            this.userCategoryForm.get("userCategory").setValue(""); 
-          }
+        this.masterUserGrades = response.userGrades;
+        this.userGrades = this.masterUserGrades;
+        this.userGrades.unshift({ id : "", name : "Select User Grade"});
+        this.filterUserCategories(this.user.userCategory.id);
+      }
+      else
+      {
+        this.userGrades = [];
+      }
+    } 
+    catch (error) 
+    {
+      this.showNotification("error", error);
+    }
+  }
+
+  //get user category
+  async getUserCategories()
+  {
+    try 
+    {
+      let response = await this.commonService.getUserCategories().toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
+      {
+        this.masterUserCategories = response.userCategories;
+        this.userCategories = this.masterUserCategories;
+      }
+      else
+      {
+        this.userGrades = [];
+      }
+    } 
+    catch (error) 
+    {
+      this.showNotification("error", error);
+    }
+  } 
+
+  filterUserCategories(userCategoryId : string)
+  {
+    try
+    {
+      let userGradeId = this.userGradeForm.get("userGrade").value;
+      let userGrades = this.masterUserGrades.filter(userGrade => userGrade.id == userGradeId);
+      if(userGrades.length > 0)
+      {    
+        if(userGrades[0].code == "MOADM")
+        {
+          this.isRequired = true;
+          this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code == "STFUSR");
+          this.userCategories.unshift({ id : "", name : "Select User Category"});
+          this.userCategoryForm.controls["userCategory"].enable();
+          this.userCategoryForm.controls["userCategory"].addValidators(Validators.required);
+          this.userCategoryForm.updateValueAndValidity();
+          this.userCategoryForm.get("userCategory").setValue(userCategoryId);
+        }
+        else if(userGrades[0].code == "MOUSR")
+        {
+          this.isRequired = true;
+          this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code != "STFUSR");
+          this.userCategories.unshift({ id : "", name : "Select User Category"});
+          this.userCategoryForm.controls["userCategory"].enable();
+          this.userCategoryForm.controls["userCategory"].addValidators(Validators.required);
+          this.userCategoryForm.updateValueAndValidity();
+          this.userCategoryForm.get("userCategory").setValue(userCategoryId);
+        }
+        else
+        {
+          this.userCategories = [];
+          this.isRequired = false;
+          this.userCategoryForm.controls["userCategory"].disable();
+          this.userCategoryForm.controls["userCategory"].clearAsyncValidators();
+          this.userCategoryForm.updateValueAndValidity();
+          this.userCategoryForm.get("userCategory").setValue(userCategoryId);
+        }
+        
+        if(this.userCategories.length == 2)
+        {
+          this.userCategoryForm.get("userCategory").setValue(this.userCategories[1].id);
+        }
+        else
+        {
+          this.userCategoryForm.get("userCategory").setValue(""); 
         }
       }
-      catch(e)
-      {
-
-      }
-   }
+    }
+    catch(e)
+    {
+      
+    }
+  }
    
   // async getUsers() 
   // {
@@ -253,8 +253,8 @@ export class UserEditComponent {
   {
     if(!this.saveClicked)
     {
-      this.editUserForm.get("gender").enable();
-      this.userCategoryForm.get("userCategory").enable();
+      // this.editUserForm.get("gender").enable();
+      // this.userCategoryForm.get("userCategory").enable();
       if(this.editUserForm.valid && this.userGradeForm.valid && ((this.isRequired && this.userCategoryForm.valid) || (!this.isRequired && !this.userCategoryForm.valid)))
       {
         this.editUserForm.get("gender").disable();

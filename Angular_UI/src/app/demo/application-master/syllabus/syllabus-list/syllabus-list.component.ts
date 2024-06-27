@@ -47,7 +47,7 @@ export class SyllabusListComponent
   {
     this.searchClicked = false;
     this.syllabuses = [];
-    this.getSyllabuses(0, 0);
+    this.getSyllabuses(0, 0, 'All');
     this.getAcademicSessions();
     this.academicSessions = [];
     this.schoolingPrograms = [];
@@ -66,7 +66,7 @@ export class SyllabusListComponent
     {
       this.academicSessionForm.get("academicSession").setValue(res.responseData.academicSessionId);
       this.schoolingProgramForm.get("schoolingProgram").setValue(res.responseData.schoolingProgramId);
-      this.getSyllabuses(res.responseData.academicSessionId, res.responseData.schoolingProgramId);
+      this.getSyllabuses(res.responseData.academicSessionId, res.responseData.schoolingProgramId, 'All');
     }
   })
 
@@ -107,7 +107,7 @@ export class SyllabusListComponent
         let academicSessionId = this.academicSessionForm.get("academicSession").value;
         if(academicSessionId != undefined && academicSessionId != "")
         {
-          let response = await this.commonService.getSchoolingPrograms(academicSessionId).toPromise();
+          let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
             this.schoolingPrograms = response.schoolingPrograms;
@@ -142,21 +142,21 @@ export class SyllabusListComponent
     let schoolingProgramId : number = this.schoolingProgramForm.get("schoolingProgram").value;
     if(!isNaN(schoolingProgramId) && schoolingProgramId > 0 && academicSessionId >0)
     {
-      this.getSyllabuses(academicSessionId, schoolingProgramId);
+      this.getSyllabuses(academicSessionId, schoolingProgramId, 'All');
     }
     else
     {
-      this.getSyllabuses(academicSessionId, schoolingProgramId);
+      this.getSyllabuses(academicSessionId, schoolingProgramId, 'All');
     }
   }
 
 
-  async getSyllabuses(academicSessionId : number, schoolingProgramId : number) 
+  async getSyllabuses(academicSessionId : number, schoolingProgramId : number, action : string) 
   {
     try
     {
       this.searchClicked = true;
-      let response = await this.commonService.getSyllabuses(academicSessionId, schoolingProgramId).toPromise();
+      let response = await this.commonService.getSyllabuses(academicSessionId, schoolingProgramId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblSyllabus').DataTable().destroy();

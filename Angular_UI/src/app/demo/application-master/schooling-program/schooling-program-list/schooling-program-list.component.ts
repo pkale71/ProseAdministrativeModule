@@ -48,14 +48,14 @@ export class SchoolingProgramListComponent {
    })
 
    this.getAcademicSessions();
-   this.getSchoolingPrograms(0);
+   this.getSchoolingPrograms(0, 'All');
   }
 
   public gradeAddResult:any = this.commonSharedService.schoolingProgramListObject.subscribe(res =>{
     if(res.result == "success")
     {
       this.academicSessionForm.get("academicSession").setValue(res.responseData.academicSessionId);
-      this.getSchoolingPrograms(res.responseData.academicSessionId);
+      this.getSchoolingPrograms(res.responseData.academicSessionId, 'All');
     }
   })
 
@@ -70,11 +70,11 @@ export class SchoolingProgramListComponent {
     let academicSessionId : number = this.academicSessionForm.get("academicSession").value;
     if(!isNaN(academicSessionId) && academicSessionId > 0)
     {
-      this.getSchoolingPrograms(academicSessionId);
+      this.getSchoolingPrograms(academicSessionId, 'All');
     }
     else
     {
-      this.getSchoolingPrograms(academicSessionId);
+      this.getSchoolingPrograms(academicSessionId, 'All');
     }
   }
 
@@ -103,12 +103,12 @@ export class SchoolingProgramListComponent {
   }
   
 
-  async getSchoolingPrograms(academicSessionId : number) 
+  async getSchoolingPrograms(academicSessionId : number, action : string) 
   {
     try
       {
         this.searchClicked = true;
-        let response = await this.commonService.getSchoolingPrograms(academicSessionId).toPromise();
+        let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           $('#tblSchoolProgram').DataTable().destroy();

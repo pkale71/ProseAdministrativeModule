@@ -97,7 +97,7 @@ export class SyllabusAddComponent {
         let academicSessionId = this.academicSessionForm.get("academicSession").value;
         if(academicSessionId != undefined && academicSessionId != "")
         {
-          let response = await this.commonService.getSchoolingPrograms(academicSessionId).toPromise();
+          let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
             this.schoolingPrograms = response.schoolingPrograms;

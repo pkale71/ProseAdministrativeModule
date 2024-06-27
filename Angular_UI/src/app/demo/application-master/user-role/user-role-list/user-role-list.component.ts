@@ -41,22 +41,22 @@ export class UserRoleListComponent
   {
     this.searchClicked = false;
     this.userRoles = [];
-    this.getUserRoles(0);
+    this.getUserRoles(0, 'All');
   }
 
   public userRoleAddResult:any = this.commonSharedService.userRoleListObject.subscribe(res =>{
     if(res.result == "success")
     {
-      this.getUserRoles(0);
+      this.getUserRoles(0, 'All');
     }
   })
 
-  async getUserRoles(moduleId : number) 
+  async getUserRoles(moduleId : number, action : string) 
   {   
     try
     {
       this.searchClicked = true;
-      let response = await this.commonService.getUserRoles(moduleId).toPromise();
+      let response = await this.commonService.getUserRoles(moduleId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblUserRole').DataTable().destroy();
@@ -164,7 +164,7 @@ export class UserRoleListComponent
           {
             this.showNotification("success", "User Role Deleted.");
             this.commonSharedService.syllabusListObject.next({result : "success"});
-            this.getUserRoles(0);
+            this.getUserRoles(0, 'All');
           }
         }
         catch(e)

@@ -110,7 +110,7 @@ export class SubjectWiseChapterAddComponent
   {
    try
    {
-     let response = await this.commonService.getGradeCategories().toPromise();
+     let response = await this.commonService.getGradeCategories('All').toPromise();
      if (response.status_code == 200 && response.message == 'success') 
      {
        this.gradeCategories = response.gradeCategories;
@@ -137,7 +137,7 @@ export class SubjectWiseChapterAddComponent
       if(gradeCategoryId != undefined && gradeCategoryId != "")
       {
         this.saveClicked = true;
-        let response = await this.commonService.getGrades(gradeCategoryId).toPromise();
+        let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.masterGrades = response.grades;
@@ -174,7 +174,7 @@ export class SubjectWiseChapterAddComponent
         if(academicSessionId != undefined && academicSessionId != "" && gradeId != undefined && gradeId != "")
           {
             this.saveClicked = true;
-            let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId).toPromise();
+            let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId, 'All').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
               this.masterGradeWiseSyllabuses = response.gradeWiseSyllabuses;
@@ -211,7 +211,7 @@ export class SubjectWiseChapterAddComponent
       if(academicSessionId != undefined && academicSessionId != "" && gradeId != undefined && gradeId != "" && syllabusId != undefined && syllabusId != "")
         {
           this.saveClicked = true;
-          let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeId).toPromise();
+          let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
             this.masterSyllabusWiseSubjects = response.syllabusWiseSubjects;

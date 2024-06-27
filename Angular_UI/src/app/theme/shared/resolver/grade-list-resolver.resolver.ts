@@ -9,6 +9,6 @@ export class GradeListResolver implements Resolve<any> {
   constructor(private commonService: CommonService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.commonService.getGrades(0);
+    return this.commonService.getGrades(0, 'All');
   }
 }

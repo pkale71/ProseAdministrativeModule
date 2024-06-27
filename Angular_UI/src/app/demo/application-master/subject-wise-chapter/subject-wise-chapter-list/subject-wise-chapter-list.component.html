@@ -102,7 +102,7 @@
                   <td style="width:40px;text-align: right;">
                     <i class="fa fa-edit" (click)="editSubjectWiseChapter(subjectWiseChapter)" 
                     title="Edit" style="cursor: pointer;"></i>&nbsp;
-                    <i class="fa fa-trash-alt" (click)="deleteSubjectWiseChapter(subjectWiseChapter)"  
+                    <i class="fa fa-trash-alt" (click)="deleteSubjectWiseChapter(subjectWiseChapter)"  *ngIf = "subjectWiseChapter.isExist == 0"
                     title="Delete" style="cursor: pointer;"></i>&nbsp;
                     <!-- <i class="fa fa-list" (click)="detailGrade(grade.id)"  title="Detail" style="cursor: pointer;"></i> -->
                   </td>

@@ -53,9 +53,9 @@ export class GradeWiseSyllabusListComponent {
     this.gradeCategories = [];
     this.academicSessions = [];
     this.grades = [];
-    this.getGradeWiseSyllabuses(0,0);
+    this.getGradeWiseSyllabuses(0,0,'All');
     this.getAcademicSessions();
-    this.getGradeCategories();
+    this.getGradeCategories('All');
     // this.getGrades();
 
     this.academicSessionForm = this.formbuilder.group({
@@ -72,7 +72,7 @@ export class GradeWiseSyllabusListComponent {
   public gradeAddResult:any = this.commonSharedService.gradeWiseSyllabusListObject.subscribe(res =>{
     if(res.result == "success")
     {
-        this.getGradeWiseSyllabuses(0,0);
+        this.getGradeWiseSyllabuses(0,0,'All');
     }
   })
 
@@ -106,11 +106,11 @@ export class GradeWiseSyllabusListComponent {
   }
 
    //gradeCategory
-   async getGradeCategories() 
+   async getGradeCategories(action : string) 
    {
     try
     {
-      let response = await this.commonService.getGradeCategories().toPromise();
+      let response = await this.commonService.getGradeCategories('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         this.gradeCategories = response.gradeCategories;
@@ -138,7 +138,7 @@ export class GradeWiseSyllabusListComponent {
         let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
         if(gradeCategoryId != undefined && gradeCategoryId != "")
         {
-          let response = await this.commonService.getGrades(gradeCategoryId).toPromise();
+          let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
             {
               this.masterGrades = response.grades;
@@ -179,25 +179,25 @@ export class GradeWiseSyllabusListComponent {
         let gradeId : number = this.gradeForm.get("grade").value;
         if(!isNaN(gradeId) &&  gradeId > 0)
         {
-          this.getGradeWiseSyllabuses(academicSessionId, gradeId);
+          this.getGradeWiseSyllabuses(academicSessionId, gradeId, 'All');
         }
         else
         {
-          this.getGradeWiseSyllabuses(academicSessionId,0);
+          this.getGradeWiseSyllabuses(academicSessionId, 0, 'All');
         }
       }
       else
       {
-        this.getGradeWiseSyllabuses(0,0);
+        this.getGradeWiseSyllabuses(0,0,'All');
       }
   }
 
-  async getGradeWiseSyllabuses(academicSessionId : number, gradeId : number) 
+  async getGradeWiseSyllabuses(academicSessionId : number, gradeId : number, action : string) 
   {
     try
       {
         this.searchClicked = true;
-        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId).toPromise();
+        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           $('#tblGradeWiseSyllabus').DataTable().destroy();

@@ -57,13 +57,13 @@ export class UserTypeListComponent
       'userRole' : ['0']
     })
     this.getModules();
-    this.getUserTypes(0,0);
+    this.getUserTypes(0, 0, 'All');
   }
 
   public userRoleAddResult:any = this.commonSharedService.userTypeListObject.subscribe(res =>{
     if(res.result == "success")
     {
-      this.getUserTypes(0,0);
+      this.getUserTypes(0,0,'All');
     }
   })
 
@@ -98,7 +98,7 @@ export class UserTypeListComponent
       let moduleId = this.moduleForm.get("module").value;
       if(moduleId != null && moduleId != undefined)
       {
-        let response = await this.commonService.getUserRoles(moduleId).toPromise();
+        let response = await this.commonService.getUserRoles(moduleId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.masterUserRoles = response.userRoles;
@@ -121,15 +121,15 @@ export class UserTypeListComponent
   {
     let moduleId : number = this.moduleForm.get("module").value;
     let userRoleId : number = this.userRoleForm.get("userRole").value;
-    this.getUserTypes(moduleId, userRoleId);
+    this.getUserTypes(moduleId, userRoleId, 'All');
   }
 
-  async getUserTypes(moduleId : number, userRoleId : number) 
+  async getUserTypes(moduleId : number, userRoleId : number, action : string) 
   {  
     try
     {
       this.searchClicked = true;
-      let response = await this.commonService.getUserTypes(moduleId, userRoleId).toPromise();
+      let response = await this.commonService.getUserTypes(moduleId, userRoleId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblUserType').DataTable().destroy();

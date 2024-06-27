@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SyllabusWiseSubjectListComponent } from './syllabus-wise-subject-list.component';
+import { GradeListComponent } from './grade-list.component';
 
 describe('GradeFormListComponent', () => {
-  let component: SyllabusWiseSubjectListComponent;
-  let fixture: ComponentFixture<SyllabusWiseSubjectListComponent>;
+  let component: GradeListComponent;
+  let fixture: ComponentFixture<GradeListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SyllabusWiseSubjectListComponent ]
+      declarations: [ GradeListComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SyllabusWiseSubjectListComponent);
+    fixture = TestBed.createComponent(GradeListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

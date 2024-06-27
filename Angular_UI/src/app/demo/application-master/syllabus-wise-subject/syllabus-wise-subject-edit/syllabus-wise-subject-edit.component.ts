@@ -124,7 +124,7 @@ export class SyllabusWiseSubjectEditComponent {
   {
    try
    {
-    let response = await this.commonService.getGradeCategories().toPromise();
+    let response = await this.commonService.getGradeCategories('All').toPromise();
     if (response.status_code == 200 && response.message == 'success') 
     {
       this.gradeCategories = response.gradeCategories;
@@ -151,7 +151,7 @@ export class SyllabusWiseSubjectEditComponent {
       if(gradeCategoryId != undefined && gradeCategoryId != "")
       {
         this.saveClicked = true;
-        let response = await this.commonService.getGrades(gradeCategoryId).toPromise();
+        let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.masterGrades = response.grades;
@@ -187,7 +187,7 @@ export class SyllabusWiseSubjectEditComponent {
         if(academicSessionId != undefined && academicSessionId != "" && gradeId != undefined && gradeId != "")
           {
             this.saveClicked = true;
-            let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId).toPromise();
+            let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId, 'All').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
               this.masterGradeWiseSyllabuses = response.gradeWiseSyllabuses;

@@ -61,7 +61,7 @@ export class SubjectWiseChapterListComponent {
     this.grades = [];
     this.gradeWiseSyllabuses = [];
     this.syllabusWiseSubjects = [];
-    this.getSubjectWiseChapters(0,0,0,0);
+    this.getSubjectWiseChapters(0,0,0,0,'All');
 
     this.academicSessionForm = this.formbuilder.group({
       "academicSession" : ['0']
@@ -86,7 +86,7 @@ export class SubjectWiseChapterListComponent {
   public gradeAddResult:any = this.commonSharedService.subjectWiseChapterListObject.subscribe(res =>{
     if(res.result == "success")
     {
-        this.getSubjectWiseChapters(0,0,0,0);
+        this.getSubjectWiseChapters(0,0,0,0,'All');
     }
   })
 
@@ -124,7 +124,7 @@ export class SubjectWiseChapterListComponent {
    {
     try
     {
-      let response = await this.commonService.getGradeCategories().toPromise();
+      let response = await this.commonService.getGradeCategories('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         this.gradeCategories = response.gradeCategories;
@@ -153,7 +153,7 @@ export class SubjectWiseChapterListComponent {
       let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
       if(gradeCategoryId != undefined && gradeCategoryId != "")
       {
-        let response = await this.commonService.getGrades(gradeCategoryId).toPromise();
+        let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
           {
             this.masterGrades = response.grades;
@@ -198,7 +198,7 @@ export class SubjectWiseChapterListComponent {
       let gradeId = this.gradeForm.get("grade").value;
       if(academicSessionId != undefined && academicSessionId != "" && gradeId != undefined && gradeId != "")
       {
-        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId).toPromise();
+        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.masterGradeWiseSyllabuses = response.gradeWiseSyllabuses;
@@ -253,7 +253,7 @@ export class SubjectWiseChapterListComponent {
       let gradeId = this.gradeForm.get('grade').value;
       if(academicSessionId != undefined && academicSessionId != "" && syllabusId != undefined && syllabusId != "" && gradeId != undefined && gradeId != "")
         {
-          let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeId).toPromise();
+          let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
             this.masterSyllabusWiseSubjects = response.syllabusWiseSubjects;
@@ -282,15 +282,15 @@ export class SubjectWiseChapterListComponent {
     let syllabusId : number = this.syllabusForm.get("syllabus").value;
     let gradeId : number = this.gradeForm.get("grade").value;
     let subjectId : number = this.subjectForm.get('subject').value;
-    this.getSubjectWiseChapters(academicSessionId, syllabusId, gradeId, subjectId);
+    this.getSubjectWiseChapters(academicSessionId, syllabusId, gradeId, subjectId, 'All');
   }
 
-  async getSubjectWiseChapters(academicSessionId : number, syllabusId : number, gradeId : number, subjectId : number) 
+  async getSubjectWiseChapters(academicSessionId : number, syllabusId : number, gradeId : number, subjectId : number, action : string) 
   {
     try
     { 
       this.searchClicked = true;
-      let response = await this.commonService.getSubjectWiseChapters(academicSessionId, syllabusId, gradeId, subjectId).toPromise();
+      let response = await this.commonService.getSubjectWiseChapters(academicSessionId, syllabusId, gradeId, subjectId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblSubjectWiseChapter').DataTable().destroy();
