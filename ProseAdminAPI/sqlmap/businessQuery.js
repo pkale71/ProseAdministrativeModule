@@ -1,5 +1,5 @@
 let dbConn = require('../util/dbConnection');
-let commonFunction = require('../util/commonFunctions');
+const commonFunction = require('../util/commonFunctions');
 let db = {};
 
 db.checkDuplicateEmailMobile = (email, mobile, tableName, id) => 
@@ -2139,7 +2139,7 @@ db.getBusinessPartner = (uuid) =>
     })
 };
 
-db.duplicateBusinessPartner = (name, businessPartnerTypeId, id) => 
+db.duplicateBusinessPartner = (name, businessPartnerTypeId, uuid) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -2148,9 +2148,9 @@ db.duplicateBusinessPartner = (name, businessPartnerTypeId, id) =>
             let sql = `SELECT bp.id, bp.name
             FROM business_partner bp 
             WHERE bp.name = '${name}' AND bp.business_partner_type_id = ${businessPartnerTypeId}`;
-            if(id != "")
+            if(uuid != "")
             {
-                sql =sql + ` AND bp.id != ${id}`
+                sql =sql + ` AND bp.uuid != '${uuid}'`
             }
             dbConn.query(sql, (error, result) => 
             {
@@ -2174,8 +2174,8 @@ db.insertBusinessPartner = (businessPartner) =>
     {
         try
         {
-            let sql = `INSERT INTO business_partner (uuid, code, name, email, business_partner_type_id, business_vertical_id, business_vertical_type_ids, address, country_id, state_region_id, district_id, city_id, pincode, contact_person, contact_email, contact_mobile, incharge_person, incharge_email, incharge_mobile, applicable_from, applicable_to, is_having_contract, reward_applicable, commission_term_id, pan_number, gst_number, commercial_term_id, created_on, created_by_id)
-            VALUES('${businessPartner.uuid}', '${businessPartner.code}', '${businessPartner.name}', '${businessPartner.email}', ${businessPartner.businessPartnerTypeId}, ${businessPartner.businessVerticalId}, '${businessPartner.businessVerticalTypeIds}', '${businessPartner.address}', ${businessPartner.countryId}, ${businessPartner.stateRegionId}, ${businessPartner.districtId}, ${businessPartner.cityId}, '${businessPartner.pincode}', '${businessPartner.contactPerson}', '${businessPartner.contactEmail}', '${businessPartner.contactMobile}', NULLIF('${businessPartner.inchargePerson}', ''), NULLIF('${businessPartner.inchargeEmail}', ''), NULLIF('${businessPartner.inchargeMobile}', ''), '${businessPartner.applicableFrom}', '${businessPartner.applicableTo}', NULLIF('${businessPartner.isHavingContract}', ''), NULLIF('${businessPartner.rewardApplicable}', ''), NULLIF('${businessPartner.commissionTermId}', ''), NULLIF('${businessPartner.panNumber}', ''), NULLIF('${businessPartner.gstNumber}', ''), NULLIF('${businessPartner.commercialTermId}', ''), NOW(), ${businessPartner.createdById})`;
+            let sql = `INSERT INTO business_partner (uuid, code, name, email, business_partner_type_id, business_vertical_id, business_vertical_type_ids, address, country_id, state_region_id, district_id, city_id, pincode, contact_person, contact_email, contact_mobile, incharge_person, incharge_email, incharge_mobile, applicable_from, applicable_to, reward_applicable, commission_term_id, pan_number, gst_number, commercial_term_id, created_on, created_by_id)
+            VALUES('${businessPartner.uuid}', '${businessPartner.code}', '${businessPartner.name}', '${businessPartner.email}', ${businessPartner.businessPartnerTypeId}, ${businessPartner.businessVerticalId}, '${businessPartner.businessVerticalTypeIds}', '${businessPartner.address}', ${businessPartner.countryId}, ${businessPartner.stateRegionId}, ${businessPartner.districtId}, ${businessPartner.cityId}, '${businessPartner.pincode}', '${businessPartner.contactPerson}', '${businessPartner.contactEmail}', '${businessPartner.contactMobile}', NULLIF('${businessPartner.inchargePerson}', ''), NULLIF('${businessPartner.inchargeEmail}', ''), NULLIF('${businessPartner.inchargeMobile}', ''), '${businessPartner.applicableFrom}', '${businessPartner.applicableTo}', NULLIF('${businessPartner.rewardApplicable}', ''), NULLIF('${businessPartner.commissionTermId}', ''), NULLIF('${businessPartner.panNumber}', ''), NULLIF('${businessPartner.gstNumber}', ''), NULLIF('${businessPartner.commercialTermId}', ''), NOW(), ${businessPartner.createdById})`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -2217,14 +2217,13 @@ db.updateBusinessPartnerCode = (code, id) =>
     })
 };
 
-db.insertBusinessPartnerContractHistory = (businessPartnerContractHistory) => 
+db.updateBusinessPartner = (businessPartner) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
-    /////Deactive Old Contracts
-            let sql = `UPDATE business_partner_contract_history SET is_active = 0, updated_on = NOW(), updated_by_id = ${businessPartnerContractHistory.createdById} WHERE business_partner_id = ${businessPartnerContractHistory.businessPartnerId}`;
+            let sql = `UPDATE business_partner SET name = '${businessPartner.name}', email = '${businessPartner.email}', business_vertical_id = ${businessPartner.businessVerticalId}, business_vertical_type_ids = '${businessPartner.businessVerticalTypeIds}', address = '${businessPartner.address}', country_id = ${businessPartner.countryId}, state_region_id = ${businessPartner.stateRegionId}, district_id = ${businessPartner.districtId}, city_id = ${businessPartner.cityId}, pincode = '${businessPartner.pincode}', contact_person = '${businessPartner.contactPerson}', contact_email = '${businessPartner.contactEmail}', contact_mobile = '${businessPartner.contactMobile}', incharge_person = NULLIF('${businessPartner.inchargePerson}', ''), incharge_email = NULLIF('${businessPartner.inchargeEmail}', ''), incharge_mobile = NULLIF('${businessPartner.inchargeMobile}', ''), applicable_from = '${businessPartner.applicableFrom}', applicable_to = '${businessPartner.applicableTo}', reward_applicable = NULLIF('${businessPartner.rewardApplicable}', ''), commission_term_id = NULLIF('${businessPartner.commissionTermId}', ''), pan_number = NULLIF('${businessPartner.panNumber}', ''), gst_number = NULLIF('${businessPartner.gstNumber}', ''), commercial_term_id = NULLIF('${businessPartner.commercialTermId}', ''), updated_on = NOW(), updated_by_id = ${businessPartner.createdById} WHERE uuid = '${businessPartner.uuid}'`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -2232,25 +2231,62 @@ db.insertBusinessPartnerContractHistory = (businessPartnerContractHistory) =>
                 {
                     return reject(error);
                 }
-    /////Insert New Contract
-                sql = `INSERT INTO business_partner_contract_history (business_partner_id, contract_from, contract_to, created_on, created_by_id) VALUES (${businessPartnerContractHistory.businessPartnerId}, '${businessPartnerContractHistory.contractFrom}', '${businessPartnerContractHistory.contractTo}', NOW(), ${businessPartnerContractHistory.createdById})`;
-                dbConn.query(sql, (error, result) => 
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getBusinessPartnerContractHistories = (businessPartnerId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bpch.id AS id, bpch.contract_from AS contractFrom, bpch.contract_to AS contractTo, is_active AS isActive FROM business_partner_contract_history bpch WHERE bpch.business_partner_id = ${businessPartnerId} ORDER BY bpch.id`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
                 {
-                    if(error)
-                    {
-                        return reject(error);
-                    }
-    ///////Update Business Partner Current Contract Id
-                    sql = `UPDATE business_partner SET current_contract_history_id = ${result.insertId} WHERE id = ${businessPartnerContractHistory.businessPartnerId}`;
-                    dbConn.query(sql, (error, result) => 
-                    {
-                        if(error)
-                        {
-                            return reject(error);
-                        }
-                        return resolve(result);
-                    });
-                });
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkBusinessPartnerContractExist = (contractFrom, contractTo, businessPartnerId, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bpch.id AS businessPartnerContractId FROM business_partner_contract_history bpch WHERE bpch.business_partner_id = ${businessPartnerId}`;
+            if(id == '')
+            {
+                sql = sql + ` AND (bpch.contract_from = '${contractFrom}' OR bpch.contract_to = '${contractTo}')`;
+            }
+            else if(id != '')
+            {
+                sql = sql + ` AND bpch.id = ${id}`;
+            }
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
             });
         }
         catch(e)
@@ -2299,6 +2335,99 @@ db.updateBusinessPartnerDocFileName = (fileName, id) =>
                     return reject(error);
                 }
                 return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertBusinessPartnerContractHistory = (businessPartnerContractHistory) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+    /////Deactive Old Contracts
+            let sql = `UPDATE business_partner_contract_history SET is_active = 0, updated_on = NOW(), updated_by_id = ${businessPartnerContractHistory.createdById} WHERE business_partner_id = ${businessPartnerContractHistory.businessPartnerId} AND is_active = 1`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+    /////Insert New Contract
+                let sql1 = `INSERT INTO business_partner_contract_history (business_partner_id, contract_from, contract_to, created_on, created_by_id) VALUES (${businessPartnerContractHistory.businessPartnerId}, '${businessPartnerContractHistory.contractFrom}', '${businessPartnerContractHistory.contractTo}', NOW(), ${businessPartnerContractHistory.createdById})`;
+                dbConn.query(sql1, (error1, result1) => 
+                {
+                    if(error1)
+                    {
+                        return reject(error1);
+                    }
+    ///////Update Business Partner Current Contract Id
+                    let sql2 = `UPDATE business_partner SET is_having_contract = 1, current_contract_history_id = ${result1.insertId} WHERE id = ${businessPartnerContractHistory.businessPartnerId}`;
+                    dbConn.query(sql2, (error2, result2) => 
+                    {
+                        if(error2)
+                        {
+                            return reject(error);
+                        }
+                        return resolve(result2);
+                    });
+                });
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteBusinessPartnerContractHistory = (businessPartnerContractHistory) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+    /////Deactive Old Contracts
+            let sql = `DELETE FROM business_partner_contract_history WHERE business_partner_id = ${businessPartnerContractHistory.businessPartnerId} AND id = ${businessPartnerContractHistory.id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+    /////Check Any Contract Exist For Business Partner
+                let sql1 = `SELECT bpch.id FROM business_partner_contract_history bpch WHERE bpch.business_partner_id = ${businessPartnerContractHistory.businessPartnerId}`;
+                dbConn.query(sql1, (error1, result1) => 
+                {
+                    if(error1)
+                    {
+                        return reject(error1);
+                    }
+                    if(result1.length == 0)
+                    {
+    ///////Update Business Partner Current Contract Id And is Having Contract
+                        let sql2 = `UPDATE business_partner SET is_having_contract = 0, current_contract_history_id = NULL WHERE id = ${businessPartnerContractHistory.businessPartnerId}`;
+                        dbConn.query(sql2, (error2, result2) => 
+                        {
+                            if(error2)
+                            {
+                                return reject(error);
+                            }
+                            return resolve(result2);
+                        });
+                    }
+                    else
+                    {
+                        return resolve(result);
+                    }
+                });
             });
         }
         catch(e)

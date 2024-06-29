@@ -1,4 +1,5 @@
 const buildJSON = require('./buildBusinessJSONs.js');
+const commonFunction = require('../util/commonFunctions');
 let dbBusiness = require('../sqlmap/businessQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
@@ -15,14 +16,14 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
         businessVerticalTypeId = '';
         action = '';
 
-        let tempParams = req.params.split("/");
+        let tempParams = req.params[0].split("/");
         if(tempParams.length == 1)
         {
-            businessVerticalTypeId = commonFunction.validateNumber(req.params[0]);
+            businessVerticalTypeId = commonFunction.validateNumber(tempParams[0]);
         }
         else if(tempParams.length == 2)
         {
-            businessVerticalTypeId = commonFunction.validateNumber(req.params[0]);
+            businessVerticalTypeId = commonFunction.validateNumber(tempParams[0]);
             action = tempParams[1];
         }
 

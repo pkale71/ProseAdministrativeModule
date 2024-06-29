@@ -234,7 +234,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                         "inchargeMobile" : inchargeMobile,
                                                         "applicableFrom" : applicableFrom,
                                                         "applicableTo" : applicableTo,
-                                                        "isHavingContract" : isHavingContract,
                                                         "rewardApplicable" : rewardApplicable,
                                                         "commissionTermId" : commissionTermId,
                                                         "panNumber" : panNumber,
@@ -294,7 +293,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                         res.status(500)
                                                         return res.json({
                                                             "status_code" : 500,
-                                                            "message" : "Coach Not Saved",
+                                                            "message" : "Business Partner Not Saved",
                                                             "success" : false,
                                                             "error" : errorCode.getStatus(500)
                                                         })

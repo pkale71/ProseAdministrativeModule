@@ -46,6 +46,11 @@ businessRoute.use('/deleteCity', require('../util/validateToken.js'), require('.
 businessRoute.use('/getBusinessPartners', require('../util/validateToken.js'), require('./business-partners.js'));
 businessRoute.use('/getBusinessPartner', require('../util/validateToken.js'), require('./business-partner.js'));
 businessRoute.use('/saveBusinessPartner', uploads, require('../util/validateToken.js'), require('./save-business-partner.js'));
+businessRoute.use('/updateBusinessPartner', require('../util/validateToken.js'), require('./update-business-partner.js'));
+//businessRoute.use('/deleteBusinessPartner', require('../util/validateToken.js'), require('./delete-business-partner.js'));
+businessRoute.use('/getBusinessPartnerContractHistories', require('../util/validateToken.js'), require('./business-partner-contract-histories.js'));
+businessRoute.use('/saveBusinessPartnerContract', require('../util/validateToken.js'), require('./save-business-partner-contract.js'));
+businessRoute.use('/deleteBusinessPartnerContract', require('../util/validateToken.js'), require('./delete-business-partner-contract.js'));
 
 businessRoute.use('/',(req,res,next) => 
 {

@@ -27,7 +27,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 if(user.length == 1)
                 {
                     let userModuleAssigned = 1;
-                    if(user[0].userGradeCode != 'HRADM' && user[0].userGradeCode != 'ACADM')
+                    if(user[0].userGradeCode != 'HRADM' && user[0].userGradeCode != 'ACADM' && user[0].userGradeCode != 'BUADM'
+                    )
                     {
             ////Get User Module
                         userModules = [];

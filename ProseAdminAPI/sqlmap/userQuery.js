@@ -1,5 +1,5 @@
 let dbConn = require('../util/dbConnection');
-let commonFunction = require('../util/commonFunctions');
+const commonFunction = require('../util/commonFunctions');
 let secretKey = commonFunction.getSecretKey();
 let db = {};
 

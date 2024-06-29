@@ -1,5 +1,5 @@
 let dbConn = require('../util/dbConnection');
-let commonFunction = require('../util/commonFunctions');
+const commonFunction = require('../util/commonFunctions');
 let db = {};
 
 db.checkDatabaseExist = () =>
@@ -89,7 +89,7 @@ db.updateIsActive = (id, tableName) =>
     })
 };
 
-db.checkDuplicateEmailMobile = (emailMobile, actionOn, tableName) => 
+db.checkDuplicateEmailMobile = (emailMobile, actionOn, tableName, id = "") => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -104,6 +104,17 @@ db.checkDuplicateEmailMobile = (emailMobile, actionOn, tableName) =>
             else if(actionOn == 'Mobile')
             {
                 sql = sql + ` WHERE mobile='${emailMobile}'`
+            }
+            if(id != "")
+            {
+                if(isNaN(id))
+                {
+                    sql = sql + ` AND uuid != '${id}'`;
+                }
+                else
+                {
+                    sql = sql + ` AND id != ${id}`;
+                }
             }
             dbConn.query(sql, (error, result) => 
             {

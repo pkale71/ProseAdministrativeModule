@@ -1,4 +1,5 @@
 const buildJSON = require('./buildBusinessJSONs.js');
+const commonFunction = require('../util/commonFunctions.js');
 let dbBusiness = require('../sqlmap/businessQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();

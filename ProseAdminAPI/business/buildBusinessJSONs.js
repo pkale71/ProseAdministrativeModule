@@ -470,4 +470,23 @@ buildBusinessJSON.businessPartner = function(datas)
     return resultJSON;
 }
 
+buildBusinessJSON.businessPartnerContractHistories = function(datas)
+{
+    let resultJSON = [];
+    
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "contractFrom" : commonFunction.getFormattedDate(data.contractFrom, "yyyy-mm-dd"),
+            "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd"),
+            "isActive" : data.isActive
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
 module.exports = buildBusinessJSON;

@@ -15,6 +15,7 @@ commonRoute.use('/deleteUserRole', require('../util/validateToken.js'), require(
 commonRoute.use('/getUserTypes', require('../util/validateToken.js'), require('./user-types.js'));
 commonRoute.use('/saveUserType', require('../util/validateToken.js'), require('./save-user-type.js'));
 commonRoute.use('/deleteUserType', require('../util/validateToken.js'), require('./delete-user-type.js'));
+commonRoute.use('/downloadExcelFormat', require('./download-excel-format.js'));
 
 ///Academic Admin
 commonRoute.use('/getAcademicSessions', require('../util/validateToken.js'), require('./academic-sessions.js'));

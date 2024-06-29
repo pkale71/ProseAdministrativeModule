@@ -1,4 +1,5 @@
 const buildJSON = require('./buildBusinessJSONs.js');
+const commonFunction = require('../util/commonFunctions.js');
 let dbBusiness = require('../sqlmap/businessQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
@@ -15,7 +16,7 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
         businessVerticalId = '';
         action = '';
 
-        let tempParams = req.params[0];
+        let tempParams = req.params[0].split("/");
         if(tempParams.length == 1)
         {
             businessVerticalId = commonFunction.validateNumber(tempParams[0]);
