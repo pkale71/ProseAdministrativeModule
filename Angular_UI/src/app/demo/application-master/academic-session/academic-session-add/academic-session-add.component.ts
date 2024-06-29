@@ -54,7 +54,7 @@ export class AcademicSessionAddComponent {
       isCurrentSession: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required]
-  });
+    });
 
     this.addAcademicSessionForm.get('isAdmissionOpen').setValue('0');
     this.addAcademicSessionForm.get('isCurrentSession').setValue('0');
@@ -88,35 +88,35 @@ export class AcademicSessionAddComponent {
   async saveAcademisSession() 
   {
     if(!this.dateValidator())
-      {
+    {
     if (!this.saveClicked) 
+    {
+      if (this.addAcademicSessionForm.valid)
       {
-        if (this.addAcademicSessionForm.valid)
-         {
-            this.isValidForm = true;
-            this.saveClicked = true;
-              try 
-                {
-                  let response = await this.commonService.saveAcademicSession(this.addAcademicSessionForm.value).toPromise();
-                  if (response.status_code == 200 && response.message == 'success') 
-                      {
-                        this.showNotification("success", "Academic Session Saved");
-                        this.commonSharedService.academicSessionListObject.next({ result: "success" });
-                        this.closeModal();
-                      }
-                  }
-                  catch (e) 
-                    {
-                      this.showNotification("error", e);
-                      this.isValidForm = false;
-                      this.saveClicked = false;
-                    }
-              }
-              else 
-               {
-                 this.isValidForm = false;
-                 this.saveClicked = false;
-               }  
+        this.isValidForm = true;
+        this.saveClicked = true;
+        try 
+        {
+          let response = await this.commonService.saveAcademicSession(this.addAcademicSessionForm.value).toPromise();
+          if (response.status_code == 200 && response.message == 'success') 
+          {
+            this.showNotification("success", "Academic Session Saved");
+            this.commonSharedService.academicSessionListObject.next({ result: "success" });
+            this.closeModal();
+          }
+          }
+          catch (e) 
+          {
+            this.showNotification("error", e);
+            this.isValidForm = false;
+            this.saveClicked = false;
+          }
+        }
+        else 
+        {
+          this.isValidForm = false;
+          this.saveClicked = false;
+        }  
       }
     }
     else

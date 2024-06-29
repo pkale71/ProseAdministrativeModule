@@ -80,49 +80,43 @@ export class SyllabusListComponent
   async getAcademicSessions() 
   {
    try
+    {
+      let response = await this.commonService.getAcademicSessions().toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
       {
-        let response = await this.commonService.getAcademicSessions().toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
-        {
-          this.academicSessions = response.academicSessions;
-          this.academicSessions.unshift({ id: "0", name : "All"});
-          this.schoolingPrograms.unshift({ id: "0", name : "All"});
-        }
-        else
-        {
-          this.academicSessions = [];
-          this.academicSessions.unshift({ id: "0", name : "All"});
-        }
+        this.academicSessions = response.academicSessions;
+        this.academicSessions.unshift({ id: "0", name : "All"});
+        this.schoolingPrograms.unshift({ id: "0", name : "All"});
       }
+      else
+      {
+        this.academicSessions = [];
+        this.academicSessions.unshift({ id: "0", name : "All"});
+      }
+    }
     catch(e)
-      {
-         this.showNotification("error", e);
-      }
+    {
+      this.showNotification("error", e);
+    }
   }
 
   async getSchoolingPrograms() 
   {
     try
+    {
+      let academicSessionId = this.academicSessionForm.get("academicSession").value;
+      if(academicSessionId != undefined && academicSessionId != "")
       {
-        let academicSessionId = this.academicSessionForm.get("academicSession").value;
-        if(academicSessionId != undefined && academicSessionId != "")
+        let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
         {
-          let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
-          {
-            this.schoolingPrograms = response.schoolingPrograms;
-            if(academicSessionId == 0 )
-              {
-                this.schoolingPrograms = [];
-                this.schoolingPrograms.unshift({ id: "0", name: "All" });
-              }
-              this.schoolingProgramForm.get("schoolingProgram").setValue(this.schoolingPrograms[0].id); 
-          }
-          else
+          this.schoolingPrograms = response.schoolingPrograms;
+          if(academicSessionId == 0 )
           {
             this.schoolingPrograms = [];
             this.schoolingPrograms.unshift({ id: "0", name: "All" });
           }
+          this.schoolingProgramForm.get("schoolingProgram").setValue(this.schoolingPrograms[0].id); 
         }
         else
         {
@@ -130,10 +124,16 @@ export class SyllabusListComponent
           this.schoolingPrograms.unshift({ id: "0", name: "All" });
         }
       }
-      catch(e)
-        {
-          this.showNotification("error",e);
-        }
+      else
+      {
+        this.schoolingPrograms = [];
+        this.schoolingPrograms.unshift({ id: "0", name: "All" });
+      }
+    }
+    catch(e)
+    {
+      this.showNotification("error",e);
+    }
   }
 
   filterData()

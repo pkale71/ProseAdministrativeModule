@@ -93,30 +93,30 @@ export class SyllabusAddComponent {
   async getSchoolingPrograms() 
   {
     try
+    {
+      let academicSessionId = this.academicSessionForm.get("academicSession").value;
+      if(academicSessionId != undefined && academicSessionId != "")
       {
-        let academicSessionId = this.academicSessionForm.get("academicSession").value;
-        if(academicSessionId != undefined && academicSessionId != "")
+        let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
         {
-          let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
-          {
-            this.schoolingPrograms = response.schoolingPrograms;
-            this.schoolingPrograms.unshift({ id: "", name: "Select School Program" });
-          }
-          else
-          {
-            this.schoolingPrograms = [];
-          }
+          this.schoolingPrograms = response.schoolingPrograms;
+          this.schoolingPrograms.unshift({ id: "", name: "Select School Program" });
         }
         else
         {
           this.schoolingPrograms = [];
         }
       }
-      catch(e)
-        {
-          this.showNotification("error",e);
-        }
+      else
+      {
+        this.schoolingPrograms = [];
+      }
+    }
+    catch(e)
+    {
+      this.showNotification("error",e);
+    }
   }
 
   async saveSyllabus()

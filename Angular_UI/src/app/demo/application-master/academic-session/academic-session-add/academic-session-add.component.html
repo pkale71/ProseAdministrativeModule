@@ -54,16 +54,16 @@
                 <div class="form-group">
                     <label class="form-control-label" for="isAdmissionOpen">Is Admission Open&nbsp;<span style="color: red;">*</span></label>
                     <select class="form-control" required id="isAdmissionOpen" formControlName="isAdmissionOpen"
-                        [ngClass]="{'is-invalid': !addAcademicSessionForm.controls['isAdmissionOpen'].valid && !isValidForm}">
+                    [ngClass]="{'is-invalid': !addAcademicSessionForm.controls['isAdmissionOpen'].valid && !isValidForm}">
                         <option value="{{isOpenAdmissionSession.id}}"
                             *ngFor="let isOpenAdmissionSession of isOpenAdmissionSessions">
                             {{isOpenAdmissionSession.name}}
                         </option>
                     </select>
                     <label style="color: red;"
-                        *ngIf="addAcademicSessionForm.controls['isAdmissionOpen'].hasError('required') && !isValidForm"
-                        class="error jquery-validation-error small form-text">Please select admission open or
-                        not.</label>
+                    *ngIf="addAcademicSessionForm.controls['isAdmissionOpen'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text">Please select admission open or
+                    not.</label>
                 </div>
             </div>
 

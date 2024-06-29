@@ -29,7 +29,7 @@ const NavigationItems = [
         title: 'Dashboard',
         type: 'collapse',
         icon: 'feather icon-home',
-        userGradeCode: ['HRADM','ACADM'],
+        userGradeCode: ['HRADM','ACADM','BUADM'],
         hidden: false,
         children: [
           {
@@ -48,7 +48,7 @@ const NavigationItems = [
         title: 'Application Master',
         type: 'collapse',
         icon: 'feather icon-settings',
-        userGradeCode: ['HRADM','ACADM'],
+        userGradeCode: ['HRADM','ACADM','BUADM'],
         hidden: false,
         children: [
           {
@@ -172,6 +172,40 @@ const NavigationItems = [
             target: false
           },
 
+          {
+            id: 'academyEnclosureDocument',
+            title: 'Academy Enclosure Documents',
+            type: 'item',
+            url: '/applicationMaster/academyEnclosureDocument',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          {
+            id: 'coach',
+            title: 'Coaches',
+            type: 'item',
+            url: '/applicationMaster/coaches',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          {
+            id: 'country',
+            title: 'Countries',
+            type: 'item',
+            url: '/applicationMaster/countries',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          
         ]
       },
 
@@ -205,7 +239,53 @@ const NavigationItems = [
             target: false
           },      
         ]
+      },
+
+      //for business
+      {
+        id: 'business',
+        title: 'Businesses',
+        type: 'collapse',
+        icon: 'feather icon-user',
+        userGradeCode: ['BUADM'],
+        hidden: false,
+        children: [
+          {
+            id: 'businessVertical',
+            title: 'Business Verticals',
+            type: 'item',
+            url: '/business/businessVertical',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          {
+            id: 'businessVerticalGroup',
+            title: 'Business Vertical Groups',
+            type: 'item',
+            url: '/business/businessVerticalGroup',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          {
+            id: 'businessVerticalType',
+            title: 'Business Vertical Types',
+            type: 'item',
+            url: '/business/businessVerticalType',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+        ]
       }
+
     ]
   }
 ];

@@ -24,6 +24,12 @@ import { SyllabusWiseSubjectListComponent } from './demo/application-master/syll
 import { SubjectWiseChapterListComponent } from './demo/application-master/subject-wise-chapter/subject-wise-chapter-list/subject-wise-chapter-list.component';
 import { ChapterWiseTopicListComponent } from './demo/application-master/chapter-wise-topic/chapter-wise-topic-list/chapter-wise-topic-list.component';
 import { OnBoardingLinkListComponent } from './demo/application-master/on-boarding-link/on-boarding-link-list/on-boarding-link-list.component';
+import { AcademyEnclosureDocumentListComponent } from './demo/application-master/academy-enclosure-document/academy-enclosure-document-list/academy-enclosure-document-list.component';
+import { BusinessVerticalListComponent } from './demo/application-master/business-vertical/business-vertical-list/business-vertical-list.component';
+import { BusinessVerticalGroupListComponent } from './demo/application-master/business-vertical-group/business-vertical-group-list/business-vertical-group-list.component';
+import { BusinessVerticalTypeListComponent } from './demo/application-master/business-vertical-type/business-vertical-type-list/business-vertical-type-list.component';
+import { CoachListComponent } from './demo/application-master/coach/coach-list/coach-list.component';
+import { CountryListComponent } from './demo/application-master/country/country-list/country-list.component';
 
 const routes: Routes = [
   {
@@ -99,7 +105,7 @@ const routes: Routes = [
         { 
         },
       },
-      /////routing
+      //routing
       {
         path: 'applicationMaster/grade',
         loadComponent: () => GradeListComponent,
@@ -151,6 +157,42 @@ const routes: Routes = [
       {
         path: 'applicationMaster/ChapterWiseTopics',
         loadComponent : () => ChapterWiseTopicListComponent,
+        canActivate: [AuthGuardService],
+      },
+
+      {
+        path: 'applicationMaster/academyEnclosureDocument',
+        loadComponent : () => AcademyEnclosureDocumentListComponent,
+        canActivate: [AuthGuardService],
+      },
+
+      {
+        path: 'business/businessVertical',
+        loadComponent : () => BusinessVerticalListComponent,
+        canActivate: [AuthGuardService],
+      },
+
+      {
+        path: 'business/businessVerticalGroup',
+        loadComponent : () => BusinessVerticalGroupListComponent,
+        canActivate: [AuthGuardService],
+      },
+
+      {
+        path: 'business/businessVerticalType',
+        loadComponent : () => BusinessVerticalTypeListComponent,
+        canActivate: [AuthGuardService],
+      },
+
+      {
+        path: 'applicationMaster/coaches',
+        loadComponent : () => CoachListComponent,
+        canActivate: [AuthGuardService],
+      },
+
+      {
+        path: 'applicationMaster/countries',
+        loadComponent : () => CountryListComponent,
         canActivate: [AuthGuardService],
       },
     ]

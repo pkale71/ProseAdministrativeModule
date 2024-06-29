@@ -288,7 +288,6 @@ export class UserEditComponent {
       {
         this.isValidForm = false;
         this.saveClicked = false;
-        // this.roleForm.get('role').disable();
       }
     }
   }

@@ -15,6 +15,12 @@ export class CommonSharedService
     public userListObject = new Subject<any>();
     public syllabusListObject = new Subject<any>();
     public gradeListObject = new Subject<any>();
+    public academyEnclosureDocumentListObject = new Subject<any>();
+    public businessVerticalListObject = new Subject<any>();
+    public countryListObject = new Subject<any>();
+    public businessVerticalGroupListObject = new Subject<any>();
+    public businessVerticalTypeListObject = new Subject<any>();
+    public coachListObject = new Subject<any>();
     public gradeWiseSyllabusListObject = new Subject<any>();
     public syllabusWiseSubjectListObject = new Subject<any>();
     public subjectWiseChapterListObject = new Subject<any>();

@@ -82,55 +82,55 @@ export class SchoolingProgramListComponent {
   async getAcademicSessions() 
   {
    try
+    {
+      this.searchClicked = true;
+      let response = await this.commonService.getAcademicSessions().toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
       {
-        this.searchClicked = true;
-        let response = await this.commonService.getAcademicSessions().toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
-        {
-          this.academicSessions = response.academicSessions;
-          this.academicSessions.unshift({ id: "0", name : "All"});
-        }
-        else
-        {
-          this.academicSessions = [];
-          this.academicSessions.unshift({ id: "0", name : "All"});
-        }
+        this.academicSessions = response.academicSessions;
+        this.academicSessions.unshift({ id: "0", name : "All"});
       }
+      else
+      {
+        this.academicSessions = [];
+        this.academicSessions.unshift({ id: "0", name : "All"});
+      }
+    }
     catch(e)
-      {
-         this.showNotification("error", e);
-      }
+    {
+      this.showNotification("error", e);
+    }
   }
   
 
   async getSchoolingPrograms(academicSessionId : number, action : string) 
   {
     try
+    {
+      this.searchClicked = true;
+      let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
       {
-        this.searchClicked = true;
-        let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
-        {
-          $('#tblSchoolProgram').DataTable().destroy();
-          this.masterSchoolingPrograms = response.schoolingPrograms;
-          this.schoolingPrograms = this.masterSchoolingPrograms;
-          setTimeout(function(){
-            $('#tblSchoolProgram').DataTable();
-          },1000);
-          this.searchClicked = false;
-          this.modalService.dismissAll();
-        }
-        else
-        {
-          this.schoolingPrograms = [];
-          this.searchClicked = false;
-          this.modalService.dismissAll();
-        }
+        $('#tblSchoolProgram').DataTable().destroy();
+        this.masterSchoolingPrograms = response.schoolingPrograms;
+        this.schoolingPrograms = this.masterSchoolingPrograms;
+        setTimeout(function(){
+          $('#tblSchoolProgram').DataTable();
+        },1000);
+        this.searchClicked = false;
+        this.modalService.dismissAll();
       }
-      catch(e)
-        {
-          this.showNotification("error", e);
-        }
+      else
+      {
+        this.schoolingPrograms = [];
+        this.searchClicked = false;
+        this.modalService.dismissAll();
+      }
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+    }
   }
 
   addSchoolProgram()
