@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { FormGroup } from '@angular/forms';
 import { IOption } from 'ng-select';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,9 @@ export class CommonSharedService
     public academyEnclosureDocumentListObject = new Subject<any>();
     public businessVerticalListObject = new Subject<any>();
     public countryListObject = new Subject<any>();
+    public stateRegionListObject = new Subject<any>();
+    public districtListObject = new Subject<any>();
+    public cityListObject = new Subject<any>();
     public businessVerticalGroupListObject = new Subject<any>();
     public businessVerticalTypeListObject = new Subject<any>();
     public coachListObject = new Subject<any>();
@@ -82,5 +86,27 @@ export class CommonSharedService
         hour = hour > 12 ? hour - 12 : hour;
         hour = (hour+'').length == 1 ? `0${hour}` : hour;
         return `${hour}:${min} ${part}`
+    }
+
+    public ExcelFormatDownload(formatFor : string) 
+    {
+        // Create a link element
+        const link = document.createElement('a');
+    
+        // Set the href attribute of the link to the file URL
+        link.href = environment.apiUrl + '/common/downloadExcelFormat/' + formatFor;
+    
+        // Set the download attribute to suggest a filename
+        // This is optional and depends on the API response headers
+        link.download = '';
+    
+        // Append the link to the document body
+        document.body.appendChild(link);
+    
+        // Programmatically click the link to trigger the download
+        link.click();
+    
+        // Remove the link from the document
+        document.body.removeChild(link);
     }
 }

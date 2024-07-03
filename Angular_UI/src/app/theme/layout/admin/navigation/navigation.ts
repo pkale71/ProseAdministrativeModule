@@ -174,20 +174,9 @@ const NavigationItems = [
 
           {
             id: 'academyEnclosureDocument',
-            title: 'Academy Enclosure Documents',
+            title: 'Academy Enclosure Docs',
             type: 'item',
             url: '/applicationMaster/academyEnclosureDocument',
-            param: "",
-            userGradeCode: ['BUADM'],
-            hidden: false,
-            target: false
-          },
-
-          {
-            id: 'coach',
-            title: 'Coaches',
-            type: 'item',
-            url: '/applicationMaster/coaches',
             param: "",
             userGradeCode: ['BUADM'],
             hidden: false,
@@ -205,6 +194,38 @@ const NavigationItems = [
             target: false
           },
 
+          {
+            id: 'stateRegion',
+            title: 'State/Regions',
+            type: 'item',
+            url: '/applicationMaster/stateRegions',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          {
+            id: 'district',
+            title: 'Districts',
+            type: 'item',
+            url: '/applicationMaster/districts',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          {
+            id: 'city',
+            title: 'Cities',
+            type: 'item',
+            url: '/applicationMaster/cities',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
           
         ]
       },
@@ -244,9 +265,9 @@ const NavigationItems = [
       //for business
       {
         id: 'business',
-        title: 'Businesses',
+        title: 'Business Master',
         type: 'collapse',
-        icon: 'feather icon-user',
+        icon: 'feather icon-briefcase',
         userGradeCode: ['BUADM'],
         hidden: false,
         children: [
@@ -277,6 +298,17 @@ const NavigationItems = [
             title: 'Business Vertical Types',
             type: 'item',
             url: '/business/businessVerticalType',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          {
+            id: 'coach',
+            title: 'Coaches',
+            type: 'item',
+            url: '/business/coaches',
             param: "",
             userGradeCode: ['BUADM'],
             hidden: false,

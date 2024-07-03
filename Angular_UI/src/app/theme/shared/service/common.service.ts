@@ -8,6 +8,12 @@ import { id } from 'date-fns/locale';
 export class CommonService {
   constructor(private apiService: ApiService) { }
 
+  //file download
+  getDownloadExcelFormat(formatFor : string)
+  {
+    return this.apiService.get('/common/downloadExcelFormat/' + formatFor);
+  }
+
   //change / update Status
   updateStatus(tempJSON: any)
   {

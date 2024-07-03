@@ -193,7 +193,7 @@ export class BusinessVerticalTypeListComponent {
   {
     const dialogRef = this.modalService.open(BusinessVerticalTypeEditComponent, 
     { 
-      size: 'xl', backdrop: 'static' 
+      size: 'lg', backdrop: 'static' 
     });
     dialogRef.componentInstance.modalParams = businessVerticalType;
   }
@@ -247,7 +247,7 @@ export class BusinessVerticalTypeListComponent {
         container: 'my-swal'
       },
       title: 'Confirmation',
-      text: 'Are you sure to delete business vertical group?',
+      text: 'Are you sure to delete business vertical type?',
       icon: 'warning',
       showCloseButton: true,
       showCancelButton: true
@@ -265,7 +265,7 @@ export class BusinessVerticalTypeListComponent {
           let response = await this.businessService.deleteBusinessVerticalType(tempJSON).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "Business Vertical Group Deleted.");
+            this.showNotification("success", "Business Vertical Type Deleted.");
             this.commonSharedService.businessVerticalTypeListObject.next({result : "success"});
           }
         }

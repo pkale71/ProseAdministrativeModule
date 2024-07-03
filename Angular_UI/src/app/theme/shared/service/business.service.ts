@@ -129,5 +129,68 @@ export class BusinessService {
     return this.apiService.post('/business/updateCountry', country);
   }
   
+  // state region
+  saveStateRegion(stateRegion : any) 
+  {
+    return this.apiService.post('/business/saveStateRegion', stateRegion);
+  }
+
+  getStateRegions(countryId : number, action : string) 
+  {
+    return this.apiService.get('/business/getStateRegions/' + countryId + '/' + action);
+  }
+
+  deleteStateRegion(stateRegion : any) 
+  {
+    return this.apiService.post('/business/deleteStateRegion', stateRegion);
+  }
+
+  updateStateRegion(stateRegion : any) 
+  {
+    return this.apiService.post('/business/updateStateRegion', stateRegion);
+  }
+
+  // district
+  saveDistrict(district : any) 
+  {
+    return this.apiService.post('/business/saveDistrict', district);
+  }
+
+  getDistricts(countryId : number, stateRegionId : number, action : string) 
+  {
+    return this.apiService.get('/business/getDistricts/' + countryId + '/' + stateRegionId + '/' + action);
+  }
+
+  deleteDistrict(district : any) 
+  {
+    return this.apiService.post('/business/deleteDistrict', district);
+  }
+
+  updateDistrict(district : any) 
+  {
+    return this.apiService.post('/business/updateDistrict', district);
+  }
+
+  // city
+  saveCity(city : any) 
+  {
+    return this.apiService.post('/business/saveCity', city);
+  }
+
+  getCities(countryId : number, stateRegionId : number, districtId : number, action : string) 
+  {
+    return this.apiService.get('/business/getCities/' + countryId + '/' + stateRegionId + '/' + districtId + '/' + action);
+  }
+
+  deleteCity(city : any) 
+  {
+    return this.apiService.post('/business/deleteCity', city);
+  }
+
+  updateCity(city : any) 
+  {
+    return this.apiService.post('/business/updateCity', city);
+  }
+   
 
 }

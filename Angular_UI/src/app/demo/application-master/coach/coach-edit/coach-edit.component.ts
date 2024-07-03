@@ -104,7 +104,7 @@ export class CoachEditComponent
           let response = await this.businessService.updateCoach(this.editCoachForm.value).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "Business Vertical Type Updated");
+            this.showNotification("success", "Coach Updated");
             this.commonSharedService.coachListObject.next({result : "success"});
             this.closeModal();
           }

@@ -30,6 +30,9 @@ import { BusinessVerticalGroupListComponent } from './demo/application-master/bu
 import { BusinessVerticalTypeListComponent } from './demo/application-master/business-vertical-type/business-vertical-type-list/business-vertical-type-list.component';
 import { CoachListComponent } from './demo/application-master/coach/coach-list/coach-list.component';
 import { CountryListComponent } from './demo/application-master/country/country-list/country-list.component';
+import { StateRegionListComponent } from './demo/application-master/state-region/state-region-list/state-region-list.component';
+import { DistrictListComponent } from './demo/application-master/district/district-list/district-list.component';
+import { CityListComponent } from './demo/application-master/city/city-list/city-list.component';
 
 const routes: Routes = [
   {
@@ -185,7 +188,7 @@ const routes: Routes = [
       },
 
       {
-        path: 'applicationMaster/coaches',
+        path: 'business/coaches',
         loadComponent : () => CoachListComponent,
         canActivate: [AuthGuardService],
       },
@@ -193,6 +196,24 @@ const routes: Routes = [
       {
         path: 'applicationMaster/countries',
         loadComponent : () => CountryListComponent,
+        canActivate: [AuthGuardService],
+      },
+
+      {
+        path: 'applicationMaster/stateRegions',
+        loadComponent : () => StateRegionListComponent,
+        canActivate: [AuthGuardService],
+      },
+
+      {
+        path: 'applicationMaster/districts',
+        loadComponent : () => DistrictListComponent,
+        canActivate: [AuthGuardService],
+      },
+
+      {
+        path: 'applicationMaster/cities',
+        loadComponent : () => CityListComponent,
         canActivate: [AuthGuardService],
       },
     ]

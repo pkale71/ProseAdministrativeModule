@@ -100,8 +100,7 @@ export class SchoolingProgramListComponent {
     {
       this.showNotification("error", e);
     }
-  }
-  
+  }  
 
   async getSchoolingPrograms(academicSessionId : number, action : string) 
   {

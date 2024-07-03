@@ -23,6 +23,7 @@ export class CountryAddComponent
   addCountryForm: FormGroup;
   isValidForm: boolean;
   saveClicked : boolean;
+  isChecked : boolean;
   isCompulsories : any[];
 
   constructor(private businessService: BusinessService, 
@@ -38,6 +39,7 @@ export class CountryAddComponent
   {
     this.isValidForm = true;
     this.saveClicked = false;
+    this.isChecked = false;
 
     this.addCountryForm = this.formbuilder.group({
       id:[''],
@@ -49,6 +51,23 @@ export class CountryAddComponent
   {
     //type : default, info, success, warning, error
     this.notifier.notify(type, message);
+  }
+
+  async getDocuments(formatFor : string) 
+  {  
+    try
+    {
+      this.commonSharedService.ExcelFormatDownload(formatFor);      
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+    }
+  }
+
+  getChange(event : any)
+  {
+    this.isChecked = event.target.checked;
   }
 
   async saveCountry()

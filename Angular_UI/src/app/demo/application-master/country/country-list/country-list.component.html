@@ -29,7 +29,7 @@
                       </span>
                     </td>   
                     <td style="width:40px;text-align: right;">
-                      <i class="fa fa-trash-alt" (click)="deleteCountry(country)" 
+                      <i class="fa fa-trash-alt" (click)="deleteCountry(country)" *ngIf="country.isExist == 0"
                       title="Delete" style="cursor: pointer;"></i>&nbsp;
                       <i class="fa fa-edit" (click)="editCountry(country)" title="Edit" style="cursor: pointer;"></i>&nbsp;
                        <!--  <i class="fa fa-list" (click)="detailGrade(grade.id)" title="Detail" style="cursor: pointer;"></i> -->
