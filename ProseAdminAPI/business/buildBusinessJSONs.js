@@ -2,7 +2,7 @@ const commonFunction = require("../util/commonFunctions");
 
 const buildBusinessJSON = {};
 
-buildBusinessJSON.businessPartnerTypes = function(datas)
+buildBusinessJSON.businessPartnerTypes = function(datas, action = 1)
 {
     let resultJSON = [];
 
@@ -14,7 +14,14 @@ buildBusinessJSON.businessPartnerTypes = function(datas)
             "name" : data.name,
             "code" : data.code
         }
-        resultJSON.push(finalJSON);
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
 
     return resultJSON;
@@ -214,7 +221,8 @@ buildBusinessJSON.countries = function(datas)
             "id" : data.id,
             "name" : data.name,
             "isActive" : data.isActive,
-            "tableName" : data.tableName
+            "tableName" : data.tableName,
+            "isExist" : data.isExist
         }
         resultJSON.push(finalJSON);
     });
@@ -232,7 +240,7 @@ buildBusinessJSON.stateRegions = function(datas)
         countryJSON = [];
 
         countryJSON = {
-            "id" : data.countrytId,
+            "id" : data.countryId,
             "name" : data.countryName
         }
 
@@ -242,7 +250,8 @@ buildBusinessJSON.stateRegions = function(datas)
             "name" : data.name,
             "isActive" : data.isActive,
             "country" : countryJSON,
-            "tableName" : data.tableName
+            "tableName" : data.tableName,
+            "isExist" : data.isExist
         }
         resultJSON.push(finalJSON);
     });
@@ -262,7 +271,7 @@ buildBusinessJSON.districts = function(datas)
         stateRegionJSON = [];
 
         countryJSON = {
-            "id" : data.countrytId,
+            "id" : data.countryId,
             "name" : data.countryName
         }
 
@@ -278,7 +287,8 @@ buildBusinessJSON.districts = function(datas)
             "isActive" : data.isActive,
             "country" : countryJSON,
             "stateRegion" : stateRegionJSON,
-            "tableName" : data.tableName
+            "tableName" : data.tableName,
+            "isExist" : data.isExist
         }
         resultJSON.push(finalJSON);
     });
@@ -300,7 +310,7 @@ buildBusinessJSON.cities = function(datas)
         districtJSON = [];
 
         countryJSON = {
-            "id" : data.countrytId,
+            "id" : data.countryId,
             "name" : data.countryName
         }
 
@@ -322,7 +332,8 @@ buildBusinessJSON.cities = function(datas)
             "country" : countryJSON,
             "stateRegion" : stateRegionJSON,
             "district" : districtJSON,
-            "tableName" : data.tableName
+            "tableName" : data.tableName,
+            "isExist" : data.isExist
         }
         resultJSON.push(finalJSON);
     });
@@ -462,7 +473,8 @@ buildBusinessJSON.businessPartner = function(datas)
             "district" : districtJSON,
             "city" : cityJSON,
             "commissionTerm" : commissionTermJSON,
-            "commercialTerm" : commercialTermJSON
+            "commercialTerm" : commercialTermJSON,
+            "isExist" : data.isExist
         }
         resultJSON.push(finalJSON);
     });

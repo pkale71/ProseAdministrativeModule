@@ -18,7 +18,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         {
             if(reqData.id != "")
             {
-                id = reqData.id);
+                id = reqData.id;
 
                 ////Check Academy Enclosure Document Exist
                 businessPartnerDocUpload = await dbBusiness.checkAcademyEnclosureDocumentExist(id);

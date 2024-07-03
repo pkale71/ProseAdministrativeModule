@@ -6,6 +6,7 @@ let uploads = require('../util/multerConfig.js');
 
 ///////Routes
 businessRoute.use('/getBusinessPartnerTypes', require('../util/validateToken.js'), require('./business-partner-types.js'));
+businessRoute.use('/getBusinessPartnerType', require('../util/validateToken.js'), require('./business-partner-type.js'));
 businessRoute.use('/getCommissionTerms', require('../util/validateToken.js'), require('./commission-terms.js'));
 businessRoute.use('/getCommercialTerms', require('../util/validateToken.js'), require('./commercial-terms.js'));
 businessRoute.use('/getBusinessVerticals', require('../util/validateToken.js'), require('./business-verticals.js'));
@@ -51,6 +52,7 @@ businessRoute.use('/updateBusinessPartner', require('../util/validateToken.js'),
 businessRoute.use('/getBusinessPartnerContractHistories', require('../util/validateToken.js'), require('./business-partner-contract-histories.js'));
 businessRoute.use('/saveBusinessPartnerContract', require('../util/validateToken.js'), require('./save-business-partner-contract.js'));
 businessRoute.use('/deleteBusinessPartnerContract', require('../util/validateToken.js'), require('./delete-business-partner-contract.js'));
+businessRoute.use('/deleteBusinessPartnerDoc', require('../util/validateToken.js'), require('./delete-business-partner-document.js'));
 
 businessRoute.use('/',(req,res,next) => 
 {
