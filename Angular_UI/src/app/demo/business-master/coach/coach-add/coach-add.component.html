@@ -1,0 +1,91 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="coachAddModal"><i class="fa fa-plus"></i>&nbsp;Add Coach</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="coachForm" id="coachForm" (ngSubmit)="saveCoach()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-6"> 
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="40"
+                    [ngClass]="{'is-invalid': !coachForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="coachForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter name.</label>
+                    <label style="color: red;"
+                    *ngIf="coachForm.controls['name'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid name.</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-control-label" for="email">Email&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="email" type="text" required 
+                    formControlName="email" maxlength="100"
+                    [ngClass]="{'is-invalid': !coachForm.controls['email'].valid && !isValidForm}"
+                    />
+                    <label style="color: red;"
+                    *ngIf="coachForm.controls['email'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter email.</label>
+                    <label style="color: red;"
+                    *ngIf="coachForm.controls['email'].hasError('email') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid email.</label>
+                </div>
+            </div> 
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="mobile">Mobile&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="mobile" type="number" required
+                    formControlName="mobile" maxlength="10"
+                    [ngClass]="{'is-invalid': !coachForm.controls['mobile'].valid && !isValidForm}"
+                    />
+                    <label style="color: red;"
+                    *ngIf="coachForm.controls['mobile'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter mobile number.</label>
+                    <label style="color: red;"
+                    *ngIf="coachForm.controls['mobile'].hasError('minlength') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Mobile number should be 10 digits long</label>
+                    <label style="color: red;"
+                    *ngIf="coachForm.controls['mobile'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid mobile number</label>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <form [formGroup]="businessVerticalTypeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="businessVerticalType">Business Vertical Type&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="businessVerticalType" formControlName="businessVerticalType"
+                        [ngClass]="{'is-invalid': !businessVerticalTypeForm.controls['businessVerticalType'].valid && !isValidForm}">
+                        <option value="{{businessVerticalType.id}}" *ngFor="let businessVerticalType of businessVerticalTypes">{{businessVerticalType?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="businessVerticalTypeForm.controls['businessVerticalType'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select business vertical type.</label>
+                    </div>
+                </form>                
+            </div> 
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

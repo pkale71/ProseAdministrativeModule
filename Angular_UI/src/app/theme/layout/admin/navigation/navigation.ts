@@ -305,10 +305,21 @@ const NavigationItems = [
           },
 
           {
-            id: 'coach',
+            id: 'coaches',
             title: 'Coaches',
             type: 'item',
             url: '/business/coaches',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          {
+            id: 'businessPartners',
+            title: 'Business Partners',
+            type: 'item',
+            url: '/business/businessPartners',
             param: "",
             userGradeCode: ['BUADM'],
             hidden: false,

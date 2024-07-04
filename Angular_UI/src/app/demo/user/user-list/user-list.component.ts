@@ -34,8 +34,7 @@ export class UserListComponent
   userGradeForm : FormGroup;
   userCategoryForm : FormGroup;
   searchClicked : boolean;
-  isRequired : boolean;
-  
+  isRequired : boolean; 
   masterUserGrades : any[];
   
   constructor(private router : Router,

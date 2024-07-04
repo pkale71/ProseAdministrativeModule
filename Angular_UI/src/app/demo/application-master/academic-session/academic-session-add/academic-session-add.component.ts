@@ -60,7 +60,8 @@ export class AcademicSessionAddComponent {
     this.addAcademicSessionForm.get('isCurrentSession').setValue('0');
   }
 
-  onSelect() {
+  onSelect() 
+  {
     let startDate = this.addAcademicSessionForm.value.startDate;
     startDate = this.datePipe.transform(startDate, 'yyy');
     let endDate = this.addAcademicSessionForm.value.endDate;
@@ -69,7 +70,8 @@ export class AcademicSessionAddComponent {
     this.addAcademicSessionForm.get("name").setValue(name);
   }
 
-  dateValidator() {
+  dateValidator() 
+  {
     const startDate = this.addAcademicSessionForm.get('startDate').value;
     const endDate = this.addAcademicSessionForm.get('endDate').value;
     let validate : boolean = false;
@@ -89,21 +91,21 @@ export class AcademicSessionAddComponent {
   {
     if(!this.dateValidator())
     {
-    if (!this.saveClicked) 
-    {
-      if (this.addAcademicSessionForm.valid)
+      if (!this.saveClicked) 
       {
-        this.isValidForm = true;
-        this.saveClicked = true;
-        try 
+        if (this.addAcademicSessionForm.valid)
         {
-          let response = await this.commonService.saveAcademicSession(this.addAcademicSessionForm.value).toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
+          this.isValidForm = true;
+          this.saveClicked = true;
+          try 
           {
-            this.showNotification("success", "Academic Session Saved");
-            this.commonSharedService.academicSessionListObject.next({ result: "success" });
-            this.closeModal();
-          }
+            let response = await this.commonService.saveAcademicSession(this.addAcademicSessionForm.value).toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+              this.showNotification("success", "Academic Session Saved");
+              this.commonSharedService.academicSessionListObject.next({ result: "success" });
+              this.closeModal();
+            }
           }
           catch (e) 
           {

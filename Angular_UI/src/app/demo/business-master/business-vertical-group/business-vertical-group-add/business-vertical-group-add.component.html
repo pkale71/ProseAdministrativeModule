@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="businessVerticalGroupAddModal"><i class="fa fa-plus"></i>&nbsp;Add Business Vertical Group</h5>
+    <!-- <div> {{addGradeForm.value|json}}</div> -->
+
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addBusinessVerticalGroupForm" id="addBusinessVerticalGroupForm" (ngSubmit)="saveBusinessVertical()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-3">
+                <form [formGroup]="businessVerticalForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="businessVertical">Business Vertical&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="businessVertical" formControlName="businessVertical"
+                        [ngClass]="{'is-invalid': !businessVerticalForm.controls['businessVertical'].valid && !isValidForm}">
+                        <option value="{{businessVertical.id}}" *ngFor="let businessVertical of businessVerticals">{{businessVertical?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="businessVerticalForm.controls['businessVertical'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select business vertical.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-9">
+                <div class="form-group">
+                    <label class="form-control-label" for="names">Names&nbsp;<span style="color: red;">*</span></label>
+                    <tag-input class="tag-chips" [(ngModel)]="names" formControlName="name" [modelAsStrings]="true" (keyup.enter)="onEnterKey($event)"></tag-input>
+                    <label style="color: red;"
+                    *ngIf="addBusinessVerticalGroupForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter name.</label>
+                </div>                
+            </div> 
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

@@ -25,14 +25,16 @@ import { SubjectWiseChapterListComponent } from './demo/application-master/subje
 import { ChapterWiseTopicListComponent } from './demo/application-master/chapter-wise-topic/chapter-wise-topic-list/chapter-wise-topic-list.component';
 import { OnBoardingLinkListComponent } from './demo/application-master/on-boarding-link/on-boarding-link-list/on-boarding-link-list.component';
 import { AcademyEnclosureDocumentListComponent } from './demo/application-master/academy-enclosure-document/academy-enclosure-document-list/academy-enclosure-document-list.component';
-import { BusinessVerticalListComponent } from './demo/application-master/business-vertical/business-vertical-list/business-vertical-list.component';
-import { BusinessVerticalGroupListComponent } from './demo/application-master/business-vertical-group/business-vertical-group-list/business-vertical-group-list.component';
-import { BusinessVerticalTypeListComponent } from './demo/application-master/business-vertical-type/business-vertical-type-list/business-vertical-type-list.component';
-import { CoachListComponent } from './demo/application-master/coach/coach-list/coach-list.component';
+import { BusinessVerticalListComponent } from './demo/business-master/business-vertical/business-vertical-list/business-vertical-list.component';
+import { BusinessVerticalGroupListComponent } from './demo/business-master/business-vertical-group/business-vertical-group-list/business-vertical-group-list.component';
+import { BusinessVerticalTypeListComponent } from './demo/business-master/business-vertical-type/business-vertical-type-list/business-vertical-type-list.component';
+import { CoachListComponent } from './demo/business-master/coach/coach-list/coach-list.component';
 import { CountryListComponent } from './demo/application-master/country/country-list/country-list.component';
 import { StateRegionListComponent } from './demo/application-master/state-region/state-region-list/state-region-list.component';
 import { DistrictListComponent } from './demo/application-master/district/district-list/district-list.component';
 import { CityListComponent } from './demo/application-master/city/city-list/city-list.component';
+import { BusinessPartnerListComponent } from './demo/business-master/business-partner/business-partner-list/business-partner-list.component';
+import { BusinessPartnerAddComponent } from './demo/business-master/business-partner/business-partner-add/business-partner-add.component';
 
 const routes: Routes = [
   {
@@ -216,6 +218,17 @@ const routes: Routes = [
         loadComponent : () => CityListComponent,
         canActivate: [AuthGuardService],
       },
+
+      {
+        path: 'business/businessPartners',
+        loadComponent : () => BusinessPartnerListComponent,
+        canActivate: [AuthGuardService],
+      },
+      {
+        path: 'business/businessPartner/add/:id',
+        loadComponent: () => BusinessPartnerAddComponent,
+        canActivate: [AuthGuardService],
+      },
     ]
   },
   {
@@ -229,7 +242,7 @@ const routes: Routes = [
       {
         path: 'userProfile/:code',
         loadChildren: () => import('./demo/pages/user-profile/user-profile.module').then((m) => m.UserProfileModule)
-      }
+      }    
     ]
   },
   {

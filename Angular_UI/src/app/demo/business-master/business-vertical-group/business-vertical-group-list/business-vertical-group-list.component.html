@@ -1,0 +1,74 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-chart-line"></i>&nbsp; Business Vertical Groups &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="addBusinessVertical()">Add Business Vertical Group</button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <form [formGroup]="businessVerticalForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="businessVertical">Business Vertical</label>
+                        <select class="form-control" required id="businessVertical" formControlName="businessVertical">
+                          <option value="{{businessVertical.id}}" *ngFor="let businessVertical of businessVerticals">{{businessVertical.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div> 
+              <!-- search button -->
+              <div class="col-md-3">
+                <br/>
+                <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
+                (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
+                <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                  <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table datatable id="tblBusinessVerticalGroup" class="table table-striped row-border table-hover pt-10">
+                <thead>
+                  <tr>
+                    <th>Sno</th>
+                    <th>Business Vertical Group</th>
+                    <th>Business Vertical</th>
+                    <th>Active</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let businessVerticalGroup of businessVerticalGroups let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{businessVerticalGroup.name}}</td>
+                    <td>{{businessVerticalGroup.businessVertical?.name}}</td>
+                    <td>
+                      <span [ngClass]="businessVerticalGroup.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(businessVerticalGroup)" 
+                      style="cursor: pointer;" title="Update Status">
+                        {{businessVerticalGroup.isActive? 'Yes' : 'No' }}
+                      </span>
+                    </td>   
+                    <td style="width:40px;text-align: right;">
+                      <i class="fa fa-trash-alt" (click)="deleteBusinessVerticalGroup(businessVerticalGroup)" *ngIf = "businessVerticalGroup.isExist == 0"
+                      title="Delete" style="cursor: pointer;"></i>&nbsp;
+                      <i class="fa fa-edit" (click)="editBusinessVerticalGroup(businessVerticalGroup)" title="Edit" style="cursor: pointer;"></i>
+                    </td>
+                  </tr>
+                  <tr *ngIf="businessVerticalGroups.length == 0">
+                    <td></td>
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>
