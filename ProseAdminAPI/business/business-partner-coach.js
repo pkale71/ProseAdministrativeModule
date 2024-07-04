@@ -1,30 +1,30 @@
 const buildJSON = require('./buildBusinessJSONs.js');
+const commonFunction = require('../util/commonFunctions.js');
 let dbBusiness = require('../sqlmap/businessQuery.js');
 let errorCodes = require('../util/errorCodes.js');
-const commonFunction = require('../util/commonFunctions.js');
 let errorCode = new errorCodes();
 ////////Variables
 let id; 
 //////
-let businessPartnerType;
+let businessPartnerCoach;
 
 module.exports = require('express').Router().get('/:id', async(req,res) =>
 {
     try
     {
         id = commonFunction.validateNumber(req.params.id);
-        
-        businessPartnerType = await dbBusiness.getBusinessPartnerType(id);
-        if(businessPartnerType.length >= 0)
+
+        businessPartnerCoach = await dbBusiness.getBusinessPartnerCoach(id);
+        if(businessPartnerCoach.length >= 0)
         {
             res.status(200)
             return res.json({
-                "businessPartnerType" : buildJSON.businessPartnerTypes(businessPartnerType, 0),
+                "businessPartnerCoach" : buildJSON.businessPartnerCoaches(businessPartnerCoach, 0),
                 "status_code" : 200,
                 "success" : true,                            
                 "message" : errorCode.getStatus(200)
             })
-        }      
+        }  
     } 
     catch(e)
     {

@@ -101,11 +101,11 @@ commonFunction.deleteFileByPath = async function(filePath)
         if(fs.existsSync(filePath))
         {
             fs.unlinkSync(filePath);
-            //console.log(`File ${filePath} has been deleted.`);
+            // console.log(`File ${filePath} has been deleted.`);
         }
         else
         {
-            //console.log(`File ${filePath} not found.`);
+            // console.log(`File ${filePath} not found.`);
         }
     } catch (err) {
         console.error(err);

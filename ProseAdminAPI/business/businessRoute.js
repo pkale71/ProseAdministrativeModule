@@ -48,11 +48,16 @@ businessRoute.use('/getBusinessPartners', require('../util/validateToken.js'), r
 businessRoute.use('/getBusinessPartner', require('../util/validateToken.js'), require('./business-partner.js'));
 businessRoute.use('/saveBusinessPartner', uploads, require('../util/validateToken.js'), require('./save-business-partner.js'));
 businessRoute.use('/updateBusinessPartner', require('../util/validateToken.js'), require('./update-business-partner.js'));
-//businessRoute.use('/deleteBusinessPartner', require('../util/validateToken.js'), require('./delete-business-partner.js'));
+businessRoute.use('/deleteBusinessPartner', require('../util/validateToken.js'), require('./delete-business-partner.js'));
 businessRoute.use('/getBusinessPartnerContractHistories', require('../util/validateToken.js'), require('./business-partner-contract-histories.js'));
 businessRoute.use('/saveBusinessPartnerContract', require('../util/validateToken.js'), require('./save-business-partner-contract.js'));
 businessRoute.use('/deleteBusinessPartnerContract', require('../util/validateToken.js'), require('./delete-business-partner-contract.js'));
-businessRoute.use('/deleteBusinessPartnerDoc', require('../util/validateToken.js'), require('./delete-business-partner-document.js'));
+businessRoute.use('/uploadBusinessPartnerDocument', uploads, require('../util/validateToken.js'), require('./upload-business-partner-document.js'));
+businessRoute.use('/deleteBusinessPartnerDocument', require('../util/validateToken.js'), require('./delete-business-partner-document.js'));
+businessRoute.use('/getBusinessPartnerCoaches', require('../util/validateToken.js'), require('./business-partner-coaches.js'));
+businessRoute.use('/getBusinessPartnerCoach', require('../util/validateToken.js'), require('./business-partner-coach.js'));
+businessRoute.use('/saveBusinessPartnerCoach', require('../util/validateToken.js'), require('./save-business-partner-coach.js'));
+businessRoute.use('/deleteBusinessPartnerCoach', require('../util/validateToken.js'), require('./delete-business-partner-coach.js'));
 
 businessRoute.use('/',(req,res,next) => 
 {

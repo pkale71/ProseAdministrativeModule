@@ -1,5 +1,6 @@
 let dbConn = require('../util/dbConnection');
 const commonFunction = require('../util/commonFunctions');
+const { businessPartner } = require('../business/buildBusinessJSONs');
 let db = {};
 
 db.checkDuplicateEmailMobile = (email, mobile, tableName, id) => 
@@ -909,13 +910,13 @@ db.getCoach = (coachId) =>
             LEFT JOIN business_partner_coach bpc ON bpc.coach_id = c.id`
             if(!isNaN(coachId))
             {
-                sql = sql + ` WHERE c.id = ${coachId}`;
+                sql = sql + ` WHERE FIND_IN_SET(c.id, '${coachId}') > 0`;
             }
             else
             {
-                sql = sql + ` WHERE c.uuid='${coachId}'`;
+                sql = sql + ` WHERE FIND_IN_SET(c.uuid, '${coachId}') > 0`;
             }
-            sql =sql + ` GROUP BY c.id`;
+            sql =sql + ` GROUP BY c.id ORDER BY c.id`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -2064,10 +2065,11 @@ db.getBusinessPartners = (businessPartnerTypeId) =>
             JOIN business_partner_type bpt ON bpt.id = bp.business_partner_type_id 
             JOIN business_vertical bv ON bv.id = bp.business_vertical_id 
             JOIN business_vertical_type bvt ON FIND_IN_SET(bvt.id, bp.business_vertical_type_ids) 
-            LEFT JOIN study_center sc ON sc.business_partner_id = bp.id`;
+            LEFT JOIN study_center sc ON sc.business_partner_id = bp.id 
+            WHERE bp.deleted_on IS NULL AND bp.deleted_by_id IS NULL`;
             if(businessPartnerTypeId != "")
             {
-                sql = sql + ` WHERE bp.business_partner_type_id = ${businessPartnerTypeId}`
+                sql = sql + ` AND bp.business_partner_type_id = ${businessPartnerTypeId}`
             }
             sql = sql + ` GROUP BY bp.id
             ORDER BY bp.name`;
@@ -2241,6 +2243,30 @@ db.updateBusinessPartner = (businessPartner) =>
     })
 };
 
+db.deleteBusinessPartner = (id, deletedById) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE business_partner SET is_active = 0, deleted_on = NOW(), deleted_by_id = ${deletedById} WHERE id = ${id} AND deleted_on IS NULL AND deleted_by_id IS NULL`;
+           
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.getBusinessPartnerContractHistories = (businessPartnerId) => 
 {
     return new Promise((resolve, reject) => 
@@ -2296,6 +2322,54 @@ db.checkBusinessPartnerContractExist = (contractFrom, contractTo, businessPartne
     })
 };
 
+db.checkBusinessPartnerDocumentExist = (businessPartnerId, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bpdu.id AS businessPartnerDocumentId, bpdu.file_name AS fileName FROM business_partner_doc_upload bpdu WHERE bpdu.business_partner_id = ${businessPartnerId} AND bpdu.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkDuplicateBusinessPartnerDoc = (businessPartnerId, academyEnclosureDocId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bpdu.id, bpdu.file_name AS fileName FROM business_partner_doc_upload bpdu WHERE bpdu.business_partner_id = ${businessPartnerId} AND bpdu.academy_enclosure_document_id = ${academyEnclosureDocId}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.insertBusinessPartnerDocument = (businessPartnerDocument) => 
 {
     return new Promise((resolve, reject) => 
@@ -2320,13 +2394,42 @@ db.insertBusinessPartnerDocument = (businessPartnerDocument) =>
     })
 };
 
-db.updateBusinessPartnerDocFileName = (fileName, id) => 
+db.updateBusinessPartnerDocFileName = (fileName, id, updatedById = '') => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
-            let sql = `UPDATE business_partner_doc_upload SET file_name = '${fileName}' WHERE id = ${id}`;
+            let sql = `UPDATE business_partner_doc_upload SET file_name = '${fileName}'`;
+            if(updatedById != '')
+            {
+                sql =sql + `, updated_on = NOW(), updated_by_id = ${updatedById}`
+            }
+            sql =sql + ` WHERE id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteBusinessPartnerDocument = (businessPartnerId, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM business_partner_doc_upload WHERE business_partner_id = ${businessPartnerId} AND id = ${id}`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -2428,6 +2531,157 @@ db.deleteBusinessPartnerContractHistory = (businessPartnerContractHistory) =>
                         return resolve(result);
                     }
                 });
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getBusinessPartnerCoaches = (businessPartnerId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bpc.id, bpc.is_active AS isActive, 'business_partner_coach' AS tableName,
+            c.uuid AS coachUUID, c.name AS coachName, c.email AS coachEmail, c.mobile AS coachMobile, c.is_active AS coachIsActive,
+            bvt.id AS businessVerticalTypeId, bvt.name AS businessVerticalTypeName
+            FROM business_partner_coach bpc
+            JOIN coach c ON c.id = bpc.coach_id
+            JOIN business_vertical_type bvt ON bvt.id = c.business_vertical_type_id  
+            WHERE bpc.business_partner_id = ${businessPartnerId} ORDER BY c.name`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getBusinessPartnerCoach = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bpc.id, bpc.is_active AS isActive, 'business_partner_coach' AS tableName,
+            c.uuid AS coachUUID, c.name AS coachName, c.email AS coachEmail, c.mobile AS coachMobile, c.is_active AS coachIsActive,
+            bvt.id AS businessVerticalTypeId, bvt.name AS businessVerticalTypeName
+            FROM business_partner_coach bpc
+            JOIN coach c ON c.id = bpc.coach_id
+            JOIN business_vertical_type bvt ON bvt.id = c.business_vertical_type_id  
+            WHERE bpc.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateBusinessPartnerCoach = (ids, businessPartnerId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bpc.id, bpc.is_active AS isActive, 'business_partner_coach' AS tableName,
+            c.uuid AS coachUUID, c.name AS coachName, c.email AS coachEmail, c.mobile AS coachMobile, c.is_active AS coachIsActive,
+            bvt.id AS businessVerticalTypeId, bvt.name AS businessVerticalTypeName
+            FROM business_partner_coach bpc
+            JOIN coach c ON c.id = bpc.coach_id
+            JOIN business_vertical_type bvt ON bvt.id = c.business_vertical_type_id  
+            WHERE bpc.business_partner_id = ${businessPartnerId} AND bpc.coach_id IN (${ids})`;
+           
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertBusinessPartnerCoach = (businessPartnerCoach) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sqlValues = '';
+            let coaches = businessPartnerCoach.coaches.toString().split(",");
+            for(let i=0;i<coaches.length;i++)
+            {
+                if(sqlValues == '')
+                {
+                    sqlValues = `(${businessPartnerCoach.businessPartnerId}, ${coaches[i]}, NOW(), ${businessPartnerCoach.createdById})`;
+                }
+                else
+                {
+                    sqlValues = sqlValues + `,(${businessPartnerCoach.businessPartnerId}, ${coaches[i]}, NOW(), ${businessPartnerCoach.createdById})`;
+                }
+            }
+            let sql = `INSERT INTO business_partner_coach (business_partner_id, coach_id, created_on, created_by_id) VALUES ${sqlValues}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteBusinessPartnerCoach = (id, businessPartnerId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM business_partner_coach WHERE id = ${id} AND business_partner_id = ${businessPartnerId}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
             });
         }
         catch(e)

@@ -501,4 +501,49 @@ buildBusinessJSON.businessPartnerContractHistories = function(datas)
     return resultJSON;
 }
 
+buildBusinessJSON.businessPartnerCoaches = function(datas, action = 1)
+{
+    let resultJSON = [];
+    let coachJSON = [];
+    let businessVerticalTypeJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        coachJSON = [];
+        businessVerticalTypeJSON = [];
+
+        coachJSON = {
+            "uuid" : data.coachUUID,
+            "name" : data.coachName,
+            "email" : data.coachEmail,
+            "mobile" : data.coachMobile,
+            "isActive" : data.coachIsActive
+        }
+
+        businessVerticalTypeJSON = {
+            "id" : data.businessVerticalTypeId,
+            "name" : data.businessVerticalTypeName
+        }
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName ? data.tableName : '',
+            "coach" : coachJSON,
+            "businessVerticalType" : businessVerticalTypeJSON
+
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
 module.exports = buildBusinessJSON;
