@@ -159,7 +159,7 @@ export class CityEditComponent
     {
       let countryId = this.countryForm.get('country').value;
       let stateRegionId = this.stateRegionForm.get('stateRegion').value;
-      if(countryId != undefined && countryId != '')
+      if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '')
       {
         this.searchClicked = true;  
         let response = await this.businessService.getDistricts(countryId, stateRegionId, 'All').toPromise();

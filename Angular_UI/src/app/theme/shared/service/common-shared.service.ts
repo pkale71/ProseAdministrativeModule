@@ -14,6 +14,7 @@ export class CommonSharedService
     public userRoleListObject = new Subject<any>();
     public userTypeListObject = new Subject<any>();
     public userListObject = new Subject<any>();
+    public businessPartnerListObject = new Subject<any>();
     public syllabusListObject = new Subject<any>();
     public gradeListObject = new Subject<any>();
     public academyEnclosureDocumentListObject = new Subject<any>();

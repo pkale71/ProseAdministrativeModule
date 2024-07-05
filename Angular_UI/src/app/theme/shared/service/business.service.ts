@@ -8,6 +8,30 @@ export class BusinessService {
 
   constructor(private apiService: ApiService) { }
 
+  // Business Partner Types
+  getBusinessPartnerTypes()
+  {
+    return this.apiService.get('/business/getBusinessPartnerTypes');
+  }
+
+  // Business Partner Type
+  getBusinessPartnerType(id : number)
+  {
+    return this.apiService.get(`/business/getBusinessPartnerType/${id}`);
+  }
+
+  // Commission Terms
+  getCommissionTerms()
+  {
+    return this.apiService.get('/business/getCommissionTerms');
+  }
+
+  // Commercial Terms
+  getCommercialTerms()
+  {
+    return this.apiService.get('/business/getCommercialTerms');
+  }
+
   // academy enclosure document
   saveAcademyEnclosureDocument(academyEnclosureDocument : any) 
   {
@@ -190,6 +214,17 @@ export class BusinessService {
   updateCity(city : any) 
   {
     return this.apiService.post('/business/updateCity', city);
+  }
+
+  //business partner
+  getBusinessPartners(businessPartnerTypeId : number)
+  {
+    return this.apiService.get('/business/getBusinessPartners/' + businessPartnerTypeId);
+  }
+
+  saveBusinessPartner(businessPartner : any)
+  {
+    return this.apiService.post('/business/saveBusinessPartner', businessPartner);
   }
    
 

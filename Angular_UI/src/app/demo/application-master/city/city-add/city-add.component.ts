@@ -94,16 +94,16 @@ export class CityAddComponent
     {
       let response = await this.businessService.getCountries('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
-        {
-          this.masterCountries = response.countries;
-          this.countries = this.masterCountries;
-          this.countries.unshift({ id : '', name : 'Select Country'});
-        }
-        else
-        { 
-          this.countries = [];
-          this.countries.unshift({ id : '', name : 'Select Country'});
-        }
+      {
+        this.masterCountries = response.countries;
+        this.countries = this.masterCountries;
+        this.countries.unshift({ id : '', name : 'Select Country'});
+      }
+      else
+      { 
+        this.countries = [];
+        this.countries.unshift({ id : '', name : 'Select Country'});
+      }
     }
     catch(e)
     {
@@ -155,7 +155,7 @@ export class CityAddComponent
     {
       let countryId = this.countryForm.get('country').value;
       let stateRegionId = this.stateRegionForm.get('stateRegion').value;
-      if(countryId != undefined && countryId != '')
+      if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '')
       {
         this.searchClicked = true;  
         let response = await this.businessService.getDistricts(countryId, stateRegionId, 'All').toPromise();
