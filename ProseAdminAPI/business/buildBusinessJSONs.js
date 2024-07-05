@@ -27,6 +27,47 @@ buildBusinessJSON.businessPartnerTypes = function(datas, action = 1)
     return resultJSON;
 }
 
+buildBusinessJSON.studyCenterTypes = function(datas, action = 1)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.studyCenterRewardTypes = function(datas)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
 buildBusinessJSON.commercialTerms = function(datas)
 {
     let resultJSON = [];

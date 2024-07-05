@@ -62,7 +62,7 @@ CREATE TABLE `academy_enclosure_document` (
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,66 @@ CREATE TABLE `academy_enclosure_document` (
 
 LOCK TABLES `academy_enclosure_document` WRITE;
 /*!40000 ALTER TABLE `academy_enclosure_document` DISABLE KEYS */;
+INSERT INTO `academy_enclosure_document` VALUES (1,'Pan',1,1,'2024-06-21 18:53:43',4),(2,'GST Certificate',1,1,'2024-06-21 18:53:55',4);
 /*!40000 ALTER TABLE `academy_enclosure_document` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `business_partner`
+--
+
+DROP TABLE IF EXISTS `business_partner`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `business_partner` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `business_partner_type_id` int(11) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `business_vertical_id` int(11) NOT NULL,
+  `business_vertical_type_ids` text NOT NULL,
+  `address` text NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `state_region_id` int(11) NOT NULL,
+  `district_id` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `pincode` varchar(9) NOT NULL,
+  `contact_person` text,
+  `contact_email` varchar(150) DEFAULT NULL,
+  `contact_mobile` varchar(15) DEFAULT NULL,
+  `incharge_person` text,
+  `incharge_email` varchar(150) DEFAULT NULL,
+  `incharge_mobile` varchar(15) DEFAULT NULL,
+  `applicable_from` date NOT NULL,
+  `applicable_to` date NOT NULL,
+  `is_having_contract` int(11) DEFAULT NULL,
+  `current_contract_history_id` int(11) DEFAULT NULL,
+  `reward_applicable` int(11) DEFAULT NULL,
+  `commission_term_id` int(11) DEFAULT NULL,
+  `pan_number` varchar(10) DEFAULT NULL,
+  `gst_number` varchar(15) DEFAULT NULL,
+  `commercial_term_id` int(11) DEFAULT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `deleted_on` datetime DEFAULT NULL,
+  `deleted_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `business_partner`
+--
+
+LOCK TABLES `business_partner` WRITE;
+/*!40000 ALTER TABLE `business_partner` DISABLE KEYS */;
+INSERT INTO `business_partner` VALUES (1,'Just Game LLP - Just Cricket','RP-000001',1,'info@justcric.com',1,'3,1,2','No 7/1 , Itgalpura village, Rajanukunte, Bangalore North',1,4,3,1,'490023','Mr.Nasiruddin','tnaas3@gmail.com','9448505903',NULL,NULL,NULL,'2022-04-01','2027-03-31',1,10,1,1,'AAMF13029Q','29AAMF13029Q1ZN',NULL,1,'2024-06-28 12:27:18',4,NULL,NULL,'a8ca8b10-351b-11ef-ac9e-9528e9adec92',NULL,NULL),(2,'Just Game LLP - Just Cricket-1','RP-000002',1,'info-1@justcric.com',1,'3,1,2','No 7/1 , Itgalpura village, Rajanukunte, Bangalore North',1,4,3,1,'490023','Mr.Nasiruddin','tnaas3@gmail.com','9448505903',NULL,NULL,NULL,'2022-04-01','2027-03-31',0,NULL,1,1,'AAMF13029Q','29AAMF13029Q1ZN',NULL,1,'2024-06-28 12:35:46',4,NULL,NULL,'d7b25600-351c-11ef-a0e6-e31ab257a17b',NULL,NULL),(3,'Just Game LLP - Just Cricket-2','RP-000003',1,'info-2@justcric.com',1,'1,2','No 7/1 , Itgalpura village, Rajanukunte, Bangalore North',1,4,3,1,'490001','Mr.Nasiruddin','tnaas3@gmail.com','9448505903',NULL,'tnaas3@gmail.com','9448505903','2021-04-01','2024-12-31',1,3,0,1,NULL,NULL,NULL,0,'2024-06-28 12:37:08',4,'2024-06-28 16:25:04',4,'083ca2d0-351d-11ef-a6a9-598cb34e38bd','2024-07-04 10:23:14',4);
+/*!40000 ALTER TABLE `business_partner` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -91,7 +150,7 @@ CREATE TABLE `business_partner_coach` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +159,69 @@ CREATE TABLE `business_partner_coach` (
 
 LOCK TABLES `business_partner_coach` WRITE;
 /*!40000 ALTER TABLE `business_partner_coach` DISABLE KEYS */;
+INSERT INTO `business_partner_coach` VALUES (1,1,2,1,'2024-07-03 17:59:22',4,NULL,NULL),(3,1,6,1,'2024-07-03 18:08:35',4,NULL,NULL);
 /*!40000 ALTER TABLE `business_partner_coach` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `business_partner_contract_history`
+--
+
+DROP TABLE IF EXISTS `business_partner_contract_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `business_partner_contract_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `business_partner_id` int(11) NOT NULL,
+  `contract_from` date NOT NULL,
+  `contract_to` date NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `business_partner_contract_history`
+--
+
+LOCK TABLES `business_partner_contract_history` WRITE;
+/*!40000 ALTER TABLE `business_partner_contract_history` DISABLE KEYS */;
+INSERT INTO `business_partner_contract_history` VALUES (3,3,'2024-01-01','2024-12-31',1,'2024-06-28 12:37:08',4,NULL,NULL),(9,1,'2019-01-01','2020-12-31',0,'2024-06-29 11:22:35',4,'2024-06-29 11:51:30',4),(10,1,'2022-01-01','2023-12-31',1,'2024-06-29 11:51:30',4,NULL,NULL);
+/*!40000 ALTER TABLE `business_partner_contract_history` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `business_partner_doc_upload`
+--
+
+DROP TABLE IF EXISTS `business_partner_doc_upload`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `business_partner_doc_upload` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `business_partner_id` int(11) NOT NULL,
+  `academy_enclosure_document_id` int(11) NOT NULL,
+  `file_name` text NOT NULL,
+  `uploaded_on` datetime NOT NULL,
+  `uploaded_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `business_partner_doc_upload`
+--
+
+LOCK TABLES `business_partner_doc_upload` WRITE;
+/*!40000 ALTER TABLE `business_partner_doc_upload` DISABLE KEYS */;
+INSERT INTO `business_partner_doc_upload` VALUES (3,2,1,'RP-000002_3.pdf','2024-06-28 12:35:46',4,NULL,NULL),(4,2,2,'RP-000002_4.xlsx','2024-06-28 12:35:46',4,NULL,NULL),(5,3,1,'RP-000003_5.pdf','2024-06-28 12:37:08',4,NULL,NULL),(6,3,2,'RP-000003_6.xlsx','2024-06-28 12:37:08',4,NULL,NULL),(9,1,2,'RP-000001_9.docx','2024-07-03 15:44:37',4,'2024-07-03 15:45:19',4);
+/*!40000 ALTER TABLE `business_partner_doc_upload` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -144,7 +265,7 @@ CREATE TABLE `business_vertical` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +295,7 @@ CREATE TABLE `business_vertical_group` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +304,7 @@ CREATE TABLE `business_vertical_group` (
 
 LOCK TABLES `business_vertical_group` WRITE;
 /*!40000 ALTER TABLE `business_vertical_group` DISABLE KEYS */;
-INSERT INTO `business_vertical_group` VALUES (1,'Team Soprt',1,1,'2024-06-20 11:33:30',4,'2024-06-20 11:40:22',4);
+INSERT INTO `business_vertical_group` VALUES (1,'Team Soprt',1,1,'2024-06-20 11:33:30',4,'2024-06-20 11:40:22',4),(2,'Team Soprt 11',1,1,'2024-06-27 15:36:51',4,NULL,NULL),(3,'Team Soprt 12',1,1,'2024-06-27 15:36:51',4,NULL,NULL),(10,'Team Soprt 11',1,1,'2024-06-27 15:47:47',4,NULL,NULL),(11,'Team Soprt 12',1,1,'2024-06-27 15:47:47',4,NULL,NULL),(12,'Team Soprt 11',1,1,'2024-06-27 15:49:16',4,NULL,NULL),(13,'Team Soprt 12',1,1,'2024-06-27 15:49:16',4,NULL,NULL),(14,'Team Soprt 11',1,1,'2024-06-27 15:50:17',4,NULL,NULL),(15,'Team Soprt 12',1,1,'2024-06-27 15:50:17',4,NULL,NULL),(16,'Team Soprt 11',1,1,'2024-06-27 15:50:37',4,NULL,NULL),(17,'Team Soprt 12',1,1,'2024-06-27 15:50:37',4,NULL,NULL);
 /*!40000 ALTER TABLE `business_vertical_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,7 +326,7 @@ CREATE TABLE `business_vertical_type` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -214,7 +335,7 @@ CREATE TABLE `business_vertical_type` (
 
 LOCK TABLES `business_vertical_type` WRITE;
 /*!40000 ALTER TABLE `business_vertical_type` DISABLE KEYS */;
-INSERT INTO `business_vertical_type` VALUES (1,'Team Soprt-2',1,1,1,'2024-06-20 13:51:22',4,'2024-06-20 13:56:44',4);
+INSERT INTO `business_vertical_type` VALUES (1,'Cricket',1,1,1,'2024-06-20 13:51:22',4,'2024-06-20 13:56:44',4),(2,'Foot Ball',1,1,1,'2024-06-26 13:27:22',4,NULL,NULL),(3,'Basket Ball',1,1,1,'2024-06-26 13:28:04',4,NULL,NULL),(4,'Golf',1,1,1,'2024-06-27 16:00:13',4,NULL,NULL);
 /*!40000 ALTER TABLE `business_vertical_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,7 +357,7 @@ CREATE TABLE `chapter_wise_topic` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -245,7 +366,7 @@ CREATE TABLE `chapter_wise_topic` (
 
 LOCK TABLES `chapter_wise_topic` WRITE;
 /*!40000 ALTER TABLE `chapter_wise_topic` DISABLE KEYS */;
-INSERT INTO `chapter_wise_topic` VALUES (2,2,2,'Topic-1',1,'2024-06-11 16:27:10',4,NULL,NULL),(3,2,2,'Topic-110',1,'2024-06-12 10:37:21',4,NULL,NULL);
+INSERT INTO `chapter_wise_topic` VALUES (2,2,2,'Topic-1',1,'2024-06-11 16:27:10',4,NULL,NULL),(3,2,2,'Topic-110',1,'2024-06-12 10:37:21',4,NULL,NULL),(4,2,2,'हिंदी व्याकरण',1,'2024-07-05 12:26:12',1,NULL,NULL),(5,2,2,'विराम चिह्न',1,'2024-07-05 12:26:12',1,NULL,NULL),(6,2,2,'पर्यायवाची शब्द',1,'2024-07-05 12:26:12',1,NULL,NULL);
 /*!40000 ALTER TABLE `chapter_wise_topic` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -258,15 +379,17 @@ DROP TABLE IF EXISTS `city`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `city` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
+  `name` text NOT NULL,
   `country_id` int(11) NOT NULL,
   `state_region_id` int(11) NOT NULL,
   `district_id` int(11) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -275,6 +398,7 @@ CREATE TABLE `city` (
 
 LOCK TABLES `city` WRITE;
 /*!40000 ALTER TABLE `city` DISABLE KEYS */;
+INSERT INTO `city` VALUES (1,'Bhilai',1,4,3,1,'2024-06-25 12:47:19',4,'2024-06-25 12:52:24',4),(23,'Anda',1,4,3,1,'2024-07-05 10:49:02',1,NULL,NULL),(24,'Dhamdha',1,4,3,1,'2024-07-05 10:49:02',1,NULL,NULL),(25,'Jamul',1,4,3,1,'2024-07-05 10:49:02',1,NULL,NULL),(26,'Patan',1,4,3,1,'2024-07-05 10:49:02',1,NULL,NULL);
 /*!40000 ALTER TABLE `city` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -287,10 +411,10 @@ DROP TABLE IF EXISTS `coach`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `coach` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(8) NOT NULL,
-  `name` varchar(150) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `name` text NOT NULL,
   `email` varchar(150) NOT NULL,
-  `mobile` varchar(10) NOT NULL,
+  `mobile` varchar(15) NOT NULL,
   `business_vertical_type_id` int(11) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL,
@@ -299,7 +423,7 @@ CREATE TABLE `coach` (
   `updated_by_id` int(11) DEFAULT NULL,
   `uuid` varchar(36) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -308,7 +432,7 @@ CREATE TABLE `coach` (
 
 LOCK TABLES `coach` WRITE;
 /*!40000 ALTER TABLE `coach` DISABLE KEYS */;
-INSERT INTO `coach` VALUES (2,'6Po9VA','Manish Kumar Mehta','manish551@gmail.com','9994848830',1,1,'2024-06-21 11:17:58',4,'2024-06-21 11:30:34',4,'d04e98f0-2f91-11ef-b305-5dd7364747d2');
+INSERT INTO `coach` VALUES (2,'C-000002','Manish Kumar Mehta','manish551@gmail.com','9994848830',1,0,'2024-06-21 11:17:58',4,'2024-06-21 11:30:34',4,'d04e98f0-2f91-11ef-b305-5dd7364747d2'),(5,'C-000005','Mukesh Pandit','mukesh1345@gmail.com','7773399302',1,0,'2024-06-26 12:59:10',4,NULL,NULL,'c7c95300-338d-11ef-bca2-21b3eedfc717'),(6,'C-000006','Rohit Singh','rohit99448@gmail.com','7713399302',1,1,'2024-06-26 12:59:54',4,NULL,NULL,'e21ecf50-338d-11ef-bca2-21b3eedfc717');
 /*!40000 ALTER TABLE `coach` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -369,12 +493,14 @@ DROP TABLE IF EXISTS `country`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `country` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
+  `name` varchar(200) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -383,6 +509,7 @@ CREATE TABLE `country` (
 
 LOCK TABLES `country` WRITE;
 /*!40000 ALTER TABLE `country` DISABLE KEYS */;
+INSERT INTO `country` VALUES (1,'India',1,'2024-06-24 14:09:22',4,'2024-07-04 16:46:31',4),(3,'USA',1,'2024-06-24 14:09:44',4,NULL,NULL),(22,'Nepal',1,'2024-07-04 16:35:54',4,'2024-07-04 16:46:31',4),(23,'Westindies',1,'2024-07-04 16:35:54',4,'2024-07-04 16:46:31',4),(40,'Afganistan',1,'2024-07-04 17:43:17',1,NULL,NULL),(41,'Pakistan',1,'2024-07-04 17:43:17',1,NULL,NULL),(42,'Russia',1,'2024-07-04 17:43:17',1,NULL,NULL),(43,'England',1,'2024-07-04 17:43:17',1,NULL,NULL),(44,'Saudi Arab',1,'2024-07-04 17:43:17',1,NULL,NULL);
 /*!40000 ALTER TABLE `country` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -395,14 +522,16 @@ DROP TABLE IF EXISTS `district`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `district` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
+  `name` text NOT NULL,
   `country_id` int(11) NOT NULL,
   `state_region_id` int(11) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -411,6 +540,7 @@ CREATE TABLE `district` (
 
 LOCK TABLES `district` WRITE;
 /*!40000 ALTER TABLE `district` DISABLE KEYS */;
+INSERT INTO `district` VALUES (1,'Bhopal',1,2,1,'2024-06-24 19:13:43',4,'2024-06-24 19:24:00',4),(3,'Durg',1,4,1,'2024-06-25 12:46:46',4,NULL,NULL),(4,'Raipur',1,4,1,'2024-07-04 20:13:00',1,NULL,NULL),(5,'Mahasamund',1,4,1,'2024-07-04 20:13:00',1,NULL,NULL),(6,'Balod',1,4,1,'2024-07-04 20:13:00',1,NULL,NULL),(7,'Baloda-Baazar',1,4,1,'2024-07-04 20:13:00',1,NULL,NULL);
 /*!40000 ALTER TABLE `district` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -561,13 +691,15 @@ DROP TABLE IF EXISTS `state_region`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `state_region` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
+  `name` text NOT NULL,
   `country_id` int(11) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -576,7 +708,103 @@ CREATE TABLE `state_region` (
 
 LOCK TABLES `state_region` WRITE;
 /*!40000 ALTER TABLE `state_region` DISABLE KEYS */;
+INSERT INTO `state_region` VALUES (2,'MadhyaPradesh',1,1,'2024-06-24 17:29:56',4,NULL,NULL),(4,'Chhattisgarh',1,1,'2024-06-24 19:15:42',4,NULL,NULL),(5,'Delhi',1,1,'2024-07-04 19:58:24',1,NULL,NULL),(6,'Maharastra',1,1,'2024-07-04 19:58:24',1,NULL,NULL);
 /*!40000 ALTER TABLE `state_region` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `study_center`
+--
+
+DROP TABLE IF EXISTS `study_center`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `study_center` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `business_partner_id` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `mobile` varchar(15) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `state_region_id` int(11) NOT NULL,
+  `district_id` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `pincode` varchar(9) NOT NULL,
+  `address` text NOT NULL,
+  `studey_center_type_id` int(11) NOT NULL,
+  `pan_number` varchar(10) DEFAULT NULL,
+  `gst_number` varchar(15) DEFAULT NULL,
+  `landlord_name` text,
+  `contact_person_name` text,
+  `contact_person_email` varchar(150) DEFAULT NULL,
+  `contact_person_mobile` varchar(15) DEFAULT NULL,
+  `study_center_agreement_history_id` int(11) DEFAULT NULL,
+  `study_center_reward_type_id` int(11) DEFAULT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `study_center`
+--
+
+LOCK TABLES `study_center` WRITE;
+/*!40000 ALTER TABLE `study_center` DISABLE KEYS */;
+/*!40000 ALTER TABLE `study_center` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `study_center_reward_type`
+--
+
+DROP TABLE IF EXISTS `study_center_reward_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `study_center_reward_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `study_center_reward_type`
+--
+
+LOCK TABLES `study_center_reward_type` WRITE;
+/*!40000 ALTER TABLE `study_center_reward_type` DISABLE KEYS */;
+INSERT INTO `study_center_reward_type` VALUES (1,'Rent'),(2,'Revenue Sharing'),(3,'Rent & Revenue Sharing');
+/*!40000 ALTER TABLE `study_center_reward_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `study_center_type`
+--
+
+DROP TABLE IF EXISTS `study_center_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `study_center_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `study_center_type`
+--
+
+LOCK TABLES `study_center_type` WRITE;
+/*!40000 ALTER TABLE `study_center_type` DISABLE KEYS */;
+INSERT INTO `study_center_type` VALUES (1,'Company Owned'),(2,'Company Operated'),(3,'Partner Captive');
+/*!40000 ALTER TABLE `study_center_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -681,14 +909,14 @@ CREATE TABLE `user` (
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(50) DEFAULT NULL,
   `email` varchar(150) NOT NULL,
-  `mobile` varchar(10) NOT NULL,
+  `mobile` varchar(15) NOT NULL,
   `gender` varchar(10) NOT NULL,
   `user_grade_id` int(11) NOT NULL,
   `user_category_id` int(11) DEFAULT NULL,
   `password` text NOT NULL,
   `profile_pic_file_name` text,
   `is_active` int(11) NOT NULL DEFAULT '1',
-  `is_approved_by_admin` int(11) NOT NULL DEFAULT '0',
+  `is_approved_by_admin` int(11) DEFAULT '0',
   `auth_token` text,
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
@@ -711,7 +939,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'HR','Admin','pkale71@gmail.com','9993443711','Male',1,1,'5816EE12CB8BD00C6D28A7B640D1D48E',NULL,1,1,NULL,'2024-05-20 12:26:39',0,NULL,NULL,NULL,NULL,'2024-05-20 12:26:39',0,NULL,NULL,'27537b39-1676-11ef-866d-54ee753f9eea'),(4,'Rohit',NULL,'rohitsingh@gmail.com','9993443701','Male',2,1,'5816EE12CB8BD00C6D28A7B640D1D48E','81c5bfd0-1739-11ef-9262-bb5f70f380f8_Pic.png',1,1,'LdTrweKSBaZR83oMrYfBmHfrt4QEqY7NBszlNDfZjo4EII5lh6nAmxHY','2024-05-21 11:45:22',1,NULL,NULL,NULL,NULL,'2024-05-27 16:16:13',1,'2024-05-21 15:16:00',1,'81c5bfd0-1739-11ef-9262-bb5f70f380f8'),(9,'Kamlesh','Singh','kamlesh.1223@gmail.com','7773443701','Male',5,1,'8A14FF7F88739EB67A837FB10BD35933',NULL,1,1,NULL,'2024-05-21 12:02:56',1,NULL,NULL,NULL,NULL,'2024-05-23 16:06:20',1,NULL,NULL,'f5c03b20-173b-11ef-86f5-1774f3e8216f'),(10,'Umesh','Yadav','umesh.yadav@gmail.com','7773443639','Male',5,1,'FD88B4A891D0ACC524777DEC2A6C1D05','a9177500-173f-11ef-86f5-1774f3e8216f_Pic.png',1,1,NULL,'2024-05-21 12:29:25',1,NULL,NULL,NULL,NULL,'2024-05-23 16:07:16',1,NULL,NULL,'a9177500-173f-11ef-86f5-1774f3e8216f'),(12,'Rajesh',NULL,'pkale71@yahoo.com','9993443712','Male',5,1,'FD88B4A891D0ACC524777DEC2A6C1D05',NULL,1,0,NULL,'2024-06-12 14:04:50',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'a229d270-2896-11ef-b5f4-6fdbbd826909');
+INSERT INTO `user` VALUES (1,'HR','Admin','pkale71@gmail.com','9993443711','Male',1,1,'5816EE12CB8BD00C6D28A7B640D1D48E',NULL,1,1,'FREHt5n5KuYdqPxrCo9vIdqwVsXw2uRT6chBe0ToZWxCWFjGzlCGL4BJ','2024-05-20 12:26:39',0,NULL,NULL,NULL,NULL,'2024-05-20 12:26:39',0,NULL,NULL,'27537b39-1676-11ef-866d-54ee753f9eea'),(4,'Rohit',NULL,'rohitsingh@gmail.com','9993443701','Male',2,1,'5816EE12CB8BD00C6D28A7B640D1D48E','81c5bfd0-1739-11ef-9262-bb5f70f380f8_Pic.png',1,1,'LdTrweKSBaZR83oMrYfBmHfrt4QEqY7NBszlNDfZjo4EII5lh6nAmxHY','2024-05-21 11:45:22',1,NULL,NULL,NULL,NULL,'2024-05-27 16:16:13',1,'2024-05-21 15:16:00',1,'81c5bfd0-1739-11ef-9262-bb5f70f380f8'),(9,'Kamlesh','Singh','kamlesh.1223@gmail.com','7773443701','Male',5,1,'8A14FF7F88739EB67A837FB10BD35933',NULL,1,1,NULL,'2024-05-21 12:02:56',1,NULL,NULL,NULL,NULL,'2024-05-23 16:06:20',1,NULL,NULL,'f5c03b20-173b-11ef-86f5-1774f3e8216f'),(10,'Umesh','Yadav','umesh.yadav@gmail.com','7773443639','Male',5,1,'FD88B4A891D0ACC524777DEC2A6C1D05','a9177500-173f-11ef-86f5-1774f3e8216f_Pic.png',1,1,NULL,'2024-05-21 12:29:25',1,NULL,NULL,NULL,NULL,'2024-05-23 16:07:16',1,NULL,NULL,'a9177500-173f-11ef-86f5-1774f3e8216f'),(12,'Rajesh',NULL,'pkale71@yahoo.com','9993443712','Male',5,1,'FD88B4A891D0ACC524777DEC2A6C1D05',NULL,1,0,NULL,'2024-06-12 14:04:50',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'a229d270-2896-11ef-b5f4-6fdbbd826909');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -780,7 +1008,7 @@ CREATE TABLE `user_login_logout_history` (
   `logout_on` datetime DEFAULT NULL,
   `logout_as` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -789,7 +1017,7 @@ CREATE TABLE `user_login_logout_history` (
 
 LOCK TABLES `user_login_logout_history` WRITE;
 /*!40000 ALTER TABLE `user_login_logout_history` DISABLE KEYS */;
-INSERT INTO `user_login_logout_history` VALUES (1,1,'JoAtervlxY11izO3SAConmT8FxYAY9EWBcZjN1Wx2VNi0QJVSF0ekWMu','2024-05-20 13:56:22','2024-05-20 13:57:02','Forced'),(2,1,'xTYjn84jotRq8eBQyDkezCQSDndpqTfeq7AxeFmbjf42zGIKVaIm1UuZ','2024-05-20 13:57:02','2024-05-20 14:13:55','Forced'),(3,1,'9wjPmFyiwO63BnQTbrXY6h9P7AgdcqdLiv1ywbEY6IU6eCH91J55rbzj','2024-05-20 14:13:55','2024-05-20 15:57:48','Normal'),(4,1,'9D6GCsQy0YbjHAMgz7lMlYztVAmlR8XNw14hGLzydxTPnjrwTDrEf3nl','2024-05-20 16:00:22','2024-05-20 16:49:40',NULL),(5,1,'W8RFlhGbvXFd9TJBZf3IJSmev9PSXyDqL6LFWfrbCGpkHSBfyZ42CzQt','2024-05-20 16:55:07','2024-05-21 10:26:20','Forced'),(6,1,'KFxeLwW9rdwKytGKP5q9TKbdY6zsZFlwKj5B89WDscFb7KGAkjGdmJ2j','2024-05-21 10:26:20','2024-05-21 14:07:23','Forced'),(7,1,'cSESWUmzcLs9mbINe8AmJI2aYDoqsBLls7QoHuKbbublPfc8dTcNrF2o','2024-05-21 14:07:23','2024-05-23 16:08:16','Forced'),(8,9,'emEmQKJb1I68gtxsuRPaN88XlXhttFpYl8guJx8O7Lffxfz1ZCWhKh6z','2024-05-23 16:06:32','2024-05-27 15:14:35','Forced'),(9,1,'NlqnIGvdiJpjKun3mDI8vyW44K7U5IaaRPHSR7nUGyy1A6s3rsTs42yI','2024-05-23 16:08:16','2024-05-23 16:11:53','Forced'),(10,1,'Dif9dTQxKqox524Sn8kPFljAW1gEItsdIp78pjdnyNd2znRfv8K8HoXr','2024-05-23 16:11:53','2024-05-23 16:15:16','Forced'),(11,1,'0a1Q4ocrAqXVC54YNjO7TmLmgViTVGpjXWIeuuCiPijZCkZN1ql8MlaA','2024-05-23 16:15:16','2024-05-23 16:15:29','Forced'),(12,1,'FhQEQ3Yk3Jmo1Bbdx8Q81kvtmrciTvWJgBhs02VOiZVBg66ozrP2dJz5','2024-05-23 16:15:29','2024-05-23 16:16:31','Forced'),(13,1,'dQlnGFgceQDZHk665sQSpBBXVVyfByi1oWbv75CPq9bOKHiwVfGl3xfM','2024-05-23 16:16:31','2024-05-23 16:18:25','Forced'),(14,1,'ZgzwIJinKj0Nf1O3Qu5xxM2QDkZCjmwyzTbpfXdvhcA5cpuu2846IJeQ','2024-05-23 16:18:25','2024-05-23 16:19:35','Forced'),(15,1,'58hIiRLWIqD9MDHIhQokbzvSoULTWlYV8WlXKKC9NFNinWgLrenAeDCe','2024-05-23 16:19:35','2024-05-23 16:20:38','Forced'),(16,1,'R8cfTsIAnugwMO5pPHBY4rnri6V8PyXwXpHg8y7l6b19AuO7qrl577VK','2024-05-23 16:20:38','2024-05-23 16:22:56','Forced'),(17,1,'h9VY33SciRFNfFiKEPUuXk6YpIKCrnXkThyvKkA4FD9pu7orX4zTth5E','2024-05-23 16:22:56','2024-05-24 15:48:23','Forced'),(18,1,'codd3jniQvEyyY9Wce8ek5cLoyP0Or57uX0lSxwWPjgJoxtzy7N1ZVL5','2024-05-24 15:48:23','2024-05-24 15:49:00','Forced'),(19,1,'VtbsxzRJ6zDbLT3fbtA6NPoEVngz8RGKX83Xqu3p3Ctu5IcjqOLlBtmJ','2024-05-24 15:49:00','2024-05-24 17:22:36','Forced'),(20,1,'jmIX647AzAErVwMfU5Z4Jv1AZ4QxZOystTjlmlkOP2OLaberQnm4CN2i','2024-05-24 17:22:36','2024-05-24 17:23:25','Forced'),(21,1,'sgdn0OGUU6KzIEn3tUrfiPeDXVM4biANTuFgkklXySQm9fvVBOYM9qyV','2024-05-24 17:23:25','2024-05-24 17:24:18','Forced'),(22,1,'howoRHbD9Dt0Zk4yDhwdBATx8bgreSDw1jjOZsdwu7oloKA2fO6pLflN','2024-05-24 17:24:18','2024-05-24 17:24:38','Forced'),(23,1,'s6RRx7n7TJfRA2Fc8EloSRWORxZj8KBtA1wp69rIRqrIsyW4tImyMcL7','2024-05-24 17:24:38','2024-05-24 17:25:10','Forced'),(24,1,'uGs73n8s2wRfvfdm6yujdZ1aNrpPloqGOnX7n3O0Yo4WgCDhfpgYFx6Z','2024-05-24 17:25:10','2024-05-24 17:25:49','Forced'),(25,1,'vhEMY2V8fO7S0fN4Q1VduvAyUqrb7HzF4KxQGXpuskPRFoBDyHLV10vj','2024-05-24 17:25:49','2024-05-24 18:06:35','Forced'),(26,1,'rbvC4y6ho1ukyFTBog8v3aEXrJJ3M8eSf7RdrPWCKbnryaqk46n49qHb','2024-05-24 18:06:35','2024-05-24 18:08:07','Forced'),(27,1,'IhRxRIWNHAPCyz3zVCEk0yf467CP7Ks5oS4nMvoIKYzKV1yMedQFjeON','2024-05-24 18:08:07','2024-05-24 18:08:29','Forced'),(28,1,'wOzvqzyEbJRFwhDUjRQS1qcQZR0BXzfII0nnXsOEcG9TxbVBmZQdtxiE','2024-05-24 18:08:29','2024-05-24 18:08:34','Forced'),(29,1,'gvM2t45ElQWawDmE7v6gA91GtDGHWyhqtACRfoqWLc1KBbtiA3Uo2aCl','2024-05-24 18:08:34','2024-05-24 18:08:51','Forced'),(30,1,'74XfrpFohyHLwh9brDVJ0GB7C0GLmHSdFdbET1ykdr0VtbH35V9QxBOI','2024-05-24 18:08:51','2024-05-24 18:09:26','Forced'),(31,1,'ScJY6V9jsZSt8hLlWPyliI96wuaHHLNtbdtBc8dz7ywRN2Rp4JZmYsjK','2024-05-24 18:09:26','2024-05-24 18:09:36','Forced'),(32,1,'gMbqdLiCdq9QN7lCf7LRaNkGVKLVcEVZA1n0MbdoNnOwbBLUiDSCCF2J','2024-05-24 18:09:36','2024-05-24 18:10:32','Forced'),(33,1,'XtJKZsxlfNpEpChEJ5aPRNYNipUQJKq5SzpAEMSi6OgE6blbz1vm7Acu','2024-05-24 18:10:32','2024-05-24 18:10:43','Forced'),(34,1,'T7gT7ZyIlfrSNmZ4usBGsgK4A7C4wZiXXrqdDzQkeUtm4QuIzb6uYXVb','2024-05-24 18:10:43','2024-05-24 18:13:02','Forced'),(35,1,'BzZq7QXRSC61PbEbkvJkHgrpmMPWW79eKEHOco3Kh8DnKsBoyjEFSp1Y','2024-05-24 18:13:02','2024-05-24 18:15:07','Forced'),(36,1,'LTpWCVdySfHAt45A2Y6VBIS6XRL1O3DNaHAJDYMlwrslL921g5mommbe','2024-05-24 18:15:07','2024-05-24 18:16:45','Forced'),(37,1,'7CnrgOFN3oiPbW5lr9mQUs4Q6qBO3JHUA3RdiYdfcLKHsM5n0UPnUtHl','2024-05-24 18:16:45','2024-05-27 14:47:18','Forced'),(38,1,'LAofL5xQN5tYSQyp9dm61GwvpabDkAJ2pYyyZHKYT3qfkEyI5LtHvpdE','2024-05-27 14:47:18','2024-05-27 14:50:20','Forced'),(39,1,'D3ScStWpRzWjeBcdp5UxHicVAMTKucw3y7hxHan11RYOHZoJyQvM8kHl','2024-05-27 14:50:20','2024-05-27 14:51:31','Forced'),(40,1,'15ljuw9Y35yJb5f5szTUjSuyAq32CH6boPLSOQx6fX0zxGnQjAR5IYyb','2024-05-27 14:51:31','2024-05-27 14:51:51','Forced'),(41,1,'czrneWKpX1eHw61pcwuKHglKePk2AQjhDQmB031EenJTLFZlJoVSe47V','2024-05-27 14:51:51','2024-05-27 14:58:15','Forced'),(42,1,'zt4acBekoscovfgDlm4OW4QkVl69ilsVfd2wsqQ4AXSF0XO5gR2XSnrr','2024-05-27 14:58:15','2024-05-27 14:59:36','Forced'),(43,1,'2DqLt5ExeOrGV9DNFeX8PzjQD6RYEUjvDbBTdsr7YMF5fTKuMTVBfZ9a','2024-05-27 14:59:36','2024-05-27 14:59:44','Forced'),(44,1,'45Q7ONITVkF4LkM0QWetloYgg3Xru7qfjyK6mZMfXJHcAdPPP5zHZ6H5','2024-05-27 14:59:44','2024-05-27 14:59:55','Forced'),(45,1,'66noUms9czjJgcgkm2NwozCIjDu8sqTHRtUp9fKj941Ih7e6v8C0EONp','2024-05-27 14:59:55','2024-05-27 15:01:13','Forced'),(46,1,'S4XlMvnw6XV9RK3BFtIt73Uo7C1PpLvwFsUAr58DGNyHzR4vsL83NpIE','2024-05-27 15:01:13','2024-05-27 15:01:50','Forced'),(47,1,'419SDulLVyC8fAQmSQPprDhuzcCjaUkM3cq3xAsTqBzCM5KIZWUD1c8f','2024-05-27 15:01:50','2024-05-27 15:02:51','Forced'),(48,1,'D0WvYV8gebjIcczLvtI7f7Z1MAmZqShglGSNfvZQpb0uvbCzRcoIUMQR','2024-05-27 15:02:51','2024-05-27 15:12:45','Forced'),(49,1,'tA0offbfyW3HqjTpqxfbr16lCYZ6pDpr7TDTIaNSW4voLIMvpUiGprm2','2024-05-27 15:12:45','2024-05-27 15:26:14','Forced'),(50,9,'sxkx7gwLlyULEi13bj2CIq09SSFtsNgm9b7lRnfsk75dRo42VsSGkbR1','2024-05-27 15:14:35','2024-05-27 15:27:19','Forced'),(51,1,'Fa8T5zfvAQYxejmWLqee9PQkms6KEBkqJavnCeSKxDgiZzhGEyLS6CKC','2024-05-27 15:26:14','2024-05-27 15:26:20','Normal'),(52,9,'aPp3AXiA86gNbD2VkvDs2Kc34G53ZQ2gY1T4H2xxcp7OytoWggN7EozM','2024-05-27 15:27:19','2024-05-27 15:35:07','Normal'),(53,9,'neUXdIJdP4U0oTpX3Uyb8LkPJjPKufLofWzaXqhiBU2hhVpY8QzsndF2','2024-05-27 15:35:10','2024-05-27 15:38:24','Forced'),(54,9,'zqi5Kz7CrVEhv9juksItbPAEdGq1C1EgehyXPgIovpPUMTRVGiQpcIrW','2024-05-27 15:38:24','2024-05-27 15:39:58','Forced'),(55,9,'LejDkZYevyhkPxJWJ6rYvTNL136yKF1UDQDA3r5RJ3bQdkBESjtm3o6W','2024-05-27 15:39:58','2024-05-27 15:43:50','Forced'),(56,9,'Pg2Iz9I6iglDxRIMyVNQjj5eTNzjOJ1GC1INuZ7cfueiFO9GcMcBRNwN','2024-05-27 15:43:50','2024-05-27 15:44:48','Forced'),(57,9,'KphDBBYPzc60XdiY1862bZkMtCXx1JS96xAVvitFCOdioNh3Zdtrr9Gu','2024-05-27 15:44:48','2024-05-27 15:45:43','Forced'),(58,9,'GCmwjdHvJ1b4JVK66uWmRd1eSF2BuHsEAl1IBhAi2JREEK6XiAIPLwGS','2024-05-27 15:45:43','2024-05-27 15:46:23','Forced'),(59,9,'U2dB4xwtyG9vVirQL9HkZU47cDs8dChuPAitTMJcP4R4BvlgKP2sgRgs','2024-05-27 15:46:23','2024-05-27 15:48:23','Forced'),(60,9,'8hCzTJXOcIbR6pfSJVqTwrS6V5E4iy3U1BXvYxi2Zg4Bxi2ooBgmVibC','2024-05-27 15:48:23','2024-05-27 16:13:21','Normal'),(61,4,'2QVu8ivqSnEIxlw8F1ERkONvBnhgTLHUE1p2TqcEAsBsaGvjxbHjexpg','2024-05-27 16:17:00','2024-05-27 16:17:37','Forced'),(62,4,'jVLVcKuSWHrQd4EvcEAc1BIqgltLPgCAwjwS38ZGNLYyvKdnv4I8Ssb6','2024-05-27 16:17:37','2024-05-27 16:18:47','Forced'),(63,4,'Erqis4fUQBuOYYH8MEfZ5BGi6hnrY39QOY9tqEkLt4Z5RdiGCf6URG3F','2024-05-27 16:18:47','2024-05-27 16:19:01','Forced'),(64,4,'LdTrweKSBaZR83oMrYfBmHfrt4QEqY7NBszlNDfZjo4EII5lh6nAmxHY','2024-05-27 16:19:01',NULL,NULL);
+INSERT INTO `user_login_logout_history` VALUES (1,1,'JoAtervlxY11izO3SAConmT8FxYAY9EWBcZjN1Wx2VNi0QJVSF0ekWMu','2024-05-20 13:56:22','2024-05-20 13:57:02','Forced'),(2,1,'xTYjn84jotRq8eBQyDkezCQSDndpqTfeq7AxeFmbjf42zGIKVaIm1UuZ','2024-05-20 13:57:02','2024-05-20 14:13:55','Forced'),(3,1,'9wjPmFyiwO63BnQTbrXY6h9P7AgdcqdLiv1ywbEY6IU6eCH91J55rbzj','2024-05-20 14:13:55','2024-05-20 15:57:48','Normal'),(4,1,'9D6GCsQy0YbjHAMgz7lMlYztVAmlR8XNw14hGLzydxTPnjrwTDrEf3nl','2024-05-20 16:00:22','2024-05-20 16:49:40',NULL),(5,1,'W8RFlhGbvXFd9TJBZf3IJSmev9PSXyDqL6LFWfrbCGpkHSBfyZ42CzQt','2024-05-20 16:55:07','2024-05-21 10:26:20','Forced'),(6,1,'KFxeLwW9rdwKytGKP5q9TKbdY6zsZFlwKj5B89WDscFb7KGAkjGdmJ2j','2024-05-21 10:26:20','2024-05-21 14:07:23','Forced'),(7,1,'cSESWUmzcLs9mbINe8AmJI2aYDoqsBLls7QoHuKbbublPfc8dTcNrF2o','2024-05-21 14:07:23','2024-05-23 16:08:16','Forced'),(8,9,'emEmQKJb1I68gtxsuRPaN88XlXhttFpYl8guJx8O7Lffxfz1ZCWhKh6z','2024-05-23 16:06:32','2024-05-27 15:14:35','Forced'),(9,1,'NlqnIGvdiJpjKun3mDI8vyW44K7U5IaaRPHSR7nUGyy1A6s3rsTs42yI','2024-05-23 16:08:16','2024-05-23 16:11:53','Forced'),(10,1,'Dif9dTQxKqox524Sn8kPFljAW1gEItsdIp78pjdnyNd2znRfv8K8HoXr','2024-05-23 16:11:53','2024-05-23 16:15:16','Forced'),(11,1,'0a1Q4ocrAqXVC54YNjO7TmLmgViTVGpjXWIeuuCiPijZCkZN1ql8MlaA','2024-05-23 16:15:16','2024-05-23 16:15:29','Forced'),(12,1,'FhQEQ3Yk3Jmo1Bbdx8Q81kvtmrciTvWJgBhs02VOiZVBg66ozrP2dJz5','2024-05-23 16:15:29','2024-05-23 16:16:31','Forced'),(13,1,'dQlnGFgceQDZHk665sQSpBBXVVyfByi1oWbv75CPq9bOKHiwVfGl3xfM','2024-05-23 16:16:31','2024-05-23 16:18:25','Forced'),(14,1,'ZgzwIJinKj0Nf1O3Qu5xxM2QDkZCjmwyzTbpfXdvhcA5cpuu2846IJeQ','2024-05-23 16:18:25','2024-05-23 16:19:35','Forced'),(15,1,'58hIiRLWIqD9MDHIhQokbzvSoULTWlYV8WlXKKC9NFNinWgLrenAeDCe','2024-05-23 16:19:35','2024-05-23 16:20:38','Forced'),(16,1,'R8cfTsIAnugwMO5pPHBY4rnri6V8PyXwXpHg8y7l6b19AuO7qrl577VK','2024-05-23 16:20:38','2024-05-23 16:22:56','Forced'),(17,1,'h9VY33SciRFNfFiKEPUuXk6YpIKCrnXkThyvKkA4FD9pu7orX4zTth5E','2024-05-23 16:22:56','2024-05-24 15:48:23','Forced'),(18,1,'codd3jniQvEyyY9Wce8ek5cLoyP0Or57uX0lSxwWPjgJoxtzy7N1ZVL5','2024-05-24 15:48:23','2024-05-24 15:49:00','Forced'),(19,1,'VtbsxzRJ6zDbLT3fbtA6NPoEVngz8RGKX83Xqu3p3Ctu5IcjqOLlBtmJ','2024-05-24 15:49:00','2024-05-24 17:22:36','Forced'),(20,1,'jmIX647AzAErVwMfU5Z4Jv1AZ4QxZOystTjlmlkOP2OLaberQnm4CN2i','2024-05-24 17:22:36','2024-05-24 17:23:25','Forced'),(21,1,'sgdn0OGUU6KzIEn3tUrfiPeDXVM4biANTuFgkklXySQm9fvVBOYM9qyV','2024-05-24 17:23:25','2024-05-24 17:24:18','Forced'),(22,1,'howoRHbD9Dt0Zk4yDhwdBATx8bgreSDw1jjOZsdwu7oloKA2fO6pLflN','2024-05-24 17:24:18','2024-05-24 17:24:38','Forced'),(23,1,'s6RRx7n7TJfRA2Fc8EloSRWORxZj8KBtA1wp69rIRqrIsyW4tImyMcL7','2024-05-24 17:24:38','2024-05-24 17:25:10','Forced'),(24,1,'uGs73n8s2wRfvfdm6yujdZ1aNrpPloqGOnX7n3O0Yo4WgCDhfpgYFx6Z','2024-05-24 17:25:10','2024-05-24 17:25:49','Forced'),(25,1,'vhEMY2V8fO7S0fN4Q1VduvAyUqrb7HzF4KxQGXpuskPRFoBDyHLV10vj','2024-05-24 17:25:49','2024-05-24 18:06:35','Forced'),(26,1,'rbvC4y6ho1ukyFTBog8v3aEXrJJ3M8eSf7RdrPWCKbnryaqk46n49qHb','2024-05-24 18:06:35','2024-05-24 18:08:07','Forced'),(27,1,'IhRxRIWNHAPCyz3zVCEk0yf467CP7Ks5oS4nMvoIKYzKV1yMedQFjeON','2024-05-24 18:08:07','2024-05-24 18:08:29','Forced'),(28,1,'wOzvqzyEbJRFwhDUjRQS1qcQZR0BXzfII0nnXsOEcG9TxbVBmZQdtxiE','2024-05-24 18:08:29','2024-05-24 18:08:34','Forced'),(29,1,'gvM2t45ElQWawDmE7v6gA91GtDGHWyhqtACRfoqWLc1KBbtiA3Uo2aCl','2024-05-24 18:08:34','2024-05-24 18:08:51','Forced'),(30,1,'74XfrpFohyHLwh9brDVJ0GB7C0GLmHSdFdbET1ykdr0VtbH35V9QxBOI','2024-05-24 18:08:51','2024-05-24 18:09:26','Forced'),(31,1,'ScJY6V9jsZSt8hLlWPyliI96wuaHHLNtbdtBc8dz7ywRN2Rp4JZmYsjK','2024-05-24 18:09:26','2024-05-24 18:09:36','Forced'),(32,1,'gMbqdLiCdq9QN7lCf7LRaNkGVKLVcEVZA1n0MbdoNnOwbBLUiDSCCF2J','2024-05-24 18:09:36','2024-05-24 18:10:32','Forced'),(33,1,'XtJKZsxlfNpEpChEJ5aPRNYNipUQJKq5SzpAEMSi6OgE6blbz1vm7Acu','2024-05-24 18:10:32','2024-05-24 18:10:43','Forced'),(34,1,'T7gT7ZyIlfrSNmZ4usBGsgK4A7C4wZiXXrqdDzQkeUtm4QuIzb6uYXVb','2024-05-24 18:10:43','2024-05-24 18:13:02','Forced'),(35,1,'BzZq7QXRSC61PbEbkvJkHgrpmMPWW79eKEHOco3Kh8DnKsBoyjEFSp1Y','2024-05-24 18:13:02','2024-05-24 18:15:07','Forced'),(36,1,'LTpWCVdySfHAt45A2Y6VBIS6XRL1O3DNaHAJDYMlwrslL921g5mommbe','2024-05-24 18:15:07','2024-05-24 18:16:45','Forced'),(37,1,'7CnrgOFN3oiPbW5lr9mQUs4Q6qBO3JHUA3RdiYdfcLKHsM5n0UPnUtHl','2024-05-24 18:16:45','2024-05-27 14:47:18','Forced'),(38,1,'LAofL5xQN5tYSQyp9dm61GwvpabDkAJ2pYyyZHKYT3qfkEyI5LtHvpdE','2024-05-27 14:47:18','2024-05-27 14:50:20','Forced'),(39,1,'D3ScStWpRzWjeBcdp5UxHicVAMTKucw3y7hxHan11RYOHZoJyQvM8kHl','2024-05-27 14:50:20','2024-05-27 14:51:31','Forced'),(40,1,'15ljuw9Y35yJb5f5szTUjSuyAq32CH6boPLSOQx6fX0zxGnQjAR5IYyb','2024-05-27 14:51:31','2024-05-27 14:51:51','Forced'),(41,1,'czrneWKpX1eHw61pcwuKHglKePk2AQjhDQmB031EenJTLFZlJoVSe47V','2024-05-27 14:51:51','2024-05-27 14:58:15','Forced'),(42,1,'zt4acBekoscovfgDlm4OW4QkVl69ilsVfd2wsqQ4AXSF0XO5gR2XSnrr','2024-05-27 14:58:15','2024-05-27 14:59:36','Forced'),(43,1,'2DqLt5ExeOrGV9DNFeX8PzjQD6RYEUjvDbBTdsr7YMF5fTKuMTVBfZ9a','2024-05-27 14:59:36','2024-05-27 14:59:44','Forced'),(44,1,'45Q7ONITVkF4LkM0QWetloYgg3Xru7qfjyK6mZMfXJHcAdPPP5zHZ6H5','2024-05-27 14:59:44','2024-05-27 14:59:55','Forced'),(45,1,'66noUms9czjJgcgkm2NwozCIjDu8sqTHRtUp9fKj941Ih7e6v8C0EONp','2024-05-27 14:59:55','2024-05-27 15:01:13','Forced'),(46,1,'S4XlMvnw6XV9RK3BFtIt73Uo7C1PpLvwFsUAr58DGNyHzR4vsL83NpIE','2024-05-27 15:01:13','2024-05-27 15:01:50','Forced'),(47,1,'419SDulLVyC8fAQmSQPprDhuzcCjaUkM3cq3xAsTqBzCM5KIZWUD1c8f','2024-05-27 15:01:50','2024-05-27 15:02:51','Forced'),(48,1,'D0WvYV8gebjIcczLvtI7f7Z1MAmZqShglGSNfvZQpb0uvbCzRcoIUMQR','2024-05-27 15:02:51','2024-05-27 15:12:45','Forced'),(49,1,'tA0offbfyW3HqjTpqxfbr16lCYZ6pDpr7TDTIaNSW4voLIMvpUiGprm2','2024-05-27 15:12:45','2024-05-27 15:26:14','Forced'),(50,9,'sxkx7gwLlyULEi13bj2CIq09SSFtsNgm9b7lRnfsk75dRo42VsSGkbR1','2024-05-27 15:14:35','2024-05-27 15:27:19','Forced'),(51,1,'Fa8T5zfvAQYxejmWLqee9PQkms6KEBkqJavnCeSKxDgiZzhGEyLS6CKC','2024-05-27 15:26:14','2024-05-27 15:26:20','Normal'),(52,9,'aPp3AXiA86gNbD2VkvDs2Kc34G53ZQ2gY1T4H2xxcp7OytoWggN7EozM','2024-05-27 15:27:19','2024-05-27 15:35:07','Normal'),(53,9,'neUXdIJdP4U0oTpX3Uyb8LkPJjPKufLofWzaXqhiBU2hhVpY8QzsndF2','2024-05-27 15:35:10','2024-05-27 15:38:24','Forced'),(54,9,'zqi5Kz7CrVEhv9juksItbPAEdGq1C1EgehyXPgIovpPUMTRVGiQpcIrW','2024-05-27 15:38:24','2024-05-27 15:39:58','Forced'),(55,9,'LejDkZYevyhkPxJWJ6rYvTNL136yKF1UDQDA3r5RJ3bQdkBESjtm3o6W','2024-05-27 15:39:58','2024-05-27 15:43:50','Forced'),(56,9,'Pg2Iz9I6iglDxRIMyVNQjj5eTNzjOJ1GC1INuZ7cfueiFO9GcMcBRNwN','2024-05-27 15:43:50','2024-05-27 15:44:48','Forced'),(57,9,'KphDBBYPzc60XdiY1862bZkMtCXx1JS96xAVvitFCOdioNh3Zdtrr9Gu','2024-05-27 15:44:48','2024-05-27 15:45:43','Forced'),(58,9,'GCmwjdHvJ1b4JVK66uWmRd1eSF2BuHsEAl1IBhAi2JREEK6XiAIPLwGS','2024-05-27 15:45:43','2024-05-27 15:46:23','Forced'),(59,9,'U2dB4xwtyG9vVirQL9HkZU47cDs8dChuPAitTMJcP4R4BvlgKP2sgRgs','2024-05-27 15:46:23','2024-05-27 15:48:23','Forced'),(60,9,'8hCzTJXOcIbR6pfSJVqTwrS6V5E4iy3U1BXvYxi2Zg4Bxi2ooBgmVibC','2024-05-27 15:48:23','2024-05-27 16:13:21','Normal'),(61,4,'2QVu8ivqSnEIxlw8F1ERkONvBnhgTLHUE1p2TqcEAsBsaGvjxbHjexpg','2024-05-27 16:17:00','2024-05-27 16:17:37','Forced'),(62,4,'jVLVcKuSWHrQd4EvcEAc1BIqgltLPgCAwjwS38ZGNLYyvKdnv4I8Ssb6','2024-05-27 16:17:37','2024-05-27 16:18:47','Forced'),(63,4,'Erqis4fUQBuOYYH8MEfZ5BGi6hnrY39QOY9tqEkLt4Z5RdiGCf6URG3F','2024-05-27 16:18:47','2024-05-27 16:19:01','Forced'),(64,4,'LdTrweKSBaZR83oMrYfBmHfrt4QEqY7NBszlNDfZjo4EII5lh6nAmxHY','2024-05-27 16:19:01','2024-06-27 16:26:13','Forced'),(65,4,'1EAM9KWWWVTYGcxGrylmTYndHbGdXRgLCTHHwVZfIPdtl9G2AHO3tgh7','2024-06-27 16:26:13','2024-06-27 16:36:04','Forced'),(66,4,'KCnU2tEUCpSUAV5s2mEps8blUxpQTs7ZdteJFsqd5NzIzorrpY4s8Vuw','2024-06-27 16:36:04',NULL,NULL),(67,1,'Bgb3Gjx9uyatzAvphpvwzpWswfAuOWA1TyjUOqlZOLmOD7WX3u0pu3ly','2024-06-27 16:36:24','2024-06-27 16:43:21','Forced'),(68,1,'FREHt5n5KuYdqPxrCo9vIdqwVsXw2uRT6chBe0ToZWxCWFjGzlCGL4BJ','2024-06-27 16:43:21',NULL,NULL);
 /*!40000 ALTER TABLE `user_login_logout_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -807,7 +1035,7 @@ CREATE TABLE `user_module` (
   `user_role_id` int(11) NOT NULL,
   `user_type_id` int(11) NOT NULL,
   `is_active` int(11) DEFAULT '1',
-  `is_approved_by_module_admin` int(11) NOT NULL DEFAULT '0',
+  `is_approved_by_module_admin` int(11) DEFAULT '0',
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
   `approved_on` datetime DEFAULT NULL,
@@ -876,7 +1104,7 @@ CREATE TABLE `user_on_boarding_link` (
   `is_sent` int(11) DEFAULT '0',
   `created_user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -955,4 +1183,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-21 11:58:27
+-- Dump completed on 2024-07-05 12:32:43

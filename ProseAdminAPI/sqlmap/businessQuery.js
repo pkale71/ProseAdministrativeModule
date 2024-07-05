@@ -189,6 +189,81 @@ db.getCommercialTerm = (id) =>
     })
 };
 
+db.getStudyCenterRewardTypes = () => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT scrt.id, scrt.name
+            FROM study_center_reward_type scrt 
+            ORDER BY scrt.name`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getStudyCenterTypes = () => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sct.id, sct.name
+            FROM study_center_type sct 
+            ORDER BY sct.name`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getStudyCenterType = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sct.id, sct.name
+            FROM study_center_type sct 
+            WHERE sct.id = ${id}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.getBusinessVerticals = (action) => 
 {
     return new Promise((resolve, reject) => 
@@ -1325,6 +1400,36 @@ db.insertCountry = (country) =>
     })
 };
 
+db.insertMultipleCountry = (countryData, createdById) => 
+{
+    let sqlValues = '';
+    for(let i=0;i<countryData.length;i++)
+    {
+        sqlValues = sqlValues == '' ? `('${countryData[i].name}', NOW(), ${createdById})` : `${sqlValues}, ('${countryData[i].name}', NOW(), ${createdById})`;
+    }
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO country (name, created_on, created_by_id)
+            VALUES ${sqlValues}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.updateCountry = (country) => 
 {
     return new Promise((resolve, reject) => 
@@ -1502,6 +1607,36 @@ db.insertStateRegion = (stateRegion) =>
         {
             let sql = `INSERT INTO state_region (name, country_id, created_on, created_by_id)
             VALUES('${stateRegion.name}', ${stateRegion.countryId}, NOW(), ${stateRegion.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertMultipleStateRegion = (stateRegionData, countryId, createdById) => 
+{
+    let sqlValues = '';
+    for(let i=0;i<stateRegionData.length;i++)
+    {
+        sqlValues = sqlValues == '' ? `('${stateRegionData[i].name}', ${countryId}, NOW(), ${createdById})` : `${sqlValues}, ('${stateRegionData[i].name}', ${countryId}, NOW(), ${createdById})`;
+    }
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO state_region (name, country_id, created_on, created_by_id)
+            VALUES ${sqlValues}`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -1736,6 +1871,36 @@ db.insertDistrict = (district) =>
     })
 };
 
+db.insertMultipleDistrict = (districtData, countryId, stateRegionId, createdById) => 
+{
+    let sqlValues = '';
+    for(let i=0;i<districtData.length;i++)
+    {
+        sqlValues = sqlValues == '' ? `('${districtData[i].name}', ${countryId}, ${stateRegionId}, NOW(), ${createdById})` : `${sqlValues}, ('${districtData[i].name}', ${countryId}, ${stateRegionId}, NOW(), ${createdById})`;
+    }
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO district (name, country_id, state_region_id, created_on, created_by_id)
+            VALUES ${sqlValues}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.updateDistrict = (district, isExist) => 
 {
     return new Promise((resolve, reject) => 
@@ -1834,7 +1999,7 @@ db.getCities = (countryId, stateRegionId, districtId, action) =>
             WHERE ct.country_id = ${countryId} AND ct.state_region_id = ${stateRegionId}`;
             if(parseInt(districtId) > 0)
             {
-                sql = sql + ` AND ct.district_id = ${stateRegionId}`;
+                sql = sql + ` AND ct.district_id = ${districtId}`;
             }
             if(action == "Active")
             {
@@ -1842,7 +2007,7 @@ db.getCities = (countryId, stateRegionId, districtId, action) =>
             }
             sql = sql + ` GROUP BY ct.id
             ORDER BY ct.name`;
-            
+           
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1948,6 +2113,36 @@ db.insertCity = (city) =>
             let sql = `INSERT INTO city (name, country_id, state_region_id, district_id, created_on, created_by_id)
             VALUES('${city.name}', ${city.countryId}, ${city.stateRegionId}, ${city.districtId}, NOW(), ${city.createdById})`;
             
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertMultipleCity = (cityData, countryId, stateRegionId, districtId, createdById) => 
+{
+    let sqlValues = '';
+    for(let i=0;i<cityData.length;i++)
+    {
+        sqlValues = sqlValues == '' ? `('${cityData[i].name}', ${countryId}, ${stateRegionId}, ${districtId}, NOW(), ${createdById})` : `${sqlValues}, ('${cityData[i].name}', ${countryId}, ${stateRegionId}, ${districtId}, NOW(), ${createdById})`;
+    }
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO city (name, country_id, state_region_id, district_id, created_on, created_by_id)
+            VALUES ${sqlValues}`;
+
             dbConn.query(sql, (error, result) => 
             {
                 if(error)

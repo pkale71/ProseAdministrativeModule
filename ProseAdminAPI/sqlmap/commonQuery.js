@@ -2277,6 +2277,36 @@ db.insertChapterWiseTopic = (ChapterWiseTopic) =>
     })
 };
 
+db.insertMultipleTopic = (topicData, academicSessionId, chapterId, createdById) => 
+{
+    let sqlValues = '';
+    for(let i=0;i<topicData.length;i++)
+    {
+        sqlValues = sqlValues == '' ? `(${academicSessionId}, ${chapterId}, '${topicData[i].name}', NOW(), ${createdById})` : `${sqlValues}, (${academicSessionId}, ${chapterId}, '${topicData[i].name}', NOW(), ${createdById})`;
+    }
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO chapter_wise_topic (academic_session_id, subject_wise_chapter_id, name, created_on, created_by_id)
+            VALUES ${sqlValues}`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.updateChapterWiseTopic = (chapterWiseTopic) => 
 {
     return new Promise((resolve, reject) => 

@@ -82,7 +82,7 @@ module.exports = require('express').Router().get('/:formatFor', async(req,res) =
                 "status_code" : 500,
                 "message" : "Invalid Excel Format Request For Download",
                 "success" : false,
-                "error" : e
+                "error" : errorCode.getStatus(500)
             });
         }  
     } 

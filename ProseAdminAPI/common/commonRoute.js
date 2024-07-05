@@ -2,6 +2,7 @@ const express = require('express');
 const commonRoute = express.Router();
 let errorCodes = require('../util/errorCodes');
 let errorCode = new errorCodes();
+let uploads = require('../util/multerConfig.js');
 
 ///////Routes
 commonRoute.use('/updateStatus', require('../util/validateToken.js'), require('./update-status.js'));
@@ -48,6 +49,7 @@ commonRoute.use('/updateSubjectWiseChapter', require('../util/validateToken.js')
 commonRoute.use('/deleteSubjectWiseChapter', require('../util/validateToken.js'), require('./delete-subject-wise-chapter.js'));
 commonRoute.use('/getChapterWiseTopics', require('../util/validateToken.js'), require('./chapter-wise-topics.js'));
 commonRoute.use('/saveChapterWiseTopic', require('../util/validateToken.js'), require('./save-chapter-wise-topic.js'));
+commonRoute.use('/uploadChapterWiseTopics', uploads, require('../util/validateToken.js'), require('./upload-chapter-wise-topics.js'));
 commonRoute.use('/updateChapterWiseTopic', require('../util/validateToken.js'), require('./update-chapter-wise-topic.js'));
 commonRoute.use('/deleteChapterWiseTopic', require('../util/validateToken.js'), require('./delete-chapter-wise-topic.js'));
 
