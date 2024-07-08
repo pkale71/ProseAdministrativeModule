@@ -66,21 +66,21 @@ export class AcademyEnclosureDocumentListComponent {
       this.searchClicked = true;  
       let response = await this.businessService.getAcademyEnclosureDocuments('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
-        {
-          $('#tblAcademyEnclosureDocument').DataTable().destroy();
-          this.masterAcademyEnclosureDocuments = response.academyEnclosureDocuments;
-          this.academyEnclosureDocuments = this.masterAcademyEnclosureDocuments;
-          setTimeout(function(){
-            $('#tblAcademyEnclosureDocument').DataTable();
-          },1000);
-          this.searchClicked = false;
-          this.modalService.dismissAll();
-        }
-        else
-        {
+      {
+        $('#tblAcademyEnclosureDocument').DataTable().destroy();
+        this.masterAcademyEnclosureDocuments = response.academyEnclosureDocuments;
+        this.academyEnclosureDocuments = this.masterAcademyEnclosureDocuments;
+        setTimeout(function(){
+          $('#tblAcademyEnclosureDocument').DataTable();
+        },1000);
         this.searchClicked = false;
-        this.modalService.dismissAll(); 
-        }
+        this.modalService.dismissAll();
+      }
+      else
+      {
+      this.searchClicked = false;
+      this.modalService.dismissAll(); 
+      }
     }
     catch(e)
     {

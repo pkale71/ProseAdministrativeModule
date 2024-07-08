@@ -65,7 +65,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="mobile">Mobile&nbsp;<span style="color: red;">*</span></label>
-                                <input class="form-control input-md" id="mobile" type="number" required  readonly
+                                <input class="form-control input-md" id="mobile" type="text" required  readonly
                                 formControlName="mobile" maxlength="10"
                                 [ngClass]="{'is-invalid': !userProfileForm.controls['mobile'].valid && !isValidForm}"
                                 />
@@ -132,13 +132,11 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="userCategory" >Category&nbsp;
-                                    <span style="color: red;" *ngIf = "isRequired">*</span>
+                                <span style="color: red;" *ngIf = "isRequired">*</span>
                                 </label>
                                 <select class="form-control" id="userCategory" [ngRequired] = "isRequired"  
                                 [ngClass]="{'is-invalid': !userProfileForm.controls['userCategory'].valid && !isValidForm}" formControlName="userCategory">                       
-                                <option value="{{userCategory.id}}" *ngFor="let userCategory of userCategories">
-                                    {{userCategory.name}}
-                                </option>
+                                <option value="{{userCategory.id}}" *ngFor="let userCategory of userCategories">{{userCategory.name}}</option>
                                 </select>
                                 <label style="color: red;"
                                 *ngIf="userProfileForm.controls['userCategory'].hasError('required') && !isValidForm"
