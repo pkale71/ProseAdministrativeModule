@@ -7,11 +7,15 @@ let businessPartnerTypeId;
 //////
 let businessPartners;
 
-module.exports = require('express').Router().get('/:businessPartnerTypeId', async(req,res) =>
+module.exports = require('express').Router().get('/?*', async(req,res) =>
 {
     try
     {
-        businessPartnerTypeId = req.params.businessPartnerTypeId;
+        businessPartnerTypeId = '';
+        if(req.params)
+        {
+            businessPartnerTypeId = req.params[0];
+        }
         
         businessPartners = await dbBusiness.getBusinessPartners(businessPartnerTypeId);
         if(businessPartners.length >= 0)
