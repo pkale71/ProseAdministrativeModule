@@ -71,7 +71,7 @@ export class BusinessPartnerListComponent
     }
   }) 
 
-  //get business partner type
+  //get business partner types
   async getBusinessPartnerTypes()
   {
     try 
