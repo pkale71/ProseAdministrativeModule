@@ -150,7 +150,7 @@ CREATE TABLE `business_partner_coach` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -531,7 +531,7 @@ CREATE TABLE `district` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -898,6 +898,82 @@ INSERT INTO `syllabus_wise_subject` VALUES (2,2,2,'Hindi',1,'2024-06-10 12:32:21
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tie_up_school`
+--
+
+DROP TABLE IF EXISTS `tie_up_school`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tie_up_school` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `mobile` varchar(15) NOT NULL,
+  `website` text NOT NULL,
+  `address` text NOT NULL,
+  `syllabus_id` int(11) NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `state_region_id` int(11) NOT NULL,
+  `district_id` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `pincode` varchar(9) NOT NULL,
+  `contact_person` text NOT NULL,
+  `pan_number` varchar(10) NOT NULL,
+  `current_contract_history_id` int(11) DEFAULT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `uuid` varchar(36) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  `deleted_on` datetime DEFAULT NULL,
+  `deleted_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tie_up_school`
+--
+
+LOCK TABLES `tie_up_school` WRITE;
+/*!40000 ALTER TABLE `tie_up_school` DISABLE KEYS */;
+INSERT INTO `tie_up_school` VALUES (1,'Krishna Public School','kpsbhilai@gmail.com','994589435834','https://www.kpsbhilai.com','Nehru Nagar',2,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',1,1,'cfb37fe0-3e83-11ef-8822-510cd6b4254b','2024-07-10 11:45:31',4,NULL,NULL,NULL,NULL),(2,'Krishna Public School-1','kpsbhilai1@gmail.com','994589435830','https://www.kpsbhilai.org','Nehru Nagar',2,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',2,1,'73c23f90-3e84-11ef-a571-fb920cd43bcc','2024-07-10 11:50:07',4,NULL,NULL,NULL,NULL),(3,'Krishna Public School-21','kpsbhilai2@gmail.com','994589435831','https://www.kpsbhilai.co.in','Nehru Nagar',3,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',5,0,'37c7fb00-3e85-11ef-b0e6-1f5491d21839','2024-07-10 11:55:35',4,'2024-07-10 12:27:41',4,'2024-07-10 12:31:01',4);
+/*!40000 ALTER TABLE `tie_up_school` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tie_up_school_contract_history`
+--
+
+DROP TABLE IF EXISTS `tie_up_school_contract_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tie_up_school_contract_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tie_up_school_id` int(11) NOT NULL,
+  `contract_from` date NOT NULL,
+  `contract_to` date NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tie_up_school_contract_history`
+--
+
+LOCK TABLES `tie_up_school_contract_history` WRITE;
+/*!40000 ALTER TABLE `tie_up_school_contract_history` DISABLE KEYS */;
+INSERT INTO `tie_up_school_contract_history` VALUES (1,1,'2024-06-01','2024-06-30',1,'2024-07-10 11:45:31',4,NULL,NULL),(2,2,'2024-06-01','2024-06-30',1,'2024-07-10 11:50:07',4,NULL,NULL),(5,3,'2022-01-01','2023-12-31',1,'2024-07-10 15:52:35',4,NULL,NULL);
+/*!40000 ALTER TABLE `tie_up_school_contract_history` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -1183,4 +1259,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-05 12:32:43
+-- Dump completed on 2024-07-10 15:54:11

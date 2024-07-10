@@ -508,7 +508,7 @@ buildBusinessJSON.businessPartner = function(datas)
             "isActive" : data.isActive,
             "businessPartnerType" : businessPartnerTypeJSON,
             "businessVertical" : businessVerticalJSON,
-            "businessVerticalType" : JSON.parse(data.businessVerticalTypes),
+            "businessVerticalTypes" : JSON.parse(data.businessVerticalTypes),
             "country" : countryJSON,
             "stateRegion" : stateRegionJSON,
             "district" : districtJSON,
@@ -582,6 +582,94 @@ buildBusinessJSON.businessPartnerCoaches = function(datas, action = 1)
         {
             resultJSON = finalJSON;
         }
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.tieUpSchools = function(datas, action = 1)
+{
+    let resultJSON = [];
+    let syllabusJSON = [];
+    let countryJSON = [];
+    let stateRegionJSON = [];
+    let districtJSON = [];
+    let cityJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        syllabusJSON = [];
+        countryJSON = [];
+        stateRegionJSON = [];
+        districtJSON = [];
+        cityJSON = [];
+
+        syllabusJSON = {
+            "id" : data.syllabusId,
+            "name" : data.syllabusName
+        }
+        countryJSON = {
+            "id" : data.countryId,
+            "name" : data.countryName
+        }
+        stateRegionJSON = {
+            "id" : data.stateRegionId,
+            "name" : data.stateRegionName
+        }
+        districtJSON = {
+            "id" : data.districtId,
+            "name" : data.districtName
+        }
+        cityJSON = {
+            "id" : data.cityId,
+            "name" : data.cityName
+        }
+/////Final JSON
+        let finalJSON = {
+            "uuid" : data.uuid,
+            "name" : data.name,
+            "email" : data.email,
+            "mobile" : data.mobile,
+            "website" : data.website,
+            "address" : data.address,
+            "pincode" : data.pincode,
+            "contactPerson" : data.contactPerson,
+            "panNumber" : data.panNumber,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName ? data.tableName : '',
+            "syllabus" : syllabusJSON,
+            "country" : countryJSON,
+            "stateRegion" : stateRegionJSON,
+            "district" : districtJSON,
+            "city" : cityJSON
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.tieUpSchoolContractHistories = function(datas)
+{
+    let resultJSON = [];
+    
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "contractFrom" : commonFunction.getFormattedDate(data.contractFrom, "yyyy-mm-dd"),
+            "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd"),
+            "isActive" : data.isActive
+        }
+        resultJSON.push(finalJSON);
     });
 
     return resultJSON;

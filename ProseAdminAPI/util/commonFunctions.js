@@ -14,6 +14,12 @@ commonFunction.getUserNameFromEmail = function(email)
     return(userName);
 }
 
+commonFunction.isValidURL = function(url) 
+{
+    const regex = /^(https?:\/\/)?([a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,})(\/[a-zA-Z0-9@:%._\+~#=\/-]*)?$/;
+    return regex.test(url);
+}
+
 commonFunction.isJsonArray = function(jsonString) 
 {
     try 
