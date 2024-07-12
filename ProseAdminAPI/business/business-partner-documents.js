@@ -6,7 +6,7 @@ let errorCode = new errorCodes();
 let businessPartnerUUID; 
 //////
 let businessPartner;
-let businessPartnerCoaches;
+let businessPartnerDocuments;
 
 module.exports = require('express').Router().get('/:businessPartnerUUID', async(req,res) =>
 {
@@ -17,12 +17,12 @@ module.exports = require('express').Router().get('/:businessPartnerUUID', async(
         businessPartner = await dbBusiness.getBusinessPartner(businessPartnerUUID);
         if(businessPartner.length == 1)
         {
-            businessPartnerCoaches = await dbBusiness.getBusinessPartnerCoaches(businessPartner[0].id);
-            if(businessPartnerCoaches.length >= 0)
+            businessPartnerDocuments = await dbBusiness.getBusinessPartnerDocuments(businessPartner[0].id);
+            if(businessPartnerDocuments.length >= 0)
             {
                 res.status(200)
                 return res.json({
-                    "businessPartnerCoaches" : buildJSON.businessPartnerCoaches(businessPartnerCoaches),
+                    "businessPartnerDocuments" : buildJSON.businessPartnerDocuments(businessPartnerDocuments),
                     "status_code" : 200,
                     "success" : true,                            
                     "message" : errorCode.getStatus(200)

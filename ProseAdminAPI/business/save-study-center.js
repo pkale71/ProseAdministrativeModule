@@ -6,31 +6,37 @@ let errorCode = new errorCodes();
 let genUUID = require('uuid');
 ////////Variables 
 let name;
+let code;
 let email;
 let mobile;
-let website;
+let studyCenterTypeId;
 let address;
 let countryId;
 let stateRegionId;
 let districtId;
 let cityId;
 let pincode;
-let contactPerson;
-let syllabusId;
-let contractFrom;
-let contractTo;
 let panNumber;
-let academyEnclosureDocumentIds;
-let totalSaved;
+let gstNumber;
+let contactPersonName;
+let contactPersonEmail;
+let contactPersonMobile;
+let landlordName;
+let rewardTypeId;
+let businessPartnerUUID;
+let agreementFrom;
+let agreementTo;
+
 //////
-let syllabus;
-let tieUpSchool;
+let studyCenterType;
+let studyCenter;
 let duplicateEmailMobile;
 let country;
 let stateRegion;
 let district;
 let city;
-let academyEnclosureDocument;
+let businessPartner;
+let rewardType;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -40,60 +46,65 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.email != undefined && reqData.mobile != undefined && reqData.website != undefined && reqData.contactPerson != undefined && reqData.address != undefined && reqData.country != undefined && reqData.stateRegion != undefined && reqData.district != undefined && reqData.city != undefined && reqData.pincode != undefined && reqData.syllabus != undefined && reqData.panNumber != undefined && reqData.contractFrom != undefined && reqData.contractTo != undefined && reqData.academyEnclosureDocumentIds != undefined)
+        if(reqData.name != undefined && reqData.email != undefined && reqData.mobile != undefined && reqData.landlordName != undefined && reqData.contactPersonName != undefined && reqData.contactPersonEmail != undefined && reqData.contactPersonMobile != undefined && reqData.address != undefined && reqData.country != undefined && reqData.stateRegion != undefined && reqData.district != undefined && reqData.city != undefined && reqData.pincode != undefined && reqData.studyCenterType != undefined && reqData.panNumber != undefined && reqData.gstNumber != undefined && reqData.rewardType != undefined && reqData.businessPartner != undefined && reqData.agreementFrom != undefined && reqData.agreementTo != undefined)
         {
-            if(reqData.name != "" && reqData.email != "" && reqData.mobile != "" && reqData.website != "" && reqData.contactPerson != "" && reqData.address != "" && JSON.parse(reqData.country).id != "" && JSON.parse(reqData.stateRegion).id != "" && JSON.parse(reqData.district).id != "" && JSON.parse(reqData.city).id != "" && reqData.pincode != "" && JSON.parse(reqData.syllabus).id != "" && reqData.panNumber != "" && reqData.contractFrom != "" && reqData.contractTo != "")
+            if(reqData.name != "" && reqData.email != "" && reqData.mobile != "" && reqData.address != "" && reqData.country.id != "" && reqData.stateRegion.id != "" && reqData.district.id != "" && reqData.city.id != "" && reqData.pincode != "" && reqData.studyCenterType.id != "" && reqData.panNumber != "" && reqData.gstNumber != "")
             {
                 name = reqData.name;
+                code = "";
                 email = reqData.email;
                 mobile = reqData.mobile;
-                website = reqData.website;
-                contactPerson = reqData.contactPerson;
+                studyCenterTypeId = commonFunction.validateNumber(reqData.studyCenterType.id);
+                contactPersonName = reqData.contactPersonName;
+                contactPersonEmail = reqData.contactPersonEmail;
+                contactPersonMobile = reqData.contactPersonMobile;
+                landlordName = reqData.landlordName;
                 pincode = commonFunction.validateNumber(reqData.pincode);
                 address = reqData.address;
-                countryId = commonFunction.validateNumber(JSON.parse(reqData.country).id);
-                stateRegionId = commonFunction.validateNumber(JSON.parse(reqData.stateRegion).id);
-                districtId = commonFunction.validateNumber(JSON.parse(reqData.district).id);
-                cityId = commonFunction.validateNumber(JSON.parse(reqData.city).id);
-                syllabusId = commonFunction.validateNumber(JSON.parse(reqData.syllabus).id);
-                contractFrom = reqData.contractFrom;
-                contractTo = reqData.contractTo;
+                countryId = commonFunction.validateNumber(reqData.country.id);
+                stateRegionId = commonFunction.validateNumber(reqData.stateRegion.id);
+                districtId = commonFunction.validateNumber(reqData.district.id);
+                cityId = commonFunction.validateNumber(reqData.city.id);
+                rewardTypeId = commonFunction.validateNumber(reqData.rewardType.id);
+                businessPartnerUUID = commonFunction.validateNumber(reqData.businessPartner.uuid);
+                agreementFrom = reqData.agreementFrom;
+                agreementTo = reqData.agreementTo;
                 panNumber = reqData.panNumber;
-                academyEnclosureDocumentIds = reqData.academyEnclosureDocumentIds;
-
-            /////check Academy Enclosure Documents And Files
-                academyEnclosureDocument = await dbBusiness.getAcademyEnclosureDocument(academyEnclosureDocumentIds);
-                if(academyEnclosureDocument.length != req.files.length)
-                {
-                    ///Remove Files
-                    commonFunction.deleteFiles(req.files);
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Academy Enclosure Documents And Uploading Files Are Not Matched",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500)
-                    })
-                }
+                gstNumber = reqData.gstNumber;
             
-            /////check Valid Website Address
-                if(!commonFunction.isValidURL(website))
+            /////Check Reward Type
+            if(rewardTypeId != "")
+            {
+                rewardType = await dbBusiness.getStudyCenterRewardType(rewardTypeId);
+                if(rewardType.length == 0)
                 {
-                    ///Remove Files
-                    commonFunction.deleteFiles(req.files);
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
-                        "message" : "Invalid Website Address",
+                        "message" : "Invalid Reward Type",
                         "success" : false,
                         "error" : errorCode.getStatus(500)
                     })
                 }
-            /////check contractFrom and contractTo
-                if(!commonFunction.isValidDate(contractFrom, "YYYY-MM-DD") || !commonFunction.isValidDate(contractTo, "YYYY-MM-DD"))
+            }
+            /////Check Business Partner
+            if(businessPartnerUUID != "")
+            {
+                businessPartner = await dbBusiness.getBusinessPartner(businessPartnerUUID);
+                if(businessPartner.length == 0)
                 {
-                    ///Remove Files
-                    commonFunction.deleteFiles(req.files);
+                    res.status(500)
+                    return res.json({
+                        "status_code" : 500,
+                        "message" : "Invalid Business Partner",
+                        "success" : false,
+                        "error" : errorCode.getStatus(500)
+                    })
+                }
+            }
+            /////check agreementFrom and agreementTo
+                if(!commonFunction.isValidDate(agreementFrom, "YYYY-MM-DD") || !commonFunction.isValidDate(agreementTo, "YYYY-MM-DD"))
+                {
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
@@ -103,16 +114,16 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     })
                 }
                 ////Check Duplicate Email/Mobile
-                duplicateEmailMobile = await dbCommon.checkDuplicateEmailMobile(email, "Email", "tie_up_school");
+                duplicateEmailMobile = await dbCommon.checkDuplicateEmailMobile(email, "Email", "study_center");
                 if(duplicateEmailMobile.length == 0)
                 {  
                     ////Check Duplicate Email/Mobile
-                    duplicateEmailMobile = await dbCommon.checkDuplicateEmailMobile(mobile, "Mobile", "tie_up_school");
+                    duplicateEmailMobile = await dbCommon.checkDuplicateEmailMobile(mobile, "Mobile", "study_center");
                     if(duplicateEmailMobile.length == 0)
                     {
-                        ////Check Syllabus
-                        syllabus = await dbCommon.getSyllabus(syllabusId);
-                        if(syllabus.length == 1)
+                        ////Check studyCenterType
+                        studyCenterType = await dbBusiness.getStudyCenterType(studyCenterTypeId);
+                        if(studyCenterType.length == 1)
                         {
                             ////Check Country
                             country = await dbBusiness.getCountry(countryId);
@@ -130,68 +141,81 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                         city = await dbBusiness.getCity(cityId, countryId, stateRegionId,districtId);
                                         if(city.length == 1)
                                         {
-                                        ////Check Duplicate TieUp School
-                                            tieUpSchool = await dbBusiness.duplicateTieUpSchool(name, "");
-                                            if(tieUpSchool.length == 0)
+                                        ////Check Duplicate Study Center
+                                            studyCenter = await dbBusiness.duplicateStudyCenter(name, "");
+                                            if(studyCenter.length == 0)
                                             {
-                                    ///insert TieUp School
+                                    ///insert Study Center
                                                 let insertJSON = {
                                                     "uuid" : genUUID.v1(),
                                                     "name" : name,
                                                     "email" : email,
                                                     "mobile" : mobile,
-                                                    "website" : website,
+                                                    "studyCenterTypeId" : studyCenterType[0].id,
                                                     "address" : address,
                                                     "countryId" : countryId,
                                                     "stateRegionId" : stateRegionId,
                                                     "districtId" : districtId,
                                                     "cityId" : cityId,
                                                     "pincode" : pincode,
-                                                    "contactPerson" : contactPerson,
+                                                    "contactPersonName" : contactPersonName,
+                                                    "contactPersonEmail" : contactPersonEmail,
+                                                    "contactPersonMobile" : contactPersonMobile,
+                                                    "landlordName" : landlordName,
                                                     "panNumber" : panNumber,
-                                                    "syllabusId" : syllabusId,
+                                                    "gstNumber" : gstNumber,
+                                                    "rewardTypeId" : rewardType[0].id,
+                                                    "businessPartnerId" : businessPartnerUUID != '' ? businessPartner[0].id : '',
                                                     "createdById" : authData.id
                                                 }
-                                                let insertTieUpSchoolResult = await dbBusiness.insertTieUpSchool(insertJSON);
-                                                let insertTieUpSchoolId = insertTieUpSchoolResult.insertId;
+                                                let insertStudyCenterResult = await dbBusiness.insertStudyCenter(insertJSON);
+                                                let insertStudyCenterId = insertStudyCenterResult.insertId;
                                     ///////
-                                                if(parseInt(insertTieUpSchoolId) > 0)
+                                                if(parseInt(insertStudyCenterId) > 0)
                                                 {
-                                                ///////Insert TieUp School Contract
-                                                    let insertContractJSON = {
-                                                        "tieUpSchoolId" : insertTieUpSchoolId,
-                                                        "contractFrom" : contractFrom,
-                                                        "contractTo" : contractTo,
-                                                        "createdById" : authData.id
-                                                    }
-                                                    let insertTieUpSchoolContractResult = await dbBusiness.insertTieUpSchoolContractHistory(insertContractJSON);
-
-                                                    ///////Save Tie-Up School Docs File
-                                                    if(academyEnclosureDocument.length > 0)
+                                                    if(studyCenterType[0].name == "Company Owned")
                                                     {
-                                                        totalSaved = await saveTieUpSchoolDocs(req.files, academyEnclosureDocument, insertTieUpSchoolId, authData.id);
-                                                ///Remove Files
-                                                        commonFunction.deleteFiles(req.files);
+                                                        code = commonFunction.generateCode(6, 'CW-', insertStudyCenterId);
                                                     }
-                                            ///Remove Files
-                                                    commonFunction.deleteFiles(req.files);
-                                                    res.status(200)
-                                                    return res.json({
-                                                        "uuid" : insertJSON.uuid,
-                                                        "savedDocs" : totalSaved > 0 ? `${totalSaved}/${academyEnclosureDocument.length}` : '',
-                                                        "status_code" : 200,
-                                                        "success" : true,                            
-                                                        "message" : errorCode.getStatus(200)
-                                                    })
+                                                    else if(studyCenterType[0].name == "Company Operated")
+                                                    {
+                                                        code = commonFunction.generateCode(6, 'CO-', insertStudyCenterId);
+                                                    }
+                                                    else if(studyCenterType[0].name == "Partner Captive")
+                                                    {
+                                                        code = commonFunction.generateCode(6, 'PC-', insertStudyCenterId);
+                                                    }
+                                                    let updateStudyCenterCodeResult = await dbBusiness.updateStudyCenterCode(code, insertStudyCenterId);
+                                                        
+                                                    if(updateStudyCenterCodeResult.affectedRows > 0)
+                                                    {
+                                                        if(studyCenterType[0].name == "Company Operated")
+                                                        {
+                                                    ///////Insert Study Center Agreement
+                                                            let insertAgreementJSON = {
+                                                                "studyCenterId" : insertStudyCenterId,
+                                                                "agreementFrom" : agreementFrom,
+                                                                "agreementTo" : agreementTo,
+                                                                "createdById" : authData.id
+                                                            }
+                                                            let insertStudyCenterAgreementResult = await dbBusiness.insertStudyCenterAgreementHistory(insertAgreementJSON);
+                                                        } 
+                                                    
+                                                        res.status(200)
+                                                        return res.json({
+                                                            "uuid" : insertJSON.uuid,
+                                                            "status_code" : 200,
+                                                            "success" : true,                            
+                                                            "message" : errorCode.getStatus(200)
+                                                        })
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    ///Remove Files
-                                                    commonFunction.deleteFiles(req.files);
                                                     res.status(500)
                                                     return res.json({
                                                         "status_code" : 500,
-                                                        "message" : "Tie-Up School Not Saved",
+                                                        "message" : "Study Center Not Saved",
                                                         "success" : false,
                                                         "error" : errorCode.getStatus(500)
                                                     })
@@ -199,12 +223,10 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                             }
                                             else
                                             {
-                                                ///Remove Files
-                                                commonFunction.deleteFiles(req.files);
                                                 res.status(500)
                                                 return res.json({
                                                     "status_code" : 500,
-                                                    "message" : "Tie-Up School Name Already Exist",
+                                                    "message" : "Study Center Name Already Exist",
                                                     "success" : false,
                                                     "error" : errorCode.getStatus(500)
                                                 })
@@ -212,8 +234,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                         }
                                         else
                                         {
-                                            ///Remove Files
-                                            commonFunction.deleteFiles(req.files);
                                             res.status(500)
                                             return res.json({
                                                 "status_code" : 500,
@@ -225,8 +245,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                     }
                                     else
                                     {
-                                        ///Remove Files
-                                        commonFunction.deleteFiles(req.files);
                                         res.status(500)
                                         return res.json({
                                             "status_code" : 500,
@@ -238,8 +256,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                 }
                                 else
                                 {
-                                    ///Remove Files
-                                    commonFunction.deleteFiles(req.files);
                                     res.status(500)
                                     return res.json({
                                         "status_code" : 500,
@@ -251,8 +267,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             }
                             else
                             {
-                                ///Remove Files
-                                commonFunction.deleteFiles(req.files);
                                 res.status(500)
                                 return res.json({
                                     "status_code" : 500,
@@ -264,12 +278,10 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         }
                         else
                         {
-                            ///Remove Files
-                            commonFunction.deleteFiles(req.files);
                             res.status(500)
                             return res.json({
                                 "status_code" : 500,
-                                "message" : "Syllabus Not Exist",
+                                "message" : "Study Center Type Not Exist",
                                 "success" : false,
                                 "error" : errorCode.getStatus(500)
                             })
@@ -277,8 +289,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     }
                     else
                     {
-                        ///Remove Files
-                        commonFunction.deleteFiles(req.files);
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
@@ -290,8 +300,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 }
                 else
                 {
-                    ///Remove Files
-                    commonFunction.deleteFiles(req.files);
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
@@ -316,8 +324,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         }
         else
         {
-            ///Remove Files
-            commonFunction.deleteFiles(req.files);
             res.status(500)
             return res.json({
                 "status_code" : 500,
@@ -329,8 +335,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
     } 
     catch(e)
     {
-        ///Remove Files
-        commonFunction.deleteFiles(req.files);
         res.status(500)
         return res.json({
             "status_code" : 500,
@@ -340,60 +344,3 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         });
     }
 })
-
-async function saveTieUpSchoolDocs(files, documentIds, tieUpSchoolId, createdById) 
-{
-    let savedFc = 0;
-
-    for (let fc = 0; fc < files.length; fc++) 
-    {
-        try 
-        {
-            let file = files[fc];
-            if (parseFloat(file.size) > 0) 
-            {
-                let allowedMimeTypes = [
-                    'image/png',
-                    'image/jpeg',
-                    'application/pdf',
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-                ];
-
-                if (allowedMimeTypes.includes(file.mimetype)) 
-                {
-                    let insertTieUpSchoolDocumentJSON = {
-                        tieUpSchoolId: tieUpSchoolId,
-                        documentId: documentIds[fc].id,
-                        fileName: "",
-                        createdById: createdById
-                    };
-
-                    let insertTieUpSchoolDocumentResult = await dbBusiness.insertTieUpSchoolDocument(insertTieUpSchoolDocumentJSON);
-                    let insertTieUpSchoolDocId = insertTieUpSchoolDocumentResult.insertId;
-
-                    // File Upload
-                    let fileExt = file.originalname.split('.').pop();
-                    let sourcePath = file.path;
-                    let destiFileName = `${tieUpSchoolId}_${insertTieUpSchoolDocId}.${fileExt}`;
-                    let destiPath = commonFunction.getUploadFolder('TieUpSchoolDoc') + destiFileName;
-
-                    await commonFunction.copyFile(sourcePath, destiPath);
-
-                    // Count how many files are saved
-                    savedFc += 1;
-                    
-                    // Update the file name in the database
-                    await dbBusiness.updateTieUpSchoolDocFileName(destiFileName, insertTieUpSchoolDocId);
-                }
-            }
-        } 
-        catch (e) 
-        {
-            console.error(`Error processing file ${documentIds[fc].name}:`, e);
-        }
-    }
-
-    return savedFc;
-}

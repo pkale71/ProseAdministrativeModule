@@ -59,6 +59,7 @@ businessRoute.use('/deleteBusinessPartner', require('../util/validateToken.js'),
 businessRoute.use('/getBusinessPartnerContractHistories', require('../util/validateToken.js'), require('./business-partner-contract-histories.js'));
 businessRoute.use('/saveBusinessPartnerContract', require('../util/validateToken.js'), require('./save-business-partner-contract.js'));
 businessRoute.use('/deleteBusinessPartnerContract', require('../util/validateToken.js'), require('./delete-business-partner-contract.js'));
+businessRoute.use('/getBusinessPartnerDocuments', require('../util/validateToken.js'), require('./business-partner-documents.js'));
 businessRoute.use('/uploadBusinessPartnerDocument', uploads, require('../util/validateToken.js'), require('./upload-business-partner-document.js'));
 businessRoute.use('/deleteBusinessPartnerDocument', require('../util/validateToken.js'), require('./delete-business-partner-document.js'));
 businessRoute.use('/getBusinessPartnerCoaches', require('../util/validateToken.js'), require('./business-partner-coaches.js'));
@@ -67,12 +68,19 @@ businessRoute.use('/saveBusinessPartnerCoach', require('../util/validateToken.js
 businessRoute.use('/deleteBusinessPartnerCoach', require('../util/validateToken.js'), require('./delete-business-partner-coach.js'));
 businessRoute.use('/getTieUpSchools', require('../util/validateToken.js'), require('./tieup-schools.js'));
 businessRoute.use('/getTieUpSchool', require('../util/validateToken.js'), require('./tieup-school.js'));
-businessRoute.use('/saveTieUpSchool', require('../util/validateToken.js'), require('./save-tieup-school.js'));
+businessRoute.use('/saveTieUpSchool', uploads, require('../util/validateToken.js'), require('./save-tieup-school.js'));
 businessRoute.use('/updateTieUpSchool', require('../util/validateToken.js'), require('./update-tieup-school.js'));
 businessRoute.use('/deleteTieUpSchool', require('../util/validateToken.js'), require('./delete-tieup-school.js'));
 businessRoute.use('/getTieUpSchoolContractHistories', require('../util/validateToken.js'), require('./tieup-school-contract-histories.js'));
 businessRoute.use('/saveTieUpSchoolContract', require('../util/validateToken.js'), require('./save-tieup-school-contract.js'));
 businessRoute.use('/deleteTieUpSchoolContract', require('../util/validateToken.js'), require('./delete-tieup-school-contract.js'));
+businessRoute.use('/getTieUpSchoolDocuments', require('../util/validateToken.js'), require('./tieup-school-documents.js'));
+businessRoute.use('/uploadTieUpSchoolDocument', uploads, require('../util/validateToken.js'), require('./upload-tieup-school-document.js'));
+businessRoute.use('/deleteTieUpSchoolDocument', require('../util/validateToken.js'), require('./delete-tieup-school-document.js'));
+
+businessRoute.use('/getStudyCenters', require('../util/validateToken.js'), require('./study-centers.js'));
+businessRoute.use('/getStudyCenter', require('../util/validateToken.js'), require('./study-center.js'));
+businessRoute.use('/saveStudyCenter', require('../util/validateToken.js'), require('./save-study-center.js'));
 
 businessRoute.use('/',(req,res,next) => 
 {

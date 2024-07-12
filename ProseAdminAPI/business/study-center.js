@@ -4,26 +4,23 @@ let dbBusiness = require('../sqlmap/businessQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables
-let businessPartnerTypeId; 
+let uuid;
 //////
-let businessPartners;
+let studyCenter;
 
-module.exports = require('express').Router().get('/?*', async(req,res) =>
+module.exports = require('express').Router().get('/:uuid', async(req,res) =>
 {
     try
     {
-        businessPartnerTypeId = '';
-        if(req.params)
-        {
-            businessPartnerTypeId = commonFunction.validateNumber(req.params[0]);
-        }
-        
-        businessPartners = await dbBusiness.getBusinessPartners(businessPartnerTypeId);
-        if(businessPartners.length >= 0)
+        uuid = '';
+        uuid = req.params[0];
+
+        studyCenter = await dbBusiness.getStudyCenter(uuid);
+        if(studyCenter.length >= 0)
         {
             res.status(200)
             return res.json({
-                "businessPartners" : buildJSON.businessPartners(businessPartners),
+                "studyCenter" : buildJSON.studyCenters(studyCenter, 0),
                 "status_code" : 200,
                 "success" : true,                            
                 "message" : errorCode.getStatus(200)

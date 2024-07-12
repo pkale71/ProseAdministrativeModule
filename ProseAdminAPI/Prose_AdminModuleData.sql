@@ -62,7 +62,7 @@ CREATE TABLE `academy_enclosure_document` (
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `academy_enclosure_document` (
 
 LOCK TABLES `academy_enclosure_document` WRITE;
 /*!40000 ALTER TABLE `academy_enclosure_document` DISABLE KEYS */;
-INSERT INTO `academy_enclosure_document` VALUES (1,'Pan',1,1,'2024-06-21 18:53:43',4),(2,'GST Certificate',1,1,'2024-06-21 18:53:55',4);
+INSERT INTO `academy_enclosure_document` VALUES (1,'Pan',1,1,'2024-06-21 18:53:43',4),(2,'GST Certificate',1,1,'2024-06-21 18:53:55',4),(3,'License Certificate',1,1,'2024-07-11 19:26:11',4);
 /*!40000 ALTER TABLE `academy_enclosure_document` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -732,20 +732,23 @@ CREATE TABLE `study_center` (
   `city_id` int(11) NOT NULL,
   `pincode` varchar(9) NOT NULL,
   `address` text NOT NULL,
-  `studey_center_type_id` int(11) NOT NULL,
+  `study_center_type_id` int(11) NOT NULL,
   `pan_number` varchar(10) DEFAULT NULL,
   `gst_number` varchar(15) DEFAULT NULL,
   `landlord_name` text,
   `contact_person_name` text,
   `contact_person_email` varchar(150) DEFAULT NULL,
   `contact_person_mobile` varchar(15) DEFAULT NULL,
-  `study_center_agreement_history_id` int(11) DEFAULT NULL,
+  `current_agreement_history_id` int(11) DEFAULT NULL,
   `study_center_reward_type_id` int(11) DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
+  `uuid` varchar(36) NOT NULL,
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
+  `deleted_on` datetime DEFAULT NULL,
+  `deleted_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -757,6 +760,65 @@ CREATE TABLE `study_center` (
 LOCK TABLES `study_center` WRITE;
 /*!40000 ALTER TABLE `study_center` DISABLE KEYS */;
 /*!40000 ALTER TABLE `study_center` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `study_center_agreement_history`
+--
+
+DROP TABLE IF EXISTS `study_center_agreement_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `study_center_agreement_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `study_center_id` int(11) NOT NULL,
+  `agreement_from` date NOT NULL,
+  `agreement_to` date NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `study_center_agreement_history`
+--
+
+LOCK TABLES `study_center_agreement_history` WRITE;
+/*!40000 ALTER TABLE `study_center_agreement_history` DISABLE KEYS */;
+/*!40000 ALTER TABLE `study_center_agreement_history` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `study_center_doc_upload`
+--
+
+DROP TABLE IF EXISTS `study_center_doc_upload`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `study_center_doc_upload` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `study_center_id` int(11) NOT NULL,
+  `academy_enclosure_document_id` int(11) NOT NULL,
+  `file_name` text NOT NULL,
+  `uploaded_on` datetime NOT NULL,
+  `uploaded_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `study_center_doc_upload`
+--
+
+LOCK TABLES `study_center_doc_upload` WRITE;
+/*!40000 ALTER TABLE `study_center_doc_upload` DISABLE KEYS */;
+/*!40000 ALTER TABLE `study_center_doc_upload` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -929,7 +991,7 @@ CREATE TABLE `tie_up_school` (
   `deleted_on` datetime DEFAULT NULL,
   `deleted_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -938,7 +1000,7 @@ CREATE TABLE `tie_up_school` (
 
 LOCK TABLES `tie_up_school` WRITE;
 /*!40000 ALTER TABLE `tie_up_school` DISABLE KEYS */;
-INSERT INTO `tie_up_school` VALUES (1,'Krishna Public School','kpsbhilai@gmail.com','994589435834','https://www.kpsbhilai.com','Nehru Nagar',2,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',1,1,'cfb37fe0-3e83-11ef-8822-510cd6b4254b','2024-07-10 11:45:31',4,NULL,NULL,NULL,NULL),(2,'Krishna Public School-1','kpsbhilai1@gmail.com','994589435830','https://www.kpsbhilai.org','Nehru Nagar',2,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',2,1,'73c23f90-3e84-11ef-a571-fb920cd43bcc','2024-07-10 11:50:07',4,NULL,NULL,NULL,NULL),(3,'Krishna Public School-21','kpsbhilai2@gmail.com','994589435831','https://www.kpsbhilai.co.in','Nehru Nagar',3,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',5,0,'37c7fb00-3e85-11ef-b0e6-1f5491d21839','2024-07-10 11:55:35',4,'2024-07-10 12:27:41',4,'2024-07-10 12:31:01',4);
+INSERT INTO `tie_up_school` VALUES (1,'Krishna Public School','kpsbhilai@gmail.com','994589435834','https://www.kpsbhilai.com','Nehru Nagar',2,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',1,1,'cfb37fe0-3e83-11ef-8822-510cd6b4254b','2024-07-10 11:45:31',4,NULL,NULL,NULL,NULL),(2,'Krishna Public School-1','kpsbhilai1@gmail.com','994589435830','https://www.kpsbhilai.org','Nehru Nagar',2,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',2,1,'73c23f90-3e84-11ef-a571-fb920cd43bcc','2024-07-10 11:50:07',4,NULL,NULL,NULL,NULL),(3,'Krishna Public School-21','kpsbhilai2@gmail.com','994589435831','https://www.kpsbhilai.co.in','Nehru Nagar',3,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',5,0,'37c7fb00-3e85-11ef-b0e6-1f5491d21839','2024-07-10 11:55:35',4,'2024-07-10 12:27:41',4,'2024-07-10 12:31:01',4),(4,'Krishna Public School-2','kpsbhilai22@gmail.com','994589435851','https://www.kpsbhilai.co.in','Nehru Nagar',2,1,4,3,1,'4900452','Rahul Singh','DHPEK4389J',6,1,'a2bd9e60-3f89-11ef-ba6d-7d3c33682264','2024-07-11 18:59:44',4,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tie_up_school` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -960,7 +1022,7 @@ CREATE TABLE `tie_up_school_contract_history` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -969,8 +1031,38 @@ CREATE TABLE `tie_up_school_contract_history` (
 
 LOCK TABLES `tie_up_school_contract_history` WRITE;
 /*!40000 ALTER TABLE `tie_up_school_contract_history` DISABLE KEYS */;
-INSERT INTO `tie_up_school_contract_history` VALUES (1,1,'2024-06-01','2024-06-30',1,'2024-07-10 11:45:31',4,NULL,NULL),(2,2,'2024-06-01','2024-06-30',1,'2024-07-10 11:50:07',4,NULL,NULL),(5,3,'2022-01-01','2023-12-31',1,'2024-07-10 15:52:35',4,NULL,NULL);
+INSERT INTO `tie_up_school_contract_history` VALUES (1,1,'2024-06-01','2024-06-30',1,'2024-07-10 11:45:31',4,NULL,NULL),(2,2,'2024-06-01','2024-06-30',1,'2024-07-10 11:50:07',4,NULL,NULL),(5,3,'2022-01-01','2023-12-31',1,'2024-07-10 15:52:35',4,NULL,NULL),(6,4,'2023-06-01','2024-06-30',1,'2024-07-11 18:59:44',4,NULL,NULL);
 /*!40000 ALTER TABLE `tie_up_school_contract_history` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tie_up_school_doc_upload`
+--
+
+DROP TABLE IF EXISTS `tie_up_school_doc_upload`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tie_up_school_doc_upload` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tie_up_school_id` int(11) NOT NULL,
+  `academy_enclosure_document_id` int(11) NOT NULL,
+  `file_name` text NOT NULL,
+  `uploaded_on` datetime NOT NULL,
+  `uploaded_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tie_up_school_doc_upload`
+--
+
+LOCK TABLES `tie_up_school_doc_upload` WRITE;
+/*!40000 ALTER TABLE `tie_up_school_doc_upload` DISABLE KEYS */;
+INSERT INTO `tie_up_school_doc_upload` VALUES (2,4,2,'4_2.pdf','2024-07-11 18:59:44',4,'2024-07-11 19:24:57',4),(3,4,3,'4_3.pptx','2024-07-11 19:26:20',4,'2024-07-11 19:28:43',4);
+/*!40000 ALTER TABLE `tie_up_school_doc_upload` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1259,4 +1351,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-10 15:54:11
+-- Dump completed on 2024-07-12 10:56:57

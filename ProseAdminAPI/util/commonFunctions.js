@@ -150,6 +150,14 @@ commonFunction.createRequiredDir = function(basePath)
     {
         fs.mkdirSync(basePath + "/uploads/business-partner-docs");
     }
+    if(!fs.existsSync(basePath + "/uploads/tie-up-school-docs"))
+    {
+        fs.mkdirSync(basePath + "/uploads/tie-up-school-docs");
+    }
+    if(!fs.existsSync(basePath + "/uploads/study-center-docs"))
+    {
+        fs.mkdirSync(basePath + "/uploads/study-center-docs");
+    }
     /////////////
     if(!fs.existsSync(basePath + "/uploads/uploadedFiles")) // For Multer Files
     {
@@ -169,6 +177,14 @@ commonFunction.getUploadFolder = function(uploadIn)
     else if(uploadIn == 'BusinessPartnerDoc')
     {       
         folderPath = baseDir + "/uploads/business-partner-docs/";
+    }
+    else if(uploadIn == 'TieUpSchoolDoc')
+    {       
+        folderPath = baseDir + "/uploads/tie-up-school-docs/";
+    }
+    else if(uploadIn == 'StudyCenterDoc')
+    {       
+        folderPath = baseDir + "/uploads/study-center-docs/";
     }
 
     return folderPath;

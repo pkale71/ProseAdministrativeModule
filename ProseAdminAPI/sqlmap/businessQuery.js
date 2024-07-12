@@ -214,6 +214,31 @@ db.getStudyCenterRewardTypes = () =>
     })
 };
 
+db.getStudyCenterRewardType = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT scrt.id, scrt.name
+            FROM study_center_reward_type scrt 
+            WHERE scrt.id = ${id}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.getStudyCenterTypes = () => 
 {
     return new Promise((resolve, reject) => 
@@ -2245,9 +2270,9 @@ db.getBusinessPartners = (businessPartnerTypeId) =>
         try
         {
             let sql = `SELECT bp.id, bp.uuid, bp.name, bp.code, bp.email, bp.pincode, bp.contact_person AS contactPerson, bp.contact_email AS contactEmail, bp.contact_mobile AS contactMobile,
-            bp.incharge_person AS inchargePerson, bp.incharge_email AS inchargeEmail, bp.incharge_mobile AS inchargeMobile, bp.applicable_from AS applicableFrom, bp.applicable_to AS applicableTo, bp.is_having_contract AS isHavingApplicable, 
+            bp.incharge_person AS inchargePerson, bp.incharge_email AS inchargeEmail, bp.incharge_mobile AS inchargeMobile, bp.applicable_from AS applicableFrom, bp.applicable_to AS applicableTo, bp.is_having_contract AS isHavingContract, 
             bp.reward_applicable AS rewardApplicable, bp.pan_number AS panNumber, bp.gst_number AS gstNumber, bp.is_active AS isActive, 'business_partner' AS tableName, COUNT(sc.id) AS isExist,
-            bpt.id AS businessPartnerTypeId, bpt.name AS businessPartnerTypeName,
+            bpt.id AS businessPartnerTypeId, bpt.code AS businessPartnerTypeCode, bpt.name AS businessPartnerTypeName,
             bv.id AS businessVerticalId, bv.name AS businessVerticalName, 
             CONCAT('[', GROUP_CONCAT(
                     CONCAT(
@@ -2290,10 +2315,10 @@ db.getBusinessPartner = (uuid) =>
     {
         try
         {
-            let sql = `SELECT bp.id, bp.uuid, bp.name, bp.code, bp.email, bp.pincode, bp.contact_person AS contactPerson, bp.contact_email AS contactEmail, bp.contact_mobile AS contactMobile,
-            bp.incharge_person AS inchargePerson, bp.incharge_email AS inchargeEmail, bp.incharge_mobile AS inchargeMobile, bp.applicable_from AS applicableFrom, bp.applicable_to AS applicableTo, bp.is_having_contract AS isHavingApplicable, 
+            let sql = `SELECT bp.id, bp.uuid, bp.name, bp.code, bp.email, bp.address, bp.pincode, bp.contact_person AS contactPerson, bp.contact_email AS contactEmail, bp.contact_mobile AS contactMobile, 
+            bp.incharge_person AS inchargePerson, bp.incharge_email AS inchargeEmail, bp.incharge_mobile AS inchargeMobile, bp.applicable_from AS applicableFrom, bp.applicable_to AS applicableTo, bp.is_having_contract AS isHavingContract, 
             bp.reward_applicable AS rewardApplicable, bp.pan_number AS panNumber, bp.gst_number AS gstNumber, bp.is_active AS isActive, 'business_partner' AS tableName,
-            bpt.id AS businessPartnerTypeId, bpt.name AS businessPartnerTypeName, 
+            bpt.id AS businessPartnerTypeId, bpt.code AS businessPartnerTypeCode, bpt.name AS businessPartnerTypeName, 
             bv.id AS businessVerticalId, bv.name AS businessVerticalName, 
             CONCAT('[', GROUP_CONCAT(
                     CONCAT(
@@ -2305,6 +2330,7 @@ db.getBusinessPartner = (uuid) =>
             sr.id AS stateRegionId, sr.name AS stateRegionName,
             d.id AS districtId, d.name AS districtName,
             ct.id AS cityId, ct.name AS cityName,
+            bpch.id as contractId, bpch.contract_from AS contractFrom, bpch.contract_to AS contractTo,
             cot.id as commissionTermId, cot.name AS commissionTermName,
             com.id as commercialTermId, com.name AS commercialTermName
             FROM 
@@ -2316,6 +2342,7 @@ db.getBusinessPartner = (uuid) =>
             JOIN state_region sr ON sr.id = bp.state_region_id
             JOIN district d ON d.id = bp.district_id
             JOIN city ct ON ct.id = bp.city_id
+            LEFT JOIN business_partner_contract_history bpch ON bpch.id = bp.current_contract_history_id
             LEFT JOIN commission_term cot ON cot.id = bp.commission_term_id
             LEFT JOIN commercial_term com ON com.id = bp.commercial_term_id 
             WHERE bp.uuid = '${uuid}'
@@ -2501,6 +2528,35 @@ db.checkBusinessPartnerContractExist = (contractFrom, contractTo, businessPartne
             {
                 sql = sql + ` AND bpch.id = ${id}`;
             }
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getBusinessPartnerDocuments = (businessPartnerId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bpdu.id, bpdu.file_name AS fileName, bpdu.uploaded_on AS uploadedOn,
+            aed.id AS documentId, aed.name AS documentName
+            FROM business_partner_doc_upload bpdu
+            JOIN academy_enclosure_document aed ON aed.id = bpdu.academy_enclosure_document_id 
+            WHERE bpdu.business_partner_id = ${businessPartnerId}
+            ORDER BY aed.name`;
+            
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -2897,8 +2953,7 @@ db.getTieUpSchools = () =>
             c.id AS countryId, c.name AS countryName,
             sr.id AS stateRegionId, sr.name AS stateRegionName,
             d.id AS districtId, d.name AS districtName,
-            ct.id AS cityId, ct.name AS cityName,
-            tusch.id AS contractHistoryId, tusch.contract_from AS contractHistoryContractFrom, tusch.contract_to AS contractHistoryContractTo
+            ct.id AS cityId, ct.name AS cityName
             FROM 
             tie_up_school tus
             JOIN syllabus s ON s.id = tus.syllabus_id 
@@ -2906,7 +2961,6 @@ db.getTieUpSchools = () =>
             JOIN state_region sr ON sr.id = tus.state_region_id 
             JOIN district d ON d.id = tus.district_id 
             JOIN city ct ON ct.id = tus.city_id 
-            LEFT JOIN tie_up_school_contract_history tusch ON tusch.id = tus.current_contract_history_id
             WHERE tus.deleted_on IS NULL AND tus.deleted_by_id IS NULL 
             ORDER BY tus.name`;
 
@@ -2938,7 +2992,7 @@ db.getTieUpSchool = (uuid) =>
             sr.id AS stateRegionId, sr.name AS stateRegionName,
             d.id AS districtId, d.name AS districtName,
             ct.id AS cityId, ct.name AS cityName,
-            tusch.id AS contractHistoryId, tusch.contract_from AS contractHistoryContractFrom, tusch.contract_to AS contractHistoryContractTo
+            tusch.id AS contractId, tusch.contract_from AS contractFrom, tusch.contract_to AS contractTo
             FROM 
             tie_up_school tus
             JOIN syllabus s ON s.id = tus.syllabus_id 
@@ -2978,6 +3032,83 @@ db.duplicateTieUpSchool = (name, uuid) =>
             {
                 sql =sql + ` AND tus.uuid != '${uuid}'`
             }
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getTieUpSchoolDocuments = (tieUpSchoolId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT tusdu.id, tusdu.file_name AS fileName, tusdu.uploaded_on AS uploadedOn,
+            aed.id AS documentId, aed.name AS documentName
+            FROM tie_up_school_doc_upload tusdu
+            JOIN academy_enclosure_document aed ON aed.id = tusdu.academy_enclosure_document_id 
+            WHERE tusdu.tie_up_school_id = ${tieUpSchoolId}
+            ORDER BY aed.name`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkTieUpSchoolDocumentExist = (tieUpSchoolId, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT tusdu.id AS tieUpSchoolId, tusdu.file_name AS fileName FROM tie_up_school_doc_upload tusdu WHERE tusdu.tie_up_school_id = ${tieUpSchoolId} AND tusdu.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkDuplicateTieUpSchoolDoc = (tieUpSchoolId, academyEnclosureDocId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT tusdu.id, tusdu.file_name AS fileName FROM tie_up_school_doc_upload tusdu WHERE tusdu.tie_up_school_id = ${tieUpSchoolId} AND tusdu.academy_enclosure_document_id = ${academyEnclosureDocId}`;
+            
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -3050,6 +3181,83 @@ db.deleteTieUpSchool = (id, deletedById) =>
         try
         {
             let sql = `UPDATE tie_up_school SET is_active = 0, deleted_on = NOW(), deleted_by_id = ${deletedById} WHERE id = ${id} AND deleted_on IS NULL AND deleted_by_id IS NULL`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertTieUpSchoolDocument = (tieUpSchoolDocument) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO tie_up_school_doc_upload (tie_up_school_id, academy_enclosure_document_id, file_name, uploaded_on, uploaded_by_id) VALUES (${tieUpSchoolDocument.tieUpSchoolId}, ${tieUpSchoolDocument.documentId}, '${tieUpSchoolDocument.fileName}', NOW(), ${tieUpSchoolDocument.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateTieUpSchoolDocFileName = (fileName, id, updatedById = '') => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE tie_up_school_doc_upload SET file_name = '${fileName}'`;
+            if(updatedById != '')
+            {
+                sql =sql + `, updated_on = NOW(), updated_by_id = ${updatedById}`
+            }
+            sql =sql + ` WHERE id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteTieUpSchoolDocument = (tieUpSchoolId, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM tie_up_school_doc_upload WHERE tie_up_school_id = ${tieUpSchoolId} AND id = ${id}`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -3205,6 +3413,216 @@ db.deleteTieUpSchoolContractHistory = (tieUpSchoolContractHistory) =>
                     {
                         return resolve(result);
                     }
+                });
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getStudyCenters = (studyCenterTypeId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sc.id, sc.uuid, sc.name, sc.code, sc.email, sc.mobile, sc.address, sc.pincode, sc.contact_person_name AS contactPersonName, sc.contact_person_email AS contactPersonEmail, sc.contact_person_mobile AS contactPersonMobile, sc.landlord_name AS landlordName, sc.pan_number AS panNumber, sc.gst_number AS gstNumber, sc.is_active AS isActive, 'study_center' AS tableName,
+            sct.id AS studyCenterTypeId, sct.name AS studyCenterTypeName,
+			bp.uuid AS businessPartnerUUID, bp.name AS businessPartnerName,
+			scrt.id AS rewardTypeId, scrt.name AS rewardTypeName,
+            c.id AS countryId, c.name AS countryName,
+            sr.id AS stateRegionId, sr.name AS stateRegionName,
+            d.id AS districtId, d.name AS districtName,
+            ct.id AS cityId, ct.name AS cityName
+            FROM 
+            study_center sc
+            JOIN study_center_type sct ON sct.id = sc.study_center_type_id 
+			LEFT JOIN business_partner bp ON bp.id = sc.business_partner_id
+			LEFT JOIN study_center_reward_type scrt ON scrt.id = sc.study_center_reward_type_id			
+            JOIN country c ON c.id = sc.country_id 
+            JOIN state_region sr ON sr.id = sc.state_region_id 
+            JOIN district d ON d.id = sc.district_id 
+            JOIN city ct ON ct.id = sc.city_id 
+            WHERE sc.deleted_on IS NULL AND sc.deleted_by_id IS NULL`;
+            if(studyCenterTypeId != '')
+            {
+                sql = sql + ` AND sc.study_center_type_id = ${studyCenterTypeId}`;
+            } 
+            sql = sql + ` ORDER BY sc.name`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getStudyCenter = (uuid) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sc.id, sc.uuid, sc.name, sc.code, sc.email, sc.mobile, sc.address, sc.pincode, sc.contact_person_name AS contactPersonName, sc.contact_person_email AS contactPersonEmail, sc.contact_person_mobile AS contactPersonMobile,  sc.landlord_name AS landlordName, sc.pan_number AS panNumber, sc.gst_number AS gstNumber, sc.is_active AS isActive, 'study_center' AS tableName,
+            sct.id AS studyCenterTypeId, sct.name AS studyCenterTypeName,
+			bp.uuid AS businessPartnerUUID, bp.name AS businessPartnerName,
+			scrt.id AS rewardTypeId, scrt.name AS rewardTypeName,
+            c.id AS countryId, c.name AS countryName,
+            sr.id AS stateRegionId, sr.name AS stateRegionName,
+            d.id AS districtId, d.name AS districtName,
+            ct.id AS cityId, ct.name AS cityName,
+            scah.id AS agreementId, scah.agreement_from AS agreementFrom, scah.agreement_to AS agreementTo
+            FROM 
+            study_center sc
+            JOIN study_center_type sct ON sct.id = sc.study_center_type_id 
+			LEFT JOIN business_partner bp ON bp.id = sc.business_partner_id
+			LEFT JOIN study_center_reward_type scrt ON scrt.id = sc.study_center_reward_type_id			
+            JOIN country c ON c.id = sc.country_id 
+            JOIN state_region sr ON sr.id = sc.state_region_id 
+            JOIN district d ON d.id = sc.district_id 
+            JOIN city ct ON ct.id = sc.city_id 
+            LEFT JOIN study_center_agreement_history scah ON scah.id = sc.current_agreement_history_id
+            WHERE sc.uuid = '${uuid}'`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateStudyCenter = (name, uuid) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sc.id, sc.name
+            FROM study_center sc 
+            WHERE sc.name = '${name}'`;
+            if(uuid != "")
+            {
+                sql =sql + ` AND sc.uuid != '${uuid}'`
+            }
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertStudyCenter = (studyCenter) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO study_center (uuid, name, email, mobile, study_center_type_id, address, pincode, country_id, state_region_id, district_id, city_id, contact_person_name, contact_person_email, contact_person_mobile, landlord_name, pan_number, gst_number, study_center_reward_type_id, business_partner_id, created_on, created_by_id)
+            VALUES('${studyCenter.uuid}', '${studyCenter.name}', '${studyCenter.email}', '${studyCenter.mobile}', '${studyCenter.studyCenterTypeId}', '${studyCenter.address}', '${studyCenter.pincode}', ${studyCenter.countryId}, ${studyCenter.stateRegionId}, ${studyCenter.districtId}, ${studyCenter.cityId}, NULLIF('${studyCenter.contactPersonName}', ''), NULLIF('${studyCenter.contactPersonEmail}', ''), NULLIF('${studyCenter.contactPersonMobile}', ''), NULLIF('${studyCenter.landlordName}', ''), NULLIF('${studyCenter.panNumber}', ''), NULLIF('${studyCenter.gstNumber}', ''), NULLIF('${studyCenter.rewardTypeId}', ''), NULLIF('${studyCenter.businessPartnerId}', ''), NOW(), ${studyCenter.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateStudyCenterCode = (code, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE study_center SET code = '${code}' WHERE id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertStudyCenterAgreementHistory = (studyCenterAgreementHistory) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+    /////Deactive Old Contracts
+            let sql = `UPDATE study_center_agreement_history SET is_active = 0, updated_on = NOW(), updated_by_id = ${studyCenterAgreementHistory.createdById} WHERE study_center_id = ${studyCenterAgreementHistory.studyCenterId} AND is_active = 1`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+    /////Insert New Contract
+                let sql1 = `INSERT INTO study_center_agreement_history (study_center_id, agreement_from, agreement_to, created_on, created_by_id) VALUES (${studyCenterAgreementHistory.studyCenterId}, '${studyCenterAgreementHistory.agreementFrom}', '${studyCenterAgreementHistory.agreementTo}', NOW(), ${studyCenterAgreementHistory.createdById})`;
+                dbConn.query(sql1, (error1, result1) => 
+                {
+                    if(error1)
+                    {
+                        return reject(error1);
+                    }
+    ///////Update Business Partner Current Contract Id
+                    let sql2 = `UPDATE study_center SET current_agreement_history_id = ${result1.insertId} WHERE id = ${studyCenterAgreementHistory.studyCenterId}`;
+                    dbConn.query(sql2, (error2, result2) => 
+                    {
+                        if(error2)
+                        {
+                            return reject(error);
+                        }
+                        return resolve(result2);
+                    });
                 });
             });
         }

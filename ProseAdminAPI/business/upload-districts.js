@@ -292,7 +292,7 @@ function readFileAndFormatCheck(file, districts, req, res)
             status_code: 500,
             message: "Error Reading File",
             success: false,
-            error: e?.stack
+            error: e
         };
     }
 }

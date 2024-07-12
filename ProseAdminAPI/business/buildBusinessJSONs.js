@@ -395,7 +395,8 @@ buildBusinessJSON.businessPartners = function(datas)
 
         businessPartnerTypeJSON = {
             "id" : data.businessPartnerTypeId,
-            "name" : data.businessPartnerTypeName
+            "name" : data.businessPartnerTypeName,
+            "code" : data.businessPartnerTypeCode
         }
         businessVerticalJSON = {
             "id" : data.businessVerticalId,
@@ -416,7 +417,7 @@ buildBusinessJSON.businessPartners = function(datas)
             "inchargeMobile" : data.inchargeMobile,
             "applicableFrom" : commonFunction.getFormattedDate(data.applicableFrom, 'yyyy-mm-dd'),
             "applicableTo" : commonFunction.getFormattedDate(data.applicableTo, 'yyyy-mm-dd'),
-            "isHavingApplicable" : data.isHavingApplicable,
+            "isHavingContract" : data.isHavingContract,
             "rewardApplicable" : data.rewardApplicable,
             "panNumber" : data.panNumber,
             "gstNumber" : data.gstNumber,
@@ -442,6 +443,7 @@ buildBusinessJSON.businessPartner = function(datas)
     let cityJSON = [];
     let commissionTermJSON = [];
     let commercialTermJSON = [];
+    let contractJSON= [];
 
     datas.forEach((data) => 
     { 
@@ -453,10 +455,12 @@ buildBusinessJSON.businessPartner = function(datas)
         cityJSON = [];
         commissionTermJSON = [];
         commercialTermJSON = [];
+        contractJSON = [];
 
         businessPartnerTypeJSON = {
             "id" : data.businessPartnerTypeId,
-            "name" : data.businessPartnerTypeName
+            "name" : data.businessPartnerTypeName,
+            "code" : data.businessPartnerTypeCode
         }
         businessVerticalJSON = {
             "id" : data.businessVerticalId,
@@ -486,12 +490,24 @@ buildBusinessJSON.businessPartner = function(datas)
             "id" : data.commercialTermId == null ? '' : data.commercialTermId,
             "name" : data.commercialTermName == null ? '' : data.commercialTermName
         }
+        if(data.businessPartnerTypeCode == 'B2C')
+        {
+            if(data.contractId != null)
+            {
+                contractJSON = {
+                    "id" : data.contractId,
+                    "contractFrom" : commonFunction.getFormattedDate(data.contractFrom, "yyyy-mm-dd"),
+                    "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd")
+                }
+            }
+        }
 /////Final JSON
         let finalJSON = {
             "uuid" : data.uuid,
             "code" : data.code,
             "name" : data.name,
             "email" : data.email,
+            "address" : data.address,
             "pincode" : data.pincode,
             "contactPerson" : data.contactPerson,
             "contactEmail" : data.contactEmail,
@@ -501,7 +517,7 @@ buildBusinessJSON.businessPartner = function(datas)
             "inchargeMobile" : data.inchargeMobile,
             "applicableFrom" : commonFunction.getFormattedDate(data.applicableFrom, 'yyyy-mm-dd'),
             "applicableTo" : commonFunction.getFormattedDate(data.applicableTo, 'yyyy-mm-dd'),
-            "isHavingApplicable" : data.isHavingApplicable,
+            "isHavingContract" : data.isHavingContract,
             "rewardApplicable" : data.rewardApplicable,
             "panNumber" : data.panNumber,
             "gstNumber" : data.gstNumber,
@@ -515,7 +531,35 @@ buildBusinessJSON.businessPartner = function(datas)
             "city" : cityJSON,
             "commissionTerm" : commissionTermJSON,
             "commercialTerm" : commercialTermJSON,
+            "contract" : contractJSON,
             "isExist" : data.isExist
+        }
+        resultJSON = finalJSON;
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.businessPartnerDocuments = function(datas)
+{
+    let resultJSON = [];
+    let enclosureDocumentJSON = [];
+    
+    datas.forEach((data) => 
+    { 
+        enclosureDocumentJSON = [];
+
+        enclosureDocumentJSON = {
+            "id" : data.documentId,
+            "name" : data.documentName
+        }
+
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "enclosureDocument" : enclosureDocumentJSON,
+            "fileName" : data.fileName,
+            "uploadedOn" : commonFunction.getFormattedDate(data.uploadedOn, "yyyy-mm-dd")
         }
         resultJSON.push(finalJSON);
     });
@@ -592,6 +636,7 @@ buildBusinessJSON.tieUpSchools = function(datas, action = 1)
     let resultJSON = [];
     let syllabusJSON = [];
     let countryJSON = [];
+    let contractJSON = [];
     let stateRegionJSON = [];
     let districtJSON = [];
     let cityJSON = [];
@@ -603,6 +648,7 @@ buildBusinessJSON.tieUpSchools = function(datas, action = 1)
         stateRegionJSON = [];
         districtJSON = [];
         cityJSON = [];
+        contractJSON = [];
 
         syllabusJSON = {
             "id" : data.syllabusId,
@@ -624,6 +670,14 @@ buildBusinessJSON.tieUpSchools = function(datas, action = 1)
             "id" : data.cityId,
             "name" : data.cityName
         }
+        if(action == 0)
+        {
+            contractJSON = {
+                "id" : data.contractId != null ? data.contractId : "",
+                "contractFrom" : commonFunction.getFormattedDate(data.contractFrom, "yyyy-mm-dd"),
+                "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd"),
+            }
+        }
 /////Final JSON
         let finalJSON = {
             "uuid" : data.uuid,
@@ -641,7 +695,8 @@ buildBusinessJSON.tieUpSchools = function(datas, action = 1)
             "country" : countryJSON,
             "stateRegion" : stateRegionJSON,
             "district" : districtJSON,
-            "city" : cityJSON
+            "city" : cityJSON,
+            "contract" : contractJSON
         }
         if(action == 1)
         {
@@ -651,6 +706,33 @@ buildBusinessJSON.tieUpSchools = function(datas, action = 1)
         {
             resultJSON = finalJSON;
         }
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.tieUpSchoolDocuments = function(datas)
+{
+    let resultJSON = [];
+    let enclosureDocumentJSON = [];
+    
+    datas.forEach((data) => 
+    { 
+        enclosureDocumentJSON = [];
+
+        enclosureDocumentJSON = {
+            "id" : data.documentId,
+            "name" : data.documentName
+        }
+
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "enclosureDocument" : enclosureDocumentJSON,
+            "fileName" : data.fileName,
+            "uploadedOn" : commonFunction.getFormattedDate(data.uploadedOn, "yyyy-mm-dd")
+        }
+        resultJSON.push(finalJSON);
     });
 
     return resultJSON;
@@ -670,6 +752,104 @@ buildBusinessJSON.tieUpSchoolContractHistories = function(datas)
             "isActive" : data.isActive
         }
         resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.studyCenters = function(datas, action = 1)
+{
+    let resultJSON = [];
+    let studyCenterTypeJSON = [];
+    let businessPartnerJSON = [];
+    let rewardTypeJSON = [];
+    let countryJSON = [];
+    let stateRegionJSON = [];
+    let districtJSON = [];
+    let cityJSON = [];
+    let agreementJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        studyCenterTypeJSON = [];
+        businessPartnerJSON = [];
+        rewardTypeJSON = [];
+        countryJSON = [];
+        stateRegionJSON = [];
+        districtJSON = [];
+        cityJSON = [];
+        agreementJSON = [];
+
+        studyCenterTypeJSON = {
+            "id" : data.studyCenterTypeId,
+            "name" : data.studyCenterTypeName
+        }
+        rewardTypeJSON = {
+            "id" : data.rewardTypeId != null ? data.rewardTypeId : "",
+            "name" : data.rewardTypeName != null ? data.rewardTypeName : ""
+        }
+        businessPartnerJSON = {
+            "uuid" : data.businessPartnerUUID != null ? data.businessPartnerUUID : "",
+            "name" : data.businessPartnerName != null ? data.businessPartnerName : ""
+        }
+        countryJSON = {
+            "id" : data.countryId,
+            "name" : data.countryName
+        }
+        stateRegionJSON = {
+            "id" : data.stateRegionId,
+            "name" : data.stateRegionName
+        }
+        districtJSON = {
+            "id" : data.districtId,
+            "name" : data.districtName
+        }
+        cityJSON = {
+            "id" : data.cityId,
+            "name" : data.cityName
+        }
+        if(action == 0)
+        {
+            agreementJSON = {
+                "id" : data.agreementId != null ? data.agreementId : "",
+                "agreementFrom" : commonFunction.getFormattedDate(data.agreementFrom, "yyyy-mm-dd"),
+                "agreementTo" : commonFunction.getFormattedDate(data.agreementTo, "yyyy-mm-dd"),
+            }
+        }
+/////Final JSON
+        let finalJSON = {
+            "uuid" : data.uuid,
+            "name" : data.name,
+            "code" : data.code,
+            "email" : data.email,
+            "mobile" : data.mobile,
+            "studyCenterType" : studyCenterTypeJSON,
+            "address" : data.address,
+            "pincode" : data.pincode,
+            "contactPersonName" : data.contactPersonName,
+            "contactPersonEmail" : data.contactPersonEmail,
+            "contactPersonMobile" : data.contactPersonMobile,
+            "landlordName" : data.landlordName,
+            "panNumber" : data.panNumber,
+            "gstNumber" : data.gstNumber,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName ? data.tableName : '',
+            "businessPartner" : businessPartnerJSON,
+            "country" : countryJSON,
+            "stateRegion" : stateRegionJSON,
+            "district" : districtJSON,
+            "city" : cityJSON,
+            "rewardType" : rewardTypeJSON,
+            "agreement" : agreementJSON
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
 
     return resultJSON;

@@ -3,26 +3,26 @@ let dbBusiness = require('../sqlmap/businessQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables
-let businessPartnerUUID; 
+let tieUpSchoolUUID; 
 //////
-let businessPartner;
-let businessPartnerCoaches;
+let tieUpSchool;
+let tieUpSchoolDocuments;
 
-module.exports = require('express').Router().get('/:businessPartnerUUID', async(req,res) =>
+module.exports = require('express').Router().get('/:tieUpSchoolUUID', async(req,res) =>
 {
     try
     {
-        businessPartnerUUID = req.params.businessPartnerUUID;
+        tieUpSchoolUUID = req.params.tieUpSchoolUUID;
 
-        businessPartner = await dbBusiness.getBusinessPartner(businessPartnerUUID);
-        if(businessPartner.length == 1)
+        tieUpSchool = await dbBusiness.getTieUpSchool(tieUpSchoolUUID);
+        if(tieUpSchool.length == 1)
         {
-            businessPartnerCoaches = await dbBusiness.getBusinessPartnerCoaches(businessPartner[0].id);
-            if(businessPartnerCoaches.length >= 0)
+            tieUpSchoolDocuments = await dbBusiness.getTieUpSchoolDocuments(tieUpSchool[0].id);
+            if(tieUpSchoolDocuments.length >= 0)
             {
                 res.status(200)
                 return res.json({
-                    "businessPartnerCoaches" : buildJSON.businessPartnerCoaches(businessPartnerCoaches),
+                    "tieUpSchoolDocuments" : buildJSON.tieUpSchoolDocuments(tieUpSchoolDocuments),
                     "status_code" : 200,
                     "success" : true,                            
                     "message" : errorCode.getStatus(200)
@@ -34,7 +34,7 @@ module.exports = require('express').Router().get('/:businessPartnerUUID', async(
             res.status(500)
             return res.json({
                 "status_code" : 500,
-                "message" : "Invalid Business Partner",
+                "message" : "Invalid Tie-Up School",
                 "success" : false,
                 "error" : errorCode.getStatus(500),
             });
