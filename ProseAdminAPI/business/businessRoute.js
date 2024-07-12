@@ -60,6 +60,7 @@ businessRoute.use('/getBusinessPartnerContractHistories', require('../util/valid
 businessRoute.use('/saveBusinessPartnerContract', require('../util/validateToken.js'), require('./save-business-partner-contract.js'));
 businessRoute.use('/deleteBusinessPartnerContract', require('../util/validateToken.js'), require('./delete-business-partner-contract.js'));
 businessRoute.use('/getBusinessPartnerDocuments', require('../util/validateToken.js'), require('./business-partner-documents.js'));
+businessRoute.use('/getBusinessPartnerDocumentFile', require('../util/validateToken.js'), require('./business-partner-document-file.js'));
 businessRoute.use('/uploadBusinessPartnerDocument', uploads, require('../util/validateToken.js'), require('./upload-business-partner-document.js'));
 businessRoute.use('/deleteBusinessPartnerDocument', require('../util/validateToken.js'), require('./delete-business-partner-document.js'));
 businessRoute.use('/getBusinessPartnerCoaches', require('../util/validateToken.js'), require('./business-partner-coaches.js'));
@@ -75,6 +76,7 @@ businessRoute.use('/getTieUpSchoolContractHistories', require('../util/validateT
 businessRoute.use('/saveTieUpSchoolContract', require('../util/validateToken.js'), require('./save-tieup-school-contract.js'));
 businessRoute.use('/deleteTieUpSchoolContract', require('../util/validateToken.js'), require('./delete-tieup-school-contract.js'));
 businessRoute.use('/getTieUpSchoolDocuments', require('../util/validateToken.js'), require('./tieup-school-documents.js'));
+businessRoute.use('/getTieUpSchoolDocumentFile', require('../util/validateToken.js'), require('./tieup-school-document-file.js'));
 businessRoute.use('/uploadTieUpSchoolDocument', uploads, require('../util/validateToken.js'), require('./upload-tieup-school-document.js'));
 businessRoute.use('/deleteTieUpSchoolDocument', require('../util/validateToken.js'), require('./delete-tieup-school-document.js'));
 
