@@ -412,15 +412,15 @@ buildBusinessJSON.businessPartners = function(datas)
             "contactPerson" : data.contactPerson,
             "contactEmail" : data.contactEmail,
             "contactMobile" : data.contactMobile,
-            "inchargePerson" : data.inchargePerson,
-            "inchargeEmail" : data.inchargeEmail,
-            "inchargeMobile" : data.inchargeMobile,
+            "inchargePerson" : data.inchargePerson != null ? data.inchargePerson : "",
+            "inchargeEmail" : data.inchargeEmail != null ? data.inchargeEmail : "",
+            "inchargeMobile" : data.inchargeMobile != null ? data.inchargeMobile : "",
             "applicableFrom" : commonFunction.getFormattedDate(data.applicableFrom, 'yyyy-mm-dd'),
             "applicableTo" : commonFunction.getFormattedDate(data.applicableTo, 'yyyy-mm-dd'),
-            "isHavingContract" : data.isHavingContract,
-            "rewardApplicable" : data.rewardApplicable,
-            "panNumber" : data.panNumber,
-            "gstNumber" : data.gstNumber,
+            "isHavingContract" : data.isHavingContract != null ? data.isHavingContract : "",
+            "rewardApplicable" : data.rewardApplicable != null ? data.rewardApplicable : "",
+            "panNumber" : data.panNumber != null ? data.panNumber : "",
+            "gstNumber" : data.gstNumber != null ? data.gstNumber : "",
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '',
             "businessPartnerType" : businessPartnerTypeJSON,
@@ -826,12 +826,12 @@ buildBusinessJSON.studyCenters = function(datas, action = 1)
             "studyCenterType" : studyCenterTypeJSON,
             "address" : data.address,
             "pincode" : data.pincode,
-            "contactPersonName" : data.contactPersonName,
-            "contactPersonEmail" : data.contactPersonEmail,
-            "contactPersonMobile" : data.contactPersonMobile,
-            "landlordName" : data.landlordName,
-            "panNumber" : data.panNumber,
-            "gstNumber" : data.gstNumber,
+            "contactPersonName" : data.contactPersonName != null ? data.contactPersonName : "",
+            "contactPersonEmail" : data.contactPersonEmail != null ? data.contactPersonEmail : "",
+            "contactPersonMobile" : data.contactPersonMobile != null ? data.contactPersonMobile : "",
+            "landlordName" : data.landlordName != null ? data.landlordName : "",
+            "panNumber" : data.panNumber != null ? data.panNumber : "",
+            "gstNumber" : data.gstNumber != null ? data.gstNumber : "",
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '',
             "businessPartner" : businessPartnerJSON,
@@ -850,6 +850,52 @@ buildBusinessJSON.studyCenters = function(datas, action = 1)
         {
             resultJSON = finalJSON;
         }
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.studyCenterDocuments = function(datas)
+{
+    let resultJSON = [];
+    let enclosureDocumentJSON = [];
+    
+    datas.forEach((data) => 
+    { 
+        enclosureDocumentJSON = [];
+
+        enclosureDocumentJSON = {
+            "id" : data.documentId,
+            "name" : data.documentName
+        }
+
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "enclosureDocument" : enclosureDocumentJSON,
+            "fileName" : data.fileName,
+            "uploadedOn" : commonFunction.getFormattedDate(data.uploadedOn, "yyyy-mm-dd")
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.studyCenterContractHistories = function(datas)
+{
+    let resultJSON = [];
+    
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "contractFrom" : commonFunction.getFormattedDate(data.contractFrom, "yyyy-mm-dd"),
+            "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd"),
+            "isActive" : data.isActive
+        }
+        resultJSON.push(finalJSON);
     });
 
     return resultJSON;

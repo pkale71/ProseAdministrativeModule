@@ -73,6 +73,7 @@ commonFunction.databaseName = function()
 commonFunction.trimSpaces = function(data)
 {
     let resData = JSON.parse(JSON.stringify(data).replace(/"\s+|\s+"/g,'"'));
+    resData = JSON.parse(JSON.stringify(resData).replace("'","''"));
     return resData;
 }
 

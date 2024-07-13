@@ -244,7 +244,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
             else
             {
                 ///Remove Files
-                commonFunction.deleteFiles(req.files);
                 res.status(500)
                 return res.json({
                     "status_code" : 500,
@@ -272,7 +271,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
             "status_code" : 500,
             "message" : "Something Went Wrong",
             "success" : false,
-            "error" : e.stack
+            "error" : e
         });
     }
 })

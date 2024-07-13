@@ -52,7 +52,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         
         if(reqData.uuid != undefined && reqData.name != undefined && reqData.email != undefined && reqData.businessPartnerType != undefined && reqData.businessVertical != undefined && reqData.businessVerticalTypeIds != undefined && reqData.address != undefined && reqData.country != undefined && reqData.stateRegion != undefined && reqData.district != undefined && reqData.city != undefined && reqData.pincode != undefined && reqData.contactPerson != undefined && reqData.contactEmail != undefined && reqData.contactMobile != undefined && reqData.inchargePerson != undefined && reqData.inchargeEmail != undefined && reqData.inchargeMobile != undefined && reqData.applicableFrom != undefined && reqData.applicableTo != undefined && reqData.rewardApplicable != undefined && reqData.commissionTerm != undefined && reqData.panNumber != undefined && reqData.gstNumber != undefined && reqData.commercialTerm != undefined)
         {
-            if(reqData.name != "" && reqData.email != undefined && reqData.businessPartnerType?.id != undefined && reqData.businessVertical?.id != "" && reqData.businessVerticalTypeIds != "" && reqData.address != "" && reqData.country?.id != "" && reqData.stateRegion?.id != "" && reqData.district?.id != "" && reqData.city?.id != "" && reqData.pincode != "" && reqData.contactPerson != "" && reqData.contactEmail != "" && reqData.contactMobile != "" && reqData.applicableFrom != "" && reqData.applicableTo != "")
+            if(reqData.name != "" && reqData.email != "" && reqData.businessPartnerType?.id != "" && reqData.businessVertical?.id != "" && reqData.businessVerticalTypeIds != "" && reqData.address != "" && reqData.country?.id != "" && reqData.stateRegion?.id != "" && reqData.district?.id != "" && reqData.city?.id != "" && reqData.pincode != "" && reqData.contactPerson != "" && reqData.contactEmail != "" && reqData.contactMobile != "" && reqData.applicableFrom != "" && reqData.applicableTo != "")
             {
                 uuid = reqData.uuid;
                 name = reqData.name;
@@ -95,121 +95,150 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 duplicateEmailMobile = await dbCommon.checkDuplicateEmailMobile(email, "Email", "business_partner", uuid);
                 if(duplicateEmailMobile.length == 0)
                 {  
-                    ////Check Business Partner Type
-                    businessPartnerType = await dbBusiness.getBusinessPartnerType(businessPartnerTypeId);
-                    if(businessPartnerType.length == 1)
+                    ////Check Duplicate Business Partner
+                    businessPartner = await dbBusiness.duplicateBusinessPartner(name, businessPartnerTypeId, uuid);
+                    if(businessPartner.length == 0)
                     {
-                        if(businessPartnerType[0].code == "B2C")
+                        ////Check Business Partner Type
+                        businessPartnerType = await dbBusiness.getBusinessPartnerType(businessPartnerTypeId);
+                        if(businessPartnerType.length == 1)
                         {
-                /////check Reward Applicable and Commission Term
-                            if(rewardApplicable == 1 && parseInt(commissionTermId) > 0)
+                    ////get Business Partner
+                            businessPartner = await dbBusiness.getBusinessPartner(uuid)
+                            if(businessPartner.length == 1)
                             {
-                                commissionTerm = await dbBusiness.getCommissionTerm(commissionTermId);
-                                if(commissionTerm.length == 0)
+                                if(businessPartnerTypeId == businessPartner[0].businessPartnerTypeId)
                                 {
-                                    res.status(500)
-                                    return res.json({
-                                        "status_code" : 500,
-                                        "message" : "Commission Term Not Exist",
-                                        "success" : false,
-                                        "error" : errorCode.getStatus(500)
-                                    })
-                                }
-                            }
-                        }
-                        else if(businessPartnerType[0].code == "B2B")
-                        {
-                            if(parseInt(commercialTermId) > 0)
-                            {
-                                commercialTerm = await dbBusiness.getCommercialTerm(commercialTermId);
-                                if(commercialTerm.length == 0)
-                                {
-                                    res.status(500)
-                                    return res.json({
-                                        "status_code" : 500,
-                                        "message" : "Commercial Term Not Exist",
-                                        "success" : false,
-                                        "error" : errorCode.getStatus(500)
-                                    })
-                                }
-                            }
-                        }
-                        ////Check Business Vertical
-                        businessVertical = await dbBusiness.getBusinessVertical(businessVerticalId);
-                        if(businessVertical.length == 1)
-                        {
-                            ////Check Business Vertical Type Ids
-                            let businessVerticalTypeCount = businessVerticalTypeIds.toString().split(",");
-                            
-                            businessVerticalType = await dbBusiness.getBusinessVerticalType(businessVerticalTypeIds);
-                            if(businessVerticalType.length == businessVerticalTypeCount.length)
-                            {
-                                ////Check Country
-                                country = await dbBusiness.getCountry(countryId);
-                                if(country.length == 1)
-                                {
-                                    ////Check State/Region
-                                    stateRegion = await dbBusiness.getStateRegion(stateRegionId, countryId);
-                                    if(stateRegion.length == 1)
+                                    if(businessPartnerType[0].code == "B2C")
                                     {
-                                        ////Check District
-                                        district = await dbBusiness.getDistrict(districtId, countryId,stateRegionId);
-                                        if(district.length == 1)
+                            /////check Reward Applicable and Commission Term
+                                        if(rewardApplicable == 1 && parseInt(commissionTermId) > 0)
                                         {
-                                            ////Check City
-                                            city = await dbBusiness.getCity(cityId, countryId, stateRegionId,districtId);
-                                            if(city.length == 1)
+                                            commissionTerm = await dbBusiness.getCommissionTerm(commissionTermId);
+                                            if(commissionTerm.length == 0)
                                             {
-                                            ////Check Duplicate Business Partner
-                                                businessPartner = await dbBusiness.duplicateBusinessPartner(name, businessPartnerTypeId, uuid);
-                                                if(businessPartner.length == 0)
+                                                res.status(500)
+                                                return res.json({
+                                                    "status_code" : 500,
+                                                    "message" : "Commission Term Not Exist",
+                                                    "success" : false,
+                                                    "error" : errorCode.getStatus(500)
+                                                })
+                                            }
+                                        }
+                                    }
+                                    else if(businessPartnerType[0].code == "B2B")
+                                    {
+                                        if(parseInt(commercialTermId) > 0)
+                                        {
+                                            commercialTerm = await dbBusiness.getCommercialTerm(commercialTermId);
+                                            if(commercialTerm.length == 0)
+                                            {
+                                                res.status(500)
+                                                return res.json({
+                                                    "status_code" : 500,
+                                                    "message" : "Commercial Term Not Exist",
+                                                    "success" : false,
+                                                    "error" : errorCode.getStatus(500)
+                                                })
+                                            }
+                                        }
+                                    }
+                                    ////Check Business Vertical
+                                    businessVertical = await dbBusiness.getBusinessVertical(businessVerticalId);
+                                    if(businessVertical.length == 1)
+                                    {
+                                        ////Check Business Vertical Type Ids
+                                        let businessVerticalTypeCount = businessVerticalTypeIds.toString().split(",");
+                                        
+                                        businessVerticalType = await dbBusiness.getBusinessVerticalType(businessVerticalTypeIds);
+                                        if(businessVerticalType.length == businessVerticalTypeCount.length)
+                                        {
+                                            ////Check Country
+                                            country = await dbBusiness.getCountry(countryId);
+                                            if(country.length == 1)
+                                            {
+                                                ////Check State/Region
+                                                stateRegion = await dbBusiness.getStateRegion(stateRegionId, countryId);
+                                                if(stateRegion.length == 1)
                                                 {
-                                        ///update Business Partner
-                                                    let updateJSON = {
-                                                        "uuid" : uuid,
-                                                        "name" : name,
-                                                        "email" : email,
-                                                        "businessVerticalId" : businessVerticalId,
-                                                        "businessVerticalTypeIds" : businessVerticalTypeIds,
-                                                        "address" : address,
-                                                        "countryId" : countryId,
-                                                        "stateRegionId" : stateRegionId,
-                                                        "districtId" : districtId,
-                                                        "cityId" : cityId,
-                                                        "pincode" : pincode,
-                                                        "contactPerson" : contactPerson,
-                                                        "contactEmail" : contactEmail,
-                                                        "contactMobile" : contactMobile,
-                                                        "inchargePerson" : inchargePerson,
-                                                        "inchargeEmail" : inchargeEmail,
-                                                        "inchargeMobile" : inchargeMobile,
-                                                        "applicableFrom" : applicableFrom,
-                                                        "applicableTo" : applicableTo,
-                                                        "rewardApplicable" : rewardApplicable,
-                                                        "commissionTermId" : commissionTermId,
-                                                        "panNumber" : panNumber,
-                                                        "gstNumber" : gstNumber,
-                                                        "commercialTermId" : commercialTermId,
-                                                        "createdById" : authData.id
-                                                    }
-                                                    let updateBusinessPartnerResult = await dbBusiness.updateBusinessPartner(updateJSON);
-                                        ///////
-                                                    if(updateBusinessPartnerResult.affectedRows > 0)
-                                                    {  
-                                                        res.status(200)
-                                                        return res.json({
-                                                            "uuid" : uuid,
-                                                            "status_code" : 200,
-                                                            "success" : true,                            
-                                                            "message" : errorCode.getStatus(200)
-                                                        })
+                                                    ////Check District
+                                                    district = await dbBusiness.getDistrict(districtId, countryId,stateRegionId);
+                                                    if(district.length == 1)
+                                                    {
+                                                        ////Check City
+                                                        city = await dbBusiness.getCity(cityId, countryId, stateRegionId,districtId);
+                                                        if(city.length == 1)
+                                                        {                                                
+                                                ///update Business Partner
+                                                            let updateJSON = {
+                                                                "uuid" : uuid,
+                                                                "name" : name,
+                                                                "email" : email,
+                                                                "businessVerticalId" : businessVerticalId,
+                                                                "businessVerticalTypeIds" : businessVerticalTypeIds,
+                                                                "address" : address,
+                                                                "countryId" : countryId,
+                                                                "stateRegionId" : stateRegionId,
+                                                                "districtId" : districtId,
+                                                                "cityId" : cityId,
+                                                                "pincode" : pincode,
+                                                                "contactPerson" : contactPerson,
+                                                                "contactEmail" : contactEmail,
+                                                                "contactMobile" : contactMobile,
+                                                                "inchargePerson" : inchargePerson,
+                                                                "inchargeEmail" : inchargeEmail,
+                                                                "inchargeMobile" : inchargeMobile,
+                                                                "applicableFrom" : applicableFrom,
+                                                                "applicableTo" : applicableTo,
+                                                                "rewardApplicable" : rewardApplicable,
+                                                                "commissionTermId" : commissionTermId,
+                                                                "panNumber" : panNumber,
+                                                                "gstNumber" : gstNumber,
+                                                                "commercialTermId" : commercialTermId,
+                                                                "createdById" : authData.id
+                                                            }
+                                                            let updateBusinessPartnerResult = await dbBusiness.updateBusinessPartner(updateJSON);
+                                                ///////
+                                                            if(updateBusinessPartnerResult.affectedRows > 0)
+                                                            {  
+                                                                res.status(200)
+                                                                return res.json({
+                                                                    "uuid" : uuid,
+                                                                    "status_code" : 200,
+                                                                    "success" : true,                            
+                                                                    "message" : errorCode.getStatus(200)
+                                                                })
+                                                            }
+                                                            else
+                                                            {       
+                                                                res.status(500)
+                                                                return res.json({
+                                                                    "status_code" : 500,
+                                                                    "message" : "Business Partner Not Saved",
+                                                                    "success" : false,
+                                                                    "error" : errorCode.getStatus(500)
+                                                                })
+                                                            }
+                                                            
+                                                        }
+                                                        else
+                                                        {   
+                                                            res.status(500)
+                                                            return res.json({
+                                                                "status_code" : 500,
+                                                                "message" : "City Not Exist For Country : " + city[0].countryName + ", State/Region : " + city[0].stateRegionName + " And District : " + city[0].districtName,
+                                                                "success" : false,
+                                                                "error" : errorCode.getStatus(500)
+                                                            })
+                                                        }
                                                     }
                                                     else
-                                                    {       
+                                                    {   
                                                         res.status(500)
                                                         return res.json({
                                                             "status_code" : 500,
-                                                            "message" : "Business Partner Not Saved",
+                                                            "message" : "District Not Exist For Country : " + district[0].countryName + " And State/Region : " + district[0].stateRegionName,
                                                             "success" : false,
                                                             "error" : errorCode.getStatus(500)
                                                         })
@@ -220,7 +249,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                     res.status(500)
                                                     return res.json({
                                                         "status_code" : 500,
-                                                        "message" : "Business Partner Name Already Exist For " + businessPartnerType[0].name,
+                                                        "message" : "State/Region Not Exist For Country : " + country[0].name,
                                                         "success" : false,
                                                         "error" : errorCode.getStatus(500)
                                                     })
@@ -231,7 +260,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                 res.status(500)
                                                 return res.json({
                                                     "status_code" : 500,
-                                                    "message" : "City Not Exist For Country : " + city[0].countryName + ", State/Region : " + city[0].stateRegionName + " And District : " + city[0].districtName,
+                                                    "message" : "Country Not Exist",
                                                     "success" : false,
                                                     "error" : errorCode.getStatus(500)
                                                 })
@@ -242,7 +271,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                             res.status(500)
                                             return res.json({
                                                 "status_code" : 500,
-                                                "message" : "District Not Exist For Country : " + district[0].countryName + " And State/Region : " + district[0].stateRegionName,
+                                                "message" : "Some Business Vertical Type Not Exist",
                                                 "success" : false,
                                                 "error" : errorCode.getStatus(500)
                                             })
@@ -253,29 +282,29 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                         res.status(500)
                                         return res.json({
                                             "status_code" : 500,
-                                            "message" : "State/Region Not Exist For Country : " + country[0].name,
+                                            "message" : "Some Business Vertical Not Exist",
                                             "success" : false,
                                             "error" : errorCode.getStatus(500)
                                         })
                                     }
                                 }
                                 else
-                                {   
+                                {
                                     res.status(500)
                                     return res.json({
                                         "status_code" : 500,
-                                        "message" : "Country Not Exist",
+                                        "message" : "Business Partner Type Not Matched Saved Business Partner Type",
                                         "success" : false,
                                         "error" : errorCode.getStatus(500)
                                     })
                                 }
                             }
                             else
-                            {   
+                            {
                                 res.status(500)
                                 return res.json({
                                     "status_code" : 500,
-                                    "message" : "Some Business Vertical Type Not Exist",
+                                    "message" : "Invalid Business Partner",
                                     "success" : false,
                                     "error" : errorCode.getStatus(500)
                                 })
@@ -286,7 +315,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             res.status(500)
                             return res.json({
                                 "status_code" : 500,
-                                "message" : "Some Business Vertical Not Exist",
+                                "message" : "Some BusinessPartner Type Not Exist",
                                 "success" : false,
                                 "error" : errorCode.getStatus(500)
                             })
@@ -297,7 +326,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Some BusinessPartner Type Not Exist",
+                            "message" : "Business Partner Name Already Exist For " + businessPartnerType[0].name,
                             "success" : false,
                             "error" : errorCode.getStatus(500)
                         })

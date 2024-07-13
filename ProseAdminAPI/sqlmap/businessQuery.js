@@ -2369,8 +2369,9 @@ db.duplicateBusinessPartner = (name, businessPartnerTypeId, uuid) =>
     {
         try
         {
-            let sql = `SELECT bp.id, bp.name
+            let sql = `SELECT bp.id, bp.name, bpt.id AS businessPartnerTypeId, bpt.name AS businessPartnerTypeName
             FROM business_partner bp 
+            JOIN business_partner_type bpt ON bpt.id = bp.business_partner_type_id
             WHERE bp.name = '${name}' AND bp.business_partner_type_id = ${businessPartnerTypeId}`;
             if(uuid != "")
             {
@@ -3518,8 +3519,9 @@ db.duplicateStudyCenter = (name, uuid) =>
     {
         try
         {
-            let sql = `SELECT sc.id, sc.name
-            FROM study_center sc 
+            let sql = `SELECT sc.id, sc.name, sct.id AS studyCenterTypeId, sct.name AS studyCenterTypeName
+            FROM study_center sc
+            JOIN study_center_type sct ON sct.id = sc.study_center_type_id 
             WHERE sc.name = '${name}'`;
             if(uuid != "")
             {
@@ -3573,6 +3575,160 @@ db.updateStudyCenterCode = (code, id) =>
         try
         {
             let sql = `UPDATE study_center SET code = '${code}' WHERE id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateStudyCenter = (studyCenter) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE study_center SET name = '${studyCenter.name}', email = '${studyCenter.email}', mobile = '${studyCenter.mobile}', address = '${studyCenter.address}', pincode = '${studyCenter.pincode}', country_id = ${studyCenter.countryId}, state_region_id = ${studyCenter.stateRegionId}, district_id = ${studyCenter.districtId}, city_id = ${studyCenter.cityId}, contact_person_name = NULLIF('${studyCenter.contactPersonName}', ''), contact_person_email = NULLIF('${studyCenter.contactPersonEmail}', ''), contact_person_mobile = NULLIF('${studyCenter.contactPersonMobile}', ''), landlord_name = NULLIF('${studyCenter.landlordName}', ''), pan_number = NULLIF('${studyCenter.panNumber}', ''), gst_number = NULLIF('${studyCenter.gstNumber}', ''), study_center_reward_type_id = NULLIF('${studyCenter.rewardTypeId}', ''), business_partner_id = NULLIF('${studyCenter.businessPartnerId}', ''), updated_on = NOW(), updated_by_id = ${studyCenter.createdById} WHERE uuid = '${studyCenter.uuid}'`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteStudyCenter = (id, deletedById) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE study_center SET is_active = 0, deleted_on = NOW(), deleted_by_id = ${deletedById} WHERE id = ${id} AND deleted_on IS NULL AND deleted_by_id IS NULL`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getStudyCenterDocuments = (studyCenterId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT scdu.id, scdu.file_name AS fileName, scdu.uploaded_on AS uploadedOn,
+            aed.id AS documentId, aed.name AS documentName
+            FROM study_center_doc_upload scdu
+            JOIN academy_enclosure_document aed ON aed.id = scdu.academy_enclosure_document_id 
+            WHERE scdu.study_center_id = ${studyCenterId}
+            ORDER BY aed.name`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertStudyCenterDocument = (studyCenterDocument) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO study_center_doc_upload (study_center_id, academy_enclosure_document_id, file_name, uploaded_on, uploaded_by_id) VALUES (${studyCenterDocument.studyCenterId}, ${studyCenterDocument.documentId}, '${studyCenterDocument.fileName}', NOW(), ${studyCenterDocument.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateStudyCenterDocFileName = (fileName, id, updatedById = '') => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE study_center_doc_upload SET file_name = '${fileName}'`;
+            if(updatedById != '')
+            {
+                sql =sql + `, updated_on = NOW(), updated_by_id = ${updatedById}`
+            }
+            sql =sql + ` WHERE id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteStudyCenterDocument = (studyCenterId, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM study_center_doc_upload WHERE study_center_id = ${studyCenterId} AND id = ${id}`;
             
             dbConn.query(sql, (error, result) => 
             {

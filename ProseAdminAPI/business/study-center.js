@@ -13,7 +13,7 @@ module.exports = require('express').Router().get('/:uuid', async(req,res) =>
     try
     {
         uuid = '';
-        uuid = req.params[0];
+        uuid = req.params.uuid;
 
         studyCenter = await dbBusiness.getStudyCenter(uuid);
         if(studyCenter.length >= 0)

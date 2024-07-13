@@ -26,6 +26,8 @@ let rewardTypeId;
 let businessPartnerUUID;
 let agreementFrom;
 let agreementTo;
+let academyEnclosureDocumentIds;
+let totalSaved;
 
 //////
 let studyCenterType;
@@ -37,6 +39,7 @@ let district;
 let city;
 let businessPartner;
 let rewardType;
+let academyEnclosureDocument;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -46,85 +49,139 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.email != undefined && reqData.mobile != undefined && reqData.landlordName != undefined && reqData.contactPersonName != undefined && reqData.contactPersonEmail != undefined && reqData.contactPersonMobile != undefined && reqData.address != undefined && reqData.country != undefined && reqData.stateRegion != undefined && reqData.district != undefined && reqData.city != undefined && reqData.pincode != undefined && reqData.studyCenterType != undefined && reqData.panNumber != undefined && reqData.gstNumber != undefined && reqData.rewardType != undefined && reqData.businessPartner != undefined && reqData.agreementFrom != undefined && reqData.agreementTo != undefined)
+        if(reqData.name != undefined && reqData.email != undefined && reqData.mobile != undefined && reqData.landlordName != undefined && reqData.contactPersonName != undefined && reqData.contactPersonEmail != undefined && reqData.contactPersonMobile != undefined && reqData.address != undefined && reqData.country != undefined && reqData.stateRegion != undefined && reqData.district != undefined && reqData.city != undefined && reqData.pincode != undefined && reqData.studyCenterType != undefined && reqData.panNumber != undefined && reqData.gstNumber != undefined && reqData.rewardType != undefined && reqData.businessPartner != undefined && reqData.agreementFrom != undefined && reqData.agreementTo != undefined && reqData.academyEnclosureDocumentIds != undefined)
         {
-            if(reqData.name != "" && reqData.email != "" && reqData.mobile != "" && reqData.address != "" && reqData.country.id != "" && reqData.stateRegion.id != "" && reqData.district.id != "" && reqData.city.id != "" && reqData.pincode != "" && reqData.studyCenterType.id != "" && reqData.panNumber != "" && reqData.gstNumber != "")
+            if(reqData.name != "" && reqData.email != "" && reqData.mobile != "" && reqData.address != "" && JSON.parse(reqData.country).id != "" && JSON.parse(reqData.stateRegion).id != "" && JSON.parse(reqData.district).id != "" && JSON.parse(reqData.city).id != "" && reqData.pincode != "" && JSON.parse(reqData.studyCenterType).id != "")
             {
                 name = reqData.name;
                 code = "";
                 email = reqData.email;
                 mobile = reqData.mobile;
-                studyCenterTypeId = commonFunction.validateNumber(reqData.studyCenterType.id);
+                studyCenterTypeId = commonFunction.validateNumber(JSON.parse(reqData.studyCenterType).id);
+                pincode = commonFunction.validateNumber(reqData.pincode);
+                address = reqData.address;
+                countryId = commonFunction.validateNumber(JSON.parse(reqData.country).id);
+                stateRegionId = commonFunction.validateNumber(JSON.parse(reqData.stateRegion).id);
+                districtId = commonFunction.validateNumber(JSON.parse(reqData.district).id);
+                cityId = commonFunction.validateNumber(JSON.parse(reqData.city).id);
+                panNumber = reqData.panNumber;
+                gstNumber = reqData.gstNumber;
                 contactPersonName = reqData.contactPersonName;
                 contactPersonEmail = reqData.contactPersonEmail;
                 contactPersonMobile = reqData.contactPersonMobile;
                 landlordName = reqData.landlordName;
-                pincode = commonFunction.validateNumber(reqData.pincode);
-                address = reqData.address;
-                countryId = commonFunction.validateNumber(reqData.country.id);
-                stateRegionId = commonFunction.validateNumber(reqData.stateRegion.id);
-                districtId = commonFunction.validateNumber(reqData.district.id);
-                cityId = commonFunction.validateNumber(reqData.city.id);
-                rewardTypeId = commonFunction.validateNumber(reqData.rewardType.id);
-                businessPartnerUUID = commonFunction.validateNumber(reqData.businessPartner.uuid);
+                rewardTypeId = commonFunction.validateNumber(JSON.parse(reqData.rewardType).id);
+                businessPartnerUUID = JSON.parse(reqData.businessPartner).uuid;
                 agreementFrom = reqData.agreementFrom;
                 agreementTo = reqData.agreementTo;
-                panNumber = reqData.panNumber;
-                gstNumber = reqData.gstNumber;
+                academyEnclosureDocumentIds = reqData.academyEnclosureDocumentIds;
             
-            /////Check Reward Type
-            if(rewardTypeId != "")
-            {
-                rewardType = await dbBusiness.getStudyCenterRewardType(rewardTypeId);
-                if(rewardType.length == 0)
+            /////check Academy Enclosure Documents And Files
+                academyEnclosureDocument = await dbBusiness.getAcademyEnclosureDocument(academyEnclosureDocumentIds);
+                if(academyEnclosureDocument.length != req.files.length)
                 {
+                    ///Remove Files
+                    commonFunction.deleteFiles(req.files);
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
-                        "message" : "Invalid Reward Type",
+                        "message" : "Academy Enclosure Documents And Uploading Files Are Not Matched",
                         "success" : false,
                         "error" : errorCode.getStatus(500)
                     })
                 }
-            }
-            /////Check Business Partner
-            if(businessPartnerUUID != "")
-            {
-                businessPartner = await dbBusiness.getBusinessPartner(businessPartnerUUID);
-                if(businessPartner.length == 0)
+
+                ////Check studyCenterType
+                studyCenterType = await dbBusiness.getStudyCenterType(studyCenterTypeId);
+                if(studyCenterType.length == 1)
                 {
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Invalid Business Partner",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500)
-                    })
-                }
-            }
-            /////check agreementFrom and agreementTo
-                if(!commonFunction.isValidDate(agreementFrom, "YYYY-MM-DD") || !commonFunction.isValidDate(agreementTo, "YYYY-MM-DD"))
-                {
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Invalid Date Format In ContractFrom or ContractTo",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500)
-                    })
-                }
-                ////Check Duplicate Email/Mobile
-                duplicateEmailMobile = await dbCommon.checkDuplicateEmailMobile(email, "Email", "study_center");
-                if(duplicateEmailMobile.length == 0)
-                {  
-                    ////Check Duplicate Email/Mobile
-                    duplicateEmailMobile = await dbCommon.checkDuplicateEmailMobile(mobile, "Mobile", "study_center");
-                    if(duplicateEmailMobile.length == 0)
+                    if(studyCenterType[0].name == "Company Owned")
                     {
-                        ////Check studyCenterType
-                        studyCenterType = await dbBusiness.getStudyCenterType(studyCenterTypeId);
-                        if(studyCenterType.length == 1)
+                        panNumber = "";
+                        gstNumber = "";
+                        contactPersonName = "";
+                        contactPersonEmail = "";
+                        contactPersonMobile = "";
+                        landlordName = "";
+                        rewardTypeId = "";
+                        businessPartnerUUID = "";
+                        agreementFrom = "";
+                        agreementTo = "";                        
+                    }
+                    else if(studyCenterType[0].name == "Company Operated")
+                    {
+                        businessPartnerUUID = "";
+                    }
+                    else if(studyCenterType[0].name == "Partner Captive")
+                    {
+                        panNumber = "";
+                        gstNumber = "";
+                        contactPersonName = "";
+                        contactPersonEmail = "";
+                        contactPersonMobile = "";
+                        landlordName = "";
+                        rewardTypeId = "";
+                        agreementFrom = "";
+                        agreementTo = "";
+                    }
+                    /////Check Reward Type
+                    if(rewardTypeId != "")
+                    {
+                        rewardType = await dbBusiness.getStudyCenterRewardType(rewardTypeId);
+                        if(rewardType.length == 0)
                         {
+                            ///Remove Files
+                            commonFunction.deleteFiles(req.files);
+                            res.status(500)
+                            return res.json({
+                                "status_code" : 500,
+                                "message" : "Invalid Reward Type",
+                                "success" : false,
+                                "error" : errorCode.getStatus(500)
+                            })
+                        }
+                    }
+                    /////Check Business Partner
+                    if(businessPartnerUUID != "")
+                    {
+                        businessPartner = await dbBusiness.getBusinessPartner(businessPartnerUUID);
+                        if(businessPartner.length == 0)
+                        {
+                            ///Remove Files
+                            commonFunction.deleteFiles(req.files);
+                            res.status(500)
+                            return res.json({
+                                "status_code" : 500,
+                                "message" : "Invalid Business Partner",
+                                "success" : false,
+                                "error" : errorCode.getStatus(500)
+                            })
+                        }
+                    }
+                /////check agreementFrom and agreementTo
+                    if(agreementFrom != "" && agreementTo != "")
+                    {
+                        if(!commonFunction.isValidDate(agreementFrom, "YYYY-MM-DD") || !commonFunction.isValidDate(agreementTo, "YYYY-MM-DD"))
+                        {
+                            ///Remove Files
+                            commonFunction.deleteFiles(req.files);
+                            res.status(500)
+                            return res.json({
+                                "status_code" : 500,
+                                "message" : "Invalid Date Format In AgreementFrom or AgreementTo",
+                                "success" : false,
+                                "error" : errorCode.getStatus(500)
+                            })
+                        }
+                    }
+                    ////Check Duplicate Email/Mobile
+                    duplicateEmailMobile = await dbCommon.checkDuplicateEmailMobile(email, "Email", "study_center");
+                    if(duplicateEmailMobile.length == 0)
+                    {  
+                        ////Check Duplicate Email/Mobile
+                        duplicateEmailMobile = await dbCommon.checkDuplicateEmailMobile(mobile, "Mobile", "study_center");
+                        if(duplicateEmailMobile.length == 0)
+                        {                        
                             ////Check Country
                             country = await dbBusiness.getCountry(countryId);
                             if(country.length == 1)
@@ -164,7 +221,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                     "landlordName" : landlordName,
                                                     "panNumber" : panNumber,
                                                     "gstNumber" : gstNumber,
-                                                    "rewardTypeId" : rewardType[0].id,
+                                                    "rewardTypeId" : rewardType != null ? rewardType[0].id : "",
                                                     "businessPartnerId" : businessPartnerUUID != '' ? businessPartner[0].id : '',
                                                     "createdById" : authData.id
                                                 }
@@ -200,7 +257,16 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                             }
                                                             let insertStudyCenterAgreementResult = await dbBusiness.insertStudyCenterAgreementHistory(insertAgreementJSON);
                                                         } 
-                                                    
+                                                        
+                                                        ///////Save Study Center Docs File
+                                                        if(academyEnclosureDocument.length > 0)
+                                                        {
+                                                            totalSaved = await saveStudyCenterDocs(req.files, academyEnclosureDocument, insertStudyCenterId, code, authData.id);
+                                                    ///Remove Files
+                                                            commonFunction.deleteFiles(req.files);
+                                                        }
+                                                ///Remove Files
+                                                        commonFunction.deleteFiles(req.files);
                                                         res.status(200)
                                                         return res.json({
                                                             "uuid" : insertJSON.uuid,
@@ -212,6 +278,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                 }
                                                 else
                                                 {
+                                                    ///Remove Files
+                                                    commonFunction.deleteFiles(req.files);
                                                     res.status(500)
                                                     return res.json({
                                                         "status_code" : 500,
@@ -223,6 +291,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                             }
                                             else
                                             {
+                                                ///Remove Files
+                                                commonFunction.deleteFiles(req.files);
                                                 res.status(500)
                                                 return res.json({
                                                     "status_code" : 500,
@@ -234,6 +304,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                         }
                                         else
                                         {
+                                            ///Remove Files
+                                            commonFunction.deleteFiles(req.files);
                                             res.status(500)
                                             return res.json({
                                                 "status_code" : 500,
@@ -245,6 +317,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                     }
                                     else
                                     {
+                                        ///Remove Files
+                                        commonFunction.deleteFiles(req.files);
                                         res.status(500)
                                         return res.json({
                                             "status_code" : 500,
@@ -256,6 +330,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                 }
                                 else
                                 {
+                                    ///Remove Files
+                                    commonFunction.deleteFiles(req.files);
                                     res.status(500)
                                     return res.json({
                                         "status_code" : 500,
@@ -267,6 +343,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             }
                             else
                             {
+                                ///Remove Files
+                                commonFunction.deleteFiles(req.files);
                                 res.status(500)
                                 return res.json({
                                     "status_code" : 500,
@@ -278,10 +356,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         }
                         else
                         {
+                            ///Remove Files
+                            commonFunction.deleteFiles(req.files);
                             res.status(500)
                             return res.json({
                                 "status_code" : 500,
-                                "message" : "Study Center Type Not Exist",
+                                "message" : "Duplicate Mobile",
                                 "success" : false,
                                 "error" : errorCode.getStatus(500)
                             })
@@ -289,10 +369,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     }
                     else
                     {
+                        ///Remove Files
+                        commonFunction.deleteFiles(req.files);
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Duplicate Mobile",
+                            "message" : "Duplicate Email",
                             "success" : false,
                             "error" : errorCode.getStatus(500)
                         })
@@ -300,10 +382,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 }
                 else
                 {
+                    ///Remove Files
+                    commonFunction.deleteFiles(req.files);
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
-                        "message" : "Duplicate Email",
+                        "message" : "Study Center Type Not Exist",
                         "success" : false,
                         "error" : errorCode.getStatus(500)
                     })
@@ -324,6 +408,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         }
         else
         {
+            ///Remove Files
+            commonFunction.deleteFiles(req.files);
             res.status(500)
             return res.json({
                 "status_code" : 500,
@@ -335,12 +421,71 @@ module.exports = require('express').Router().post('/',async(req,res) =>
     } 
     catch(e)
     {
+        ///Remove Files
+        commonFunction.deleteFiles(req.files);
         res.status(500)
         return res.json({
             "status_code" : 500,
             "message" : "Something Went Wrong",
             "success" : false,
-            "error" : e.stack
+            "error" : e
         });
     }
 })
+
+async function saveStudyCenterDocs(files, documentIds, studyCenterId, code, createdById) 
+{
+    let savedFc = 0;
+
+    for (let fc = 0; fc < files.length; fc++) 
+    {
+        try 
+        {
+            let file = files[fc];
+            if (parseFloat(file.size) > 0) 
+            {
+                let allowedMimeTypes = [
+                    'image/png',
+                    'image/jpeg',
+                    'application/pdf',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+                ];
+
+                if (allowedMimeTypes.includes(file.mimetype)) 
+                {
+                    let insertStudyCenterDocumentJSON = {
+                        studyCenterId: studyCenterId,
+                        documentId: documentIds[fc].id,
+                        fileName: "",
+                        createdById: createdById
+                    };
+
+                    let insertStudyCenterDocumentResult = await dbBusiness.insertStudyCenterDocument(insertStudyCenterDocumentJSON);
+                    let insertStudyCenterDocId = insertStudyCenterDocumentResult.insertId;
+
+                    // File Upload
+                    let fileExt = file.originalname.split('.').pop();
+                    let sourcePath = file.path;
+                    let destiFileName = `${code}_${insertStudyCenterDocId}.${fileExt}`;
+                    let destiPath = commonFunction.getUploadFolder('StudyCenterDoc') + destiFileName;
+
+                    await commonFunction.copyFile(sourcePath, destiPath);
+
+                    // Count how many files are saved
+                    savedFc += 1;
+                    
+                    // Update the file name in the database
+                    await dbBusiness.updateStudyCenterDocFileName(destiFileName, insertStudyCenterDocId);
+                }
+            }
+        } 
+        catch (e) 
+        {
+            console.error(`Error processing file ${documentIds[fc].name}:`, e);
+        }
+    }
+
+    return savedFc;
+}
