@@ -129,7 +129,7 @@ CREATE TABLE `business_partner` (
 
 LOCK TABLES `business_partner` WRITE;
 /*!40000 ALTER TABLE `business_partner` DISABLE KEYS */;
-INSERT INTO `business_partner` VALUES (1,'Just Game LLP - Just Cricket','RP-000001',1,'info@justcric.com',1,'3,1,2','No 7/1 , Itgalpura village, Rajanukunte, Bangalore North',1,4,3,1,'490023','Mr.Nasiruddin','tnaas3@gmail.com','9448505903',NULL,NULL,NULL,'2022-04-01','2027-03-31',1,10,1,1,'AAMF13029Q','29AAMF13029Q1ZN',NULL,1,'2024-06-28 12:27:18',4,NULL,NULL,'a8ca8b10-351b-11ef-ac9e-9528e9adec92',NULL,NULL),(2,'Just Game LLP - Just Cricket-1','RP-000002',1,'info-1@justcric.com',1,'3,1,2','No 7/1 , Itgalpura village, Rajanukunte, Bangalore North',1,4,3,1,'490023','Mr.Nasiruddin','tnaas3@gmail.com','9448505903',NULL,NULL,NULL,'2022-04-01','2027-03-31',0,NULL,1,1,'AAMF13029Q','29AAMF13029Q1ZN',NULL,1,'2024-06-28 12:35:46',4,NULL,NULL,'d7b25600-351c-11ef-a0e6-e31ab257a17b',NULL,NULL),(3,'Just Game LLP - Just Cricket-2','RP-000003',1,'info-2@justcric.com',1,'1,2','No 7/1 , Itgalpura village, Rajanukunte, Bangalore North',1,4,3,1,'490001','Mr.Nasiruddin','tnaas3@gmail.com','9448505903',NULL,'tnaas3@gmail.com','9448505903','2021-04-01','2024-12-31',1,3,0,1,NULL,NULL,NULL,0,'2024-06-28 12:37:08',4,'2024-06-28 16:25:04',4,'083ca2d0-351d-11ef-a6a9-598cb34e38bd','2024-07-04 10:23:14',4);
+INSERT INTO `business_partner` VALUES (1,'Just Game LLP - Just Cricket','RP-000001',1,'info@justcric.com',1,'3,1,2','No 7/1 , Itgalpura village, Rajanukunte, Bangalore North',1,4,3,1,'490023','Mr.Nasiruddin','tnaas3@gmail.com','9448505903',NULL,NULL,NULL,'2022-04-01','2027-03-31',1,10,1,1,'AAMF13029Q','29AAMF13029Q1ZN',NULL,1,'2024-06-28 12:27:18',4,NULL,NULL,'a8ca8b10-351b-11ef-ac9e-9528e9adec92',NULL,NULL),(2,'Just Game LLP - Just Cricket-1','RP-000002',1,'info-1@justcric.com',1,'3,1,2','No 7/1 , Itgalpura village, Rajanukunte, Bangalore North',1,4,3,1,'490023','Mr.Nasiruddin','tnaas3@gmail.com','9448505903',NULL,NULL,NULL,'2022-04-01','2027-03-31',0,NULL,1,1,'AAMF13029Q','29AAMF13029Q1ZN',NULL,1,'2024-06-28 12:35:46',4,NULL,NULL,'d7b25600-351c-11ef-a0e6-e31ab257a17b',NULL,NULL),(3,'Just Game LLP - Just Cricket-2','RP-000003',1,'info-2@justcric.com',1,'1,2','No 7/1 , Itgalpura village, Rajanukunte, Bangalore North',1,4,3,1,'490001','Mr.Nasiruddin','tnaas3@gmail.com','9448505903',NULL,'tnaas3@gmail.com','9448505903','2021-04-01','2024-12-31',1,3,0,1,NULL,NULL,NULL,0,'2024-06-28 12:37:08',4,'2024-07-12 11:24:10',4,'083ca2d0-351d-11ef-a6a9-598cb34e38bd','2024-07-04 10:23:14',4);
 /*!40000 ALTER TABLE `business_partner` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -721,9 +721,9 @@ DROP TABLE IF EXISTS `study_center`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `study_center` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `business_partner_id` int(11) NOT NULL,
+  `business_partner_id` int(11) DEFAULT NULL,
   `name` text NOT NULL,
-  `code` varchar(10) NOT NULL,
+  `code` varchar(10) DEFAULT NULL,
   `mobile` varchar(15) NOT NULL,
   `email` varchar(150) NOT NULL,
   `country_id` int(11) NOT NULL,
@@ -750,7 +750,7 @@ CREATE TABLE `study_center` (
   `deleted_on` datetime DEFAULT NULL,
   `deleted_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -759,6 +759,7 @@ CREATE TABLE `study_center` (
 
 LOCK TABLES `study_center` WRITE;
 /*!40000 ALTER TABLE `study_center` DISABLE KEYS */;
+INSERT INTO `study_center` VALUES (1,NULL,'Krishna Public School-2','CW-000001','994589435851','kpsbhilai22@gmail.com',1,4,3,1,'4900452','Nehru Nagar',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'92355320-4034-11ef-a7fe-ad56391774c9','2024-07-12 15:23:20',4,'2024-07-13 11:00:39',4,NULL,NULL),(3,NULL,'Krishna Public School-3','CO-000003','777589435851','kpsbhilai23@gmail.com',1,4,3,1,'4900452','Nehru Nagar',2,'AAMF13029Q','29AAMF13029Q1ZN','Kamlesh','Rohit Sinha','rohit124@gmail.com','998584939383',2,2,1,'1a74b8c0-40da-11ef-a20a-b771b1bb406c','2024-07-13 11:08:16',4,NULL,NULL,NULL,NULL),(4,NULL,'Krishna Public School-4','CO-000004','777589435859','kpsbhilai24@gmail.com',1,4,3,1,'4900452','Nehru Nagar',2,'AAMF13029Q','29AAMF13029Q1ZN','Kamlesh','Rohit Sinha','rohit124@gmail.com','998584939383',3,2,1,'74e5a530-40da-11ef-a20a-b771b1bb406c','2024-07-13 11:10:48',4,NULL,NULL,NULL,NULL),(5,2,'Krishna\'s Public School-9','PC-000005','994589435856','kpsbhilai29@gmail.com',1,4,3,1,'4900452','Nehru Nagar',3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'926d4ea0-40da-11ef-a20a-b771b1bb406c','2024-07-13 11:11:37',4,'2024-07-13 11:30:37',4,'2024-07-13 11:36:38',4),(6,2,'Krishna Public School-5','PC-000006','777589435852','kpsbhilai25@gmail.com',1,4,3,1,'4900452','Nehru Nagar',3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'a20de5d0-40db-11ef-ad02-6522ae59098b','2024-07-13 11:19:13',4,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `study_center` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -780,7 +781,7 @@ CREATE TABLE `study_center_agreement_history` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -789,6 +790,7 @@ CREATE TABLE `study_center_agreement_history` (
 
 LOCK TABLES `study_center_agreement_history` WRITE;
 /*!40000 ALTER TABLE `study_center_agreement_history` DISABLE KEYS */;
+INSERT INTO `study_center_agreement_history` VALUES (2,3,'2023-06-01','2024-06-30',1,'2024-07-13 11:08:16',4,NULL,NULL),(3,4,'2023-06-01','2024-06-30',1,'2024-07-13 11:10:48',4,NULL,NULL);
 /*!40000 ALTER TABLE `study_center_agreement_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -809,7 +811,7 @@ CREATE TABLE `study_center_doc_upload` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -818,6 +820,7 @@ CREATE TABLE `study_center_doc_upload` (
 
 LOCK TABLES `study_center_doc_upload` WRITE;
 /*!40000 ALTER TABLE `study_center_doc_upload` DISABLE KEYS */;
+INSERT INTO `study_center_doc_upload` VALUES (1,1,1,'CW-000001_1.xlsx','2024-07-12 15:23:20',4,NULL,NULL),(2,1,2,'CW-000001_2.pdf','2024-07-12 15:23:20',4,NULL,NULL),(4,3,3,'CO-000003_4.pdf','2024-07-13 11:08:16',4,NULL,NULL),(5,4,3,'CO-000004_5.pdf','2024-07-13 11:10:48',4,NULL,NULL),(6,5,3,'PC-000005_6.pdf','2024-07-13 11:11:37',4,NULL,NULL),(7,6,3,'PC-000006_7.pdf','2024-07-13 11:19:13',4,NULL,NULL);
 /*!40000 ALTER TABLE `study_center_doc_upload` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1351,4 +1354,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-12 10:56:57
+-- Dump completed on 2024-07-13 13:55:33

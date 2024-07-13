@@ -103,6 +103,9 @@ businessRoute.use('/updateStudyCenter', require('../util/validateToken.js'), req
 businessRoute.use('/deleteStudyCenter', require('../util/validateToken.js'), require('./delete-study-center.js'));
 
 businessRoute.use('/getStudyCenterDocuments', require('../util/validateToken.js'), require('./study-center-documents.js'));
+businessRoute.use('/getStudyCenterDocumentFile', require('../util/validateToken.js'), require('./study-center-document-file.js'));
+businessRoute.use('/uploadStudyCenterDocument', uploads, require('../util/validateToken.js'), require('./upload-study-center-document.js'));
+businessRoute.use('/deleteStudyCenterDocument', require('../util/validateToken.js'), require('./delete-study-center-document.js'));
 
 businessRoute.use('/',(req,res,next) => 
 {

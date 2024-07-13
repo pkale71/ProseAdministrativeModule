@@ -3543,6 +3543,54 @@ db.duplicateStudyCenter = (name, uuid) =>
     })
 };
 
+db.checkStudyCenterDocumentExist = (studyCenterId, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT scdu.id AS studyCenterId, scdu.file_name AS fileName FROM study_center_doc_upload scdu WHERE scdu.study_center_id = ${studyCenterId} AND scdu.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkDuplicateStudyCenterDoc = (studyCenterId, academyEnclosureDocId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT scdu.id, scdu.file_name AS fileName FROM study_center_doc_upload scdu WHERE scdu.study_center_id = ${studyCenterId} AND scdu.academy_enclosure_document_id = ${academyEnclosureDocId}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.insertStudyCenter = (studyCenter) => 
 {
     return new Promise((resolve, reject) => 
