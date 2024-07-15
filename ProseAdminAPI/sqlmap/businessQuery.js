@@ -3276,7 +3276,7 @@ db.deleteTieUpSchoolDocument = (tieUpSchoolId, id) =>
     })
 };
 
-db.getTieUpSchoolHistories = (tieUpSchoolId) => 
+db.getTieUpSchoolContrtactHistories = (tieUpSchoolId) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -3399,7 +3399,7 @@ db.deleteTieUpSchoolContractHistory = (tieUpSchoolContractHistory) =>
                     }
                     if(result1.length == 0)
                     {
-    ///////Update Business Partner Current Contract Id And is Having Contract
+    ///////Update Tie-Up School Current Contract Id
                         let sql2 = `UPDATE tie_up_school SET current_contract_history_id = NULL WHERE id = ${tieUpSchoolContractHistory.tieUpSchoolId}`;
                         dbConn.query(sql2, (error2, result2) => 
                         {
@@ -3794,6 +3794,30 @@ db.deleteStudyCenterDocument = (studyCenterId, id) =>
     })
 };
 
+db.getStudyCenterAgreementHistories = (studyCenterId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT scah.id AS id, scah.agreement_from AS agreementFrom, scah.agreement_to AS agreementTo, is_active AS isActive FROM study_center_agreement_history scah WHERE scah.study_center_id = ${studyCenterId} ORDER BY scah.id`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.insertStudyCenterAgreementHistory = (studyCenterAgreementHistory) => 
 {
     return new Promise((resolve, reject) => 
@@ -3827,6 +3851,88 @@ db.insertStudyCenterAgreementHistory = (studyCenterAgreementHistory) =>
                         }
                         return resolve(result2);
                     });
+                });
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkStudyCenterAgreementExist = (agreementFrom, agreementTo, studyCenterId, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT scah.id AS studyCenterAgreementId FROM study_center_agreement_history scah WHERE scah.study_center_id = ${studyCenterId}`;
+            if(id == '')
+            {
+                sql = sql + ` AND (scah.agreement_from = '${agreementFrom}' OR scah.agreement_to = '${agreementTo}')`;
+            }
+            else if(id != '')
+            {
+                sql = sql + ` AND scah.id = ${id}`;
+            }
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteStudyCenterAgreementHistory = (studyCenterAgreementHistory) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+    /////Delete Old Contracts
+            let sql = `DELETE FROM study_center_agreement_history WHERE study_center_id = ${studyCenterAgreementHistory.studyCenterId} AND id = ${studyCenterAgreementHistory.id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+    /////Check Any Agreement Exist For study center
+                let sql1 = `SELECT scah.id FROM study_center_agreement_history scah WHERE scah.study_center_id = ${studyCenterAgreementHistory.studyCenterId}`;
+                dbConn.query(sql1, (error1, result1) => 
+                {
+                    if(error1)
+                    {
+                        return reject(error1);
+                    }
+                    if(result1.length == 0)
+                    {
+    ///////Update Study Center Current Agreement Id
+                        let sql2 = `UPDATE study_center SET current_agreement_history_id = NULL WHERE id = ${studyCenterAgreementHistory.studyCenterId}`;
+                        dbConn.query(sql2, (error2, result2) => 
+                        {
+                            if(error2)
+                            {
+                                return reject(error2);
+                            }
+                            return resolve(result2);
+                        });
+                    }
+                    else
+                    {
+                        return resolve(result);
+                    }
                 });
             });
         }

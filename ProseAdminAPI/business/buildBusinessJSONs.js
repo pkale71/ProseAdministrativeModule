@@ -882,7 +882,7 @@ buildBusinessJSON.studyCenterDocuments = function(datas)
     return resultJSON;
 }
 
-buildBusinessJSON.studyCenterContractHistories = function(datas)
+buildBusinessJSON.studyCenterAgreementHistories = function(datas)
 {
     let resultJSON = [];
     
@@ -891,8 +891,8 @@ buildBusinessJSON.studyCenterContractHistories = function(datas)
 /////Final JSON
         let finalJSON = {
             "id" : data.id,
-            "contractFrom" : commonFunction.getFormattedDate(data.contractFrom, "yyyy-mm-dd"),
-            "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd"),
+            "agreementFrom" : commonFunction.getFormattedDate(data.agreementFrom, "yyyy-mm-dd"),
+            "agreementTo" : commonFunction.getFormattedDate(data.agreementTo, "yyyy-mm-dd"),
             "isActive" : data.isActive
         }
         resultJSON.push(finalJSON);

@@ -12,10 +12,7 @@ let academyEnclosureDocument;
 let allowedMimeTypes = [
     'image/png',
     'image/jpeg',
-    'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    'application/pdf'
 ];
 
 module.exports = require('express').Router().post('/',async(req,res) =>

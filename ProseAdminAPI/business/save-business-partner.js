@@ -470,10 +470,7 @@ async function saveBusinessPartnerDocs(files, documentIds, businessPartnerId, bu
                 let allowedMimeTypes = [
                     'image/png',
                     'image/jpeg',
-                    'application/pdf',
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+                    'application/pdf'
                 ];
 
                 if (allowedMimeTypes.includes(file.mimetype)) 

@@ -107,6 +107,10 @@ businessRoute.use('/getStudyCenterDocumentFile', require('../util/validateToken.
 businessRoute.use('/uploadStudyCenterDocument', uploads, require('../util/validateToken.js'), require('./upload-study-center-document.js'));
 businessRoute.use('/deleteStudyCenterDocument', require('../util/validateToken.js'), require('./delete-study-center-document.js'));
 
+businessRoute.use('/getStudyCenterAgreementHistories', require('../util/validateToken.js'), require('./study-center-agreement-histories.js'));
+businessRoute.use('/saveStudyCenterAgreement', require('../util/validateToken.js'), require('./save-study-center-agreement.js'));
+businessRoute.use('/deleteStudyCenterAgreement', require('../util/validateToken.js'), require('./delete-study-center-agreement.js'));
+
 businessRoute.use('/',(req,res,next) => 
 {
     return res.status(400).json({
