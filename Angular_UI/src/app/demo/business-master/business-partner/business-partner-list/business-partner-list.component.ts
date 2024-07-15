@@ -5,7 +5,6 @@ import { DataTablesModule } from 'angular-datatables';
 import { NotifierService } from 'angular-notifier';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserService } from 'src/app/theme/shared/service/user.service';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
 import { BusinessPartnerEditComponent } from '../business-partner-edit/business-partner-edit.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -35,13 +34,14 @@ export class BusinessPartnerListComponent
   businessPartnerType : any;
   masterBusinessPartnerType : any[];
   id : number;
+  businessPartner : any;
+  uuid : string;
     
   constructor(private router : Router,
     private formbuilder : FormBuilder,
     private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
-    private modalService: NgbModal,
-    private userService: UserService, 
+    private modalService: NgbModal, 
     private commonService : CommonService,
     private businessService : BusinessService,
     private route: ActivatedRoute,
@@ -61,17 +61,17 @@ export class BusinessPartnerListComponent
     });
 
     this.getBusinessPartnerTypes();
-    this.getBusinessPartners();
+    this.getBusinessPartners("");
   }
 
   public businessPartnerAddResult:any = this.commonSharedService.businessPartnerListObject.subscribe(res =>{
     if(res.result == "success")
     {
-      this.getBusinessPartners();
+      this.getBusinessPartners('');
     }
   }) 
 
-  //get business partner types
+  //get business partner types 
   async getBusinessPartnerTypes()
   {
     try 
@@ -85,6 +85,7 @@ export class BusinessPartnerListComponent
       else
       {
         this.businessPartnerTypes = [];
+        this.businessPartnerTypes.unshift({ id : "0", name : "All"});
       }
     } 
     catch (error) 
@@ -93,41 +94,51 @@ export class BusinessPartnerListComponent
     }
   }
 
-  async getBusinessPartners() 
+  // get business partner with business partner type id
+  async getBusinessPartners(businessPartnerTypeId : any) 
   {
     try
     {
-      let businessPartnerTypeId = this.businessPartnerTypeForm.get("businessPartnerType").value;
-      if(businessPartnerTypeId != undefined && businessPartnerTypeId != '')
+      this.searchClicked = true;
+      let response = await this.businessService.getBusinessPartners(businessPartnerTypeId).toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
       {
-        this.searchClicked = true;
-        let response = await this.businessService.getBusinessPartners(businessPartnerTypeId).toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
-        {
-          $('#tblBusinessPartner').DataTable().destroy();
-          this.masterBusinessPartners = response.businessPartners;
-          this.businessPartners = this.masterBusinessPartners;
-          setTimeout(function(){
-            $('#tblBusinessPartner').DataTable();
-          },800);
-          this.searchClicked = false;
-          this.modalService.dismissAll();
-        }
-        else
-        {
-          this.businessPartners = [];
-          this.searchClicked = false;
-        }    
+        $('#tblBusinessPartner').DataTable().destroy();
+        this.masterBusinessPartners = response.businessPartners;
+        this.businessPartners = this.masterBusinessPartners;
+        setTimeout(function(){
+          $('#tblBusinessPartner').DataTable();
+        },800);
+        this.searchClicked = false;
+        this.modalService.dismissAll();
       }
       else
       {
         this.businessPartners = [];
         this.searchClicked = false;
-      }
+      } 
     }
     catch(e)
     {
       this.showNotification("error", e);
+      this.searchClicked = false;
+    }
+  }
+
+  // get business partner with uuid
+  async getBusinessPartner(uuid : string) 
+  {
+    this.searchClicked = true;
+    let response = await this.businessService.getBusinessPartner(uuid).toPromise(); 
+    if (response.status_code == 200 && response.message == 'success') 
+    {
+      this.businessPartner = response.businessPartner;
+      this.searchClicked = false;
+    }
+    else
+    {
+      this.businessPartner = [];
+      this.searchClicked = false;
     }
   }
 
@@ -137,14 +148,14 @@ export class BusinessPartnerListComponent
     this.notifier.notify(type, message);
   }
 
-  updateStatus(user : any)
+  updateStatus(businessPartner : any)
   {
     Swal.fire({
       customClass: {
         container: 'my-swal'
       },
       title: 'Confirmation',
-      text: 'Are you sure to ' + (user.isActive == 1 ? 'de-active' : 'active') + ' the user?',
+      text: 'Are you sure to ' + (businessPartner.isActive == 1 ? 'de-active' : 'active') + ' the business partner?',
       icon: 'warning',
       allowOutsideClick: false,
       showCloseButton: true,
@@ -158,16 +169,16 @@ export class BusinessPartnerListComponent
         try
         {
           let tempJson = {
-            uuid : user.uuid,
-            userModuleId : "",
-            action : "User"
+            id : businessPartner.uuid,
+            tableName : businessPartner.tableName
           }
           this.showNotification("info", "Please wait...");
-          let response = await this.userService.updateStatus(tempJson).toPromise();
+          let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "User Status Updated");
-              this.commonSharedService.userListObject.next({result : "success"});
+            let businessPartnerType = businessPartner?.businessPartnerType?.name;
+            this.showNotification("success", businessPartnerType  + " " + "Status Updated");
+            this.commonSharedService.businessPartnerListObject.next({result : "success"});
           }
         }
         catch(e)
@@ -178,21 +189,12 @@ export class BusinessPartnerListComponent
     });   
   }
 
-  // addBusinessPartner()
-  // {
-  //   const dialogRef = this.modalService.open(BusinessPartnerAddComponent, 
-  //   { 
-  //     size: 'xl', backdrop: 'static' 
-  //   });
-  //   dialogRef.componentInstance.modalParams = {};
-  // }
-
   addBusinessPartnerType(id : string)
   {
     this.router.navigateByUrl("/business/businessPartner/add/" + id);
   }
 
-  editUser(uuid : string)
+  editBusinessPartner(uuid : string)
   {
     let params = {
       "uuid" : uuid
@@ -204,19 +206,19 @@ export class BusinessPartnerListComponent
     dialogRef.componentInstance.modalParams = params;
   }
 
-  detailUser(uuid : string)
+  detailBusinessPartner(uuid : string)
   {
-    this.router.navigateByUrl("/user/detail/" + uuid);
+    this.router.navigateByUrl("/business/businessPartner/detail/" + uuid);
   }
 
-  deleteUser(uuid : string)
+  deleteBusinessPartner(businessPartner : any)
   {
     Swal.fire({
       customClass: {
         container: 'my-swal'
       },
       title: 'Confirmation',
-      text: 'Are you sure to delete user?',
+      text: 'Are you sure to delete business partner?',
       icon: 'warning',
       showCloseButton: true,
       showCancelButton: true
@@ -228,15 +230,16 @@ export class BusinessPartnerListComponent
       else 
       {
         this.showNotification("info", "Please wait...");
-        let tempJSON = { 
-          "uuid" : uuid
-        };
+        let tempJson = {
+          uuid : businessPartner.uuid,
+        }
         try
         {
-          let response = await this.userService.deleteUser(tempJSON).toPromise();
+          let response = await this.businessService.deleteBusinessPartner(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "User Deleted.");
+            let businessPartnerType = businessPartner?.businessPartnerType?.name;
+            this.showNotification("success", businessPartnerType + " " + "Deleted.");
             this.commonSharedService.businessPartnerListObject.next({result : "success"});
           }
         }

@@ -35,6 +35,7 @@ import { DistrictListComponent } from './demo/application-master/district/distri
 import { CityListComponent } from './demo/application-master/city/city-list/city-list.component';
 import { BusinessPartnerListComponent } from './demo/business-master/business-partner/business-partner-list/business-partner-list.component';
 import { BusinessPartnerAddComponent } from './demo/business-master/business-partner/business-partner-add/business-partner-add.component';
+import { BusinessPartnerDetailComponent } from './demo/business-master/business-partner/business-partner-detail/business-partner-detail.component';
 
 const routes: Routes = [
   {
@@ -92,7 +93,6 @@ const routes: Routes = [
         { 
         },
       },
-      
       {
         path: 'applicationMaster/userTypes',
         loadComponent: () => UserTypeListComponent,
@@ -100,8 +100,7 @@ const routes: Routes = [
         resolve: 
         { 
         },
-      },
-      
+      },  
       {
         path: 'applicationMaster/gradeCategories',
         loadComponent: () => GradeCategoryListComponent,
@@ -121,15 +120,12 @@ const routes: Routes = [
         path: 'applicationMaster/academicSessions',
         loadComponent: () => AcademicSessionListComponent,
         canActivate: [AuthGuardService],
-
       },
-
       {
         path: 'applicationMaster/schoolingPrograms',
         loadComponent : () => SchoolingProgramListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'applicationMaster/syllabuses',
         loadComponent: () => SyllabusListComponent,
@@ -139,86 +135,71 @@ const routes: Routes = [
         //   syllabuses : SyllabusListResolver,
         // },
       },
-
       {
         path: 'applicationMaster/grade-wise-syllabus',
         loadComponent: () => GradeWiseSyllabusListComponent,
         canActivate: [AuthGuardService],
-
-      },
-      
+      },      
       {
         path: 'applicationMaster/SyllabusWiseSubjects',
         loadComponent : () => SyllabusWiseSubjectListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'applicationMaster/SubjectWiseChapters',
         loadComponent : () => SubjectWiseChapterListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'applicationMaster/ChapterWiseTopics',
         loadComponent : () => ChapterWiseTopicListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'applicationMaster/academyEnclosureDocument',
         loadComponent : () => AcademyEnclosureDocumentListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'business/businessVertical',
         loadComponent : () => BusinessVerticalListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'business/businessVerticalGroup',
         loadComponent : () => BusinessVerticalGroupListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'business/businessVerticalType',
         loadComponent : () => BusinessVerticalTypeListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'business/coaches',
         loadComponent : () => CoachListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'applicationMaster/countries',
         loadComponent : () => CountryListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'applicationMaster/stateRegions',
         loadComponent : () => StateRegionListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'applicationMaster/districts',
         loadComponent : () => DistrictListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'applicationMaster/cities',
         loadComponent : () => CityListComponent,
         canActivate: [AuthGuardService],
       },
-
       {
         path: 'business/businessPartners',
         loadComponent : () => BusinessPartnerListComponent,
@@ -227,6 +208,11 @@ const routes: Routes = [
       {
         path: 'business/businessPartner/add/:id',
         loadComponent: () => BusinessPartnerAddComponent,
+        canActivate: [AuthGuardService],
+      },
+      {
+        path: 'business/businessPartner/detail/:uuid',
+        loadComponent: () => BusinessPartnerDetailComponent,
         canActivate: [AuthGuardService],
       },
     ]

@@ -110,26 +110,21 @@ export class StateRegionAddComponent
   {
     if(!this.saveClicked)
     {
-      // this.addStateRegionForm.get("name").disable();
-      // console.log(this.addStateRegionForm.valid)
-      // console.log(this.countryForm.valid)
       if(this.addStateRegionForm.valid && this.countryForm.valid)
       {
-        // console.log(this.addStateRegionForm.valid && this.countryForm.valid)
         this.isValidForm = true;
         this.saveClicked = true;
         this.addStateRegionForm.controls["country"].get('id').setValue(this.countryForm.get('country').value);
-        // console.log(this.addStateRegionForm.valid && this.countryForm.valid)
         try
         {
-          // if(this.isChecked = true)
-          // {
-          //   console.log(this.isChecked)
-            // const formData = new FormData();
-            // formData.append('country', this.countryForm.get('country').value); 
-            // formData.append('file', this.addStateRegionForm.get('fileInputField').value); 
-            // console.log(formData)
-            let response = await this.businessService.saveStateRegion(this.addStateRegionForm.value).toPromise();
+          if(this.isChecked == true)
+          {
+            console.log(this.isChecked)
+            const formData = new FormData();
+            formData.append('country', this.countryForm.get('country').value); 
+            formData.append('uploadFile', this.addStateRegionForm.get('fileInputField').value); 
+            console.log(formData)
+            let response = await this.businessService.uploadStateRegions(formData).toPromise();
             console.log(response)
             if (response.status_code == 200 && response.message == 'success') 
             {
@@ -139,7 +134,7 @@ export class StateRegionAddComponent
                 result : "success"});
               this.closeModal();
             }
-          // }  
+          }  
           else
           {
             let response = await this.businessService.saveStateRegion(this.addStateRegionForm.value).toPromise();

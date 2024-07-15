@@ -88,7 +88,7 @@ export class UserProfileComponent {
 
   onSelectProfile(event) 
   {
-    if (this.profileForm.get("profilePic").value) 
+    if (this.profileForm.get("profilePic").value)  
     {
       const file = this.profileForm.get("profilePic").value;
       let fSize : number =parseFloat((file[0].size / 1048576).toFixed(2));

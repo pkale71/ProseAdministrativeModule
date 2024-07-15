@@ -5,100 +5,143 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NotifierService } from 'angular-notifier';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonService } from 'src/app/theme/shared/service/common.service';
-import { UserService } from 'src/app/theme/shared/service/user.service';
-import { Router } from '@angular/router';
-// my Shared Service
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
 
 // third party
 import Swal from 'sweetalert2';
+import { IOption, SelectModule } from 'ng-select';
+import { BusinessService } from 'src/app/theme/shared/service/business.service';
 
 @Component({
   selector: 'app-business-partner-edit',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, SelectModule],
   templateUrl: './business-partner-edit.component.html',
   styleUrls: ['./business-partner-edit.component.scss']
 })
 export class BusinessPartnerEditComponent {
   @Input() public modalParams;
-  user : any;
-  uuid : string;
-  userGrades : any[];
-  userCategories : any[];
-  masterUserGrades : any[];
-  masterUserCategories : any[];
-  editUserForm: FormGroup;
-  userGradeForm: FormGroup;
-  userCategoryForm: FormGroup;
+  uuid : string;  
+  isRequiredContract : boolean;
+  isRequiredPanGst : boolean;
+  isRequiredReward : boolean;
+  searchClicked : boolean;
+  editBusinessPartnerForm: FormGroup;
+  countryForm : FormGroup;
+  stateRegionForm : FormGroup;
+  districtForm : FormGroup;
+  cityForm : FormGroup;
+  businessVerticalForm : FormGroup;
+  businessVerticalTypeForm : FormGroup;
+  commissionTermForm : FormGroup;
+  commercialTermForm : FormGroup;
   isValidForm: boolean;
   saveClicked : boolean;
-  masterUser : any[];
-  isRequired : boolean;
+  countries : any[];
+  stateRegions : any[];
+  districts : any[];
+  cities : any[];
+  businessVerticals : any[];
+  businessPartnerTypes : any[];
+  commissionTerms : any[];
+  commercialTerms : any[];
+  businessPartner : any;
+  businessVerticalTypeIds : Array<IOption>;
+  isRewardApplicables : any[];
 
   constructor(
     private commonService: CommonService, 
-    private userService: UserService, 
+    private businessService: BusinessService, 
     private activeModal: NgbActiveModal,
     private notifier: NotifierService,
     private formbuilder: FormBuilder,
     private router : Router,
+    private route: ActivatedRoute,
     public commonSharedService : CommonSharedService,
    ) 
   {
+    this.isRewardApplicables = [{
+      "id": 1,
+      "name": "Yes"
+      },
+      {
+        "id": 0,
+        "name": "No"
+      }]
   }
 
   ngOnInit() 
   {
     //get Modal params
     this.uuid = this.modalParams.uuid;
-    this.userGrades = [];
-    this.userCategories = [];
-    this.masterUserGrades = [];
-    this.masterUserCategories = [];
     this.isValidForm = true;
     this.saveClicked = false;
-    this.isRequired = false;
+    this.searchClicked = false;
+    this.isRequiredContract = false;
+    this.isRequiredPanGst = false;
+    this.isRequiredReward = false;
 
-    this.editUserForm = this.formbuilder.group({
+    this.editBusinessPartnerForm = this.formbuilder.group({
       uuid: this.uuid,
-      firstName: ['',[Validators.pattern('^[a-zA-Z ]*$'), Validators.required]],
-      lastName: ['',[Validators.pattern('^[a-zA-Z ]*$')]],
-      gender: ['', Validators.required],
-      email: ['',[Validators.required, Validators.email]],
-      mobile: ['',[Validators.required, Validators.pattern('^[0-9]{10,10}'), Validators.maxLength(10), Validators.minLength(10)]],
-      userGrade: this.formbuilder.group({ 'id': [''] }),
-      userCategory: this.formbuilder.group({ 'id': [''] }),
+      name : ['', Validators.required],
+      businessPartnerType : [{ id : ''}],
+      email : ['', [Validators.required, Validators.email]],
+      pincode : ['', Validators.required],
+      address : ['', Validators.required],
+      country : this.formbuilder.group({ 'id' : ['']}),
+      stateRegion : this.formbuilder.group({ 'id' : ['']}),
+      district : this.formbuilder.group({ 'id' : ['']}),
+      city : this.formbuilder.group({ 'id' : ['']}),
+      businessVertical : this.formbuilder.group({ 'id' : ['']}),
+      businessVerticalTypeIds : ['', Validators.required],
+      contactPerson : ['', Validators.required],
+      contactEmail : ['', Validators.required],
+      contactMobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$'), Validators.maxLength(15), Validators.minLength(10)]],  
+      inchargePerson : [''],
+      inchargeEmail : [''],
+      inchargeMobile : [''],  
+      applicableFrom: ['', Validators.required],
+      applicableTo: ['', Validators.required],
+      rewardApplicable : ['', Validators.required],
+      panNumber : ['', [Validators.pattern("^[a-zA-Z]{5}[0-9]{4}[A-Za-z]{1}$"), Validators.minLength(10)]],
+      gstNumber : ['', [Validators.pattern("^[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Z]{1}[0-9a-zA-Z]{1}$"), Validators.minLength(15)]],
+      commissionTerm : this.formbuilder.group({ 'id' : ['']}),
+      commercialTerm : this.formbuilder.group({ 'id' : ['']})
     });
 
-    this.userGradeForm = this.formbuilder.group({
-      'userGrade': ['', [Validators.required]]
-    });
+    this.countryForm = this.formbuilder.group({
+      'country' : ['', Validators.required]
+    })
+    this.stateRegionForm = this.formbuilder.group({
+      'stateRegion' : ['', Validators.required]
+    })
+    this.districtForm = this.formbuilder.group({
+      'district' : ['', Validators.required]
+    })
+    this.cityForm = this.formbuilder.group({
+      'city' : ['', Validators.required]
+    })
+    this.businessVerticalForm = this.formbuilder.group({
+      'businessVertical' : ['', Validators.required]
+    })
+    this.businessVerticalTypeForm = this.formbuilder.group({
+      'businessVerticalTypeIds' : ['', Validators.required]
+    })
+    this.commissionTermForm = this.formbuilder.group({
+      'commissionTerm' : ['']
+    })
+    this.commercialTermForm = this.formbuilder.group({
+      'commercialTerm' : ['']
+    })
 
-    this.userCategoryForm = this.formbuilder.group({
-      'userCategory': ['']
-    });
-
-    this.editUserForm.get("gender").disable();    
-    this.getUser(this.uuid);    
-    this.getUserGrades();
-    this.getUserCategories();
-  }
-
-  async getUser(uuid : string) 
-  {
-    let response = await this.userService.getUser(uuid).toPromise();
-    if (response.status_code == 200 && response.message == 'success') 
-    {
-      this.user = response.user;
-      this.editUserForm.patchValue(this.user);
-      this.userGradeForm.get("userGrade").setValue(this.user.userGrade.id);
-      this.userCategoryForm.get("userCategory").setValue(this.user.userCategory.id);
-    }
-    else
-    {
-      this.user = [];
-    }
+    this.getBusinessPartner(this.uuid); 
+    this.getCountries('Active');
+    this.getBusinessVerticals('Active');
+    this.getBusinessVerticalTypes('Active');
+    this.getReferralPartner();
+    this.getCommissionTerms();
+    this.getCommercialTerms();
   }
 
   showNotification(type: string, message: string): void 
@@ -107,174 +150,344 @@ export class BusinessPartnerEditComponent {
     this.notifier.notify(type, message);
   }
 
-  async checkDuplicateEmailMobile(checkFor : string, value : string) 
+  async getBusinessPartner(uuid : string) 
   {
-    let data = {
-          "checkFor" : checkFor,
-          "value" : value,
-          "uuid"  :  this.editUserForm.get("uuid").value
+    this.searchClicked = true;
+    let response = await this.businessService.getBusinessPartner(uuid).toPromise(); 
+    if (response.status_code == 200 && response.message == 'success') 
+    {
+      this.businessPartner = response.businessPartner;
+      this.editBusinessPartnerForm.patchValue(this.businessPartner);
+      this.countryForm.get('country').setValue(this.businessPartner.country.id);
+      this.stateRegionForm.get('stateRegion').setValue(this.businessPartner.stateRegion.id);
+      this.districtForm.get('district').setValue(this.businessPartner.district.id);
+      this.cityForm.get('city').setValue(this.businessPartner.city.id);
+      this.businessVerticalForm.get('businessVertical').setValue(this.businessPartner.businessVertical.id);
+      let businessVerticalTypes : any = [];
+      for(let j = 0; j<this.businessPartner.businessVerticalTypes.length; j++)
+      {
+        businessVerticalTypes.push(this.businessPartner.businessVerticalTypes[j].id.toString());
+      }
+      this.businessVerticalTypeForm.get('businessVerticalTypeIds').setValue(businessVerticalTypes);
+      if(this.editBusinessPartnerForm.controls['rewardApplicable'].value == 1)
+      {
+        this.getReferralPartner();
+        this.commissionTermForm.get('commissionTerm').setValue(this.businessPartner.commissionTerm.id);
+      }
+      this.commercialTermForm.get('commercialTerm').setValue(this.businessPartner.commercialTerm.id);
+      this.searchClicked = false;
     }
+    else
+    {
+      this.businessPartner = [];
+      this.searchClicked = false;
+    }
+  }
+
+  //get country
+  async getCountries(action : string) 
+  {  
     try
     {
-      let response = await this.userService.checkDuplicateEmailMobile(data).toPromise();
+      let response = await this.businessService.getCountries('Active').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
+        this.countries = response.countries;
+        this.countries.unshift({ id : '', name : 'Select Country'});
+        this.getStateRegions('Active');
+      }
+      else
+      { 
+        this.countries = [];
+        this.countries.unshift({ id : '', name : 'Select Country'});
       }
     }
     catch(e)
     {
       this.showNotification("error", e);
-      if(checkFor == "Email")
-      {
-        this.editUserForm.get("email").setValue(this.user.email);
-      }
-      else if(checkFor == "Mobile")
-      {
-        this.editUserForm.get("mobile").setValue(this.user.mobile);
-      }
     }
   }
-
-  //get user Grades
-  async getUserGrades()
-  {
-    try 
-    {
-      let response = await this.commonService.getUserGrades().toPromise();
-      if (response.status_code == 200 && response.message == 'success') 
-      {
-        this.masterUserGrades = response.userGrades;
-        this.userGrades = this.masterUserGrades;
-        this.userGrades.unshift({ id : "", name : "Select User Grade"});
-        this.filterUserCategories(this.user.userCategory.id);
-      }
-      else
-      {
-        this.userGrades = [];
-      }
-    } 
-    catch (error) 
-    {
-      this.showNotification("error", error);
-    }
-  }
-
-  //get user category
-  async getUserCategories()
-  {
-    try 
-    {
-      let response = await this.commonService.getUserCategories().toPromise();
-      if (response.status_code == 200 && response.message == 'success') 
-      {
-        this.masterUserCategories = response.userCategories;
-        this.userCategories = this.masterUserCategories;
-      }
-      else
-      {
-        this.userGrades = [];
-      }
-    } 
-    catch (error) 
-    {
-      this.showNotification("error", error);
-    }
-  } 
-
-  filterUserCategories(userCategoryId : string)
-  {
+ 
+   //get state/region
+  async getStateRegions(action : string) 
+  {  
     try
     {
-      let userGradeId = this.userGradeForm.get("userGrade").value;
-      let userGrades = this.masterUserGrades.filter(userGrade => userGrade.id == userGradeId);
-      if(userGrades.length > 0)
-      {    
-        if(userGrades[0].code == "MOADM")
-        {
-          this.isRequired = true;
-          this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code == "STFUSR");
-          this.userCategories.unshift({ id : "", name : "Select User Category"});
-          this.userCategoryForm.controls["userCategory"].enable();
-          this.userCategoryForm.controls["userCategory"].addValidators(Validators.required);
-          this.userCategoryForm.updateValueAndValidity();
-          this.userCategoryForm.get("userCategory").setValue(userCategoryId);
-        }
-        else if(userGrades[0].code == "MOUSR")
-        {
-          this.isRequired = true;
-          this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code != "STFUSR");
-          this.userCategories.unshift({ id : "", name : "Select User Category"});
-          this.userCategoryForm.controls["userCategory"].enable();
-          this.userCategoryForm.controls["userCategory"].addValidators(Validators.required);
-          this.userCategoryForm.updateValueAndValidity();
-          this.userCategoryForm.get("userCategory").setValue(userCategoryId);
+      let countryId = this.countryForm.get('country').value;
+      if(countryId != undefined && countryId != "")
+      {
+        this.searchClicked = true;  
+        let response = await this.businessService.getStateRegions(countryId, 'Active').toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        { 
+          this.stateRegions = response.stateRegions;
+          this.stateRegions.unshift({ id : '', name : 'Select State/Region'});
+          this.getDistricts('Active');
+          this.searchClicked = false;
         }
         else
         {
-          this.userCategories = [];
-          this.isRequired = false;
-          this.userCategoryForm.controls["userCategory"].disable();
-          this.userCategoryForm.controls["userCategory"].clearAsyncValidators();
-          this.userCategoryForm.updateValueAndValidity();
-          this.userCategoryForm.get("userCategory").setValue(userCategoryId);
+          this.stateRegions = [];
+          this.stateRegions.unshift({ id : '', name : 'Select State/Region'});
+          this.searchClicked = false;
         }
-        
-        if(this.userCategories.length == 2)
+      }
+      else
+      {
+        this.stateRegions = [];
+        this.stateRegions.unshift({ id : '', name : 'Select State/Region'});          
+      }  
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+      this.searchClicked = false;
+    }
+  }
+ 
+   // get district
+  async getDistricts(action : string) 
+  {  
+    try
+    {
+      let countryId = this.countryForm.get('country').value;
+      let stateRegionId = this.stateRegionForm.get('stateRegion').value;
+      if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '')
+      {
+        this.searchClicked = true;  
+        let response = await this.businessService.getDistricts(countryId, stateRegionId, 'Active').toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
         {
-          this.userCategoryForm.get("userCategory").setValue(this.userCategories[1].id);
+          this.districts = response.districts;
+          this.districts.unshift({ id : '', name : "Select District"});
+          this.getCities('Active');
+          this.searchClicked = false;
         }
         else
         {
-          this.userCategoryForm.get("userCategory").setValue(""); 
+          this.districts = [];
+          this.districts.unshift({ id : '', name : "Select District"});
+          this.searchClicked = false;
         }
+      }
+      else
+      {
+        this.districts = [];
+        this.districts.unshift({ id : '', name : "Select District"});
+        this.searchClicked = false;
+      } 
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+      this.searchClicked = false;
+    }
+  }
+
+   //get city
+  async getCities(action : string) 
+  {  
+    try
+    {
+      let countryId = this.countryForm.get('country').value;
+      let stateRegionId = this.stateRegionForm.get('stateRegion').value;
+      let districtId = this.districtForm.get('district').value;
+      if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '' && districtId != undefined && districtId != '')
+      {
+        this.searchClicked = true;  
+        let response = await this.businessService.getCities(countryId, stateRegionId, districtId, 'Active').toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+          this.cities = response.cities;
+          this.cities.unshift({ id : '', name : "Select City"});
+          this.searchClicked = false;
+        }
+        else
+        {
+          this.cities = [];
+          this.cities.unshift({ id : '', name : "Select City"});
+          this.searchClicked = false;
+        } 
+      }
+      else
+      {
+        this.cities = [];
+        this.cities.unshift({ id : '', name : "Select City"});
+        this.searchClicked = false;
+      }   
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+      this.searchClicked = false;
+    }
+  }
+
+  // get business vertical
+  async getBusinessVerticals(action : string) 
+  {  
+    try
+    {
+      let response = await this.businessService.getBusinessVerticals('Active').toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
+      { 
+        this.businessVerticals = response.businessVerticals;
+        this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
+        this.getBusinessVerticalTypes('Active');
+      }
+      else
+      {
+        this.businessVerticals = [];
+        this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
       }
     }
     catch(e)
     {
-      
+      this.showNotification("error", e);
     }
   }
-   
-  // async getUsers() 
-  // {
-  //   let response = await this.userService.getUsers().toPromise();
-  //   if (response.status_code == 200 && response.message == 'success') 
-  //   {
-  //     this.masterUser = response.user;
-  //     this.user = this.masterUser;
-  //   }
-  //   else
-  //   {
-  //     this.user = [];
-  //   }
-  // }
+  
+  //get business vertical type
+  async getBusinessVerticalTypes(action : string) 
+  {  
+    try
+    {
+      let businessVerticalId = this.businessVerticalForm.get("businessVertical").value;
+      if(businessVerticalId != undefined && businessVerticalId != "")
+      {
+        this.searchClicked = true; 
+        let tempBusinessVerticalTypes : Array<IOption> = [];
+        let response = await this.businessService.getBusinessVerticalTypes(businessVerticalId, 0, 'Active').toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        { 
+          let businessVerticalTypeIds : any[] = response.businessVerticalTypes;
+          for(let i = 0; i < businessVerticalTypeIds.length; i++)
+          {
+            tempBusinessVerticalTypes.push({
+              'value' : businessVerticalTypeIds[i].id.toString(),
+              'label' : businessVerticalTypeIds[i].name
+            })
+          }
+          this.businessVerticalTypeIds = this.commonSharedService.prepareSelectOptions(tempBusinessVerticalTypes);
+          this.searchClicked = false;
+        }
+      } 
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+      this.searchClicked = false;
+    }
+  }
 
-  async saveUser()
+  async getCommissionTerms()
+  {
+    try
+    {
+      let response = await this.businessService.getCommissionTerms().toPromise();
+      if(response.status_code == 200 && response.message == 'success')
+      {
+        this.commissionTerms = response.commissionTerms;
+        this.commissionTerms.unshift({ id : '', name : 'Select Commission Term'});
+      }
+      else
+      {
+        this.commissionTerms = [];
+        this.commissionTerms.unshift({ id : '', name : 'Select Commission Term'});
+      }
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+    }
+  }
+
+  // get Commercial Terms
+  async getCommercialTerms()
+  {
+    try
+    {
+      let response = await this.businessService.getCommercialTerms().toPromise();
+      if(response.status_code == 200 && response.message == 'success')
+      {
+        this.commercialTerms = response.commercialTerms;
+        this.commercialTerms.unshift({ id : '', name : 'Select Commercial Term'});
+      }
+      else
+      {
+        this.commercialTerms = [];
+        this.commercialTerms.unshift({ id : '', name : 'Select Commercial Term'});
+      }
+    }
+    catch(e)
+    {
+      this.showNotification('error', e);
+    }
+  }
+ 
+  getReferralPartner()
+  {
+    if(this.editBusinessPartnerForm.controls['rewardApplicable'].value == 1)
+    {
+      this.isRequiredReward = true;
+      this.commissionTermForm.controls['commissionTerm'].enable();
+      this.commissionTermForm.controls['commissionTerm'].addValidators(Validators.required);
+      this.commissionTermForm.updateValueAndValidity();
+    }
+    else
+    {
+      this.isRequiredReward = false;
+      this.commissionTermForm.controls['commissionTerm'].setValue('');
+      this.commissionTermForm.controls['commissionTerm'].disable();
+      this.commissionTermForm.controls['commissionTerm'].clearValidators();
+    }  
+  }
+
+  async saveBusinessPartner()
   {
     if(!this.saveClicked)
     {
-      // this.editUserForm.get("gender").enable();
-      // this.userCategoryForm.get("userCategory").enable();
-      if(this.editUserForm.valid && this.userGradeForm.valid && ((this.isRequired && this.userCategoryForm.valid) || (!this.isRequired && !this.userCategoryForm.valid)))
+      if(this.editBusinessPartnerForm.valid && this.countryForm.valid && this.stateRegionForm.valid && this.districtForm.valid && this.cityForm.valid && this.businessVerticalForm.valid && this.businessVerticalTypeForm.valid || ((this.businessPartner.businessPartnerType.code == 'B2C' && this.editBusinessPartnerForm.controls['rewardApplicable'].value == 1  && this.commissionTermForm.valid)||(this.businessPartner.businessPartnerType.code == 'B2C' && this.editBusinessPartnerForm.controls['rewardApplicable'].value == 0)) || (this.businessPartner.businessPartnerType.code == 'B2B' && this.commercialTermForm.valid))
       {
-        this.editUserForm.get("gender").disable();
-        this.userCategoryForm.get("userCategory").disable();
         this.isValidForm = true;
         this.saveClicked = true;
         try
         {
           let tempJson = {
-            uuid : this.user.uuid,
-            userGrade : {"id" : this.userGradeForm.get("userGrade").value},
-            userCategory : {"id" : this.userCategoryForm.get("userCategory").value}
+            uuid : this.businessPartner.uuid,
+            name : this.editBusinessPartnerForm.get('name').value,
+            email : this.editBusinessPartnerForm.get('email').value,
+            address : this.editBusinessPartnerForm.get('address').value,
+            pincode : this.editBusinessPartnerForm.get('pincode').value,
+            contactPerson : this.editBusinessPartnerForm.get('contactPerson').value,
+            contactEmail : this.editBusinessPartnerForm.get('contactEmail').value,
+            contactMobile : this.editBusinessPartnerForm.get('contactMobile').value,
+            inchargePerson : this.editBusinessPartnerForm.get('inchargePerson').value,
+            inchargeEmail : this.editBusinessPartnerForm.get('inchargeEmail').value,
+            inchargeMobile : this.editBusinessPartnerForm.get('inchargeMobile').value,
+            applicableFrom : this.editBusinessPartnerForm.get('applicableFrom').value,
+            applicableTo : this.editBusinessPartnerForm.get('applicableTo').value,
+            rewardApplicable : this.businessPartner.businessPartnerType.code == 'B2C' ? this.editBusinessPartnerForm.get('rewardApplicable').value : '',
+            panNumber : this.editBusinessPartnerForm.get('panNumber').value,
+            gstNumber : this.editBusinessPartnerForm.get('gstNumber').value,
+            businessPartnerType : { "id" : this.businessPartner.businessPartnerType.id},
+            country : { "id" : this.countryForm.get('country').value},
+            stateRegion : { "id" : this.stateRegionForm.get('stateRegion').value},
+            district : { "id" : this.districtForm.get('district').value},
+            city : { "id" : this.cityForm.get('city').value},
+            businessVertical : { "id" : this.businessVerticalForm.get('businessVertical').value},
+            businessVerticalTypeIds : this.businessVerticalTypeForm.get('businessVerticalTypeIds').value.toString(),   
+            commissionTerm : { "id" : this.businessPartner.businessPartnerType.code == 'B2C' ? this.commissionTermForm.get('commissionTerm').value : ''},         
+            commercialTerm : { "id" : this.businessPartner.businessPartnerType.code == 'B2B' ? this.commercialTermForm.get('commercialTerm').value : ''},         
           }
-          let response = await this.userService.updateUser(tempJson).toPromise();
+          let response = await this.businessService.updateBusinessPartner(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "User Updated");
-              this.closeModal();
-              this.commonSharedService.userListObject.next({result : "success"});
-              // this.router.navigateByUrl("/user/detail/" + this.user.uuid);
+            this.showNotification("success", "Business Partner Updated");
+            this.closeModal();
+            this.saveClicked = false;
+            this.isValidForm = false;
+            this.router.navigateByUrl("/business/businessPartner/detail/" + this.uuid);
           }
         }
         catch(e)

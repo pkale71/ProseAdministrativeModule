@@ -138,6 +138,11 @@ export class BusinessService {
     return this.apiService.post('/business/saveCountry', country);
   }
 
+  uploadCountries(countries : any)
+  {
+    return this.apiService.post('/business/uploadCountries', countries);
+  }
+
   getCountries(action : string) 
   {
     return this.apiService.get('/business/getCountries/' + action);
@@ -157,6 +162,11 @@ export class BusinessService {
   saveStateRegion(stateRegion : any) 
   {
     return this.apiService.post('/business/saveStateRegion', stateRegion);
+  }
+
+  uploadStateRegions(stateRegions : any)
+  {
+    return this.apiService.post('/business/uploadStateRegions', stateRegions);
   }
 
   getStateRegions(countryId : number, action : string) 
@@ -217,15 +227,73 @@ export class BusinessService {
   }
 
   //business partner
-  getBusinessPartners(businessPartnerTypeId : number)
+  getBusinessPartners(businessPartnerTypeId : any)
   {
-    return this.apiService.get('/business/getBusinessPartners/' + businessPartnerTypeId);
+    if(businessPartnerTypeId != "")
+    {
+      return this.apiService.get('/business/getBusinessPartners/' + businessPartnerTypeId);
+    }
+    else
+    {
+      return this.apiService.get('/business/getBusinessPartners');
+    }
   }
 
   saveBusinessPartner(businessPartner : any)
   {
     return this.apiService.post('/business/saveBusinessPartner', businessPartner);
   }
-   
+
+  getBusinessPartner(uuid : string)
+  {
+    return this.apiService.get('/business/getBusinessPartner/' + uuid);
+  }
+
+  updateBusinessPartner(businessPartner : any)
+  {
+    return this.apiService.post('/business/updateBusinessPartner', businessPartner);
+  }
+
+  deleteBusinessPartner(businessPartner : any)
+  {
+    return this.apiService.post('/business/deleteBusinessPartner', businessPartner);
+  }
+
+  // business partner contract
+  saveBusinessPartnerContract(businessPartnerContract : any)
+  {
+    return this.apiService.post('/business/saveBusinessPartnerContract', businessPartnerContract);
+  }
+
+  getBusinessPartnerContractHistories(uuid : string)
+  {
+    return this.apiService.get('/business/getBusinessPartnerContractHistories/' + uuid);
+  }
+
+  deleteBusinessPartnerContract(businessPartnerContract : any)
+  {
+    return this.apiService.post('/business/deleteBusinessPartnerContract', businessPartnerContract);
+  }
+
+  // business partner document
+  uploadBusinessPartnerDocument(businessPartnerDocument : any)
+  {
+    return this.apiService.post('/business/uploadBusinessPartnerDocument', businessPartnerDocument);
+  }
+
+  getBusinessPartnerDocuments(uuid : string)
+  {
+    return this.apiService.get('/business/getBusinessPartnerDocuments/' + uuid);
+  }
+
+  deleteBusinessPartnerDocument(businessPartnerDocument : any)
+  {
+    return this.apiService.post('/business/deleteBusinessPartnerDocument', businessPartnerDocument);
+  }
+  
+  getBusinessPartnerDocumentFile(businessPartnerDocument : any)
+  {
+    return this.apiService.post('/business/getBusinessPartnerDocumentFile', businessPartnerDocument)
+  }
 
 }

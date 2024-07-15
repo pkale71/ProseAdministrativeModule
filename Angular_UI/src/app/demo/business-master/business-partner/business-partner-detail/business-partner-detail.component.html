@@ -1,123 +1,232 @@
 <div class="row">
   <div class="col-sm-12">
-    <div class="card" >
-      <div class="card-header" style="padding: 10px 25px;">
-        <h5 style="margin-top: 0.8rem;"><i class="fa fa-user"></i>&nbsp;User&nbsp;
-          <!-- <span [ngClass]="user.active?'badge bg-success':'badge bg-danger'"> Active : {{user.active?'Yes':'No'}}</span> -->
-        </h5>
-        <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+    <div class="card">
+      <div class="card-body">
+        <h5 class="mb-3"> {{businessPartner?.businessPartnerType?.name}} &nbsp;
+          <span class="{{businessPartner?.isActive == 1 ? 'badge bg-success' :  'badge bg-danger'}}">
+            Status : {{businessPartner?.isActive == 1 ? 'Yes' : 'No'}}
+          </span>
+          <button type="button" class="btn btn-rounded btn-black float-end" style="margin-top: 0rem;"
           (click)="back()">Back</button>
-      </div>
-      <div class="card" *ngIf = "user?.userGrade?.code != 'MOADM' || user?.userGrade?.code != 'MOUSR' ">
-        <div class="card-header">
-          <h4>User Info&nbsp;<i class="fa fa-spin fa-spinner" *ngIf = "searchClicked"></i></h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="form-control-label" for="fullName">Name</label>
-                  <label class="form-control input-md">{{user?.fullName}}</label>
+        </h5>
+        <ul class="nav nav-tabs" ngbNav #nav="ngbNav">
+          <li class="nav-item" [ngbNavItem]="1">
+            <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+              Partner Info
+            </a>
+            <ng-template ngbNavContent>
+              <div class="row">
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="code">Code</label>
+                  <label class="form-control input-md">{{businessPartner?.code}}</label>    
                 </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
+                <div class="col-sm-5">
+                  <label class="form-control-label" for="name">Name</label>
+                  <label class="form-control input-md">{{businessPartner?.name}}</label>                 
+                </div>
+                <div class="col-sm-4">
                   <label class="form-control-label" for="email">Email</label>
-                  <label class="form-control input-md">{{user?.email}}</label>
+                  <label class="form-control input-md">{{businessPartner?.email}}</label>                  
                 </div>
               </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="form-control-label" for="mobile">Mobile</label>
-                  <label class="form-control input-md">{{user?.mobile}}</label>
+              <div class="row mt-2">
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="businessVertical">Business Vertical</label>
+                  <label class="form-control input-md">{{businessPartner?.businessVertical?.name}}</label>                
+                </div>
+                <div class="col-sm-9">
+                  <label class="form-control-label" for="businessVerticalTypes">Business Vertical Types</label>
+                  <label class="form-control input-md">
+                    <span class="label bg-info" *ngFor="let businessVerticalType of businessPartner?.businessVerticalTypes">
+                      {{businessVerticalType?.name}}
+                    </span>
+                  </label>                
+                </div>
+              </div>  
+              <div class="row mt-2">
+                <div class="col-sm-6">
+                  <label class="form-control-label" for="address">Address</label>
+                  <label class="form-control input-md">{{businessPartner?.address}}</label>                
+                </div>
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="country">Country</label>
+                  <label class="form-control input-md">{{businessPartner?.country?.name}}</label>                
+                </div>
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="stateRegion">State/Region</label>
+                  <label class="form-control input-md">{{businessPartner?.stateRegion?.name}}</label>                
                 </div>
               </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="form-control-label" for="gender">Gender</label>
-                  <label class="form-control input-md">{{user?.gender}}</label>
+              <div class="row mt-2">  
+                <div class="col-sm-4">
+                  <label class="form-control-label" for="district">District</label>
+                  <label class="form-control input-md">{{businessPartner?.district?.name}}</label>                
+                </div>
+                <div class="col-sm-4">
+                  <label class="form-control-label" for="city">City</label>
+                  <label class="form-control input-md">{{businessPartner?.city?.name}}</label>                
+                </div>
+                <div class="col-sm-4">
+                  <label class="form-control-label" for="pincode">Pincode</label>
+                  <label class="form-control input-md">{{businessPartner?.pincode}}</label>                
                 </div>
               </div>
-            </div>
-          <div class="row">
-              <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="form-control-label" for="userGrade">User Grade</label>
-                    <label class="form-control input-md">{{user?.userGrade?.name}}</label>
-                  </div>
+              <hr class="mt-3">
+              <div class="row">  
+                <div class="col-sm-4">
+                  <label class="form-control-label" for="contactPerson">Contact Person</label>
+                  <label class="form-control input-md">{{businessPartner?.contactPerson}}</label>                
+                </div>
+                <div class="col-sm-5">
+                  <label class="form-control-label" for="contactEmail">Contact Email</label>
+                  <label class="form-control input-md">{{businessPartner?.contactEmail}}</label>                
+                </div>
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="contactMobile">Contact Mobile</label>
+                  <label class="form-control input-md">{{businessPartner?.contactMobile}}</label>                
+                </div>
               </div>
-              <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="form-control-label" for="userCategory">User Category</label>
-                    <label class="form-control input-md">{{user?.userCategory?.name}}</label>
-                  </div>
+              <div class="row mt-2"> 
+                <div class="col-sm-4">
+                  <label class="form-control-label" for="inchargePerson">Incharge Person</label>
+                  <label class="form-control input-md">
+                    {{ businessPartner?.inchargePerson != "" ? businessPartner?.inchargePerson : '----' }}
+                  </label>                
+                </div>
+                <div class="col-sm-5">
+                  <label class="form-control-label" for="inchargeEmail">Incharge Email</label>
+                  <label class="form-control input-md">
+                    {{businessPartner?.inchargeEmail != "" ? businessPartner?.inchargeEmail : '----'}}</label>                
+                </div>
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="inchargeMobile">Incharge Mobile</label>
+                  <label class="form-control input-md">
+                    {{businessPartner?.inchargeMobile != "" ? businessPartner?.inchargeMobile : '----'}}</label>                
+                </div>
               </div>
-          </div>
-        </div>
-      </div>
-      <div class="card" *ngIf = "user?.userGrade?.code == 'MOADM' || user?.userGrade?.code == 'MOUSR' ">
-        <div class="card-header" style="padding: 5px 25px;">
-          <h4 style="margin-top: 0.8rem;">&nbsp;User Modules&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i>
-          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
-          (click)="addUserModule()">Add User Module</button></h4>
-        </div>
-        <div class="card-body" >
-          <div class="row">
-            <div class="col-md-12">      
-              <div class="table-responsive">
-                <table datatable id="tblUserModule" class="table table-striped row-border table-hover pt-10">
-                  <thead>
-                    <tr>
-                      <th>Sno</th>
-                      <th>Module</th>
-                      <th>User Role</th>
-                      <th>User Type</th>
-                      <th>Active</th>
-                      <th>Is Approved</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let userModule of userModules let i=index">
-                      <td>{{i+1}}</td>
-                      <td>{{userModule.module?.name}}</td>
-                      <td>{{userModule.userRole?.name}}</td>
-                      <td>{{userModule.userType?.name}}</td>
-                      <td>
-                        <span [ngClass]="userModule.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(userModule)" 
-                        style="cursor: pointer;" title="Update Status">
-                          {{userModule.isActive? 'Yes' : 'No' }}
-                        </span>
-                      </td>
-                      <td *ngIf = "userModule.isModuleAdminApproved == null"></td>
-                      <td *ngIf = "userModule.isModuleAdminApproved != null">
-                        <span [ngClass]="userModule.isModuleAdminApproved ? 'badge bg-success' : 'badge bg-danger'" 
-                        style="cursor: pointer;" title="Approve/Deny" (click)="approveUserModule(userModule)" >
-                        <i class="{{userModule.isModuleAdminApproved? 'fa fa-user-check' : 'fa fa-user-times'}}" ></i>
-                        {{userModule.isModuleAdminApproved? 'Yes' : 'No'}}
-                        </span>
-                      </td>
-                      <td style="width:40px; text-align: right;">
-                        <i class="fa fa-trash-alt" (click)="deleteUserModule(userModule)" title="Delete" style="cursor: pointer;"></i>&nbsp;
-                      </td>
-                    </tr>
-                    <tr *ngIf="userModules.length == 0">
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td>No record(s) found</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div class="row mt-2">
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="applicableFrom">Applicable From</label>
+                  <label class="form-control input-md">{{businessPartner?.applicableFrom | date : "dd/MM/yyyy"}}</label>                
+                </div>
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="applicableTo">Applicable To</label>
+                  <label class="form-control input-md">{{businessPartner?.applicableTo | date : "dd/MM/yyyy"}}</label>                
+                </div>
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="panNumber">PanNumber</label>
+                  <label class="form-control input-md">{{businessPartner?.panNumber != "" ? businessPartner?.panNumber : '----'}}</label>                
+                </div>
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="gstNumber">GstNumber</label>
+                  <label class="form-control input-md">{{businessPartner?.gstNumber != "" ? businessPartner?.gstNumber : '----'}}</label>                
+                </div>                   
               </div>
-            </div>
-        </div>
-        </div>
+              <hr class="mt-3">
+              <div class="row" *ngIf="businessPartner?.businessPartnerType?.code == 'B2C'">  
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="isHavingContract">Is Having Contract</label>
+                  <label class="form-control input-md">{{businessPartner?.isHavingContract == 1 ? 'Yes' : 'No'}}</label>                
+                </div> 
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="contractFrom">Contract From</label>
+                  <label class="form-control input-md">{{businessPartner?.contract?.contractFrom != "" ? (businessPartner?.contract?.contractFrom | date : "dd/MM/yyyy")  : '----' }}</label>                
+                </div>
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="contractTo">Contract To</label>
+                  <label class="form-control input-md">{{businessPartner?.contract?.contractTo != "" ? (businessPartner?.contract?.contractTo | date : "dd/MM/yyyy") : '----'}}</label>                
+                </div>
+                <div class="col-sm-3">
+                  <label class="form-control-label" for="rewardApplicable">Reward Applicable</label>
+                  <label class="form-control input-md">{{businessPartner?.rewardApplicable == 1 ? 'Yes' : 'No'}}</label>                
+                </div>
+              </div>
+              <div class="{{businessPartner?.businessPartnerType?.code == 'B2B' ? 'row' : 'row mt-2'}}">  
+                <div class="col-sm-3" *ngIf="businessPartner?.businessPartnerType?.code == 'B2C'">
+                  <label class="form-control-label" for="commissionTerm">Commission Term</label>
+                  <label class="form-control input-md">{{businessPartner?.commissionTerm?.name != '' ? businessPartner?.commissionTerm?.name : '----'}}</label>                
+                </div>                  
+                <div class="col-sm-3" *ngIf="businessPartner?.businessPartnerType?.code == 'B2B'">
+                  <label class="form-control-label" for="commercialTerm">Commercial Term</label>
+                  <label class="form-control input-md">{{businessPartner?.commercialTerm?.name != '' ? businessPartner?.commercialTerm?.name : '----'}}</label>                
+                </div>
+              </div>  
+            </ng-template>
+          </li>
+          <li class="nav-item" [ngbNavItem]="2">
+            <a class="nav-link text-uppercase" aria-controls="documents" aria-selected="true" ngbNavLink>Enclosure Documents</a>
+            <ng-template ngbNavContent>
+              <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+              (click)="addDocument(businessPartner.uuid)">Add Document</button>  
+              <table class="table table-striped row-border table-hover pt-1">
+                <thead>
+                  <tr>
+                    <th>Sno</th>
+                    <th>Enclosure Document</th>
+                    <th>File Name</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let businessPartnerDocument of businessPartnerDocuments let i=index" >
+                    <td>{{i+1}}</td>
+                    <td>{{businessPartnerDocument?.enclosureDocument?.name}}</td>
+                    <td>{{businessPartnerDocument?.fileName}}</td>
+                    <td>
+                      <i class="fa fa-trash-alt" title="Delete" (click)="deleteBusinessPartnerDocument(businessPartnerDocument)"></i>
+                    </td>
+                  </tr>
+                  <tr *ngIf="businessPartnerDocuments.length == 0">
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </li>
+          <li class="nav-item" [ngbNavItem]="3" *ngIf="businessPartner?.businessPartnerType?.code == 'B2C'">
+            <a class="nav-link text-uppercase" aria-controls="contacts" aria-selected="true" ngbNavLink>Contract History</a>
+            <ng-template ngbNavContent>
+              <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+              (click)="addRenew(businessPartner.uuid)">Add/Renew</button>  
+              <table class="table table-striped row-border table-hover pt-10">
+                <thead>
+                  <tr>
+                    <th>Sno</th>
+                    <th>Contract From</th>
+                    <th>Contract To</th>
+                    <th>Active</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let businessPartnerContractHistory of businessPartnerContractHistories; let i = index">
+                    <td>{{i+1}}</td>
+                    <td>{{businessPartnerContractHistory?.contractFrom  | date : "yyyy/MM/dd"}}</td>
+                    <td>{{businessPartnerContractHistory?.contractTo  | date : "yyyy/MM/dd"}}</td>
+                    <td>
+                      <span [ngClass]="businessPartnerContractHistory.isActive ? 'badge bg-success' : ' badge bg-danger'" style="cursor: pointer;" title="Change Status" (click)="updateStatus(businessPartnerContractHistory)">{{businessPartnerContractHistory.isActive? 'Yes' : 'No'}}</span>
+                    </td>
+                    <td>
+                      <i class="fa fa-trash-alt" title="Delete" (click)="deleteBusinessPartnerContract(businessPartnerContractHistory)"></i>
+                    </td>
+                  </tr>
+                  <tr *ngIf="businessPartnerContractHistories.length == 0">
+                    <td></td>
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
       </div>
     </div>
   </div>
 </div>
-

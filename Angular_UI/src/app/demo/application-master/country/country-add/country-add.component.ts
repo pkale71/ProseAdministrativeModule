@@ -44,6 +44,7 @@ export class CountryAddComponent
     this.addCountryForm = this.formbuilder.group({
       id:[''],
       name: ['',[Validators.required]],
+      uploadFile: ['',Validators.required]
     });  
   }
 
@@ -74,7 +75,38 @@ export class CountryAddComponent
   {
     if(!this.saveClicked)
     {
-      if(this.addCountryForm.valid)
+      if(this.isChecked)
+      { 
+        if(this.addCountryForm.valid)
+        { 
+          alert(this.addCountryForm.valid)
+          this.isValidForm = true;
+          this.saveClicked = true;
+          try
+          {
+            if(this.addCountryForm.get('uploadFile')?.value != '')
+            {
+              console.log(this.addCountryForm.get('uploadFile')?.value != '')
+              let formData = new FormData();
+              formData.append('uploadFile',this.addCountryForm.get('uploadFile').value);
+              let response = await this.businessService.uploadCountries(formData).toPromise();
+              if (response.status_code == 200 && response.message == 'success') 
+              {
+                this.showNotification("success", "Country Saved");
+                this.commonSharedService.countryListObject.next({result : "success"});
+                this.closeModal();
+              }
+            }  
+          }
+          catch(e)
+          {
+            this.showNotification("error", e);
+            this.isValidForm = false;
+            this.saveClicked = false;
+          }
+        }
+      }
+      else   //(this.addCountryForm.valid)
       {
         this.isValidForm = true;
         this.saveClicked = true;
@@ -95,14 +127,14 @@ export class CountryAddComponent
           this.saveClicked = false;
         }
       }
-      else
-      {
-        this.isValidForm = false;
-        this.saveClicked = false;
-      }
+    }  
+    else
+    {
+      this.isValidForm = false;
+      this.saveClicked = false;
     }
   }
-
+  
   closeModal()
   {
     this.activeModal.close(); 

@@ -12,8 +12,9 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { DataTablesModule } from 'angular-datatables';
 import { BusinessService } from 'src/app/theme/shared/service/business.service';
-import { event } from 'jquery';
 import { IOption, SelectModule } from 'ng-select';
+import { add } from 'date-fns/esm';
+import { FileUploadValidators } from '@iplab/ngx-file-upload';
 
 @Component({
   selector: 'app-business-partner-add',
@@ -53,7 +54,9 @@ export class BusinessPartnerAddComponent {
   isHavingContracts : any[];
   commissionTerms : any[];
   commercialTerms : any[];
+  masterAcademyEnclosureDocuments : any[];
   academyEnclosureDocuments : any[];
+  docFiles : any[] = [];
 
   constructor(private notifier: NotifierService, 
     private commonService : CommonService,
@@ -63,14 +66,15 @@ export class BusinessPartnerAddComponent {
     public commonSharedService : CommonSharedService,
     private location : Location, 
     private route: ActivatedRoute,
+    private router : Router,
     private businessService: BusinessService
        )
     {
-       this.id = this.route.params['value'].id;
+      this.id = this.route.params['value'].id;
 
-       this.isHavingContracts = [{
-        "id": 1,
-        "name": "Yes"
+      this.isHavingContracts = [{
+      "id": 1,
+      "name": "Yes"
       },
       {
         "id": 0,
@@ -110,10 +114,10 @@ export class BusinessPartnerAddComponent {
       stateRegion : this.formbuilder.group({ 'id' : ['']}),
       district : this.formbuilder.group({ 'id' : ['']}),
       businessVertical : this.formbuilder.group({ 'id' : ['']}),
-      businessVerticalType : this.formbuilder.group({ 'id' : ['']}),
+      businessVerticalTypes : this.formbuilder.group({ 'id' : ['']}),
       contactPerson : ['', Validators.required],
       contactEmail : ['', Validators.required],
-      contactMobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,10}'), Validators.maxLength(10), Validators.minLength(10)]],  
+      contactMobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$'), Validators.maxLength(15), Validators.minLength(10)]],  
       inchargePerson : [''],
       inchargeEmail : [''],
       inchargeMobile : [''],  
@@ -123,10 +127,10 @@ export class BusinessPartnerAddComponent {
       contractFrom : [''],
       contractTo : [''],
       rewardApplicable : ['', Validators.required],
-      panNumber : [''],
-      gstNumber : [''],
+      panNumber : ['', [Validators.pattern("^[a-zA-Z]{5}[0-9]{4}[A-Za-z]{1}$"), Validators.minLength(10)]],
+      gstNumber : ['', [Validators.pattern("^[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Z]{1}[0-9a-zA-Z]{1}$"), Validators.minLength(15)]],
       commissionTerm : this.formbuilder.group({ 'id' : ['']}),
-      commercialTerm : this.formbuilder.group({ 'id' : ['']}),
+      commercialTerm : this.formbuilder.group({ 'id' : ['']})
     })
 
     this.addBusinessPartnerForm.get('isHavingContract').setValue("0");
@@ -148,7 +152,7 @@ export class BusinessPartnerAddComponent {
       'businessVertical' : ['', Validators.required]
     })
     this.businessVerticalTypeForm = this.formbuilder.group({
-      'businessVerticalType' : ['', Validators.required]
+      'businessVerticalTypes' : ['', Validators.required]
     })
     this.commissionTermForm = this.formbuilder.group({
       'commissionTerm' : ['']
@@ -162,7 +166,7 @@ export class BusinessPartnerAddComponent {
     this.getCommercialTerms();
     this.getReferralPartner();
     this.getCommissionTerms();
-    this.getAcademyEnclosureDocuments('Active')
+    this.getAcademyEnclosureDocuments('Active');
   }
 
   showNotification(type: string, message: string): void 
@@ -179,6 +183,13 @@ export class BusinessPartnerAddComponent {
       if (response.status_code == 200 && response.message == 'success') 
       {
         this.businessPartnerType = response.businessPartnerType;
+        if(this.businessPartnerType.code == 'B2B')
+        {
+          this.isRequiredPanGst = true;
+          this.addBusinessPartnerForm.controls['panNumber'].addValidators(Validators.required);
+          this.addBusinessPartnerForm.controls['gstNumber'].addValidators(Validators.required);
+          this.addBusinessPartnerForm.updateValueAndValidity();
+        }
       }
       else
       {
@@ -434,7 +445,7 @@ export class BusinessPartnerAddComponent {
     this.getEnclosureDocDetailsForm = [];
     this.addRow();
   }
-
+ 
   getReferralPartner()
   {
     if(this.addBusinessPartnerForm.controls['isHavingContract'].value == 1)
@@ -451,7 +462,7 @@ export class BusinessPartnerAddComponent {
         this.commissionTermForm.controls['commissionTerm'].enable();
         this.commissionTermForm.controls['commissionTerm'].addValidators(Validators.required);
         this.commissionTermForm.updateValueAndValidity();
-       //both are true then pan and gst required    
+        //both are true then pan and gst required    
         this.isRequiredPanGst = true;
         this.addBusinessPartnerForm.controls['panNumber'].addValidators(Validators.required);
         this.addBusinessPartnerForm.controls['gstNumber'].addValidators(Validators.required);
@@ -462,11 +473,11 @@ export class BusinessPartnerAddComponent {
         this.isRequiredReward = false;
         this.commissionTermForm.controls['commissionTerm'].setValue('');
         this.commissionTermForm.controls['commissionTerm'].disable();
-        this.commissionTermForm.controls['commissionTerm'].clearAsyncValidators();
+        this.commissionTermForm.controls['commissionTerm'].clearValidators();
         //both are false then pan and gst not required    
         this.isRequiredPanGst = false;
-        this.addBusinessPartnerForm.controls['panNumber'].clearValidators();
-        this.addBusinessPartnerForm.controls['gstNumber'].clearValidators();
+        this.addBusinessPartnerForm.controls['panNumber'].removeValidators(Validators.required);
+        this.addBusinessPartnerForm.controls['gstNumber'].removeValidators(Validators.required);
         this.addBusinessPartnerForm.updateValueAndValidity();
       }  
     }
@@ -476,6 +487,7 @@ export class BusinessPartnerAddComponent {
       this.commissionTermForm.controls['commissionTerm'].enable();
       this.commissionTermForm.controls['commissionTerm'].addValidators(Validators.required);
       this.commissionTermForm.updateValueAndValidity();
+      this.isRequiredContract = false;
       this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
       this.addBusinessPartnerForm.controls['contractFrom'].disable();
       this.addBusinessPartnerForm.controls['contractFrom'].clearAsyncValidators();
@@ -484,8 +496,8 @@ export class BusinessPartnerAddComponent {
       this.addBusinessPartnerForm.controls['contractTo'].clearAsyncValidators();
       //both are false then pan and gst not required  
       this.isRequiredPanGst = false;
-      this.addBusinessPartnerForm.controls['panNumber'].clearValidators();
-      this.addBusinessPartnerForm.controls['gstNumber'].clearValidators();
+      this.addBusinessPartnerForm.controls['panNumber'].removeValidators(Validators.required);
+      this.addBusinessPartnerForm.controls['gstNumber'].removeValidators(Validators.required);
       this.addBusinessPartnerForm.updateValueAndValidity();
     }
     else
@@ -493,18 +505,18 @@ export class BusinessPartnerAddComponent {
       this.isRequiredReward = false; 
       this.commissionTermForm.controls['commissionTerm'].setValue('');
       this.commissionTermForm.controls['commissionTerm'].disable();
-      this.commissionTermForm.controls['commissionTerm'].clearAsyncValidators();
+      this.commissionTermForm.controls['commissionTerm'].clearValidators();
       this.commissionTermForm.updateValueAndValidity();
       this.isRequiredContract = false;
       this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
       this.addBusinessPartnerForm.controls['contractFrom'].disable();
-      this.addBusinessPartnerForm.controls['contractFrom'].clearAsyncValidators();
+      this.addBusinessPartnerForm.controls['contractFrom'].clearValidators();
       this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
       this.addBusinessPartnerForm.controls['contractTo'].disable();
-      this.addBusinessPartnerForm.controls['contractTo'].clearAsyncValidators();
+      this.addBusinessPartnerForm.controls['contractTo'].clearValidators();
       this.isRequiredPanGst = false;
-      this.addBusinessPartnerForm.controls['panNumber'].clearValidators();
-      this.addBusinessPartnerForm.controls['gstNumber'].clearValidators();
+      this.addBusinessPartnerForm.controls['panNumber'].removeValidators(Validators.required);
+      this.addBusinessPartnerForm.controls['gstNumber'].removeValidators(Validators.required);
       this.addBusinessPartnerForm.updateValueAndValidity();
     }
   }
@@ -513,8 +525,8 @@ export class BusinessPartnerAddComponent {
   {
     let i : number = this.getEnclosureDocDetailsForm.length;
     this.getEnclosureDocDetailsForm[i] = this.formbuilder.group({
-      uuid : new FormControl(''),
-      academyEnclosureDocuments : new FormControl('', Validators.required)
+      academyEnclosureDocument : new FormControl('', Validators.required),
+      docFile : new FormControl('', Validators.required)
     })
   }
 
@@ -523,7 +535,15 @@ export class BusinessPartnerAddComponent {
     if(this.getEnclosureDocDetailsForm.length > 1)
     {
       let i : number = this.getEnclosureDocDetailsForm.length - 1;
+      let id:any = this.getEnclosureDocDetailsForm[i].controls['academyEnclosureDocument'].value
+      this.academyEnclosureDocuments.forEach((ele:any, i:number)=>{
+        if(ele.id == id)
+        {
+          ele.isUploaded = false;
+        }
+      })
       this.getEnclosureDocDetailsForm.splice(i, 1);
+      this.docFiles.splice(i, 1);
     }
   }  
 
@@ -534,8 +554,12 @@ export class BusinessPartnerAddComponent {
       let response = await this.businessService.getAcademyEnclosureDocuments('Active').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.academyEnclosureDocuments = response.academyEnclosureDocuments;
-        this.academyEnclosureDocuments.unshift({ id : '', name : 'Select Document'});
+        this.masterAcademyEnclosureDocuments = response.academyEnclosureDocuments;
+        this.academyEnclosureDocuments = this.masterAcademyEnclosureDocuments;
+        this.academyEnclosureDocuments.unshift({ id : '', name : 'Select Document'}); 
+        this.academyEnclosureDocuments.forEach((ele:any)=>{
+          ele['isUploaded'] = false;
+        })
       }
       else
       {
@@ -553,73 +577,133 @@ export class BusinessPartnerAddComponent {
     this.location.back();
   }
 
+  prepareFormData()
+  {
+    let formData = new FormData();
+
+    formData.append('name',this.addBusinessPartnerForm.get('name').value);
+    formData.append('email', this.addBusinessPartnerForm.get('email').value);
+    formData.append('pincode', this.addBusinessPartnerForm.get('pincode').value);
+    formData.append('address', this.addBusinessPartnerForm.get('address').value);
+    formData.append('country', JSON.stringify({ 'id' : this.countryForm.get('country').value}));
+    formData.append('stateRegion', JSON.stringify({ 'id' : this.stateRegionForm.get('stateRegion').value}));
+    formData.append('district', JSON.stringify({ 'id' : this.districtForm.get('district').value}));
+    formData.append('city', JSON.stringify({ 'id' : this.cityForm.get('city').value}));
+    formData.append('businessVertical', JSON.stringify({ 'id' : this.businessVerticalForm.get('businessVertical').value}));
+    formData.append('businessVerticalTypeIds', this.businessVerticalTypeForm.get('businessVerticalTypes').value.toString());
+    formData.append('contactPerson',this.addBusinessPartnerForm.get('contactPerson').value);
+    formData.append('contactEmail', this.addBusinessPartnerForm.get('contactEmail').value);
+    formData.append('contactMobile', this.addBusinessPartnerForm.get('contactMobile').value); 
+    formData.append('inchargePerson',this.addBusinessPartnerForm.get('inchargePerson').value);
+    formData.append('inchargeEmail', this.addBusinessPartnerForm.get('inchargeEmail').value);
+    formData.append('inchargeMobile', this.addBusinessPartnerForm.get('inchargeMobile').value);
+    formData.append('applicableFrom',this.addBusinessPartnerForm.get('applicableFrom').value);
+    formData.append('applicableTo', this.addBusinessPartnerForm.get('applicableTo').value);
+    formData.append('panNumber', this.addBusinessPartnerForm.get('panNumber').value);
+    formData.append('gstNumber', this.addBusinessPartnerForm.get('gstNumber').value);
+    formData.append('businessPartnerType', JSON.stringify({ "id" : this.id}));
+    if(this.businessPartnerType.code == 'B2C')
+    {
+      formData.append('isHavingContract', this.addBusinessPartnerForm.get('isHavingContract').value);
+      formData.append('contractFrom',this.addBusinessPartnerForm.get('contractFrom').value);
+      formData.append('contractTo', this.addBusinessPartnerForm.get('contractTo').value);
+      formData.append('rewardApplicable',this.addBusinessPartnerForm.get('rewardApplicable').value);
+      formData.append('commissionTerm', JSON.stringify({ 'id' : this.commissionTermForm.get('commissionTerm').value}));
+    }
+    else
+    {
+      formData.append('isHavingContract', "");
+      formData.append('contractFrom',"");
+      formData.append('contractTo', "");
+      formData.append('rewardApplicable',"");
+      formData.append('commissionTerm', JSON.stringify({ 'id' : ""}));
+    }
+    if(this.businessPartnerType.code == 'B2B')
+    {
+      formData.append('commercialTerm', JSON.stringify({ 'id' : this.commercialTermForm.get('commercialTerm').value}));
+    }
+    else
+    {
+      formData.append('commercialTerm', JSON.stringify({ 'id' : ""}));
+    }
+    if(this.docFiles.length > 0)
+    {
+      let docIds = "";
+      for(let k=0; k<this.getEnclosureDocDetailsForm.length; k++)
+      {
+        let docId = this.getEnclosureDocDetailsForm[k].get("academyEnclosureDocument").value;
+        docIds = docIds == "" ? docId : docIds + "," + docId;
+        formData.append('docFiles', this.docFiles[k], this.docFiles[k].name);
+      }
+      formData.append('academyEnclosureDocumentIds', docIds);
+    }  
+    else
+    {
+      formData.append('docFiles', "");
+      formData.append('academyEnclosureDocumentIds', "");
+    }
+    return formData;
+  }
+
+  fileChange(event : any, i : number)
+  {
+    if(this.getEnclosureDocDetailsForm[i].get('docFile').value)
+    { // console.log(event.target.files[0])
+      const file = event.target.files[0]; //this.getEnclosureDocDetailsForm[i].get('docFile').value;
+      let fSize : number = parseFloat((file.size / 1024).toFixed(2));
+      if(file.type == 'image/png' || file.type == 'image/jpeg' || file.type == 'application/pdf')
+      {
+        if(fSize > 0)
+        {
+          this.docFiles[i] = file;
+        }
+      }
+    }  
+  }
+
+  getDocumentSelect()
+  {    
+    this.academyEnclosureDocuments.forEach((ele:any) => {
+      ele.isUploaded = this.getEnclosureDocDetailsForm.some((form:any) => {
+        return form.controls['academyEnclosureDocument'].value == ele.id
+      })
+    })
+  }
+
   async saveBusinessPartner() 
   {
     if (!this.saveClicked) 
     {
-      if (this.addBusinessPartnerForm.valid && this.countryForm.valid && this.stateRegionForm.valid && this.districtForm.valid && this.cityForm.valid && this.businessVerticalForm.valid && this.businessVerticalTypeForm.valid) 
+      if (this.addBusinessPartnerForm.valid) 
       {
         this.isValidForm = true;
         this.saveClicked = true;
-        if(this.businessPartnerType.code == 'B2C') 
-        {
-          try 
+        try 
+        {             
+          let data = this.prepareFormData();
+          let response = await this.businessService.saveBusinessPartner(data).toPromise();
+          if (response.status_code == 200 && response.message == 'success') 
           {
-            let formData = new FormData();
-            formData.append('name',this.addBusinessPartnerForm.get('name').value);
-            formData.append('email', this.addBusinessPartnerForm.get('email').value);
-            formData.append('pincode', this.addBusinessPartnerForm.get('pincode').value);
-            formData.append('address', this.addBusinessPartnerForm.get('address').value);
-            formData.append('country', JSON.stringify({ 'id' : this.addBusinessPartnerForm.get('country').value}));
-            formData.append('stateRegion', JSON.stringify({ 'id' : this.addBusinessPartnerForm.get('stateRegion').value}));
-            formData.append('district', JSON.stringify({ 'id' : this.addBusinessPartnerForm.get('district').value}));
-            formData.append('city', JSON.stringify({ 'id' : this.addBusinessPartnerForm.get('city').value}));
-            formData.append('businessVertical', JSON.stringify({ 'id' : this.addBusinessPartnerForm.get('businessVertical').value}));
-            formData.append('businessVerticalType', JSON.stringify({ 'id' : this.addBusinessPartnerForm.get('businessVerticalType').value}));
-            formData.append('contactPerson',this.addBusinessPartnerForm.get('contactPerson').value);
-            formData.append('contactEmail', this.addBusinessPartnerForm.get('contactEmail').value);
-            formData.append('contactMobile', this.addBusinessPartnerForm.get('contactMobile').value); 
-            formData.append('inchargePerson',this.addBusinessPartnerForm.get('inchargePerson').value);
-            formData.append('inchargeEmail', this.addBusinessPartnerForm.get('inchargeEmail').value);
-            formData.append('inchargeMobile', this.addBusinessPartnerForm.get('inchargeMobile').value);
-            formData.append('applicableFrom',this.addBusinessPartnerForm.get('applicableFrom').value);
-            formData.append('applicableTo', this.addBusinessPartnerForm.get('applicableTo').value);
-            formData.append('isHavingContract', this.addBusinessPartnerForm.get('isHavingContract').value);
-            formData.append('contractFrom',this.addBusinessPartnerForm.get('contractFrom').value);
-            formData.append('contractTo', this.addBusinessPartnerForm.get('contractTo').value);
-            formData.append('rewardApplicable',this.addBusinessPartnerForm.get('rewardApplicable').value);
-            formData.append('panNumber', this.addBusinessPartnerForm.get('panNumber').value);
-            formData.append('gstNumber', this.addBusinessPartnerForm.get('gstNumber').value);
-            formData.append('commissionTerm', JSON.stringify({ 'id' : this.addBusinessPartnerForm.get('commissionTerm').value}));
-            //formData.append('commercialTerm', JSON.stringify({ 'id' : this.addBusinessPartnerForm.get('commercialTerm').value}));
-            let tempReferralpartnerDetails : any[];
-            for(let i = 0; i < this.getEnclosureDocDetailsForm.length; i++)
+            let savedDocs = response?.savedDocs;
+            if(savedDocs != "")
+            { 
+              this.showNotification("success", "Business Partner Saved, " + savedDocs + " Docs Are Uploaded.");
+            }
+            else
             {
-              let data = {
-                uuid : '',
-                academyEnclosureDocuments : this.getEnclosureDocDetailsForm[i].get('academyEnclosureDocuments')?.value
-              }
-              tempReferralpartnerDetails.push(data);
-            }
-            let response = await this.businessService.saveBusinessPartner(formData).toPromise();
-            if (response.status_code == 200 && response.message == 'success') 
-              {
               this.showNotification("success", "Business Partner Saved");
-              this.commonSharedService.businessPartnerListObject.next({ 
-                result: "success", 
-                responseData : {
-                 
-                }
-               });
             }
-          }
-          catch (e) 
-          {
-            this.showNotification("error", e);
-            this.isValidForm = false;
             this.saveClicked = false;
-          } 
+            this.isValidForm = false;
+            this.router.navigateByUrl("/business/businessPartner/detail/" + response.businessPartnerTypeUUID);
+          }
         }
+        catch (e) 
+        {
+          this.showNotification("error", e);
+          this.isValidForm = false;
+          this.saveClicked = false;
+        } 
       }
       else 
       {

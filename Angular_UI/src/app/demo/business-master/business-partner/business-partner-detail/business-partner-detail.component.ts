@@ -1,18 +1,18 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 
 // third party
 import Swal from 'sweetalert2';
-import { UserService } from 'src/app/theme/shared/service';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
-import { CommonService } from 'src/app/theme/shared/service/common.service';
-// import { UserModuleComponent } from '../user-module-add/user-module.component';
 import { DataTablesModule } from 'angular-datatables';
+import { BusinessService } from 'src/app/theme/shared/service/business.service';
+import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { BusinessPartnerContractAddComponent } from '../business-partner-contract-add/business-partner-contract-add.component';
+import { BusinessPartnerDocumentAddComponent } from '../business-partner-document-add/business-partner-document-add.component';
 
 @Component({
   selector: 'app-business-partner-detail',
@@ -22,105 +22,93 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./business-partner-detail.component.scss']
 })
 export class BusinessPartnerDetailComponent {
-  user : any;
   searchClicked : boolean;
   uuid : string;
-  userUUID : any; 
-  userModules : any[];
+  businessPartner : any;
+  businessPartnerContractHistories : any = [];
+  businessPartnerDocuments : any[];
 
   constructor(private notifier: NotifierService, 
-    private commonService : CommonService,
-    private formbuilder: FormBuilder,
-    private activatedRoute: ActivatedRoute,
-    private userService: UserService, 
-    private modalService: NgbModal,
+    private businessService: BusinessService, 
     public commonSharedService : CommonSharedService,
+    private commonService : CommonService,
+    private modalService: NgbModal, 
     private location : Location, 
-    private route: ActivatedRoute
-       )
+    private route: ActivatedRoute)
     {
-      this.uuid = this.route.params['value'].userUUID;
+      this.uuid = this.route.params['value'].uuid;
+      this.searchClicked = false;
+      this.getBusinessPartner(this.uuid);
+      this.getBusinessPartnerContractHistories(this.uuid);
+      this.getBusinessPartnerDocuments(this.uuid);
     }
 
   ngOnInit() 
   {
-    this.searchClicked = false;
-    this.userModules = [];
-    this.getUser(this.uuid);
-    this.getUserModules(this.uuid, 'All');
   }
+
+  public businessPartnerContractHistoryAddResult:any = this.commonSharedService.businessPartnerContractHistoryDocumentListObject.subscribe(res =>{
+    if(res.result == "success")
+    {
+      this.getBusinessPartnerContractHistories(this.uuid);
+      this.getBusinessPartnerDocuments(this.uuid);
+    }
+  }) 
 
   showNotification(type: string, message: string): void 
   {
     //type : default, info, success, warning, error
     this.notifier.notify(type, message);
   }
-   
 
-  public userAssignedGradeSectionResult:any = this.commonSharedService.userModulesListObject.subscribe(res =>{
-    if(res.result == "success")
-    {
-      this.getUserModules(this.uuid, 'All');
-      // let userUUID = res.userUUID;
-    }
-  })
-
-  // addUserModule()
-  // {
-  //   let params = {
-  //     "userUUID" : this.uuid
-  //   }
-  //   const dialogRef = this.modalService.open(UserModuleComponent, 
-  //   { 
-  //     size: 'xl', backdrop: 'static' 
-  //   });
-  //   dialogRef.componentInstance.modalParams = params;
-  // }
-
-    // setIsPresent()
-    // {
-    //   this.isPresent  = this.isPresent ? false : true;
-    // }
-
-  async getUser(uuid : string) 
+  async getBusinessPartner(uuid : string) 
   {
     this.searchClicked = true;
-    let response = await this.userService.getUser(uuid).toPromise(); 
+    let response = await this.businessService.getBusinessPartner(uuid).toPromise(); 
     if (response.status_code == 200 && response.message == 'success') 
     {
-      $('#tblUser').DataTable().destroy();
-      this.user = response.user;
-      setTimeout(function(){
-        $('#tblUser').DataTable();
-      },800);
+      this.businessPartner = response.businessPartner;
       this.searchClicked = false;
-      this.modalService.dismissAll();
     }
     else
     {
-      this.user = [];
+      this.businessPartner = [];
       this.searchClicked = false;
-      this.modalService.dismissAll();
     }
   }
 
-  async getUserModules(userUUID : string, action : string) 
+  // get busines partner contract history
+  async getBusinessPartnerContractHistories(uuid : string) 
   {
-    let response = await this.userService.getUserModule(userUUID, 'All').toPromise();
+    this.searchClicked = true;
+    let response = await this.businessService.getBusinessPartnerContractHistories(uuid).toPromise(); 
     if (response.status_code == 200 && response.message == 'success') 
     {
-      $('#tblUserModule').DataTable().destroy();
-      this.userModules = response.userModules;
-      setTimeout(function(){
-        $('#tblUserModule').DataTable();
-      },800);
-      this.modalService.dismissAll();
+      this.businessPartnerContractHistories = response.businessPartnerContractHistories;
+      this.searchClicked = false;
     }
     else
     {
-      this.userModules = [];
-      this.modalService.dismissAll();
+      this.businessPartnerContractHistories = [];
+      this.searchClicked = false;
+    }    
+  }
+
+  // get business partner documents
+  async getBusinessPartnerDocuments(uuid : string) 
+  {
+    this.searchClicked = true;
+    let response = await this.businessService.getBusinessPartnerDocuments(uuid).toPromise(); 
+    if (response.status_code == 200 && response.message == 'success') 
+    {
+      this.businessPartnerDocuments = response.businessPartnerDocuments;
+      this.searchClicked = false;
     }
+    else
+    {
+      this.businessPartnerContractHistories = [];
+      this.searchClicked = false;
+    }    
   }
 
   back()
@@ -128,62 +116,44 @@ export class BusinessPartnerDetailComponent {
     this.location.back();
   }
 
-  approveUserModule(userModule : any)
+  addRenew(uuid : string)
   {
-    // Swal.fire({
-    //   customClass: {
-    //     container: 'my-swal'
-    //   },
-    //   title: 'Confirmation',
-    //   text: 'Are you sure to ' + (userModule.isModuleAdminApproved == 1 ? 'deny' : 'approve') + ' the user module?',
-    //   icon: 'warning',
-    //   allowOutsideClick: false,
-    //   showCloseButton: true,
-    //   showCancelButton: true 
-    // }).then(async (willUpdate) => {
-    //   if (willUpdate.dismiss) 
-    //   {
-    //   } 
-    //   else 
-    //   {        
-    //     try
-    //     {
-    //       let tempJson = {
-    //         id : userModule.id,
-    //         action : userModule.isModuleAdminApproved == 1 ? 'Deny' : 'Approve'
-    //       }
-    //       this.showNotification("info", "Please wait...");
-    //       let response = await this.userService.approveDenyUserModule(tempJson).toPromise();
-    //       if (response.status_code == 200 && response.message == 'success') 
-    //       {
-    //         this.showNotification("success", "User Module Updated");
-    //         this.commonSharedService.userModulesListObject.next({
-    //           result : "success"
-    //         });
-    //       }
-    //     }
-    //     catch(e)
-    //     {
-    //       this.showNotification("error", e);
-    //     }
-    //   }
-    // });   
+    let params = {
+      "uuid" : uuid
+    }
+    const dialogRef = this.modalService.open(BusinessPartnerContractAddComponent, 
+    { 
+      size: 'md', backdrop: 'static' 
+    });
+    dialogRef.componentInstance.modalParams = params;
   }
 
-  updateStatus(userModule : any)
+  addDocument(uuid : string)
+  {
+    let params = {
+      "uuid" : uuid
+    }
+    const dialogRef = this.modalService.open(BusinessPartnerDocumentAddComponent, 
+    { 
+      size: 'md', backdrop: 'static' 
+    });
+    dialogRef.componentInstance.modalParams = params;
+  }
+
+  updateStatus(businessPartnerContractHistory : any)
   {
     Swal.fire({
       customClass: {
         container: 'my-swal'
       },
       title: 'Confirmation',
-      text: 'Are you sure to ' + (userModule.isActive == 1 ? 'de-active' : 'active') + ' the user module?',
+      text: 'Are you sure to ' + (businessPartnerContractHistory.isActive == 1 ? 'de-active' : 'active') + ' the business partner contract?',
       icon: 'warning',
       allowOutsideClick: false,
       showCloseButton: true,
       showCancelButton: true 
-    }).then(async (willDelete) => {
-      if (willDelete.dismiss) 
+    }).then(async (willUpdate) => {
+      if (willUpdate.dismiss) 
       {
       } 
       else 
@@ -191,17 +161,15 @@ export class BusinessPartnerDetailComponent {
         try
         {
           let tempJson = {
-            id : userModule.id,
-            tableName : userModule.tableName
+            id : businessPartnerContractHistory.id,
+            tableName : businessPartnerContractHistory.tableName
           }
           this.showNotification("info", "Please wait...");
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "User Module Updated");
-            this.commonSharedService.userModulesListObject.next({
-              result : "success"
-            });
+            this.showNotification("success"," Business Partner Contract Status Updated");
+            this.commonSharedService.businessPartnerContractHistoryDocumentListObject.next({result : "success"});
           }
         }
         catch(e)
@@ -212,14 +180,15 @@ export class BusinessPartnerDetailComponent {
     });   
   }
 
-  deleteUserModule(userModule : any)
+   // delete business partner contract
+  deleteBusinessPartnerContract(businessPartnerContractHistory : any)
   {
     Swal.fire({
       customClass: {
         container: 'my-swal'
       },
       title: 'Confirmation',
-      text: 'Are you sure to delete user module?',
+      text: 'Are you sure to delete business partner contract?',
       icon: 'warning',
       showCloseButton: true,
       showCancelButton: true
@@ -231,19 +200,17 @@ export class BusinessPartnerDetailComponent {
       else 
       {
         this.showNotification("info", "Please wait...");
-        let tempJSON = { 
-          "id" : userModule.id,
-          "user" : {
-            "uuid" : this.uuid
-          }
-        };
+        let tempJson = {
+          id : businessPartnerContractHistory.id,
+          businessPartner : {"uuid" : this.uuid}
+        }
         try
         {
-          let response = await this.userService.deleteUserModule(tempJSON).toPromise();
+          let response = await this.businessService.deleteBusinessPartnerContract(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "User Module Deleted.");
-            this.commonSharedService.userModulesListObject.next({result : "success"});
+            this.showNotification("success", "Business Partner Contract Deleted.");
+            this.commonSharedService.businessPartnerContractHistoryDocumentListObject.next({result : "success"});
           }
         }
         catch(e)
@@ -254,4 +221,44 @@ export class BusinessPartnerDetailComponent {
     });
   }
 
+  // delete business partner document
+  deleteBusinessPartnerDocument(businessPartnerDocument : any)
+  {
+    Swal.fire({
+      customClass: {
+        container: 'my-swal'
+      },
+      title: 'Confirmation',
+      text: 'Are you sure to delete business partner document?',
+      icon: 'warning',
+      showCloseButton: true,
+      showCancelButton: true
+    }).then(async (willDelete) => {
+      if (willDelete.dismiss) 
+      {
+        
+      } 
+      else 
+      {
+        this.showNotification("info", "Please wait...");
+        let tempJson = {
+          id : businessPartnerDocument.id,
+          businessPartner : {"uuid" : this.uuid}
+        }
+        try
+        {
+          let response = await this.businessService.deleteBusinessPartnerDocument(tempJson).toPromise();
+          if (response.status_code == 200 && response.message == 'success') 
+          {
+            this.showNotification("success", "Business Partner Document Deleted.");
+            this.commonSharedService.businessPartnerContractHistoryDocumentListObject.next({result : "success"});
+          }
+        }
+        catch(e)
+        {
+          this.showNotification("error", e);
+        }
+      }
+    });
+  }
 }
