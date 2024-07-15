@@ -20,7 +20,7 @@ module.exports = require('express').Router().get('/:tieUpSchoolUUID', async(req,
         tieUpSchool = await dbBusiness.getTieUpSchool(tieUpSchoolUUID);
         if(tieUpSchool.length == 1)
         {
-            tieUpSchoolContractHistories = await dbBusiness.getTieUpSchoolContrtactHistories(tieUpSchool[0].id);
+            tieUpSchoolContractHistories = await dbBusiness.getTieUpSchoolContractHistories(tieUpSchool[0].id);
             if(tieUpSchoolContractHistories.length >= 0)
             {
                 res.status(200)

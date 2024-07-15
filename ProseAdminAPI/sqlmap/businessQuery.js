@@ -2496,7 +2496,7 @@ db.getBusinessPartnerContractHistories = (businessPartnerId) =>
     {
         try
         {
-            let sql = `SELECT bpch.id AS id, bpch.contract_from AS contractFrom, bpch.contract_to AS contractTo, is_active AS isActive FROM business_partner_contract_history bpch WHERE bpch.business_partner_id = ${businessPartnerId} ORDER BY bpch.id`;
+            let sql = `SELECT bpch.id AS id, bpch.contract_from AS contractFrom, bpch.contract_to AS contractTo, is_active AS isActive, 'business_partner_contract_history' AS tableName FROM business_partner_contract_history bpch WHERE bpch.business_partner_id = ${businessPartnerId} ORDER BY bpch.id`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -3276,13 +3276,13 @@ db.deleteTieUpSchoolDocument = (tieUpSchoolId, id) =>
     })
 };
 
-db.getTieUpSchoolContrtactHistories = (tieUpSchoolId) => 
+db.getTieUpSchoolContractHistories = (tieUpSchoolId) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
-            let sql = `SELECT tush.id AS id, tush.contract_from AS contractFrom, tush.contract_to AS contractTo, is_active AS isActive FROM tie_up_school_contract_history tush WHERE tush.tie_up_school_id = ${tieUpSchoolId} ORDER BY tush.id`;
+            let sql = `SELECT tush.id AS id, tush.contract_from AS contractFrom, tush.contract_to AS contractTo, is_active AS isActive, 'tie_up_school_contract_history' AS tableName FROM tie_up_school_contract_history tush WHERE tush.tie_up_school_id = ${tieUpSchoolId} ORDER BY tush.id`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -3800,7 +3800,7 @@ db.getStudyCenterAgreementHistories = (studyCenterId) =>
     {
         try
         {
-            let sql = `SELECT scah.id AS id, scah.agreement_from AS agreementFrom, scah.agreement_to AS agreementTo, is_active AS isActive FROM study_center_agreement_history scah WHERE scah.study_center_id = ${studyCenterId} ORDER BY scah.id`;
+            let sql = `SELECT scah.id AS id, scah.agreement_from AS agreementFrom, scah.agreement_to AS agreementTo, is_active AS isActive, 'study_center_agreement_history' AS tableName FROM study_center_agreement_history scah WHERE scah.study_center_id = ${studyCenterId} ORDER BY scah.id`;
             
             dbConn.query(sql, (error, result) => 
             {

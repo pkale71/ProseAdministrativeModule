@@ -578,7 +578,8 @@ buildBusinessJSON.businessPartnerContractHistories = function(datas)
             "id" : data.id,
             "contractFrom" : commonFunction.getFormattedDate(data.contractFrom, "yyyy-mm-dd"),
             "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd"),
-            "isActive" : data.isActive
+            "isActive" : data.isActive,
+            "tableName" : data.tableName
         }
         resultJSON.push(finalJSON);
     });
@@ -749,7 +750,8 @@ buildBusinessJSON.tieUpSchoolContractHistories = function(datas)
             "id" : data.id,
             "contractFrom" : commonFunction.getFormattedDate(data.contractFrom, "yyyy-mm-dd"),
             "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd"),
-            "isActive" : data.isActive
+            "isActive" : data.isActive,
+            "tableName" : data.tableName
         }
         resultJSON.push(finalJSON);
     });
@@ -893,7 +895,8 @@ buildBusinessJSON.studyCenterAgreementHistories = function(datas)
             "id" : data.id,
             "agreementFrom" : commonFunction.getFormattedDate(data.agreementFrom, "yyyy-mm-dd"),
             "agreementTo" : commonFunction.getFormattedDate(data.agreementTo, "yyyy-mm-dd"),
-            "isActive" : data.isActive
+            "isActive" : data.isActive,
+            "tableName" : data.tableName
         }
         resultJSON.push(finalJSON);
     });
