@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="businessPartnerDocumentAddModal"><i class="fa fa-plus"></i>&nbsp;Add Document</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addBusinessPartnerDocumentForm" id="addBusinessPartnerDocumentForm" (ngSubmit)="uploadBusinessPartnerDocument()" autoComplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-12">
+                <form [formGroup]="academyEnclosureDocumentForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="academyEnclosureDocument">AcademyEnclosure Document&nbsp;<span
+                        style="color: red;">*</span></label>
+                        <select class="form-select"  required id="academyEnclosureDocument" formControlName="academyEnclosureDocument" 
+                        [ngClass]="{'is-invalid': !academyEnclosureDocumentForm.controls['academyEnclosureDocument'].valid && !isValidForm}">
+                        <option value="{{academyEnclosureDocument.id}}" *ngFor="let academyEnclosureDocument of academyEnclosureDocuments;">{{academyEnclosureDocument?.name}}</option>
+                        </select> 
+                        <label style="color: red;"
+                        *ngIf="academyEnclosureDocumentForm.controls['academyEnclosureDocument'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select academy enclosure document.</label>
+                    </div>
+                </form>
+            </div>
+            <!-- file selection -->
+            <div class="col-md-12">
+                <label class="mb-1" for="docFile">Document File&nbsp;<span style="color: red;">*</span></label>
+                <input  _ngcontent-ng-c896720819="" type="file" id="docFile" formControlName="docFile" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="fileChange($event)" [ngClass]="{'is-invalid': !addBusinessPartnerDocumentForm.controls['docFile'].valid && !isValidForm}" class="form-control">   
+                <label style="color: red;"
+                *ngIf="addBusinessPartnerDocumentForm.controls['docFile'].hasError('required') && !isValidForm"
+                class="error jquery-validation-error small form-text"
+                >Please select document file.</label>            
+            </div>
+        </div>
+    </div>    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-school"></i>&nbsp; Schooling Programs &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="addSchoolProgram()">Add Schooling Program</button>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <form [formGroup]="academicSessionForm">
+                  <div class="form-group">
+                      <label class="form-control-label" for="academicSession">Academic Session</label>
+                      <select class="form-control" required id="academicSession" formControlName="academicSession">
+                          <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession.name}}</option>
+                      </select>
+                  </div>
+              </form>
+            </div>
+            <!-- search button -->
+            <div class="col-md-3">
+              <br/>
+              <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
+              (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
+              <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table datatable id="tblSchoolProgram" class="table table-striped row-border table-hover pt-10">
+              <thead>
+                <tr>
+                  <th>Sno</th>
+                  <th>Academic Session</th>
+                  <th>Schooling Program</th>
+                  <th>Active</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let schoolingProgram of schoolingPrograms let i=index">
+                  <td>{{i+1}}</td>
+                  <td>{{schoolingProgram.academicSession?.name}}</td>
+                  <td>{{schoolingProgram.name}}</td>
+                  <td>
+                    <span [ngClass]="schoolingProgram.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(schoolingProgram)" 
+                    style="cursor: pointer;" title="Update Status">
+                      {{schoolingProgram.isActive? 'Yes' : 'No' }}
+                    </span>
+                  </td>   
+                  <td style="width:40px;text-align: right;">
+                    <i class="fa fa-trash-alt" (click)="deleteSchoolingProgram(schoolingProgram)" *ngIf = "schoolingProgram.isExist == 0"
+                    title="Delete" style="cursor: pointer;"></i>&nbsp;
+                  </td>
+                </tr>
+                <tr *ngIf="schoolingPrograms.length == 0">
+                  <td></td>
+                  <td></td>
+                  <td>No record(s) found</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

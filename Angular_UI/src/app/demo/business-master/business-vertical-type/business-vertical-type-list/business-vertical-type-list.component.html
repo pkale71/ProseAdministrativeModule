@@ -1,0 +1,87 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-chart-line"></i>&nbsp; Business Vertical Types &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="addBusinessVertical()">Add Business Vertical Type</button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <form [formGroup]="businessVerticalForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="businessVertical">Business Vertical</label>
+                        <select class="form-control" required id="businessVertical" formControlName="businessVertical" (click) = "getBusinessVerticalGroups()">
+                          <option value="{{businessVertical.id}}" *ngFor="let businessVertical of businessVerticals">{{businessVertical.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div> 
+              <div class="col-md-3">
+                <form [formGroup]="businessVerticalGroupForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="businessVerticalGroup">Business Vertical Group</label><i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i>
+                        <select class="form-control" required id="businessVerticalGroup" formControlName="businessVerticalGroup">
+                          <option value="{{businessVerticalGroup.id}}" *ngFor="let businessVerticalGroup of businessVerticalGroups">{{businessVerticalGroup.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div> 
+              <!-- search button -->
+              <div class="col-md-3">
+                <br/>
+                <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
+                (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
+                <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                  <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table datatable id="tblBusinessVerticalType" class="table table-striped row-border table-hover pt-10">
+                <thead>
+                  <tr>
+                    <th>Sno</th>
+                    <th>Business Vertical Type</th>
+                    <th>Business Vertical Group</th>
+                    <th>Business Vertical</th>
+                    <th>Active</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let businessVerticalType of businessVerticalTypes let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{businessVerticalType.name}}</td>
+                    <td>{{businessVerticalType.businessVertical?.name}}</td>
+                    <td>{{businessVerticalType.businessVerticalGroup?.name}}</td>
+                    <td>
+                      <span [ngClass]="businessVerticalType.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(businessVerticalType)" 
+                      style="cursor: pointer;" title="Update Status">
+                        {{businessVerticalType.isActive? 'Yes' : 'No' }}
+                      </span>
+                    </td>   
+                    <td style="width:40px;text-align: right;">
+                      <i class="fa fa-trash-alt" (click)="deleteBusinessVerticalType(businessVerticalType)" *ngIf = "businessVerticalType.isExist == 0"
+                      title="Delete" style="cursor: pointer;"></i>&nbsp;
+                      <i class="fa fa-edit" (click)="editBusinessVerticalType(businessVerticalType)" title="Edit" style="cursor: pointer;"></i>
+                    </td>
+                  </tr>
+                  <tr *ngIf="businessVerticalTypes.length == 0">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>

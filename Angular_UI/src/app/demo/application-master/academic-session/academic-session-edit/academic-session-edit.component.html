@@ -1,0 +1,94 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="gradeAddModal"><i class="fa fa-edit"></i>&nbsp;Edit Academic Session</h5>
+    <!-- <div> {{editAcademicSessionForm.value|json}}</div> -->
+
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+</div>
+<form [formGroup]="editAcademicSessionForm" id ="editAcademicSessionForm" (ngSubmit)="saveAcademicSession()" autocomplete="off">
+    <div class="modal-body">
+        <div class="row">
+
+            <!-- Name field -->
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required formControlName="name" readonly 
+                        maxlength="12"
+                        [ngClass]="{'is-invalid':editAcademicSessionForm.controls['name'].valid && !isValidForm}" />
+                    <label style="color: red;"
+                        *ngIf="editAcademicSessionForm.controls['name'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text">Please enter name.
+                    </label>
+                </div>
+            </div>
+
+            <!-- Start date -->
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="startDate">Start Date&nbsp;<span
+                            style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="startDate" type="date" required formControlName="startDate" (change) = "onSelect()"
+                        [ngClass]="{'is-invalid': !editAcademicSessionForm.controls['startDate'].valid && !isValidForm}" />
+                    <label style="color: red;"
+                        *ngIf="editAcademicSessionForm.controls['startDate'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text">Please enter your start date.</label>
+                </div>
+            </div>
+            <!-- end date -->
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="endDate">End Date&nbsp;<span
+                            style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="endDate" type="date" required formControlName="endDate" (change) = "onSelect()"
+                        [ngClass]="{'is-invalid': !editAcademicSessionForm.controls['endDate'].valid && !isValidForm}" />
+                    <label style="color: red;"
+                        *ngIf="editAcademicSessionForm.controls['endDate'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text">Please enter your end date.</label>
+                </div>
+            </div>
+            <!-- Is admission open  -->
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="isAdmissionOpen">Is Admission Open&nbsp;<span style="color: red;">*</span></label>
+                    <select class="form-control" required id="isAdmissionOpen" formControlName="isAdmissionOpen"
+                        [ngClass]="{'is-invalid': !editAcademicSessionForm.controls['isAdmissionOpen'].valid && !isValidForm}">
+                        <option value="{{isOpenAdmissionSession.id}}"
+                            *ngFor="let isOpenAdmissionSession of isOpenAdmissionSessions">
+                            {{isOpenAdmissionSession.name}}
+                        </option>
+                    </select>
+                    <label style="color: red;"
+                        *ngIf="editAcademicSessionForm.controls['isAdmissionOpen'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text">Please select admission open or
+                        not.</label>
+                </div>
+            </div>
+
+            <!-- Is current session -->
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="isCurrentSession">Is Current Session&nbsp;<span
+                            style="color: red;">*</span></label>
+                    <select class="form-control" required id="isCurrentSession" formControlName="isCurrentSession"
+                        [ngClass]="{'is-invalid': !editAcademicSessionForm.controls['isCurrentSession'].valid && !isValidForm}">
+                        <option value="{{isOpenAdmissionSession.id}}"
+                            *ngFor="let isOpenAdmissionSession of isOpenAdmissionSessions">
+                            {{isOpenAdmissionSession.name}}</option>
+                    </select>
+                    <label style="color: red;"
+                        *ngIf="editAcademicSessionForm.controls['isCurrentSession'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text">Please select current session.</label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">
+            Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save
+        </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>
