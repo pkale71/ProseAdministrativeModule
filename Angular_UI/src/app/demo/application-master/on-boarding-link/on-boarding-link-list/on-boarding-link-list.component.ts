@@ -24,6 +24,7 @@ import { UserService } from 'src/app/theme/shared/service';
 export class OnBoardingLinkListComponent {
   userOnBoardingLinks : any[];
   searchClicked : boolean;
+  linkClicked : boolean[];
   statusForm : FormGroup;
   
   constructor(private notifier: NotifierService, 
@@ -39,6 +40,7 @@ export class OnBoardingLinkListComponent {
   ngOnInit() 
   {
     this.searchClicked = false;
+    this.linkClicked = [];
     this.userOnBoardingLinks = [];
     this.statusForm = this.formbuilder.group({
       'status' : ['Pending']
@@ -60,11 +62,12 @@ export class OnBoardingLinkListComponent {
     this.notifier.notify(type, message);
   }
 
-  async sendOnBoardingLink(code : string)
+  async sendOnBoardingLink(code : string, i : number)
   {
     let linkUrl = window.origin + '/#/userProfile/' + code;
-    if(linkUrl != "" && linkUrl != undefined && code != "" && code != undefined)
+    if(linkUrl != "" && linkUrl != undefined && code != "" && code != undefined && !this.linkClicked[i])
     {
+      this.linkClicked[i] = true;
       let tempJSON = {
         "linkUrl" : linkUrl,
         "code" : code
@@ -72,16 +75,17 @@ export class OnBoardingLinkListComponent {
       try
       {
         let response = await this.userService.sendOnBoardingLink(tempJSON).toPromise();
-        console.log(response);
         if(response.status_code == 200 && response.message == 'success')
         {
           this.showNotification("success", "OnBoarding Link Sent successfully");
+          this.linkClicked[i] = false;
           this.commonSharedService.onBoardingLinkListObject.next({ result: "success" });
         }
       }
       catch (e)
       {
         this.showNotification("error", e);
+        this.linkClicked[i] = false;
       }
     }
   }
@@ -151,7 +155,7 @@ export class OnBoardingLinkListComponent {
           let response = await this.userService.deleteOnBoardingLink(tempJSON).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "User On Boarding Link Deleted.");
+            this.showNotification("success", "User On-Boarding Link Deleted.");
             this.commonSharedService.onBoardingLinkListObject.next({result : "success"});
           }
         }

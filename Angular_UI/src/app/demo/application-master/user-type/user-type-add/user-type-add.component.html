@@ -47,7 +47,7 @@
             <div class="col-md-12">
                 <form [formGroup]="roleForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="role">User Role&nbsp;<span style="color: red;">*</span></label>
+                        <label class="form-control-label" for="role">User Role&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
                         <select class="form-control" required id="role" formControlName="role" 
                         [ngClass]="{'is-invalid': !roleForm.controls['role'].valid && !isValidForm}" 
                         >

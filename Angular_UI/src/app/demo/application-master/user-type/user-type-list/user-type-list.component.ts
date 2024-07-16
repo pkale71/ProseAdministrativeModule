@@ -25,6 +25,7 @@ export class UserTypeListComponent
   masterUserTypes : any[];
   userTypes : any[];
   searchClicked : boolean;
+  userRoleClicked: boolean;
   userRoles : any[];
   masterUserRoles : any[];
   modules : any[];
@@ -39,8 +40,6 @@ export class UserTypeListComponent
     private commonService : CommonService,
     public commonSharedService : CommonSharedService)
   {
-    // this.loginUser = this.commonSharedService.loginUser;
-    // this.userRole = this.loginUser.type;
     this.modules = [];
     this.userRoles = [];
   }
@@ -49,6 +48,7 @@ export class UserTypeListComponent
   {
     this.searchClicked = false;
     this.userTypes = [];
+    this.userRoleClicked = false;
 
     this.moduleForm = this.formBuilder.group({
       'module' : ['0']
@@ -60,10 +60,12 @@ export class UserTypeListComponent
     this.getUserTypes(0, 0, 'All');
   }
 
-  public userRoleAddResult:any = this.commonSharedService.userTypeListObject.subscribe(res =>{
+  public userTypeAddResult:any = this.commonSharedService.userTypeListObject.subscribe(res =>{
     if(res.result == "success")
     {
-      this.getUserTypes(0,0,'All');
+      let moduleId = res.moduleId;
+      let userRoleId = res.userRoleId;
+      this.getUserTypes(moduleId,userRoleId,'All');
     }
   })
 
@@ -98,22 +100,26 @@ export class UserTypeListComponent
       let moduleId = this.moduleForm.get("module").value;
       if(moduleId != null && moduleId != undefined)
       {
+        this.userRoleClicked = true;
         let response = await this.commonService.getUserRoles(moduleId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.masterUserRoles = response.userRoles;
           this.userRoles = this.masterUserRoles
           this.userRoles.unshift({id : "", name : "All"});
+          this.userRoleClicked = false;
         }
         else
         {
           this.userRoles = [];
+          this.userRoleClicked = false;
         }
       }
     }  
     catch(e)
     {
       this.showNotification("error", e);
+      this.userRoleClicked = false;
     }
   }
 
@@ -196,8 +202,10 @@ export class UserTypeListComponent
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "UserRole Updated");
+              this.showNotification("success", "User Type " + (userType.isActive == 1 ? 'de-activated' : 'activated'));
               this.commonSharedService.userTypeListObject.next({
+                moduleId : this.moduleForm.get("module").value,
+                userRoleId : this.userRoleForm.get("userRole").value,
                 result : "success"
               });
           }

@@ -93,7 +93,7 @@ export class OnBoardingLinkAddComponent {
           let response = await this.userService.saveOnBoardingLink(this.onBoardingLinkForm.value).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "User OnBoarding successfully Saved");
+            this.showNotification("success", "User On-Boarding Saved Successfully");
             this.commonSharedService.onBoardingLinkListObject.next({ result: "success" });
             this.closeModal();
           }

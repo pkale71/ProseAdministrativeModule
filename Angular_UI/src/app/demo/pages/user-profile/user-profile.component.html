@@ -6,16 +6,15 @@
         <div class="m-3">
             <div class="row justify-content-md-center" style="text-align: center;">
                 <div class="col-md-12">
-                  <h4 class="wow fadeInUp" data-wow-delay="0s"><i class="fa fa-address-card" ></i>&nbsp;User Profile</h4>
+                  <h3 class="wow fadeInUp" data-wow-delay="0s"><i class="fa fa-address-card" ></i>&nbsp;User Profile</h3>
                 </div>
             </div>            
         </div> 
 
         <div class="card" *ngIf="loadingClicked || profileClicked">
-            <div class="card-body text-center">
-                <h5 *ngIf="loadingClicked"><i class="fa fa-spin fa-spinner" ></i> Loading Data...</h5>
-                <h5 *ngIf="profileClicked"><i class="{{iconClass}}"></i>&nbsp;<label class="{{colorClass}}"> {{message}}</label></h5>
-                
+            <div class="card-body text-center p-3">
+                <h5 *ngIf="loadingClicked" class="m-1"><i class="fa fa-spin fa-spinner" ></i> Loading Data...</h5>
+                <h5 *ngIf="profileClicked" class="m-1"><i class="{{iconClass}}"></i>&nbsp;<label class="{{colorClass}}"> {{message}}</label></h5>                
             </div>
         </div>
         <div class="card" *ngIf = "!loadingClicked && !profileClicked">
@@ -151,13 +150,13 @@
                                 <span style="color: red;">[ JPEG/PNG, Max File Size : 1 MB ]</span>
                                 </label>
                                 <div class="avatar-xl mx-auto">
-                                <file-upload class="form-control" [multiple]="false" [accept]="'image/png, image/jpeg'" maxsize="1 MB"
+                                <file-upload class="form-control" [multiple]="false" [accept]="'image/png, image/jpeg'" maxsize="1 MB" style="min-height: 85px;"
                                 formControlName="profilePic" id="profilePic" (change)="onSelectProfile($event)"></file-upload>
                                 </div>
                             </form>
                         </div>
 
-                        <div class="card-footer">
+                        <div class="card-footer text-end">
                             <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
                             <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
                                 <i class="fa fa-spin fa-spinner"></i>Saving...</button>

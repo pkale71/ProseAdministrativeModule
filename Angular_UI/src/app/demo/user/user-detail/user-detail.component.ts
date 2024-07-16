@@ -13,6 +13,7 @@ import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { UserModuleComponent } from '../user-module-add/user-module.component';
 import { DataTablesModule } from 'angular-datatables';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserApprovedComponent } from '../user-approved/user-approved.component';
 
 @Component({
   selector: 'app-user-detail',
@@ -57,7 +58,7 @@ export class UserDetailComponent {
   }
    
 
-  public userAssignedGradeSectionResult:any = this.commonSharedService.userModulesListObject.subscribe(res =>{
+  public userModuleListResult:any = this.commonSharedService.userModulesListObject.subscribe(res =>{
     if(res.result == "success")
     {
       this.getUserModules(this.uuid, 'All');
@@ -76,11 +77,6 @@ export class UserDetailComponent {
     });
     dialogRef.componentInstance.modalParams = params;
   }
-
-    // setIsPresent()
-    // {
-    //   this.isPresent  = this.isPresent ? false : true;
-    // }
 
   async getUser(uuid : string) 
   {
@@ -128,48 +124,6 @@ export class UserDetailComponent {
     this.location.back();
   }
 
-  approveUserModule(userModule : any)
-  {
-    // Swal.fire({
-    //   customClass: {
-    //     container: 'my-swal'
-    //   },
-    //   title: 'Confirmation',
-    //   text: 'Are you sure to ' + (userModule.isModuleAdminApproved == 1 ? 'deny' : 'approve') + ' the user module?',
-    //   icon: 'warning',
-    //   allowOutsideClick: false,
-    //   showCloseButton: true,
-    //   showCancelButton: true 
-    // }).then(async (willUpdate) => {
-    //   if (willUpdate.dismiss) 
-    //   {
-    //   } 
-    //   else 
-    //   {        
-    //     try
-    //     {
-    //       let tempJson = {
-    //         id : userModule.id,
-    //         action : userModule.isModuleAdminApproved == 1 ? 'Deny' : 'Approve'
-    //       }
-    //       this.showNotification("info", "Please wait...");
-    //       let response = await this.userService.approveDenyUserModule(tempJson).toPromise();
-    //       if (response.status_code == 200 && response.message == 'success') 
-    //       {
-    //         this.showNotification("success", "User Module Updated");
-    //         this.commonSharedService.userModulesListObject.next({
-    //           result : "success"
-    //         });
-    //       }
-    //     }
-    //     catch(e)
-    //     {
-    //       this.showNotification("error", e);
-    //     }
-    //   }
-    // });   
-  }
-
   updateStatus(userModule : any)
   {
     Swal.fire({
@@ -191,14 +145,15 @@ export class UserDetailComponent {
         try
         {
           let tempJson = {
-            id : userModule.id,
-            tableName : userModule.tableName
+            uuid : this.user.uuid,
+            userModuleId : userModule.module.id,
+            action : "UserModule"
           }
           this.showNotification("info", "Please wait...");
-          let response = await this.commonService.updateStatus(tempJson).toPromise();
+          let response = await this.userService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "User Module Updated");
+            this.showNotification("success", "User Module " + (userModule.isActive == 1 ? 'de-activated' : 'activated'));
             this.commonSharedService.userModulesListObject.next({
               result : "success"
             });
@@ -210,6 +165,19 @@ export class UserDetailComponent {
         }
       }
     });   
+  }
+
+  approveUserModule(userModule : any)
+  {
+    let params = {
+      "uuid" : userModule.id,
+      "action" : "User Module"
+    }
+    const dialogRef = this.modalService.open(UserApprovedComponent, 
+    { 
+      size: 'sm', backdrop: 'static' 
+    });
+    dialogRef.componentInstance.modalParams = params;
   }
 
   deleteUserModule(userModule : any)
@@ -253,5 +221,4 @@ export class UserDetailComponent {
       }
     });
   }
-
 }

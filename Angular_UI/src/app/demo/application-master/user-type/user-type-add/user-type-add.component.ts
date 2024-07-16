@@ -28,6 +28,7 @@ export class UserTypeAddComponent {
   moduleForm: FormGroup;
   roleForm: FormGroup;
   isValidForm: boolean;
+  searchClicked: boolean;
   saveClicked : boolean;
 
   constructor(
@@ -46,6 +47,7 @@ export class UserTypeAddComponent {
   {
     this.isValidForm = true;
     this.saveClicked = false;
+    this.searchClicked = false;
     this.modules = [];
     this.addUserTypeForm = this.formbuilder.group({
       id:[''],
@@ -97,6 +99,7 @@ export class UserTypeAddComponent {
       let moduleId = this.moduleForm.get("module").value;
       if(moduleId != null && moduleId != undefined)
       {
+        this.searchClicked = true;
         let response = await this.commonService.getUserRoles(moduleId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
@@ -104,16 +107,19 @@ export class UserTypeAddComponent {
           this.userRoles = this.masterUserRoles
           this.userRoles.unshift({id:"", name : "Select User Role"})
           this.roleForm.controls["role"].setValue("");
+          this.searchClicked = false;
         }
         else
         {
           this.userRoles = [];
+          this.searchClicked = false;
         }
       }
     }  
     catch(e)
     {
       this.showNotification("error", e);
+      this.searchClicked = false;
     }
   }
 
@@ -146,8 +152,12 @@ export class UserTypeAddComponent {
           let response = await this.commonService.saveUserType(this.addUserTypeForm.value).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.commonSharedService.userTypeListObject.next({result : "success"})
-              this.showNotification("success", "User Role Created");
+              this.commonSharedService.userTypeListObject.next({
+                moduleId : this.moduleForm.get("module").value,
+                userRoleId : this.roleForm.get("role").value,
+                result : "success"
+              })
+              this.showNotification("success", "User Type Created");
               this.closeModal();
           }
         }

@@ -89,7 +89,7 @@ export class UserService {
     return this.apiService.post('/user/saveUser', user);
   }
 
-  approvedUser(user : any)
+  approveDenyUser(user : any)
   {
     return this.apiService.post('/user/approveDenyUser', user);
   }

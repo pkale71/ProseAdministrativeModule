@@ -21,7 +21,7 @@
             <div class="col-md-3">
               <form [formGroup]="userRoleForm">
                   <div class="form-group">
-                      <label class="form-control-label" for="userRole">User Role</label>
+                      <label class="form-control-label" for="userRole">User Role&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="userRoleClicked"></i></label>
                       <select class="form-control" required id="userRole" formControlName="userRole">
                           <option value="{{userRole.id}}" *ngFor="let userRole of userRoles">{{userRole.name}}</option>
                       </select>

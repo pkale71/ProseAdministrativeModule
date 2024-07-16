@@ -28,6 +28,7 @@ export class UserApprovedComponent {
   saveClicked : boolean;
   searchClicked : boolean;
   uuid : string;
+  action : string;
   user : any[];
   masterUser : any[];
 
@@ -48,6 +49,7 @@ export class UserApprovedComponent {
   ngOnInit() 
   {
     this.uuid = this.modalParams.uuid;
+    this.action = this.modalParams.action;
     this.isValidForm = true;
     this.saveClicked = false;
     this.searchClicked = false;
@@ -55,7 +57,6 @@ export class UserApprovedComponent {
       uuid: this.uuid,
       action: ['',Validators.required],
     });
-
   }
 
   public userAddResult:any = this.commonSharedService.userListObject.subscribe(res =>{
@@ -95,13 +96,34 @@ export class UserApprovedComponent {
         this.saveClicked = true;
         try 
         {
-          let response = await this.userService.approvedUser(this.approvedUserForm.value).toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
+          if(this.action == "User")
           {
-            this.showNotification("success", "User Approved");
-            this.closeModal();
-            this.commonSharedService.userListObject.next({result : "success"});
-            // this.router.navigateByUrl("/user/detail/" + response.data.uuid);
+            let tempJSON = {
+              "uuid" : this.uuid,
+              "action" : this.approvedUserForm.get("action").value
+            }
+            let response = await this.userService.approveDenyUser(tempJSON).toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+              this.showNotification("success", "User Approved");
+              this.closeModal();
+              this.commonSharedService.userListObject.next({result : "success"});
+            }
+          }
+          else if(this.action == "User Module")
+          {
+            let tempJSON = {
+              "id" : this.uuid,
+              "action" : this.approvedUserForm.get("action").value
+            }
+            let response = await this.userService.approveDenyUserModule(tempJSON).toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+              this.showNotification("success", "User Module Approved");
+              this.closeModal();
+              this.commonSharedService.userListObject.next({result : "success"});
+              this.commonSharedService.userModulesListObject.next({result : "success"});
+            }
           }
         }
         catch(e)

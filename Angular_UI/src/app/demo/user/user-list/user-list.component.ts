@@ -277,7 +277,8 @@ export class UserListComponent
   approvedUser(uuid : string)
   {
     let params = {
-      "uuid" : uuid
+      "uuid" : uuid,
+      "action" : "User"
     }
     const dialogRef = this.modalService.open(UserApprovedComponent, 
     { 

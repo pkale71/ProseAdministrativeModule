@@ -49,7 +49,7 @@
               <div class="col-md-3">
                   <div class="form-group">
                     <label class="form-control-label" for="userCategory">User Category</label>
-                    <label class="form-control input-md">{{user?.userCategory?.name}}</label>
+                    <label class="form-control input-md">{{user?.userCategory?.id != "" ? user?.userCategory?.name : '----'}}</label>
                   </div>
               </div>
           </div>
@@ -91,13 +91,13 @@
                       </td>
                       <td *ngIf = "userModule.isModuleAdminApproved == null"></td>
                       <td *ngIf = "userModule.isModuleAdminApproved != null">
-                        <span [ngClass]="userModule.isModuleAdminApproved ? 'badge bg-success' : 'badge bg-danger'" 
-                        style="cursor: pointer;" title="Approve/Deny" (click)="approveUserModule(userModule)" >
+                        <span [ngClass]="userModule.isModuleAdminApproved ? 'badge bg-success' : 'badge bg-danger'">
                         <i class="{{userModule.isModuleAdminApproved? 'fa fa-user-check' : 'fa fa-user-times'}}" ></i>
                         {{userModule.isModuleAdminApproved? 'Yes' : 'No'}}
                         </span>
                       </td>
                       <td style="width:40px; text-align: right;">
+                        <i class="fa fa-user-tag" (click)="approveUserModule(userModule)" title="Approve/Deny" style="cursor: pointer;" *ngIf="user.userGrade.code == 'MOADM'"></i>&nbsp;
                         <i class="fa fa-trash-alt" (click)="deleteUserModule(userModule)" title="Delete" style="cursor: pointer;"></i>&nbsp;
                       </td>
                     </tr>
