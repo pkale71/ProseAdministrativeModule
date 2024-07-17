@@ -209,13 +209,14 @@ db.updateUserModuleStatus = (userId, moduleId) =>
         {
             let sql = `UPDATE user_module SET is_active = IF(is_active = 1,0,1)
             WHERE user_id = ${userId} AND module_id = ${moduleId}`
+    
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
                 {
                     return reject(error);
                 }  
-                return resolve(result1);
+                return resolve(result);
             });
         }
         catch(e)
@@ -764,8 +765,25 @@ db.userOnBoardingExist = (email, mobile) =>
                 if(error)
                 {
                     return reject(error);
-                }    
-                return resolve(result);
+                } 
+                if(result.length == 0)
+                {   
+                    let sql1 = `SELECT id
+                    FROM user WHERE email='${email}' OR mobile='${mobile}'`
+    
+                    dbConn.query(sql1, (error1, result1) => 
+                    {
+                        if(error1)
+                        {
+                            return reject(error1);
+                        }    
+                        return resolve(result1);
+                    });
+                }
+                else
+                {
+                    return resolve(result);
+                }
             });
         }
         catch(e)

@@ -63,7 +63,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
-                        "message" : "Duplicate Email Or Mobile",
+                        "message" : "User On-Boarding Link Or User Already Exist With Same Email Or Mobile",
                         "success" : false,
                         "error" : errorCode.getStatus(500)
                     })

@@ -17,8 +17,6 @@ let cityId;
 let pincode;
 let contactPerson;
 let syllabusId;
-let contractFrom;
-let contractTo;
 let panNumber;
 //////
 let syllabus;
@@ -37,9 +35,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.uuid != undefined && reqData.name != undefined && reqData.email != undefined && reqData.mobile != undefined && reqData.website != undefined && reqData.contactPerson != undefined && reqData.address != undefined && reqData.country != undefined && reqData.stateRegion != undefined && reqData.district != undefined && reqData.city != undefined && reqData.pincode != undefined && reqData.syllabus != undefined && reqData.panNumber != undefined && reqData.contractFrom != undefined && reqData.contractTo != undefined)
+        if(reqData.uuid != undefined && reqData.name != undefined && reqData.email != undefined && reqData.mobile != undefined && reqData.website != undefined && reqData.contactPerson != undefined && reqData.address != undefined && reqData.country != undefined && reqData.stateRegion != undefined && reqData.district != undefined && reqData.city != undefined && reqData.pincode != undefined && reqData.syllabus != undefined && reqData.panNumber != undefined)
         {
-            if(reqData.uuid != "" && reqData.name != "" && reqData.email != "" && reqData.mobile != "" && reqData.website != "" && reqData.contactPerson != "" && reqData.address != "" && reqData.country.id != "" && reqData.stateRegion.id != "" && reqData.district.id != "" && reqData.city.id != "" && reqData.pincode != "" && reqData.syllabus.id != "" && reqData.panNumber != "" && reqData.contractFrom != "" && reqData.contractTo != "")
+            if(reqData.uuid != "" && reqData.name != "" && reqData.email != "" && reqData.mobile != "" && reqData.website != "" && reqData.contactPerson != "" && reqData.address != "" && reqData.country.id != "" && reqData.stateRegion.id != "" && reqData.district.id != "" && reqData.city.id != "" && reqData.pincode != "" && reqData.syllabus.id != "" && reqData.panNumber != "")
             {
                 uuid = reqData.uuid;
                 name = reqData.name;
@@ -54,8 +52,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 districtId = commonFunction.validateNumber(reqData.district.id);
                 cityId = commonFunction.validateNumber(reqData.city.id);
                 syllabusId = commonFunction.validateNumber(reqData.syllabus.id);
-                contractFrom = reqData.contractFrom;
-                contractTo = reqData.contractTo;
                 panNumber = reqData.panNumber;
             
             /////check Valid Website Address
@@ -65,17 +61,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     return res.json({
                         "status_code" : 500,
                         "message" : "Invalid Website Address",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500)
-                    })
-                }
-            /////check contractFrom and contractTo
-                if(!commonFunction.isValidDate(contractFrom, "YYYY-MM-DD") || !commonFunction.isValidDate(contractTo, "YYYY-MM-DD"))
-                {
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Invalid Date Format In ContractFrom or ContractTo",
                         "success" : false,
                         "error" : errorCode.getStatus(500)
                     })
