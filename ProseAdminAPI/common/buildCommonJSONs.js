@@ -249,6 +249,7 @@ buildCommonJSON.gradeWiseSyllabuses = function(datas)
     let gradeCategoryJSON;
     let gradeJSON;
     let syllabusJSON;
+    let schoolingProgramJSON = [];
     let resultJSON = [];
 
     datas.forEach((data) => 
@@ -256,6 +257,7 @@ buildCommonJSON.gradeWiseSyllabuses = function(datas)
         academicSessionJSON = [];
         gradeCategoryJSON = [];
         gradeJSON = [];
+        schoolingProgramJSON = [];
         
         gradeCategoryJSON = {
             "id" : data.gradeCategoryId,
@@ -272,6 +274,11 @@ buildCommonJSON.gradeWiseSyllabuses = function(datas)
             "name" : data.academicSessionName,
         } 
 
+        schoolingProgramJSON = {
+            "id" : data.schoolingProgramId,
+            "name" : data.schoolingProgramName,
+        } 
+
         syllabusJSON = {
             "id" : data.syllabusId,
             "name" : data.syllabusName,
@@ -283,6 +290,7 @@ buildCommonJSON.gradeWiseSyllabuses = function(datas)
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '' ? data.tableName : '',
             "academicSession" : academicSessionJSON,
+            "schoolingProgram" : schoolingProgramJSON,
             "gradeCategory" : gradeCategoryJSON,
             "grade" : gradeJSON,
             "syllabus" : syllabusJSON,
@@ -300,6 +308,7 @@ buildCommonJSON.syllabusWiseSubjects = function(datas)
     let gradeCategoryJSON;
     let gradeJSON;
     let syllabusJSON;
+    let schoolingProgramJSON;
     let resultJSON = [];
 
     datas.forEach((data) => 
@@ -308,6 +317,7 @@ buildCommonJSON.syllabusWiseSubjects = function(datas)
         academicSessionJSON = [];
         syllabusJSON = [];
         gradeJSON = [];
+        schoolingProgramJSON = [];
         
         gradeCategoryJSON = {
             "id" : data.gradeCategoryId,
@@ -318,6 +328,11 @@ buildCommonJSON.syllabusWiseSubjects = function(datas)
             "id" : data.gradeId,
             "name" : data.gradeName,
         }
+
+        schoolingProgramJSON = {
+            "id" : data.schoolingProgramId,
+            "name" : data.schoolingProgramName,
+        } 
         
         academicSessionJSON = {
             "id" : data.academicSessionId,
@@ -337,6 +352,7 @@ buildCommonJSON.syllabusWiseSubjects = function(datas)
             "academicSession" : academicSessionJSON,
             "gradeCategory" : gradeCategoryJSON,
             "grade" : gradeJSON,
+            "schoolingProgram" : schoolingProgramJSON,
             "syllabus" : syllabusJSON,
             "isExist" : data.isExist
         }
@@ -353,6 +369,7 @@ buildCommonJSON.subjectWiseChapters = function(datas)
     let gradeJSON;
     let syllabusJSON;
     let subjectJSON;
+    let schoolingProgramJSON;
     let resultJSON = [];
 
     datas.forEach((data) => 
@@ -362,6 +379,7 @@ buildCommonJSON.subjectWiseChapters = function(datas)
         syllabusJSON = [];
         gradeJSON = [];
         subjectJSON = [];
+        schoolingProgramJSON = [];
         
         gradeCategoryJSON = {
             "id" : data.gradeCategoryId,
@@ -371,6 +389,11 @@ buildCommonJSON.subjectWiseChapters = function(datas)
         gradeJSON = {
             "id" : data.gradeId,
             "name" : data.gradeName,
+        }
+
+        schoolingProgramJSON = {
+            "id" : data.schoolingProgramId,
+            "name" : data.schoolingProgramName,
         }
         
         academicSessionJSON = {
@@ -396,6 +419,7 @@ buildCommonJSON.subjectWiseChapters = function(datas)
             "academicSession" : academicSessionJSON,
             "gradeCategory" : gradeCategoryJSON,
             "grade" : gradeJSON,
+            "schoolingProgram" : schoolingProgramJSON,
             "syllabus" : syllabusJSON,
             "subject" : subjectJSON,
             "isExist" : data.isExist
@@ -414,6 +438,7 @@ buildCommonJSON.chapterWiseTopics = function(datas)
     let syllabusJSON;
     let subjectJSON;
     let chapterJSON;
+    let schoolingProgramJSON;
     let resultJSON = [];
 
     datas.forEach((data) => 
@@ -424,6 +449,7 @@ buildCommonJSON.chapterWiseTopics = function(datas)
         gradeJSON = [];
         subjectJSON = [];
         chapterJSON = [];
+        schoolingProgramJSON = [];
 
         gradeCategoryJSON = {
             "id" : data.gradeCategoryId,
@@ -439,6 +465,11 @@ buildCommonJSON.chapterWiseTopics = function(datas)
             "id" : data.academicSessionId,
             "name" : data.academicSessionName,
         } 
+
+        schoolingProgramJSON = {
+            "id" : data.schoolingProgramId,
+            "name" : data.schoolingProgramName,
+        }
 
         syllabusJSON = {
             "id" : data.syllabusId,
@@ -464,6 +495,7 @@ buildCommonJSON.chapterWiseTopics = function(datas)
             "gradeCategory" : gradeCategoryJSON,
             "grade" : gradeJSON,
             "syllabus" : syllabusJSON,
+            "schoolingProgram" : schoolingProgramJSON,
             "subject" : subjectJSON,
             "chapter" : chapterJSON
         }

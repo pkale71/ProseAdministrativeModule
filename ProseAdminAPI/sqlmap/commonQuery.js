@@ -1404,14 +1404,16 @@ db.getGradeWiseSyllabuses = (academicSessionId, gradeId, action) =>
         {
             let sql = `SELECT gws.id, gws.is_active AS isActive, 'grade_wise_syllabus' AS tableName,
             acs.id AS academicSessionId, acs.name AS academicSessionName, 
+            sp.id AS schoolingProgramId, sp.name AS schoolingProgramName,
             gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
             g.id AS gradeId, g.name AS gradeName,
             s.id AS syllabusId, s.name AS syllabusName, COUNT(sws.id) AS isExist
             FROM grade_wise_syllabus gws
-            JOIN academic_session acs ON acs.id = gws.academic_session_id 
+            JOIN academic_session acs ON acs.id = gws.academic_session_id  
             JOIN grade g ON g.id = gws.grade_id
             JOIN grade_category gc ON gc.id = g.grade_category_id
             JOIN syllabus s ON s.id = gws.syllabus_id 
+            JOIN schooling_program sp ON sp.id = s.schooling_program_id
             LEFT JOIN syllabus_wise_subject sws ON sws.grade_wise_syllabus_id = gws.id`;
             if(parseInt(academicSessionId) > 0)
             {
@@ -1624,13 +1626,16 @@ db.getSyllabusWiseSubjects = (academicSessionId, syllabusId, gradeId, action) =>
             acs.id AS academicSessionId, acs.name AS academicSessionName, 
             gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
             g.id AS gradeId, g.name AS gradeName,
-            s.id AS syllabusId, s.name AS syllabusName, COUNT(swc.id) AS isExist
+            s.id AS syllabusId, s.name AS syllabusName, 
+            sp.id AS schoolingProgramId, sp.name AS schoolingProgramName,
+            COUNT(swc.id) AS isExist
             FROM syllabus_wise_subject sws
             JOIN grade_wise_syllabus gws ON gws.id = sws.grade_wise_syllabus_id 
             JOIN academic_session acs ON acs.id = sws.academic_session_id 
             JOIN grade g ON g.id = gws.grade_id
             JOIN grade_category gc ON gc.id = g.grade_category_id
             JOIN syllabus s ON s.id = gws.syllabus_id  
+            JOIN schooling_program sp ON sp.id = s.schooling_program_id
             LEFT JOIN subject_wise_chapter swc ON swc.syllabus_wise_subject_id = sws.id`;
             if(action == 'Active')
             {
@@ -1865,7 +1870,9 @@ db.getSubjectWiseChapters = (academicSessionId, syllabusId, gradeId, subjectId, 
             acs.id AS academicSessionId, acs.name AS academicSessionName, 
             gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
             g.id AS gradeId, g.name AS gradeName,
-            s.id AS syllabusId, s.name AS syllabusName, COUNT(cwt.id) AS isExist
+            s.id AS syllabusId, s.name AS syllabusName, 
+            sp.id AS schoolingProgramId, sp.name AS schoolingProgramName,
+            COUNT(cwt.id) AS isExist
             FROM subject_wise_chapter swc
             JOIN syllabus_wise_subject sws ON sws.id = swc.syllabus_wise_subject_id
             JOIN grade_wise_syllabus gws ON gws.id = sws.grade_wise_syllabus_id 
@@ -1873,6 +1880,7 @@ db.getSubjectWiseChapters = (academicSessionId, syllabusId, gradeId, subjectId, 
             JOIN grade g ON g.id = gws.grade_id
             JOIN grade_category gc ON gc.id = g.grade_category_id
             JOIN syllabus s ON s.id = gws.syllabus_id 
+            JOIN schooling_program sp ON sp.id = s.schooling_program_id
             LEFT JOIN chapter_wise_topic cwt ON cwt.subject_wise_chapter_id = swc.id`;
             if(action == 'Active')
             {
@@ -2124,7 +2132,8 @@ db.getChapterWiseTopics = (academicSessionId, syllabusId, gradeId, subjectId, ch
             acs.id AS academicSessionId, acs.name AS academicSessionName, 
             gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
             g.id AS gradeId, g.name AS gradeName,
-            s.id AS syllabusId, s.name AS syllabusName
+            s.id AS syllabusId, s.name AS syllabusName,
+            sp.id AS schoolingProgramId, sp.name AS schoolingProgramName
             FROM chapter_wise_topic cwt
             JOIN subject_wise_chapter swc ON swc.id = cwt.subject_wise_chapter_id
             JOIN syllabus_wise_subject sws ON sws.id = swc.syllabus_wise_subject_id
@@ -2132,7 +2141,8 @@ db.getChapterWiseTopics = (academicSessionId, syllabusId, gradeId, subjectId, ch
             JOIN academic_session acs ON acs.id = sws.academic_session_id 
             JOIN grade g ON g.id = gws.grade_id
             JOIN grade_category gc ON gc.id = g.grade_category_id
-            JOIN syllabus s ON s.id = gws.syllabus_id`;
+            JOIN syllabus s ON s.id = gws.syllabus_id 
+            JOIN schooling_program sp ON sp.id = s.schooling_program_id`;
             if(action == "Active")
             {
                 if(filters == "")
