@@ -87,6 +87,11 @@ businessRoute.use('/saveTieUpSchool', uploads, require('../util/validateToken.js
 businessRoute.use('/updateTieUpSchool', require('../util/validateToken.js'), require('./update-tieup-school.js'));
 businessRoute.use('/deleteTieUpSchool', require('../util/validateToken.js'), require('./delete-tieup-school.js'));
 
+businessRoute.use('/getTieUpSchoolSyllabuses', require('../util/validateToken.js'), require('./tieup-school-syllabuses.js'));
+businessRoute.use('/getTieUpSchoolSyllabus', require('../util/validateToken.js'), require('./tieup-school-syllabus.js'));
+businessRoute.use('/saveTieUpSchoolSyllabus', uploads, require('../util/validateToken.js'), require('./save-tieup-school-syllabus.js'));
+businessRoute.use('/deleteTieUpSchoolSyllabus', require('../util/validateToken.js'), require('./delete-tieup-school-syllabus.js'));
+
 businessRoute.use('/getTieUpSchoolContractHistories', require('../util/validateToken.js'), require('./tieup-school-contract-histories.js'));
 businessRoute.use('/saveTieUpSchoolContract', require('../util/validateToken.js'), require('./save-tieup-school-contract.js'));
 businessRoute.use('/deleteTieUpSchoolContract', require('../util/validateToken.js'), require('./delete-tieup-school-contract.js'));

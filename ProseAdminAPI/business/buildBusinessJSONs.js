@@ -712,6 +712,33 @@ buildBusinessJSON.tieUpSchools = function(datas, action = 1)
     return resultJSON;
 }
 
+buildBusinessJSON.tieUpSchoolSyllabuses = function(datas, action = 0)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName ? data.tableName : '',
+            "isExist" :  data.isExist
+        }
+        if(action == 0)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
 buildBusinessJSON.tieUpSchoolDocuments = function(datas)
 {
     let resultJSON = [];

@@ -2263,7 +2263,7 @@ db.deleteCity = (id, countryId, stateRegionId, districtId) =>
     })
 };
 
-db.getBusinessPartners = (businessPartnerTypeId) => 
+db.getBusinessPartners = (businessPartnerTypeId, action) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -2287,9 +2287,13 @@ db.getBusinessPartners = (businessPartnerTypeId) =>
             JOIN business_vertical_type bvt ON FIND_IN_SET(bvt.id, bp.business_vertical_type_ids) 
             LEFT JOIN study_center sc ON sc.business_partner_id = bp.id 
             WHERE bp.deleted_on IS NULL AND bp.deleted_by_id IS NULL`;
-            if(businessPartnerTypeId != "")
+            if(businessPartnerTypeId != 0)
             {
                 sql = sql + ` AND bp.business_partner_type_id = ${businessPartnerTypeId}`
+            }
+            if(action == "Active")
+            {
+                sql = sql + ` AND bp.is_active = 1`
             }
             sql = sql + ` GROUP BY bp.id
             ORDER BY bp.name`;
@@ -2943,27 +2947,31 @@ db.deleteBusinessPartnerCoach = (id, businessPartnerId) =>
     })
 };
 
-db.getTieUpSchools = () => 
+db.getTieUpSchools = (action) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
             let sql = `SELECT tus.id, tus.uuid, tus.name, tus.email, tus.mobile, tus.website, tus.address, tus.pincode, tus.contact_person AS contactPerson, tus.pan_number AS panNumber, tus.is_active AS isActive, 'tie_up_school' AS tableName,
-            s.id AS syllabusId, s.name AS syllabusName,
+            tuss.id AS syllabusId, tuss.name AS syllabusName,
             c.id AS countryId, c.name AS countryName,
             sr.id AS stateRegionId, sr.name AS stateRegionName,
             d.id AS districtId, d.name AS districtName,
             ct.id AS cityId, ct.name AS cityName
             FROM 
             tie_up_school tus
-            JOIN syllabus s ON s.id = tus.syllabus_id 
+            JOIN tie_up_school_syllabus tuss ON tuss.id = tus.tie_up_school_syllabus_id 
             JOIN country c ON c.id = tus.country_id 
             JOIN state_region sr ON sr.id = tus.state_region_id 
             JOIN district d ON d.id = tus.district_id 
             JOIN city ct ON ct.id = tus.city_id 
-            WHERE tus.deleted_on IS NULL AND tus.deleted_by_id IS NULL 
-            ORDER BY tus.name`;
+            WHERE tus.deleted_on IS NULL AND tus.deleted_by_id IS NULL `;
+            if(action == 'Active')
+            {
+                sql = sql + ` AND tus.is_active = 1`;
+            }
+            sql = sql + ` ORDER BY tus.name`;
 
             dbConn.query(sql, (error, result) => 
             {
@@ -2988,7 +2996,7 @@ db.getTieUpSchool = (uuid) =>
         try
         {
             let sql = `SELECT tus.id, tus.uuid, tus.name, tus.email, tus.mobile, tus.website, tus.address, tus.pincode, tus.contact_person AS contactPerson, tus.pan_number AS panNumber, tus.is_active AS isActive, 
-            s.id AS syllabusId, s.name AS syllabusName,
+            tuss.id AS syllabusId, tuss.name AS syllabusName,
             c.id AS countryId, c.name AS countryName,
             sr.id AS stateRegionId, sr.name AS stateRegionName,
             d.id AS districtId, d.name AS districtName,
@@ -2996,7 +3004,7 @@ db.getTieUpSchool = (uuid) =>
             tusch.id AS contractId, tusch.contract_from AS contractFrom, tusch.contract_to AS contractTo
             FROM 
             tie_up_school tus
-            JOIN syllabus s ON s.id = tus.syllabus_id 
+            JOIN tie_up_school_syllabus tuss ON tuss.id = tus.tie_up_school_syllabus_id 
             JOIN country c ON c.id = tus.country_id 
             JOIN state_region sr ON sr.id = tus.state_region_id 
             JOIN district d ON d.id = tus.district_id 
@@ -3415,6 +3423,165 @@ db.deleteTieUpSchoolContractHistory = (tieUpSchoolContractHistory) =>
                         return resolve(result);
                     }
                 });
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getTieUpSchoolSyllabuses = (action) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT tuss.id, tuss.name, tuss.is_active AS isActive, 'tie_up_school_syllabus' AS tableName, COUNT(tus.id) AS isExist
+            FROM tie_up_school_syllabus tuss 
+            LEFT JOIN tie_up_school tus ON tus.tie_up_school_syllabus_id = tuss.id`;
+            if(action == "Active")
+            {
+                sql = sql + ' WHERE tuss.is_active = 1';
+            }
+            sql = sql + ` GROUP BY tuss.id
+            ORDER BY tuss.name`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getTieUpSchoolSyllabus = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT tuss.id, tuss.name
+            FROM tie_up_school_syllabus tuss 
+            WHERE tuss.id = ${id}`
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateTieUpSchoolSyllabus = (name, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT tuss.id, tuss.name
+            FROM tie_up_school_syllabus tuss 
+            WHERE tuss.name = '${name}'`;
+            if(id != "")
+            {
+                sql =sql + ` AND tuss.id != ${id}`
+            }
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertTieUpSchoolSyllabus = (tieUpSchoolSyllabus) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO tie_up_school_syllabus (name, created_on, created_by_id)
+            VALUES('${tieUpSchoolSyllabus.name}', NOW(), ${tieUpSchoolSyllabus.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkTieUpSchoolSyllabusExist = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT tus.id AS tieUpSchoolId
+            FROM tie_up_school tus WHERE tus.tie_up_school_syllabus_id = ${id}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteTieUpSchoolSyllabus = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM tie_up_school_syllabus WHERE id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
             });
         }
         catch(e)

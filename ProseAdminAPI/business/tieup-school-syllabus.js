@@ -3,26 +3,22 @@ let dbBusiness = require('../sqlmap/businessQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables
-let action;
+let id; 
 //////
-let tieUpSchools;
+let tieUpSchoolSyllabus;
 
-module.exports = require('express').Router().get('/?*', async(req,res) =>
+module.exports = require('express').Router().get('/:id', async(req,res) =>
 {
     try
     {
-        action = '';
-        if(req.params)
-        {
-            action = req.params[0];
-        }
+        id = req.params.id;
         
-        tieUpSchools = await dbBusiness.getTieUpSchools(action);
-        if(tieUpSchools.length >= 0)
+        tieUpSchoolSyllabus = await dbBusiness.getTieUpSchoolSyllabus(id);
+        if(tieUpSchoolSyllabus.length >= 0)
         {
             res.status(200)
             return res.json({
-                "tieUpSchools" : buildJSON.tieUpSchools(tieUpSchools),
+                "tieUpSchoolSyllabus" : buildJSON.tieUpSchoolSyllabuses(tieUpSchoolSyllabus, 1),
                 "status_code" : 200,
                 "success" : true,                            
                 "message" : errorCode.getStatus(200)
