@@ -25,7 +25,6 @@ export class BusinessVerticalGroupEditComponent
   saveClicked : boolean;
   isCompulsories : any[];
   businessVerticals : any[];
-  masterBusinessVerticals : any[];
   name : string[];
   businessVerticalGroup : any;
 
@@ -37,7 +36,6 @@ export class BusinessVerticalGroupEditComponent
     )
   {
     this.businessVerticals = [];
-    this.masterBusinessVerticals = [];
   }
 
   ngOnInit() 
@@ -74,8 +72,7 @@ export class BusinessVerticalGroupEditComponent
       let response = await this.businessService.getBusinessVerticals('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.masterBusinessVerticals = response.businessVerticals;
-        this.businessVerticals = this.masterBusinessVerticals;
+        this.businessVerticals = response.businessVerticals;
         this.businessVerticals.unshift({ id : '', name : "Select Business Vertical" })
       }
       else

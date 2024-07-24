@@ -25,7 +25,6 @@ import { CommonService } from 'src/app/theme/shared/service/common.service';
 export class AcademyEnclosureDocumentListComponent {
   searchClicked : boolean;
   academyEnclosureDocuments : any[];
-  masterAcademyEnclosureDocuments : any[];
   
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -37,7 +36,6 @@ export class AcademyEnclosureDocumentListComponent {
     private router : Router)
     {
       this.academyEnclosureDocuments = [];
-      this.masterAcademyEnclosureDocuments = [];
     }
 
   ngOnInit() 
@@ -68,8 +66,7 @@ export class AcademyEnclosureDocumentListComponent {
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblAcademyEnclosureDocument').DataTable().destroy();
-        this.masterAcademyEnclosureDocuments = response.academyEnclosureDocuments;
-        this.academyEnclosureDocuments = this.masterAcademyEnclosureDocuments;
+        this.academyEnclosureDocuments = response.academyEnclosureDocuments;
         setTimeout(function(){
           $('#tblAcademyEnclosureDocument').DataTable();
         },1000);

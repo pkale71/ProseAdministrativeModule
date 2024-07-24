@@ -77,7 +77,7 @@ export class OnBoardingLinkListComponent {
         let response = await this.userService.sendOnBoardingLink(tempJSON).toPromise();
         if(response.status_code == 200 && response.message == 'success')
         {
-          this.showNotification("success", "OnBoarding Link Sent successfully");
+          this.showNotification("success", "OnBoarding Link Sent Successfully");
           this.linkClicked[i] = false;
           this.commonSharedService.onBoardingLinkListObject.next({ result: "success" });
         }

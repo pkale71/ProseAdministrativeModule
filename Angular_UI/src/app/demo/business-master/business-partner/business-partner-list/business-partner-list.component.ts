@@ -26,7 +26,6 @@ import { BusinessPartnerAddComponent } from '../business-partner-add/business-pa
 export class BusinessPartnerListComponent 
 {
   businessPartners : any[];
-  masterBusinessPartners : any[];
   businessPartnerTypes : any[];
   masterBusinessPartnerTypes : any[];
   businessPartnerTypeForm : FormGroup;
@@ -54,7 +53,6 @@ export class BusinessPartnerListComponent
     this.searchClicked = false;
     this.businessPartnerTypes = [];
     this.businessPartners = [];
-    this.masterBusinessPartners = [];
     
     this.businessPartnerTypeForm = this.formbuilder.group({
       'businessPartnerType': ['0']
@@ -104,8 +102,7 @@ export class BusinessPartnerListComponent
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblBusinessPartner').DataTable().destroy();
-        this.masterBusinessPartners = response.businessPartners;
-        this.businessPartners = this.masterBusinessPartners;
+        this.businessPartners = response.businessPartners;
         setTimeout(function(){
           $('#tblBusinessPartner').DataTable();
         },800);

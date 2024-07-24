@@ -46,10 +46,6 @@ export class UserListComponent
     private commonService : CommonService,
     public commonSharedService : CommonSharedService)
   {
-    // this.masterUsers = this.activatedRoute.snapshot.data['users'].data.users;
-    // this.users = this.masterUsers;
-    // this.loginUser = this.commonSharedService.loginUser;
-    // this.userRole = this.loginUser.role;
   }
   
   ngOnInit() 

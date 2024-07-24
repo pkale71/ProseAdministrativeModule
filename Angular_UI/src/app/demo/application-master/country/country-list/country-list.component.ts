@@ -26,7 +26,6 @@ import { CountryAddComponent } from '../country-add/country-add.component';
 export class CountryListComponent {
   searchClicked : boolean;
   countries : any[];
-  masterCountries : any[];
   
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -38,7 +37,6 @@ export class CountryListComponent {
     private router : Router)
     {
       this.countries = [];
-      this.masterCountries = [];
     }
 
   ngOnInit() 
@@ -69,8 +67,7 @@ export class CountryListComponent {
       if (response.status_code == 200 && response.message == 'success') 
         {
           $('#tblCountry').DataTable().destroy();
-          this.masterCountries = response.countries;
-          this.countries = this.masterCountries;
+          this.countries = response.countries;
           setTimeout(function(){
             $('#tblCountry').DataTable();
           },1000);

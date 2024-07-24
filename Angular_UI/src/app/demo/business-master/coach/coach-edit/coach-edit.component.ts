@@ -22,7 +22,6 @@ export class CoachEditComponent
   editCoachForm : FormGroup;
   businessVerticalTypeForm : FormGroup;
   businessVerticalTypes : any[];
-  masterBusinessVerticalTypes : any[];
   isValidForm : boolean;
   saveClicked : boolean;
   coach : any;
@@ -74,8 +73,7 @@ export class CoachEditComponent
       let response = await this.businessService.getBusinessVerticalTypes(businessVerticalId, businessVerticalGroupId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.masterBusinessVerticalTypes = response.businessVerticalTypes;
-        this.businessVerticalTypes = this.masterBusinessVerticalTypes;
+        this.businessVerticalTypes = response.businessVerticalTypes;
         this.businessVerticalTypes.unshift({ id : '', name : "Select Business Vertical Type"});
       }
       else

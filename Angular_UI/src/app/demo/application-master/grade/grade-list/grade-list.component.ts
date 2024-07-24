@@ -29,7 +29,6 @@ export class GradeListComponent {
   searchClicked : boolean;
   gradeCategories: any[];
   gradeCategoryForm: FormGroup;
-  masterGrades :any[];
   
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -59,7 +58,8 @@ export class GradeListComponent {
   public gradeAddResult:any = this.commonSharedService.gradeListObject.subscribe(res =>{
     if(res.result == "success")
     {
-     this.getGrades(0, 'All');
+      this.gradeCategoryForm.get("gradeCategory").setValue(res.gradeCategoryId);
+      this.getGrades(res.gradeCategoryId, 'All');
     }
   })
 
@@ -69,19 +69,19 @@ export class GradeListComponent {
     this.notifier.notify(type, message);
   }
 
-  async getGrades(gradeCategoryId, action : string) 
+  async getGrades(gradeCategoryId : any, action : string) 
   {  
     try
       {
         //get Grade Categories
         this.loadingData = true;
-        this.searchClicked = true;  
-        let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
+        this.searchClicked = true; 
+        gradeCategoryId = gradeCategoryId.toString() == '' ? 0 : gradeCategoryId; 
+        let response = await this.commonService.getGrades(gradeCategoryId, action).toPromise();
         if (response.status_code == 200 && response.message == 'success') 
           {
             $('#tblGrade').DataTable().destroy();
-            this.masterGrades = response.grades;
-            this.grades = this.masterGrades;
+            this.grades = response.grades;
             setTimeout(function(){
               $('#tblGrade').DataTable();
             },1000);
@@ -178,8 +178,9 @@ export class GradeListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Grade Status Updated");
+              this.showNotification("success", "Grade " + (grade.isActive == 1 ? 'de-activated' : 'activated'));
               this.commonSharedService.gradeListObject.next({
+                gradeCategoryId : grade.gradeCategory.id,
                 result : "success"
               });
           }
@@ -218,7 +219,10 @@ export class GradeListComponent {
           if (response.status_code == 200 && response.message == 'success') 
           {
             this.showNotification("success", "Grade Deleted.");
-            this.commonSharedService.gradeListObject.next({result : "success"});
+            this.commonSharedService.gradeListObject.next({
+              gradeCategoryId : grade.gradeCategory.id,  
+              result : "success"
+            });
           }
         }
         catch(e)

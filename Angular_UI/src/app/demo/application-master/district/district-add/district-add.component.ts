@@ -26,10 +26,8 @@ export class DistrictAddComponent
   isValidForm: boolean;
   saveClicked: boolean;
   searchClicked: boolean;
-  masterCountries: any[];
   countries: any[];
   stateRegions: any[];
-  masterStateRegion: any[];
   isChecked: boolean;
 
   constructor(private businessService: BusinessService, 
@@ -48,9 +46,7 @@ export class DistrictAddComponent
     this.isChecked = false;
     this.searchClicked = false;
     this.countries = [];
-    this.masterCountries = [];
     this.stateRegions = [];
-    this.masterStateRegion = [];
 
     this.addDistrictForm = this.formbuilder.group({
       id:[''],
@@ -85,8 +81,7 @@ export class DistrictAddComponent
       let response = await this.businessService.getCountries('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterCountries = response.countries;
-          this.countries = this.masterCountries;
+          this.countries = response.countries;
           this.countries.unshift({ id : '', name : 'Select Country'});
         }
         else
@@ -113,8 +108,7 @@ export class DistrictAddComponent
         let response = await this.businessService.getStateRegions(countryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterStateRegion = response.stateRegions;
-          this.stateRegions = this.masterStateRegion;
+          this.stateRegions = response.stateRegions;
           this.stateRegions.unshift({ id : '', name : 'Select State/Region'});
           this.searchClicked = false;
         }
@@ -159,26 +153,15 @@ export class DistrictAddComponent
   {
     if(!this.saveClicked)
     {
-      // this.addDistrictForm.get("name").disable();
-      // console.log(this.addDistrictForm.valid)
-      // console.log(this.countryForm.valid)
       if(this.addDistrictForm.valid && this.countryForm.valid && this.stateRegionForm.valid)
       {
-        // console.log(this.addDistrictForm.valid && this.countryForm.valid)
         this.isValidForm = true;
         this.saveClicked = true;
         this.addDistrictForm.controls["country"].get('id').setValue(this.countryForm.get('country').value);
         this.addDistrictForm.controls['stateRegion'].get('id').setValue(this.stateRegionForm.get('stateRegion').value);
-        // console.log(this.addDistrictForm.valid && this.countryForm.valid)
+
         try
         {
-          // if(this.isChecked = true)
-          // {
-          //   console.log(this.isChecked)
-            // const formData = new FormData();
-            // formData.append('country', this.countryForm.get('country').value); 
-            // formData.append('file', this.addDistrictForm.get('fileInputField').value); 
-            // console.log(formData)
             let response = await this.businessService.saveDistrict(this.addDistrictForm.value).toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {

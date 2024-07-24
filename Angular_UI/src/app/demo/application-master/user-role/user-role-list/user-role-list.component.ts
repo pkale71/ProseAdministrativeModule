@@ -22,7 +22,6 @@ import { lastValueFrom } from 'rxjs';
 })
 export class UserRoleListComponent 
 {
-  masterUserRoles : any[];
   userRoles : any[];
   searchClicked : boolean;
   
@@ -60,8 +59,7 @@ export class UserRoleListComponent
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblUserRole').DataTable().destroy();
-        this.masterUserRoles = response.userRoles;
-        this.userRoles = this.masterUserRoles;
+        this.userRoles = response.userRoles;
         setTimeout(function(){
           $('#tblUserRole').DataTable();
         },800);

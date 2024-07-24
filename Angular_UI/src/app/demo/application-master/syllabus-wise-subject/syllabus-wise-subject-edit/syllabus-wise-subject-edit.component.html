@@ -16,9 +16,8 @@
                 <form [formGroup]="academicSessionForm">
                     <div class="form-group">
                         <label class="form-control-label" for="academicSession">Academic Session &nbsp;<span style="color: red;">*</span></label>
-                        <select class="form-control"  required id="academicSession" formControlName="academicSession"
-                        [ngClass]="{'is-invalid': !academicSessionForm.controls['academicSession'].valid && !isValidForm}"
-                          >
+                        <select class="form-control"  required id="academicSession" formControlName="academicSession" (change)="getGradeWiseSyllabuses()"
+                        [ngClass]="{'is-invalid': !academicSessionForm.controls['academicSession'].valid && !isValidForm}">
                         <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession?.name}}</option>
                         </select>
                         <label style="color: red;"
@@ -49,7 +48,7 @@
             <div class="col-md-4">
                 <form [formGroup]="gradeForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="saveClicked"></i></label>
+                        <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="gradeClicked"></i></label>
                         <select class="form-control"  required id="grade" formControlName="grade"
                         [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}" (change) = "getGradeWiseSyllabuses()"
                           >
@@ -66,7 +65,7 @@
             <div class="col-md-4">
                 <form [formGroup]="syllabusForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="saveClicked"></i></label>
+                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="syllabusClicked"></i></label>
                         <select class="form-control"  required id="syllabus" formControlName="syllabus"
                         [ngClass]="{'is-invalid': !syllabusForm.controls['syllabus'].valid && !isValidForm}">
                         <option value="{{gradeWiseSyllabus.syllabus?.id}}" *ngFor="let gradeWiseSyllabus of gradeWiseSyllabuses">{{gradeWiseSyllabus.syllabus?.name}}</option>

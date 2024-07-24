@@ -26,7 +26,6 @@ import { BusinessVerticalAddComponent } from '../business-vertical-add/business-
 export class BusinessVerticalListComponent {
   searchClicked : boolean;
   businessVerticals : any[];
-  masterBusinessVerticals : any[];
   
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -38,7 +37,6 @@ export class BusinessVerticalListComponent {
     private router : Router)
     {
       this.businessVerticals = [];
-      this.masterBusinessVerticals = [];
     }
 
   ngOnInit() 
@@ -69,8 +67,7 @@ export class BusinessVerticalListComponent {
       if (response.status_code == 200 && response.message == 'success') 
         {
           $('#tblBusinessVertical').DataTable().destroy();
-          this.masterBusinessVerticals = response.businessVerticals;
-          this.businessVerticals = this.masterBusinessVerticals;
+          this.businessVerticals = response.businessVerticals;
           setTimeout(function(){
             $('#tblBusinessVertical').DataTable();
           },1000);

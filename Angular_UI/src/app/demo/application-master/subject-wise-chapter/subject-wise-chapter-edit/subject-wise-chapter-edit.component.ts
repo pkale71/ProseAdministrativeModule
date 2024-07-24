@@ -29,15 +29,15 @@ export class SubjectwiseChapterEditComponent {
   subjectForm : FormGroup;
   isValidForm: boolean;
   saveClicked: boolean;
+  gradeClicked : boolean;
+  syllabusClicked : boolean;
+  subjectClicked : boolean;
   subjectWiseChapters: any;
   gradeWiseSyllabuses : any[];
   gradeCategories : any[];
   grades : any[];
   academicSessions : any[];
-  masterGrades :  any[];
-  masterGradeWiseSyllabuses : any[];
   syllabusWiseSubjects : any[];
-  masterSyllabusWiseSubjects : any[];
 
   constructor(private commonService: CommonService,
     private activeModal: NgbActiveModal,
@@ -59,9 +59,10 @@ export class SubjectwiseChapterEditComponent {
     this.subjectWiseChapters = this.modalParams;
     this.isValidForm = true;
     this.saveClicked = false;
-    this.getAcademicSessions();
-    this.getGradeCategories();
-
+    this.gradeClicked = false;
+    this.syllabusClicked = false;
+    this.subjectClicked = false;
+    
     this.editSubjectWiseChapterForm = this.formbuilder.group({
       id: [''],
       name: ['', Validators.required],
@@ -91,16 +92,19 @@ export class SubjectwiseChapterEditComponent {
     this.subjectForm = this.formbuilder.group({
       'syllabusWiseSubject' : ['', Validators.required]
     })
+
     //Assign Form Data
     this.editSubjectWiseChapterForm.patchValue(this.subjectWiseChapters);
+    this.getAcademicSessions();
     this.academicSessionForm.get("academicSession").setValue(this.subjectWiseChapters.academicSession.id);
+    this.getGradeCategories();
     this.gradeCategoryForm.get("gradeCategory").setValue(this.subjectWiseChapters.gradeCategory.id);
-    this.gradeForm.get("grade").setValue(this.subjectWiseChapters.grade.id);
-    this.syllabusForm.get("syllabus").setValue(this.subjectWiseChapters.syllabus.id);
-    this.subjectForm.get('syllabusWiseSubject').setValue(this.subjectWiseChapters.subject.id);
     this.getGrades();
+    this.gradeForm.get("grade").setValue(this.subjectWiseChapters.grade.id);
     this.getGradeWiseSyllabuses();
+    this.syllabusForm.get("syllabus").setValue(this.subjectWiseChapters.syllabus.id);
     this.getSyllabusWiseSubjects();
+    this.subjectForm.get('syllabusWiseSubject').setValue(this.subjectWiseChapters.subject.id);
   }
 
   showNotification(type: string, message: string): void 
@@ -158,33 +162,36 @@ export class SubjectwiseChapterEditComponent {
    {  
     try 
     {
+      this.gradeForm.get("grade").setValue("");
+      this.syllabusForm.get("syllabus").setValue("");
+      this.subjectForm.get("syllabusWiseSubject").setValue("");
       let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
       if(gradeCategoryId != undefined && gradeCategoryId != "")
       {
-        this.saveClicked = true;
+        this.gradeClicked = true;
         let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterGrades = response.grades;
-          this.grades = this.masterGrades;
-          this.saveClicked = false;
+          this.grades = response.grades;
+          this.gradeClicked = false;
           this.grades.unshift({ id: "", name: "Select Grade" });
         }
         else
         {
           this.grades = [];
-          this.saveClicked = false;
+          this.gradeClicked = false;
         }
       }
       else
       {
         this.grades = [];
-        this.saveClicked = false;
+        this.gradeClicked = false;
       }    
     }
     catch(e)
     {
       this.showNotification("error", e);
+      this.gradeClicked = false;
     }
   }
 
@@ -193,34 +200,39 @@ export class SubjectwiseChapterEditComponent {
   {
     try
     {
+      this.syllabusForm.get("syllabus").setValue("");
+      this.subjectForm.get("syllabusWiseSubject").setValue("");
+      this.gradeWiseSyllabuses = [];
+      this.syllabusWiseSubjects = [];
+      
       let academicSessionId = this.academicSessionForm.get("academicSession").value;
       let gradeId = this.gradeForm.get("grade").value;
-      if(academicSessionId != undefined && academicSessionId != "" && gradeId != undefined && gradeId != "")
+      let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
+      if(academicSessionId != undefined && academicSessionId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "")
       {
-        this.saveClicked = true;
-        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId, 'All').toPromise();
+        this.syllabusClicked = true;
+        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeCategoryId, gradeId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterGradeWiseSyllabuses = response.gradeWiseSyllabuses;
-          this.gradeWiseSyllabuses = this.masterGradeWiseSyllabuses;
-          this.saveClicked = false;
-          this.gradeWiseSyllabuses.unshift({ id : "0", syllabus : {
-            id : "0",
+          this.gradeWiseSyllabuses = response.gradeWiseSyllabuses;
+          this.syllabusClicked = false;
+          this.gradeWiseSyllabuses.unshift({ id : "", syllabus : {
+            id : "",
             name : "Select Syllabus"
             }
           });
-          this.syllabusForm.get("syllabus").setValue(this.subjectWiseChapters.syllabus.id);
         }
         else
         {
           this.gradeWiseSyllabuses = [];
-          this.saveClicked = false;
+          this.syllabusClicked = false;
         }
       }
     }
     catch(e)
     {
       this.showNotification("error", e);
+      this.syllabusClicked = false;
     }
   }
 
@@ -229,37 +241,39 @@ export class SubjectwiseChapterEditComponent {
   {
     try
     {
+      this.subjectForm.get("syllabusWiseSubject").setValue("");
       let academicSessionId = this.academicSessionForm.get("academicSession").value;
       let gradeId = this.gradeForm.get("grade").value;
       let syllabusId = this.syllabusForm.get("syllabus").value;
-      if(academicSessionId != undefined && academicSessionId != "" && gradeId != undefined && gradeId != "" && syllabusId != undefined && syllabusId != "")
+      let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
+      if(academicSessionId != undefined && academicSessionId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "" && syllabusId != undefined && syllabusId != "")
         {
-          this.saveClicked = true;
-          let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeId, 'All').toPromise();
+          this.subjectClicked = true;
+          let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeCategoryId, gradeId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.masterSyllabusWiseSubjects = response.syllabusWiseSubjects;
-            this.syllabusWiseSubjects = this.masterSyllabusWiseSubjects;
-            this.saveClicked = false;
+            this.syllabusWiseSubjects = response.syllabusWiseSubjects;
+            this.subjectClicked = false;
             this.syllabusWiseSubjects.unshift({ id : "", name : "Select Subject"});
           }
           else
           {
             this.syllabusWiseSubjects = [];
             this.syllabusWiseSubjects.unshift({ id : "", name : "Select Subject"});
-            this.saveClicked = false;
+            this.subjectClicked = false;
           }  
         }
         else
         {
           this.syllabusWiseSubjects = [];
           this.syllabusWiseSubjects.unshift({ id : "", name : "Select Subject"});
-          this.saveClicked = false;
+          this.subjectClicked = false;
         } 
     }
     catch(e)
     {
       this.showNotification("error", e);
+      this.subjectClicked = false;
     }
   }
 

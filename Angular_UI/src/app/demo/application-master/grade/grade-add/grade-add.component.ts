@@ -66,7 +66,7 @@ export class GradeAddComponent
 
   async getGradeCategories() 
   {
-    let response = await this.commonService.getGradeCategories('All').toPromise();
+    let response = await this.commonService.getGradeCategories('Active').toPromise();
     if (response.status_code == 200 && response.message == 'success') 
     {
       this.gradeCategories = response.gradeCategories;
@@ -94,7 +94,10 @@ export class GradeAddComponent
           if (response.status_code == 200 && response.message == 'success') 
           {
               this.showNotification("success", "Grade Name Saved");
-              this.commonSharedService.gradeListObject.next({result : "success"});
+              this.commonSharedService.gradeListObject.next({
+                gradeCategoryId : this.gradeCategoryForm.get("gradeCategory").value,
+                result : "success"
+              });
               this.closeModal();
           }
         }

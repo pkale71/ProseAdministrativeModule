@@ -43,13 +43,11 @@ export class StateRegionAddComponent
     this.saveClicked = false;
     this.isChecked = false;
     this.countries = [];
-    this.masterCountries = [];
 
     this.addStateRegionForm = this.formbuilder.group({
       id:[''],
       name: ['',[Validators.required]],
-      country: this.formbuilder.group({ 'id' : ['']}),
-      // file: ['']
+      country: this.formbuilder.group({ 'id' : ['']})
     });  
 
     this.countryForm = this.formbuilder.group({
@@ -73,8 +71,7 @@ export class StateRegionAddComponent
       let response = await this.businessService.getCountries('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterCountries = response.countries;
-          this.countries = this.masterCountries;
+          this.countries = response.countries;
           this.countries.unshift({ id : '', name : 'Select Country'});
         }
         else
@@ -119,13 +116,11 @@ export class StateRegionAddComponent
         {
           if(this.isChecked == true)
           {
-            console.log(this.isChecked)
             const formData = new FormData();
             formData.append('country', this.countryForm.get('country').value); 
             formData.append('uploadFile', this.addStateRegionForm.get('fileInputField').value); 
-            console.log(formData)
             let response = await this.businessService.uploadStateRegions(formData).toPromise();
-            console.log(response)
+
             if (response.status_code == 200 && response.message == 'success') 
             {
               this.showNotification("success", "State Region Saved");

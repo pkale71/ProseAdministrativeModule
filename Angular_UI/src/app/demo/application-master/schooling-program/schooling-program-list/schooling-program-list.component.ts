@@ -26,7 +26,6 @@ export class SchoolingProgramListComponent {
   academicSessions : any[];
   academicSessionForm : FormGroup;
   searchClicked : boolean;
-  masterSchoolingPrograms : any[];
   
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -111,8 +110,7 @@ export class SchoolingProgramListComponent {
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblSchoolProgram').DataTable().destroy();
-        this.masterSchoolingPrograms = response.schoolingPrograms;
-        this.schoolingPrograms = this.masterSchoolingPrograms;
+        this.schoolingPrograms = response.schoolingPrograms;
         setTimeout(function(){
           $('#tblSchoolProgram').DataTable();
         },1000);
@@ -169,7 +167,7 @@ export class SchoolingProgramListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Schooling Program Status Updated");
+              this.showNotification("success", "Schooling Program " + (schoolingProgram.isActive == 1 ? 'de-activated' : 'activated'));
               this.commonSharedService.schoolingProgramListObject.next({
                 result : "success", 
                 responseData : {

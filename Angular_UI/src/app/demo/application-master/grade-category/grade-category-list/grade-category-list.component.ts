@@ -102,7 +102,7 @@ export class GradeCategoryListComponent {
         container: 'my-swal'
       },
       title: 'Confirmation',
-      text: 'Are you sure to ' + (gradeCategory.isActive == 1 ? 'de-active' : 'active') + ' the gradeCategory?',
+      text: 'Are you sure to ' + (gradeCategory.isActive == 1 ? 'de-active' : 'active') + ' the grade category?',
       icon: 'warning',
       allowOutsideClick: false,
       showCloseButton: true,
@@ -123,7 +123,7 @@ export class GradeCategoryListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Grade Category Status Updated");
+              this.showNotification("success", "Grade Category " + (gradeCategory.isActive == 1 ? 'de-activated' : 'activated'));
               this.commonSharedService.gradeCategoryListObject.next({
                 result : "success"
               });
@@ -160,7 +160,6 @@ export class GradeCategoryListComponent {
         try
         {
           let response = await this.commonService.deleteGradeCategory(tempJSON).toPromise();
-          console.log(response);
           if (response.status_code == 200 && response.message == 'success') 
           {
             this.showNotification("success", "Grade Category Deleted.");

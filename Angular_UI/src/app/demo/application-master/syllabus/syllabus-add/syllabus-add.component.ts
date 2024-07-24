@@ -97,7 +97,7 @@ export class SyllabusAddComponent {
       let academicSessionId = this.academicSessionForm.get("academicSession").value;
       if(academicSessionId != undefined && academicSessionId != "")
       {
-        let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
+        let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'Active').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.schoolingPrograms = response.schoolingPrograms;
@@ -139,7 +139,8 @@ export class SyllabusAddComponent {
               this.commonSharedService.syllabusListObject.next({
                 result : "success",
                 responseData : {
-                  schoolingProgramId : schoolingProgramId,
+                  academicSessionId : this.academicSessionForm.get("academicSession").value,
+                  schoolingProgramId : schoolingProgramId
                 }
               });
               this.closeModal();

@@ -26,7 +26,6 @@ import { BusinessVerticalGroupAddComponent } from '../business-vertical-group-ad
 export class BusinessVerticalGroupListComponent {
   searchClicked : boolean;
   businessVerticalGroups : any[];
-  masterBusinessVerticalGroups : any[];
   businessVerticals : any[];
   businessVerticalForm : FormGroup;
   
@@ -112,8 +111,7 @@ export class BusinessVerticalGroupListComponent {
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblBusinessVerticalGroup').DataTable().destroy();
-        this.masterBusinessVerticalGroups = response.businessVerticalGroups;
-        this.businessVerticalGroups = this.masterBusinessVerticalGroups;
+        this.businessVerticalGroups = response.businessVerticalGroups;
         setTimeout(function(){
           $('#tblBusinessVerticalGroup').DataTable();
         },800);

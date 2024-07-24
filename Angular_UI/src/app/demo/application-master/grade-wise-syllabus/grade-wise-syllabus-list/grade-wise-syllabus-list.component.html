@@ -4,7 +4,7 @@
         <div class="card-header" style="padding: 10px 25px;">
           <h5 style="margin-top: 0.8rem;"><i class="fa fa-book-open"></i>&nbsp;Grade Wise Syllabuses&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
           <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
-           (click)="addGradeWSForm()">Add Grade Wise Syllabus</button>
+           (click)="addGradeWiseSyllabus()">Add Grade Wise Syllabus</button>
         </div>
           <div class="card-body">
             <div class="row">
@@ -22,7 +22,7 @@
                 <form [formGroup]="gradeCategoryForm">
                     <div class="form-group">
                         <label class="form-control-label" for="gradeCategory">Grade Category</label>
-                        <select class="form-control" required id="gradeCategory" formControlName="gradeCategory" (change) ="getGrades()">
+                        <select class="form-control" required id="gradeCategory" formControlName="gradeCategory" (change) ="getGrades('')">
                             <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory.name}}</option>
                         </select>
                     </div>
@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label class="form-control-label" for="grade">Grade &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
                         <select class="form-control" required id="grade" formControlName="grade" >
-                            <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                          <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
                         </select>
                     </div>
                 </form>
@@ -53,6 +53,7 @@
                 <tr>
                   <th>Sno</th>
                   <th>Academic Session</th>
+                  <th>Schooling Program</th>
                   <th>Grade Category</th>
                   <th>Grade</th>
                   <th>Syllabus</th>
@@ -64,6 +65,7 @@
                 <tr *ngFor="let gradeWiseSyllabus of gradeWiseSyllabuses let i=index">
                   <td>{{i+1}}</td>
                   <td>{{gradeWiseSyllabus.academicSession?.name}}</td>
+                  <td>{{gradeWiseSyllabus.schoolingProgram?.name}}</td>
                   <td>{{gradeWiseSyllabus.gradeCategory?.name}}</td>
                   <td>{{gradeWiseSyllabus.grade?.name}}</td>
                   <td>{{gradeWiseSyllabus.syllabus?.name}}</td>
@@ -74,17 +76,14 @@
                     </span>
                   </td>  
                   <td style="width:40px;text-align: right;">
-                    <i class="fa fa-edit" (click)="updateGradeWiseSyllabus(gradeWiseSyllabus)" 
+                    <i class="fa fa-edit" (click)="updateGradeWiseSyllabus(gradeWiseSyllabus)" *ngIf="gradeWiseSyllabus.isExist == 0" 
                     title="Edit" style="cursor: pointer;"></i>&nbsp;
                     <i class="fa fa-trash-alt" (click)="deleteGradeWiseSyllabus(gradeWiseSyllabus)" *ngIf="gradeWiseSyllabus.isExist == 0"
                     title="Delete" style="cursor: pointer;"></i>&nbsp;
-                    <!--  <i class="fa fa-list" (click)="detailGrade(grade.id)" title="Detail" style="cursor: pointer;"></i>
-                      *ngIf="grade.isExist == 0"    -->
                   </td>
-                </tr>
-
-                
+                </tr>               
                 <tr *ngIf="gradeWiseSyllabuses.length == 0">
+                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>

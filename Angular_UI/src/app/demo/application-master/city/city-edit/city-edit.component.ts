@@ -28,12 +28,9 @@ export class CityEditComponent
   saveClicked: boolean;
   searchClicked: boolean;
   city: any;
-  masterCountries: any[];
   countries: any[];
   stateRegions: any[];
-  masterStateRegions: any[];
   districts: any[];
-  masterDistrict: any[];
 
   constructor(private businessService: BusinessService, 
     private activeModal: NgbActiveModal,
@@ -51,11 +48,8 @@ export class CityEditComponent
     this.saveClicked = false;
     this.searchClicked = false;
     this.countries = [];
-    this.masterCountries = [];
     this.stateRegions = [];
-    this.masterStateRegions = [];
     this.districts = [];
-    this.masterDistrict = [];
 
     this.editCityForm = this.formbuilder.group({
       id: [''],
@@ -98,8 +92,7 @@ export class CityEditComponent
       let response = await this.businessService.getCountries('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterCountries = response.countries;
-          this.countries = this.masterCountries;
+          this.countries = response.countries;
           this.countries.unshift({ id : '', name : 'Select Country'});
         }
         else
@@ -126,8 +119,7 @@ export class CityEditComponent
         let response = await this.businessService.getStateRegions(countryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterStateRegions = response.stateRegions;
-          this.stateRegions = this.masterStateRegions;
+          this.stateRegions = response.stateRegions;
           this.stateRegions.unshift({ id : '', name : 'All'});
           this.searchClicked = false;
         }
@@ -165,8 +157,7 @@ export class CityEditComponent
         let response = await this.businessService.getDistricts(countryId, stateRegionId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterDistrict = response.districts;
-          this.districts = this.masterDistrict;
+          this.districts = response.districts;
           this.districts.unshift({ id : '', name : "Select District"});
           this.searchClicked = false;
         }

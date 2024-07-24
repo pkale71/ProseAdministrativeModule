@@ -11,6 +11,7 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 
 // third party
 import Swal from 'sweetalert2';
+import { SchoolingProgramListComponent } from '../../schooling-program/schooling-program-list/schooling-program-list.component';
 
 @Component({
   selector: 'app-grade-wise-syllabus-edit',
@@ -23,17 +24,23 @@ export class GradeWiseSyllabusEditComponent {
   @Input() public modalParams;
   editGradeWiseSyllabusForm: FormGroup;
   academicSessionForm : FormGroup;
+  schoolingProgramForm : FormGroup;
   gradeCategoryForm : FormGroup;
   gradeForm : FormGroup;
   syllabusForm : FormGroup;
   isValidForm: boolean;
   saveClicked: boolean;
+  academicSessionClicked : boolean;
+  gradeCategoryClicked : boolean;
+  gradeClicked : boolean;
+  schoolingProgramClicked : boolean;
+  syllabusClicked : boolean;
   gradeWisesyllabus: any;
   syllabuses : any[];
   gradeCategories : any[];
   grades : any[];
-  masterGrades : any[];
   academicSessions : any[];
+  schoolingPrograms : any[];
 
   constructor(private commonService: CommonService,
     private activeModal: NgbActiveModal,
@@ -46,6 +53,7 @@ export class GradeWiseSyllabusEditComponent {
     this.gradeCategories = [],
     this.grades = [],
     this.syllabuses =[]
+    this.schoolingPrograms = [];
   }
 
   ngOnInit() 
@@ -54,9 +62,11 @@ export class GradeWiseSyllabusEditComponent {
     this.gradeWisesyllabus = this.modalParams;
     this.isValidForm = true;
     this.saveClicked = false;
-    this.getAcademicSessions();
-    this.getGradeCategories();
-    this.getSyllabuses(0,0,'All');
+    this.gradeClicked = false;
+    this.academicSessionClicked = false;
+    this.gradeCategoryClicked = false;
+    this.schoolingProgramClicked = false;
+    this.syllabusClicked = false;
 
     this.editGradeWiseSyllabusForm = this.formbuilder.group({
       id: [''],
@@ -68,26 +78,36 @@ export class GradeWiseSyllabusEditComponent {
 
     this.academicSessionForm = this.formbuilder.group({
       "academicSession" : ['', [Validators.required]]
-    })
+    });
+
+    this.schoolingProgramForm = this.formbuilder.group({
+      'schoolingProgram': ['', Validators.required]
+    });
 
     this.gradeCategoryForm = this.formbuilder.group({
       'gradeCategory' : ['', Validators.required]
-    })
+    });
 
     this.gradeForm = this.formbuilder.group({
       "grade" : ['', Validators.required]
-    })
+    });
 
     this.syllabusForm = this.formbuilder.group({
       "syllabus" : ['', Validators.required]
-    })
+    });
+
     ///Assign Form Data
     this.editGradeWiseSyllabusForm.patchValue(this.gradeWisesyllabus);
+    this.getAcademicSessions();
+    this.getGradeCategories(this.gradeWisesyllabus.gradeCategory.id);
     this.academicSessionForm.get("academicSession").setValue(this.gradeWisesyllabus.academicSession.id);
+    this.getSchoolingPrograms(this.gradeWisesyllabus.schoolingProgram.id);
+    
+    this.schoolingProgramForm.get("schoolingProgram").setValue(this.gradeWisesyllabus.schoolingProgram.id);
     this.gradeCategoryForm.get("gradeCategory").setValue(this.gradeWisesyllabus.gradeCategory.id);
+    this.getGrades(this.gradeWisesyllabus.grade.id);
     this.gradeForm.get("grade").setValue(this.gradeWisesyllabus.grade.id);
     this.syllabusForm.get("syllabus").setValue(this.gradeWisesyllabus.syllabus.id);
-    this.getGrades();
   }
 
   showNotification(type: string, message: string): void 
@@ -100,100 +120,189 @@ export class GradeWiseSyllabusEditComponent {
   async getAcademicSessions() 
   {
     try   
+    {
+      this.academicSessionClicked = true;
+      let response = await this.commonService.getAcademicSessions().toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
       {
-        let response = await this.commonService.getAcademicSessions().toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
-        {
-          this.academicSessions = response.academicSessions;
-        }
-        else
-        {
-          this.academicSessions = [];
-        }
+        this.academicSessions = response.academicSessions;
+        this.academicSessionClicked = false;
+        this.getSyllabuses();
       }
-      catch(e)
-        {
-          this.showNotification("error", e);
-        }
+      else
+      {
+        this.academicSessions = [];
+        this.academicSessionClicked = false;
+        this.getSyllabuses();
+      }
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+      this.academicSessionClicked = false;
+      this.getSyllabuses();
+    }
   }
 
   //gradeCategory
-  async getGradeCategories() 
+  async getGradeCategories(gradeCategoryId : any) 
   {
    try
    {
-     this.saveClicked = false;
-     let response = await this.commonService.getGradeCategories('All').toPromise();
-     if (response.status_code == 200 && response.message == 'success') 
-     {
-       this.gradeCategories = response.gradeCategories;
-       this.gradeCategories.unshift({ id : "", name : "Select Grade category"});
-     }
-     else
-     {
-       this.gradeCategories = [];
-       this.gradeCategories.unshift({ id : "", name : "Select Grade category"});
-     }
-   }
-   catch(e)
-   {
-     this.showNotification("error",e);
-   }
+      this.gradeCategoryClicked = true;
+      let response = await this.commonService.getGradeCategories('All').toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
+      {
+        this.gradeCategories = response.gradeCategories;
+        this.gradeCategories.unshift({ id : "", name : "Select Grade category"});
+        this.gradeCategoryClicked = false;
+
+        if(gradeCategoryId != "")
+        {
+          let filterGradeCategory = this.gradeCategories.filter(gradeCategory => {gradeCategory.id == gradeCategoryId}); 
+          if(filterGradeCategory.length == 0)
+          {
+            this.gradeCategories.push({ id: this.gradeWisesyllabus.gradeCategory.id, name: this.gradeWisesyllabus.gradeCategory.name});
+          }
+        }
+      }
+      else
+      {
+        this.gradeCategories = [];
+        this.gradeCategories.unshift({ id : "", name : "Select Grade category"});
+        this.gradeCategoryClicked = false;
+      }
+    }
+    catch(e)
+    {
+      this.showNotification("error",e);
+      this.gradeCategoryClicked = false;
+    }
   }
 
   //get grades
-  async getGrades() 
+  async getGrades(gradeId : any) 
   {
     try 
       {
         let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
         if(gradeCategoryId != undefined && gradeCategoryId != "")
         {  
-          this.saveClicked = true;
+          this.gradeClicked = true;
           let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.masterGrades = response.grades;
-            this.grades = this.masterGrades;
-            this.saveClicked = false;
+            this.grades = response.grades;
+            this.gradeClicked = false;
             this.grades.unshift({ id : "", name : "Select Grade"});
+
+            if(gradeId != "")
+            {
+              let filterGrade = this.grades.filter(grade => {grade.id == gradeId}); 
+              if(filterGrade.length == 0)
+              {
+                this.grades.push({ id: this.gradeWisesyllabus.grade.id, name: this.gradeWisesyllabus.grade.name});
+              }
+            }
           }
           else
           {
             this.grades = [];
-            this.saveClicked = false;
+            this.gradeClicked = false;
           }
         }
         else
         {
           this.grades = [];
-          this.saveClicked = false;
+          this.gradeClicked = false;
         }
       }
       catch(e)
         {
           this.showNotification("error", e);
+          this.gradeClicked = false;
         }
   }
 
+  // schooling program
+  async getSchoolingPrograms(schoolingProgramId : any) 
+  {
+    try
+    {
+      let academicSessionId = this.academicSessionForm.get("academicSession").value;
+      if(academicSessionId != undefined && academicSessionId != "")
+      {
+        this.schoolingProgramClicked = true;
+        this.schoolingPrograms = [];
+        this.schoolingProgramForm.get("schoolingProgram").setValue("");
+        let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'Active').toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+          this.schoolingPrograms = response.schoolingPrograms;
+          this.schoolingPrograms.unshift({ id: "", name: "Select School Program" });
+          this.schoolingProgramClicked = false;
+          
+          if(schoolingProgramId != "")
+          {
+            let filterSchoolingProgram = this.schoolingPrograms.filter(schoolingProgram => {schoolingProgram.id == schoolingProgramId}); 
+            if(filterSchoolingProgram.length == 0)
+            {
+              this.schoolingPrograms.push({ id: this.gradeWisesyllabus.schoolingProgram.id, name: this.gradeWisesyllabus.schoolingProgram.name});
+            }
+          }
+          this.getSyllabuses();
+        }
+        else
+        {
+          this.schoolingProgramClicked = false;
+          this.getSyllabuses();
+        }
+      }
+      else
+      {
+        this.schoolingProgramClicked = false;
+        this.getSyllabuses();
+      }
+    }
+    catch(e)
+    {
+      this.schoolingProgramClicked = false;
+      this.showNotification("error",e);
+    }
+  }
+
   //get syllabuses
-   async getSyllabuses(academicSessionId : number, schoolingProgramId : number, action : string) 
+   async getSyllabuses() 
   {
     try
       {
-        let response = await this.commonService.getSyllabuses(academicSessionId, schoolingProgramId, 'All').toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
+        let academicSessionId : string = this.academicSessionForm.get("academicSession").value; 
+        let schoolingProgramId : string = this.schoolingProgramForm.get("schoolingProgram").value;
+        if(academicSessionId != "" && schoolingProgramId != "") 
         {
-          this.syllabuses = response.syllabuses;
+          this.syllabusClicked = true;
+          let response = await this.commonService.getSyllabuses(parseInt(academicSessionId), parseInt(schoolingProgramId), 'Active').toPromise();
+          if (response.status_code == 200 && response.message == 'success') 
+          {
+            this.syllabuses = response.syllabuses;
+            this.syllabusClicked = false;
+          }
+          else
+          {
+            this.syllabuses = [];
+            this.syllabusClicked = false;
+          }
         }
         else
         {
           this.syllabuses = [];
+          this.syllabusClicked = false;
         }
       }
       catch(e)
         {
           this.showNotification("error", e);
+          this.syllabusClicked = false;
         }
   }
 

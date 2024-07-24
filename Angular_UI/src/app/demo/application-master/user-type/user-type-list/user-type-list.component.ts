@@ -22,12 +22,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class UserTypeListComponent 
 {
-  masterUserTypes : any[];
   userTypes : any[];
   searchClicked : boolean;
   userRoleClicked: boolean;
   userRoles : any[];
-  masterUserRoles : any[];
   modules : any[];
   moduleForm : FormGroup;
   userRoleForm : FormGroup;
@@ -104,8 +102,7 @@ export class UserTypeListComponent
         let response = await this.commonService.getUserRoles(moduleId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterUserRoles = response.userRoles;
-          this.userRoles = this.masterUserRoles
+          this.userRoles = response.userRoles;
           this.userRoles.unshift({id : "", name : "All"});
           this.userRoleClicked = false;
         }
@@ -139,8 +136,7 @@ export class UserTypeListComponent
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblUserType').DataTable().destroy();
-        this.masterUserTypes = response.userTypes;
-        this.userTypes = this.masterUserTypes;
+        this.userTypes = response.userTypes;
         setTimeout(function(){
           $('#tblUserType').DataTable();
         },800);

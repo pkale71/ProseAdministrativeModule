@@ -27,14 +27,12 @@
                   <td>{{academicSession.startDate | date : "dd/MM/yyyy"}}</td>
                   <td>{{academicSession.endDate | date : "dd/MM/yyyy"}}</td>
                   <td>
-                    <span [ngClass]="academicSession.isAdmissionOpen? 'badge bg-success':'badge bg-danger'" 
-                    style="cursor: pointer;" title="Update Status">
+                    <span [ngClass]="academicSession.isAdmissionOpen? 'badge bg-success':'badge bg-danger'">
                       {{academicSession.isAdmissionOpen ? "Yes" : "No"}}
                     </span>
                   </td>
                   <td>
-                    <span [ngClass] = "academicSession.isCurrentSession ? 'badge bg-success':'badge bg-danger'"
-                     style="cursor: pointer;" title="Update Status" > 
+                    <span [ngClass] = "academicSession.isCurrentSession ? 'badge bg-success':'badge bg-danger'"> 
                     {{academicSession.isCurrentSession ? "Yes" : "No"}}
                     </span>
                   </td>

@@ -79,14 +79,12 @@ export class CountryAddComponent
       { 
         if(this.addCountryForm.valid)
         { 
-          alert(this.addCountryForm.valid)
           this.isValidForm = true;
           this.saveClicked = true;
           try
           {
             if(this.addCountryForm.get('uploadFile')?.value != '')
             {
-              console.log(this.addCountryForm.get('uploadFile')?.value != '')
               let formData = new FormData();
               formData.append('uploadFile',this.addCountryForm.get('uploadFile').value);
               let response = await this.businessService.uploadCountries(formData).toPromise();

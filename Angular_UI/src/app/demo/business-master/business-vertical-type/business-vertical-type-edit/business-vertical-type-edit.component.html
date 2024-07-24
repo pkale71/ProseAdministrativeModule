@@ -44,8 +44,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
-                    <input class="form-control input-md" id="name" type="text" required formControlName="name"
-                    maxlength="12"
+                    <input class="form-control input-md" id="name" type="text" required formControlName="name" maxlength="100"
                     [ngClass]="{'is-invalid':editBusinessVerticalTypeForm.controls['name'].valid && !isValidForm}" />
                     <label style="color: red;"
                     *ngIf="editBusinessVerticalTypeForm.controls['name'].hasError('required') && !isValidForm"

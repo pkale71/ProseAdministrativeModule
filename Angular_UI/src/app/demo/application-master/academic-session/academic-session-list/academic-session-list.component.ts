@@ -123,13 +123,11 @@ export class AcademicSessionListComponent {
       {        
         try
         {
-          console.log(academicSession.id)
           let tempJson = {
             id : academicSession.id,
             tableName : academicSession.tableName
           }
           this.showNotification("info", "Please wait...");
-          console.log(tempJson)
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {

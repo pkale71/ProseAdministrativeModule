@@ -26,16 +26,12 @@ import { CityAddComponent } from '../city-add/city-add.component';
 export class CityListComponent {
   searchClicked : boolean;
   cities : any[];
-  masterCity : any[];
   districts : any;
   countryForm : FormGroup;
   stateRegionForm : FormGroup;
   districtForm : FormGroup;
-  masterDistrict : any[];
   countries : any[];
-  masterCountries : any[];
   stateRegions : any[];
-  masterStateRegion : any[];
   countryId : any;
   
   constructor(private notifier: NotifierService, 
@@ -49,11 +45,8 @@ export class CityListComponent {
     {
       this.cities = [];
       this.districts = [];
-      this.masterDistrict = [];
       this.countries = [];
-      this.masterCountries = [];
       this.stateRegions = [];
-      this.masterStateRegion = [];
     }
 
   ngOnInit() 
@@ -114,8 +107,7 @@ export class CityListComponent {
       let response = await this.businessService.getCountries('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.masterCountries = response.countries;
-        this.countries = this.masterCountries;
+        this.countries = response.countries;
         this.countries.unshift({ id : "0", name : 'Select Country'});
         this.countryForm.get('country').setValue(this.countries[0].id);
         this.searchClicked = false;
@@ -146,8 +138,7 @@ export class CityListComponent {
         let response = await this.businessService.getStateRegions(countryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterStateRegion = response.stateRegions;
-          this.stateRegions = this.masterStateRegion;
+          this.stateRegions = response.stateRegions;
           this.stateRegions.unshift({ id : '0', name : 'Select State/Region'});
           this.stateRegionForm.get('stateRegion').setValue(this.stateRegions[0].id);
           this.searchClicked = false;
@@ -186,8 +177,7 @@ export class CityListComponent {
         let response = await this.businessService.getDistricts(countryId, stateRegionId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterDistrict = response.districts;
-          this.districts = this.masterDistrict;
+          this.districts = response.districts;
           this.districts.unshift({ id : '0', name : 'All'});
           this.districtForm.get('district').setValue(this.districts[0].id);
           this.searchClicked = false;
@@ -222,8 +212,7 @@ export class CityListComponent {
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblCity').DataTable().destroy();
-        this.masterCity = response.cities;
-        this.cities = this.masterCity;
+        this.cities = response.cities;
         setTimeout(function(){
           $('#tblCity').DataTable();
         },1000);

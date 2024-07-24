@@ -31,9 +31,19 @@
               <div class="col-md-3">
                 <form [formGroup]="gradeForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="grade">Grade &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <label class="form-control-label" for="grade">Grade &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="gradeClicked"></i></label>
                         <select class="form-control" required id="grade" formControlName="grade" (change) = "getGradeWiseSyllabuses()">
                             <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div>
+              <div class="col-md-3">
+                <form [formGroup]="syllabusForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="syllabusClicked"></i></label>
+                        <select class="form-control" required id="syllabus" formControlName="syllabus"  (change) = "getSyllabusWiseSubjects()">
+                          <option value="{{gradeWiseSyllabus.syllabus?.id}}" *ngFor="let gradeWiseSyllabus of gradeWiseSyllabuses">{{gradeWiseSyllabus.syllabus?.name}}</option>
                         </select>
                     </div>
                 </form>
@@ -41,20 +51,10 @@
             </div>
             <div class="row">
               <div class="col-md-3">
-                <form [formGroup]="syllabusForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
-                        <select class="form-control" required id="syllabus" formControlName="syllabus"  (change) = "getSyllabusWiseSubjects()">
-                          <option value="{{gradeWiseSyllabus.syllabus?.id}}" *ngFor="let gradeWiseSyllabus of gradeWiseSyllabuses">{{gradeWiseSyllabus.syllabus?.name}}</option>
-                        </select>
-                    </div>
-                </form>
-              </div>
-              <div class="col-md-3">
                 <form [formGroup]="subjectForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="subject">Subject &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
-                        <select class="form-control" required id="subject" formControlName="subject" (change) ="getSubjectWiseChapters" >
+                        <label class="form-control-label" for="subject">Subject &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="subjectClicked"></i></label>
+                        <select class="form-control" required id="subject" formControlName="subject" (change) ="getSubjectWiseChapters()">
                           <option value="{{syllabusWiseSubject?.id}}" *ngFor="let syllabusWiseSubject of syllabusWiseSubjects">{{syllabusWiseSubject?.name}}</option>
                         </select>
                     </div>
@@ -63,7 +63,7 @@
               <div class="col-md-3">
                 <form [formGroup]="chapterForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="chapter">Chapter &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <label class="form-control-label" for="chapter">Chapter &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="chapterClicked"></i></label>
                         <select class="form-control" required id="chapter" formControlName="chapter" >
                           <option value="{{subjectWiseChapter?.id}}" *ngFor="let subjectWiseChapter of subjectWiseChapters">{{subjectWiseChapter?.name}}</option>
                         </select>
@@ -85,6 +85,7 @@
                 <tr>
                   <th>Sno</th>
                   <th>Academic Session</th>
+                  <th>Schooling Program</th>
                   <th>Grade Category</th>
                   <th>Grade</th>
                   <th>Syllabus</th>
@@ -99,6 +100,7 @@
                 <tr *ngFor="let chapterWiseTopic of chapterWiseTopics let i=index">
                   <td>{{i+1}}</td>
                   <td>{{chapterWiseTopic.academicSession?.name}}</td>
+                  <td>{{chapterWiseTopic.schoolingProgram?.name}}</td>
                   <td>{{chapterWiseTopic.gradeCategory?.name}}</td>
                   <td>{{chapterWiseTopic.grade?.name}}</td>
                   <td>{{chapterWiseTopic.syllabus?.name}}</td>
@@ -122,6 +124,7 @@
 
                 
                 <tr *ngIf="chapterWiseTopics.length == 0">
+                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>

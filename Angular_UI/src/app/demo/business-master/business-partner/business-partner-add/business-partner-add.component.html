@@ -168,7 +168,7 @@
               <div class="form-group">
                 <label class="form-control-label" for="contactPerson">Contact Person&nbsp;<span style="color: red;">*</span></label>
                 <input class="form-control input-md" id="contactPerson" type="text" required
-                formControlName="contactPerson" maxlength="12"
+                formControlName="contactPerson" maxlength="100"
                 [ngClass]="{'is-invalid': !addBusinessPartnerForm.controls['contactPerson'].valid && !isValidForm}"/>
                 <label style="color: red;"
                 *ngIf="addBusinessPartnerForm.controls['contactPerson'].hasError('required') && !isValidForm"
@@ -221,7 +221,7 @@
               <div class="form-group">
                 <label class="form-control-label" for="inchargePerson">Incharge Person&nbsp;</label>
                 <input class="form-control input-md" id="inchargePerson" type="text" 
-                formControlName="inchargePerson" maxlength="12">
+                formControlName="inchargePerson" maxlength="100">
               </div>                 
             </div>
             <div class="col-md-3">

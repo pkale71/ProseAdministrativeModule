@@ -24,7 +24,6 @@ export class BusinessVerticalGroupAddComponent
   isValidForm: boolean;
   saveClicked : boolean;
   businessVerticals : any[];
-  masterBusinessVerticals : any[];
   names : string[] = [];
 
   constructor(private businessService: BusinessService, 
@@ -41,7 +40,6 @@ export class BusinessVerticalGroupAddComponent
     this.isValidForm = true;
     this.saveClicked = false;
     this.businessVerticals = [];
-    this.masterBusinessVerticals = [];
 
     this.addBusinessVerticalGroupForm = this.formbuilder.group({
       id: [''],
@@ -83,8 +81,7 @@ export class BusinessVerticalGroupAddComponent
       let response = await this.businessService.getBusinessVerticals('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.masterBusinessVerticals = response.businessVerticals;
-        this.businessVerticals = this.masterBusinessVerticals;
+        this.businessVerticals = response.businessVerticals;
         this.businessVerticals.unshift({ id : '', name : "Select Business Vertical" })
       }
       else

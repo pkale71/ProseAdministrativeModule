@@ -35,11 +35,7 @@ export class SubjectWiseChapterListComponent {
   grades : any[];
   gradeCategories : any[];
   gradeWiseSyllabuses : any[];
-  masterGrades : any[];
-  masterGradeWiseSyllabuses : any[];
   syllabusWiseSubjects : any[];
-  masterSyllabusWiseSubjects : any[];
-  masterSubjectWiseChapters : any[];
   
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -61,7 +57,7 @@ export class SubjectWiseChapterListComponent {
     this.grades = [];
     this.gradeWiseSyllabuses = [];
     this.syllabusWiseSubjects = [];
-    this.getSubjectWiseChapters(0,0,0,0,'All');
+    this.getSubjectWiseChapters(0,0,0,0,0,'All');
 
     this.academicSessionForm = this.formbuilder.group({
       "academicSession" : ['0']
@@ -86,7 +82,7 @@ export class SubjectWiseChapterListComponent {
   public gradeAddResult:any = this.commonSharedService.subjectWiseChapterListObject.subscribe(res =>{
     if(res.result == "success")
     {
-        this.getSubjectWiseChapters(0,0,0,0,'All');
+        this.getSubjectWiseChapters(0,0,0,0,0,'All');
     }
   })
 
@@ -156,8 +152,7 @@ export class SubjectWiseChapterListComponent {
         let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
           {
-            this.masterGrades = response.grades;
-            this.grades = this.masterGrades;
+            this.grades = response.grades;
             this.searchClicked = false;
             this.grades.unshift({ id : "0", name : "All"});
               this.gradeWiseSyllabuses.unshift({ id : "0", syllabus : {
@@ -196,13 +191,13 @@ export class SubjectWiseChapterListComponent {
       this.searchClicked = true;
       let academicSessionId = this.academicSessionForm.get("academicSession").value;
       let gradeId = this.gradeForm.get("grade").value;
-      if(academicSessionId != undefined && academicSessionId != "" && gradeId != undefined && gradeId != "")
+      let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
+      if(academicSessionId != undefined && academicSessionId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "")
       {
-        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId, 'All').toPromise();
+        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeCategoryId, gradeId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterGradeWiseSyllabuses = response.gradeWiseSyllabuses;
-          this.gradeWiseSyllabuses = this.masterGradeWiseSyllabuses;
+          this.gradeWiseSyllabuses = response.gradeWiseSyllabuses;
           this.searchClicked = false;
           this.gradeWiseSyllabuses.unshift({ id : "0", syllabus : {
           id : "0",
@@ -251,13 +246,13 @@ export class SubjectWiseChapterListComponent {
       let academicSessionId = this.academicSessionForm.get('academicSession').value;
       let syllabusId = this.syllabusForm.get('syllabus').value;
       let gradeId = this.gradeForm.get('grade').value;
-      if(academicSessionId != undefined && academicSessionId != "" && syllabusId != undefined && syllabusId != "" && gradeId != undefined && gradeId != "")
+      let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
+      if(academicSessionId != undefined && academicSessionId != "" && syllabusId != undefined && syllabusId != "" && gradeId != undefined && gradeId != "" && gradeCategoryId != undefined && gradeCategoryId != "")
         {
-          let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeId, 'All').toPromise();
+          let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeCategoryId, gradeId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.masterSyllabusWiseSubjects = response.syllabusWiseSubjects;
-            this.syllabusWiseSubjects = this.masterSyllabusWiseSubjects;
+            this.syllabusWiseSubjects = response.syllabusWiseSubjects;
             this.searchClicked = false;
             this.syllabusWiseSubjects.unshift({ id : "0", name : "All"});
           }
@@ -281,21 +276,22 @@ export class SubjectWiseChapterListComponent {
     let academicSessionId : number = this.academicSessionForm.get("academicSession").value;
     let syllabusId : number = this.syllabusForm.get("syllabus").value;
     let gradeId : number = this.gradeForm.get("grade").value;
+    let gradeCategoryId : number = this.gradeCategoryForm.get("gradeCategory").value;
     let subjectId : number = this.subjectForm.get('subject').value;
-    this.getSubjectWiseChapters(academicSessionId, syllabusId, gradeId, subjectId, 'All');
+
+    this.getSubjectWiseChapters(academicSessionId, syllabusId, gradeCategoryId, gradeId, subjectId, 'All');
   }
 
-  async getSubjectWiseChapters(academicSessionId : number, syllabusId : number, gradeId : number, subjectId : number, action : string) 
+  async getSubjectWiseChapters(academicSessionId : number, syllabusId : number, gradeCategoryId : number, gradeId : number, subjectId : number, action : string) 
   {
     try
     { 
       this.searchClicked = true;
-      let response = await this.commonService.getSubjectWiseChapters(academicSessionId, syllabusId, gradeId, subjectId, 'All').toPromise();
+      let response = await this.commonService.getSubjectWiseChapters(academicSessionId, syllabusId, gradeCategoryId, gradeId, subjectId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblSubjectWiseChapter').DataTable().destroy();
-        this.masterSubjectWiseChapters = response.subjectWiseChapters;
-        this.subjectWiseChapters = this.masterSubjectWiseChapters;
+        this.subjectWiseChapters = response.subjectWiseChapters;
         setTimeout(function(){
           $('#tblSubjectWiseChapter').DataTable();
          }, 1000);
@@ -360,7 +356,7 @@ export class SubjectWiseChapterListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Subject Wise Chapter Status Updated");
+              this.showNotification("success", "Subject Wise Chapter " + (subjectWiseChapter.isActive == 1 ? 'de-activated' : 'activated'));
               this.commonSharedService.subjectWiseChapterListObject.next({
                 result : "success", 
                 responseData : {

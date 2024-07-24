@@ -26,11 +26,9 @@ export class DistrictEditComponent
   isValidForm: boolean;
   saveClicked: boolean;
   searchClicked: boolean;
-  districts: any;
-  masterCountries: any[];
+  district: any;
   countries: any[];
   stateRegions: any[];
-  masterStateRegion: any[];
 
   constructor(private businessService: BusinessService, 
     private activeModal: NgbActiveModal,
@@ -43,13 +41,11 @@ export class DistrictEditComponent
 
   ngOnInit() 
   {
-    this.districts = this.modalParams;
+    this.district = this.modalParams;
     this.isValidForm = true;
     this.saveClicked = false;
     this.countries = [];
-    this.masterCountries = [];
     this.stateRegions = [];
-    this.masterStateRegion = [];
 
     this.editDistrictForm = this.formbuilder.group({
       id: [''],
@@ -65,9 +61,9 @@ export class DistrictEditComponent
       'stateRegion' : ['', Validators.required]
     })
     
-    this.editDistrictForm.patchValue(this.districts);
-    this.countryForm.get('country').setValue(this.districts.country.id);
-    this.stateRegionForm.get('stateRegion').setValue(this.districts.stateRegion.id);
+    this.editDistrictForm.patchValue(this.district);
+    this.countryForm.get('country').setValue(this.district.country.id);
+    this.stateRegionForm.get('stateRegion').setValue(this.district.stateRegion.id);
     this.getCountries('All');
     this.getStateRegions('All');
   }
@@ -86,8 +82,7 @@ export class DistrictEditComponent
       let response = await this.businessService.getCountries('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterCountries = response.countries;
-          this.countries = this.masterCountries;
+          this.countries = response.countries;
           this.countries.unshift({ id : '', name : 'Select Country'});
         }
         else
@@ -114,8 +109,7 @@ export class DistrictEditComponent
         let response = await this.businessService.getStateRegions(countryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterStateRegion = response.stateRegions;
-          this.stateRegions = this.masterStateRegion;
+          this.stateRegions = response.stateRegions;
           this.stateRegions.unshift({ id : '', name : 'Select State/Region'});
           this.searchClicked = false;
         }

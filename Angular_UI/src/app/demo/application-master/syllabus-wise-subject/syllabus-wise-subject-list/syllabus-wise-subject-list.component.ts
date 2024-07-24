@@ -25,7 +25,6 @@ import { SyllabusWiseSubjectEditComponent } from '../syllabus-wise-subject-edit/
 export class SyllabusWiseSubjectListComponent {
   
   syllabusWiseSubjects : any [];
-  masterSyllabusWiseSubjects : any[];
   searchClicked : boolean;
   academicSessionForm : FormGroup;
   gradeCategoryForm : FormGroup;
@@ -35,8 +34,6 @@ export class SyllabusWiseSubjectListComponent {
   gradeCategories : any[];
   grades : any[];
   gradeWiseSyllabuses : any[];
-  masterGrades : any[];
-  masterGradeWiseSyllabuses : any[];
 
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -57,7 +54,7 @@ export class SyllabusWiseSubjectListComponent {
     this.gradeCategories = [];
     this.grades = [];
     this.gradeWiseSyllabuses = [];
-    this.getSyllabusWiseSubjects(0,0,0,'All');
+    this.getSyllabusWiseSubjects(0,0, 0, 0, 'All');
 
     this.academicSessionForm = this.formbuilder.group({
       "academicSession" : ['0']
@@ -79,7 +76,7 @@ export class SyllabusWiseSubjectListComponent {
   public gradeAddResult:any = this.commonSharedService.syllabusWiseSubjectListObject.subscribe(res =>{
     if(res.result == "success")
     {
-      this.getSyllabusWiseSubjects(0,0,0,'All');
+      this.getSyllabusWiseSubjects(0,0,0,0,'All');
     }
   })
 
@@ -150,8 +147,7 @@ export class SyllabusWiseSubjectListComponent {
           let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
           if (response.status_code == 200 && response.message == 'success') 
             {
-              this.masterGrades = response.grades;
-              this.grades = this.masterGrades;
+              this.grades = response.grades;
               this.searchClicked = false;
               this.grades.unshift({ id : "0", name : "All"});
               this.gradeWiseSyllabuses.unshift({ id : "0", syllabus : {
@@ -189,13 +185,13 @@ export class SyllabusWiseSubjectListComponent {
       this.searchClicked = true;
       let academicSessionId = this.academicSessionForm.get("academicSession").value;
       let gradeId = this.gradeForm.get("grade").value;
-      if(academicSessionId != undefined && academicSessionId != "" && gradeId != undefined && gradeId != "")
+      let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
+      if(academicSessionId != undefined && academicSessionId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "")
       {
-        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeId, 'All').toPromise();
+        let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeCategoryId, gradeId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterGradeWiseSyllabuses = response.gradeWiseSyllabuses;
-          this.gradeWiseSyllabuses = this.masterGradeWiseSyllabuses;
+          this.gradeWiseSyllabuses = response.gradeWiseSyllabuses;
           this.searchClicked = false;
           this.gradeWiseSyllabuses.unshift({ id : "0", syllabus : {
           id : "0",
@@ -239,21 +235,22 @@ export class SyllabusWiseSubjectListComponent {
     let academicSessionId : number = this.academicSessionForm.get("academicSession").value;
     let syllabusId : number = this.syllabusForm.get("syllabus").value;
     let gradeId : number = this.gradeForm.get("grade").value;
-    this.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeId, 'All');
+    let gradeCategoryId : number = this.gradeCategoryForm.get("gradeCategory").value;
+
+    this.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeCategoryId, gradeId, 'All');
   }
 
 
-  async getSyllabusWiseSubjects(academicSessionId : number, syllabusId : number, gradeId : number, action : string) 
+  async getSyllabusWiseSubjects(academicSessionId : number, syllabusId : number, gradeCategoryId : number, gradeId : number, action : string) 
   {
     try
     {
       this.searchClicked = true;
-      let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeId, 'All').toPromise();
+      let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeCategoryId, gradeId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         $("#tblSyllabusWiseSubject").DataTable().destroy();
-        this.masterSyllabusWiseSubjects = response.syllabusWiseSubjects;
-        this.syllabusWiseSubjects = this.masterSyllabusWiseSubjects;
+        this.syllabusWiseSubjects = response.syllabusWiseSubjects;
         setTimeout(function(){
           $('#tblSyllabusWiseSubject').DataTable();
         },800);
@@ -317,7 +314,7 @@ export class SyllabusWiseSubjectListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Syllabus Wise Subject Status Updated");
+              this.showNotification("success", "Syllabus Wise Subject " + (syllabusWiseSubject.isActive == 1 ? 'de-activated' : 'activated'));
               this.commonSharedService.syllabusWiseSubjectListObject.next({
                 result : "success", 
                 responseData : {

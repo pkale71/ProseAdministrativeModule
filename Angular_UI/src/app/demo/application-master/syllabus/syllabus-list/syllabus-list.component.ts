@@ -25,12 +25,11 @@ export class SyllabusListComponent
 {
   syllabuses : any[];
   searchClicked : boolean;
+  schoolingProgramClicked : boolean;
   academicSessionForm : FormGroup;
   schoolingProgramForm : FormGroup;
   academicSessions : any[];
   schoolingPrograms : any[];
-  masterSyllabus : any[];
-  masterSchoolingProgram : any[];
 
   constructor(private notifier: NotifierService, 
   private activatedRoute: ActivatedRoute,
@@ -40,32 +39,40 @@ export class SyllabusListComponent
   public commonSharedService : CommonSharedService,
   private router : Router)
   {
-  //  this.syllabuses = this.activatedRoute.snapshot.data['syllabuses'].data.syllabuses;
   }
 
   ngOnInit() 
   {
     this.searchClicked = false;
+    this.schoolingProgramClicked = false;
     this.syllabuses = [];
-    this.getSyllabuses(0, 0, 'All');
-    this.getAcademicSessions();
     this.academicSessions = [];
     this.schoolingPrograms = [];
 
     this.academicSessionForm = this.formbuilder.group({
-      "academicSession" : ['0']
+      "academicSession" : ['']
     })
 
     this.schoolingProgramForm = this.formbuilder.group({
-      "schoolingProgram" : ['0']
+      "schoolingProgram" : ['']
     })
+    this.getSchoolingPrograms("");
+    this.getAcademicSessions();
+    this.getSyllabuses(0, 0, 'All');
   }
 
   public syllabusAddResult:any = this.commonSharedService.syllabusListObject.subscribe(res =>{
     if(res.result == "success")
     {
       this.academicSessionForm.get("academicSession").setValue(res.responseData.academicSessionId);
-      this.schoolingProgramForm.get("schoolingProgram").setValue(res.responseData.schoolingProgramId);
+      if(res.responseData.schoolingProgramId != '')
+      {
+        this.getSchoolingPrograms(res.responseData.schoolingProgramId);
+      }
+      else
+      {
+        res.responseData.schoolingProgramId = this.schoolingProgramForm.get("schoolingProgram").value;
+      }
       this.getSyllabuses(res.responseData.academicSessionId, res.responseData.schoolingProgramId, 'All');
     }
   })
@@ -85,13 +92,12 @@ export class SyllabusListComponent
       if (response.status_code == 200 && response.message == 'success') 
       {
         this.academicSessions = response.academicSessions;
-        this.academicSessions.unshift({ id: "0", name : "All"});
-        this.schoolingPrograms.unshift({ id: "0", name : "All"});
+        this.academicSessions.unshift({ id: "", name : "All"});
       }
       else
       {
         this.academicSessions = [];
-        this.academicSessions.unshift({ id: "0", name : "All"});
+        this.academicSessions.unshift({ id: "", name : "All"});
       }
     }
     catch(e)
@@ -100,39 +106,50 @@ export class SyllabusListComponent
     }
   }
 
-  async getSchoolingPrograms() 
+  async getSchoolingPrograms(schoolingProgramId : string) 
   {
     try
     {
       let academicSessionId = this.academicSessionForm.get("academicSession").value;
       if(academicSessionId != undefined && academicSessionId != "")
       {
+        this.schoolingProgramClicked = true;
         let response = await this.commonService.getSchoolingPrograms(academicSessionId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.schoolingPrograms = response.schoolingPrograms;
-          if(academicSessionId == 0 )
+          if(academicSessionId == 0)
           {
             this.schoolingPrograms = [];
-            this.schoolingPrograms.unshift({ id: "0", name: "All" });
+            this.schoolingPrograms.unshift({ id: "", name: "All" });
           }
-          this.schoolingProgramForm.get("schoolingProgram").setValue(this.schoolingPrograms[0].id); 
+          else
+          {
+            this.schoolingPrograms.unshift({ id: "", name : "Select Schooling Program"});
+          }
+          this.schoolingProgramClicked = false;
+          this.schoolingProgramForm.get("schoolingProgram").setValue(schoolingProgramId);
         }
         else
         {
           this.schoolingPrograms = [];
-          this.schoolingPrograms.unshift({ id: "0", name: "All" });
+          this.schoolingPrograms.unshift({ id: "", name: "All" });
+          this.schoolingProgramClicked = false;
+          this.schoolingProgramForm.get("schoolingProgram").setValue('');
         }
+        
       }
       else
       {
         this.schoolingPrograms = [];
-        this.schoolingPrograms.unshift({ id: "0", name: "All" });
+        this.schoolingPrograms.unshift({ id: "", name: "All" });
+        this.schoolingProgramClicked = false;
       }
     }
     catch(e)
     {
       this.showNotification("error",e);
+      this.schoolingProgramClicked = false;
     }
   }
 
@@ -140,7 +157,7 @@ export class SyllabusListComponent
   {
     let academicSessionId : number = this.academicSessionForm.get("academicSession").value;
     let schoolingProgramId : number = this.schoolingProgramForm.get("schoolingProgram").value;
-    if(!isNaN(schoolingProgramId) && schoolingProgramId > 0 && academicSessionId >0)
+    if(!isNaN(schoolingProgramId) && schoolingProgramId > 0 && academicSessionId > 0)
     {
       this.getSyllabuses(academicSessionId, schoolingProgramId, 'All');
     }
@@ -156,15 +173,16 @@ export class SyllabusListComponent
     try
     {
       this.searchClicked = true;
+      academicSessionId = academicSessionId.toString() == '' ? 0 : academicSessionId;
+      schoolingProgramId = schoolingProgramId.toString() == '' ? 0 : schoolingProgramId;
       let response = await this.commonService.getSyllabuses(academicSessionId, schoolingProgramId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblSyllabus').DataTable().destroy();
-        this.masterSyllabus = response.syllabuses;
-        this.syllabuses = this.masterSyllabus;
+        this.syllabuses = response.syllabuses;
         setTimeout(function(){
           $('#tblSyllabus').DataTable();
-        },1000);
+        },1000);        
         this.searchClicked = false;
         this.modalService.dismissAll();
       }
@@ -218,12 +236,12 @@ export class SyllabusListComponent
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Syllabus Updated");
+              this.showNotification("success", "Syllabus " + (syllabus.isActive == 1 ? 'de-activated' : 'activated'));
               this.commonSharedService.syllabusListObject.next({
                 result : "success", 
                 responseData : {
                   academicSessionId : syllabus.academicSession.id,
-                  schoolingProgramId : syllabus.schoolingProgram.id
+                  schoolingProgramId : ''
                 }
               });
           }
@@ -266,7 +284,7 @@ export class SyllabusListComponent
               result : "success",
               responseData : {
                 academicSessionId : syllabus.academicSession.id,
-                schoolingProgramId : syllabus.schoolingProgram.id
+                schoolingProgramId : ''
               }
             });
           }

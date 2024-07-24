@@ -24,8 +24,6 @@ export class BusinessVerticalTypeEditComponent
   businessVerticalGroupForm : FormGroup;
   businessVerticalGroups : any[];
   businessVerticals : any[];
-  masterBusinessVerticals : any[];
-  masterBusinessVerticalGroups : any[];
   isValidForm : boolean;
   saveClicked : boolean;
   searchClicked : boolean;
@@ -84,8 +82,7 @@ export class BusinessVerticalTypeEditComponent
        let response = await this.businessService.getBusinessVerticals('All').toPromise();
        if (response.status_code == 200 && response.message == 'success') 
        {
-         this.masterBusinessVerticals = response.businessVerticals;
-         this.businessVerticals = this.masterBusinessVerticals;
+         this.businessVerticals = response.businessVerticals;
          this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
          this.getBusinessVerticalGroups();
        }
@@ -113,8 +110,7 @@ export class BusinessVerticalTypeEditComponent
         let response = await this.businessService.getBusinessVerticalGroups(businessVerticalId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterBusinessVerticalGroups = response.businessVerticalGroups;
-          this.businessVerticalGroups = this.masterBusinessVerticalGroups;
+          this.businessVerticalGroups = response.businessVerticalGroups;
           this.businessVerticalGroups.unshift({ id : '', name : "Select Business Vertical Group"});
           this.searchClicked = false;
         }

@@ -26,9 +26,7 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
 export class CoachListComponent {
   searchClicked : boolean;
   businessVerticalTypes : any[];
-  masterBusinessVerticalTypes : any[];
   businessVerticalTypeForm : FormGroup;
-  masterCoaches : any[];
   coaches : any[];
   
   constructor(private notifier: NotifierService, 
@@ -41,9 +39,7 @@ export class CoachListComponent {
     private router : Router)
     {
       this.businessVerticalTypes = [];
-      this.masterBusinessVerticalTypes = [];
       this.coaches = [];
-      this.masterCoaches = [];
     }
 
   ngOnInit() 
@@ -79,8 +75,7 @@ export class CoachListComponent {
       let response = await this.businessService.getBusinessVerticalTypes(businessVerticalId, businessVerticalGroupId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.masterBusinessVerticalTypes = response.businessVerticalTypes;
-        this.businessVerticalTypes = this.masterBusinessVerticalTypes;
+        this.businessVerticalTypes = response.businessVerticalTypes;
         this.businessVerticalTypes.unshift({ id : '0', name : "All"});
         this.searchClicked = false;
         this.modalService.dismissAll();
@@ -120,8 +115,7 @@ export class CoachListComponent {
       if (response.status_code == 200 && response.message == 'success') 
         {
           $('#tblCoach').DataTable().destroy();
-          this.masterCoaches = response.coaches;
-          this.coaches = this.masterCoaches;
+          this.coaches = response.coaches;
           setTimeout(function(){
             $('#tblCoach').DataTable();
           },1000);

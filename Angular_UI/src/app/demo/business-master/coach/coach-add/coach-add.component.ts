@@ -24,7 +24,6 @@ export class CoachAddComponent
   isValidForm : boolean;
   saveClicked : boolean;
   searchClicked : boolean;
-  masterBusinessVerticalTypes : any[];
   businessVerticalTypes : any[];
 
   constructor(private businessService: BusinessService, 
@@ -42,7 +41,6 @@ export class CoachAddComponent
     this.saveClicked = false;
     this.searchClicked = false;
     this.businessVerticalTypes = [];
-    this.masterBusinessVerticalTypes = [];
 
     this.coachForm = this.formbuilder.group({
       id: [''],
@@ -75,8 +73,7 @@ export class CoachAddComponent
       let response = await this.businessService.getBusinessVerticalTypes(businessVerticalId, businessVerticalGroupId, 'All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.masterBusinessVerticalTypes = response.businessVerticalTypes;
-        this.businessVerticalTypes = this.masterBusinessVerticalTypes;
+        this.businessVerticalTypes = response.businessVerticalTypes;
         this.businessVerticalTypes.unshift({ id : '', name : "Select Business Vertical Type"});
         this.searchClicked = false;
       }

@@ -38,8 +38,6 @@
                     </div>
                 </form>
               </div>
-            </div>
-            <div class="row">
               <div class="col-md-3">
                 <form [formGroup]="syllabusForm">
                     <div class="form-group">
@@ -50,6 +48,8 @@
                     </div>
                 </form>
               </div>
+            </div>
+            <div class="row">
               <div class="col-md-3">
                 <form [formGroup]="subjectForm">
                     <div class="form-group">
@@ -75,6 +75,7 @@
                 <tr>
                   <th>Sno</th>
                   <th>Academic Session</th>
+                  <th>Schooling Program</th>
                   <th>Grade Category</th>
                   <th>Grade</th>
                   <th>Syllabus</th>
@@ -88,6 +89,7 @@
                 <tr *ngFor="let subjectWiseChapter of subjectWiseChapters let i=index">
                   <td>{{i+1}}</td>
                   <td>{{subjectWiseChapter.academicSession?.name}}</td>
+                  <td>{{subjectWiseChapter.schoolingProgram?.name}}</td>
                   <td>{{subjectWiseChapter.gradeCategory?.name}}</td>
                   <td>{{subjectWiseChapter.grade?.name}}</td>
                   <td>{{subjectWiseChapter.syllabus?.name}}</td>
@@ -100,16 +102,15 @@
                     </span>
                   </td>
                   <td style="width:40px;text-align: right;">
-                    <i class="fa fa-edit" (click)="editSubjectWiseChapter(subjectWiseChapter)" 
-                    title="Edit" style="cursor: pointer;"></i>&nbsp;
+                    <i class="fa fa-edit" (click)="editSubjectWiseChapter(subjectWiseChapter)"  *ngIf = "subjectWiseChapter.isExist == 0" title="Edit" style="cursor: pointer;"></i>&nbsp;
                     <i class="fa fa-trash-alt" (click)="deleteSubjectWiseChapter(subjectWiseChapter)"  *ngIf = "subjectWiseChapter.isExist == 0"
                     title="Delete" style="cursor: pointer;"></i>&nbsp;
-                    <!-- <i class="fa fa-list" (click)="detailGrade(grade.id)"  title="Detail" style="cursor: pointer;"></i> -->
                   </td>
                 </tr>
 
                 
                 <tr *ngIf="subjectWiseChapters.length == 0">
+                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>

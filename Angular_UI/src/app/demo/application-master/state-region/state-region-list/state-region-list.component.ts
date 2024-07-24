@@ -42,9 +42,7 @@ export class StateRegionListComponent {
     private router : Router)
     {
       this.stateRegions = [];
-      this.masterStateRegion = [];
       this.countries = [];
-      this.masterCountries = [];
     }
 
   ngOnInit() 
@@ -93,8 +91,7 @@ export class StateRegionListComponent {
       let response = await this.businessService.getCountries('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterCountries = response.countries;
-          this.countries = this.masterCountries;
+          this.countries = response.countries;
           this.countries.unshift({ id : "", name : 'Select Country'});
           this.searchClicked = false;
         }
@@ -121,8 +118,7 @@ export class StateRegionListComponent {
       if (response.status_code == 200 && response.message == 'success') 
         {
           $('#tblStateRegion').DataTable().destroy();
-          this.masterStateRegion = response.stateRegions;
-          this.stateRegions = this.masterStateRegion;
+          this.stateRegions = response.stateRegions;
           setTimeout(function(){
             $('#tblStateRegion').DataTable();
           },1000);

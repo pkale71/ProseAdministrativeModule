@@ -44,11 +44,8 @@ export class DistrictListComponent {
     private router : Router)
     {
       this.districts = [];
-      this.masterDistrict = [];
       this.countries = [];
-      this.masterCountries = [];
       this.stateRegions = [];
-      this.masterStateRegion = [];
     }
 
   ngOnInit() 
@@ -102,8 +99,7 @@ export class DistrictListComponent {
       let response = await this.businessService.getCountries('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.masterCountries = response.countries;
-        this.countries = this.masterCountries;
+        this.countries = response.countries;
         this.countries.unshift({ id : "", name : 'Select Country'});
         this.getStateRegions('All');
         this.searchClicked = false;
@@ -134,8 +130,7 @@ export class DistrictListComponent {
         let response = await this.businessService.getStateRegions(countryId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterStateRegion = response.stateRegions;
-          this.stateRegions = this.masterStateRegion;
+          this.stateRegions = response.stateRegions;
           this.stateRegions.unshift({ id : '', name : 'All'});
           this.searchClicked = false;
         }
@@ -169,8 +164,7 @@ export class DistrictListComponent {
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblDistrict').DataTable().destroy();
-        this.masterDistrict = response.districts;
-        this.districts = this.masterDistrict;
+        this.districts = response.districts;
         setTimeout(function(){
           $('#tblDistrict').DataTable();
         },1000);

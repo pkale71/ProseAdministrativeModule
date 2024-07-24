@@ -12,7 +12,7 @@
               <form [formGroup]="academicSessionForm">
                   <div class="form-group">
                       <label class="form-control-label" for="academicSession">Academic Session</label>
-                      <select class="form-control" required id="academicSession" formControlName="academicSession" (change) = "getSchoolingPrograms()">
+                      <select class="form-control" required id="academicSession" formControlName="academicSession" (change) = "getSchoolingPrograms('')">
                           <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession.name}}</option>
                       </select>
                   </div>
@@ -21,7 +21,7 @@
             <div class="col-md-3">
               <form [formGroup]="schoolingProgramForm">
                   <div class="form-group">
-                      <label class="form-control-label" for="schoolingProgram">Schooling Program</label>
+                      <label class="form-control-label" for="schoolingProgram">Schooling Program&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="schoolingProgramClicked"></i></label>
                       <select class="form-control" required id="schoolingProgram" formControlName="schoolingProgram">
                           <option value="{{schoolingProgram.id}}" *ngFor="let schoolingProgram of schoolingPrograms">{{schoolingProgram.name}}</option>
                       </select>

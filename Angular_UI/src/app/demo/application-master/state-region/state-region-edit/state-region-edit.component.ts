@@ -25,7 +25,6 @@ export class StateRegionEditComponent
   isValidForm: boolean;
   saveClicked: boolean;
   stateRegions: any;
-  masterCountries: any[];
   countries: any[];
 
   constructor(private businessService: BusinessService, 
@@ -56,7 +55,6 @@ export class StateRegionEditComponent
     
     this.getCountries('All');
     this.editStateRegionForm.patchValue(this.stateRegions);
-    console.log(this.stateRegions)
     this.countryForm.get('country').setValue(this.stateRegions.country.id);
   }
 
@@ -74,8 +72,7 @@ export class StateRegionEditComponent
       let response = await this.businessService.getCountries('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.masterCountries = response.countries;
-        this.countries = this.masterCountries;
+        this.countries = response.countries;
         this.countries.unshift({ id : '', name : 'Select Country'});
       }
       else

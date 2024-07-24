@@ -26,13 +26,10 @@ import { BusinessVerticalTypeAddComponent } from '../business-vertical-type-add/
 export class BusinessVerticalTypeListComponent {
   searchClicked : boolean;
   businessVerticalTypes : any[];
-  masterBusinessVerticalTypes : any[];
   businessVerticalForm : FormGroup;
   businessVerticalGroupForm : FormGroup;
   businessVerticals : any[];
   businessVerticalGroups : any[];
-  masterBusinessVerticals : any[];
-  masterBusinessVerticalGroups : any[];
   
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -44,7 +41,6 @@ export class BusinessVerticalTypeListComponent {
     private router : Router)
     {
       this.businessVerticalTypes = [];
-      this.masterBusinessVerticalTypes = [];
       this.businessVerticals = [];
       this.businessVerticalGroups = [];
     }
@@ -85,8 +81,7 @@ export class BusinessVerticalTypeListComponent {
       let response = await this.businessService.getBusinessVerticals('All').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.masterBusinessVerticals = response.businessVerticals;
-        this.businessVerticals = this.masterBusinessVerticals;
+        this.businessVerticals = response.businessVerticals;
         this.businessVerticals.unshift({ id : '0', name : "All"});
         this.getBusinessVerticalGroups();
       }
@@ -112,8 +107,7 @@ export class BusinessVerticalTypeListComponent {
         let response = await this.businessService.getBusinessVerticalGroups(businessVerticalId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterBusinessVerticalGroups = response.businessVerticalGroups;
-          this.businessVerticalGroups = this.masterBusinessVerticalGroups;
+          this.businessVerticalGroups = response.businessVerticalGroups;
           this.businessVerticalGroups.unshift({ id : '0', name : "All"});
           this.searchClicked = false;
         }
@@ -159,8 +153,7 @@ export class BusinessVerticalTypeListComponent {
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblBusinessVerticalType').DataTable().destroy();
-        this.masterBusinessVerticalTypes = response.businessVerticalTypes;
-        this.businessVerticalTypes = this.masterBusinessVerticalTypes;
+        this.businessVerticalTypes = response.businessVerticalTypes;
         setTimeout(function(){
           $('#tblBusinessVerticalType').DataTable();
         },1000);

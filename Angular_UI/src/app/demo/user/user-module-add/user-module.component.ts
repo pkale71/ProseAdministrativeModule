@@ -29,7 +29,6 @@ export class UserModuleComponent {
   userRoles : any[];
   masterUserRoles : any[];
   userTypes : any[];
-  masterUserTypes : any[];
   searchClicked : boolean;
 
   constructor(private commonService: CommonService, 
@@ -107,8 +106,7 @@ export class UserModuleComponent {
         let response = await this.commonService.getUserRoles(moduleId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterUserRoles = response.userRoles;
-          this.userRoles = this.masterUserRoles
+          this.userRoles = response.userRoles;
           this.searchClicked = false;
           this.userRoles.unshift({id:"", name : "Select User Role"});
           // this.roleForm.controls["userRole"].setValue("");
@@ -145,8 +143,7 @@ export class UserModuleComponent {
         let response = await this.commonService.getUserTypes(moduleId, userRoleId, 'All').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.masterUserTypes = response.userTypes;
-          this.userTypes = this.masterUserTypes;
+          this.userTypes = response.userTypes;
           this.searchClicked = false;
           this.userTypes.unshift({ id : "", name : "Select User Type"});
           this.searchClicked = false;
