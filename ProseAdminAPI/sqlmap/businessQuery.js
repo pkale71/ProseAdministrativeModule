@@ -3140,7 +3140,7 @@ db.insertTieUpSchool = (tieUpSchool) =>
     {
         try
         {
-            let sql = `INSERT INTO tie_up_school (uuid, name, email, mobile, website, address, pincode,country_id, state_region_id, district_id, city_id, contact_person, pan_number, syllabus_id, created_on, created_by_id)
+            let sql = `INSERT INTO tie_up_school (uuid, name, email, mobile, website, address, pincode,country_id, state_region_id, district_id, city_id, contact_person, pan_number, tie_up_school_syllabus_id, created_on, created_by_id)
             VALUES('${tieUpSchool.uuid}', '${tieUpSchool.name}', '${tieUpSchool.email}', '${tieUpSchool.mobile}', '${tieUpSchool.website}', '${tieUpSchool.address}', '${tieUpSchool.pincode}', ${tieUpSchool.countryId}, ${tieUpSchool.stateRegionId}, ${tieUpSchool.districtId}, ${tieUpSchool.cityId}, '${tieUpSchool.contactPerson}', '${tieUpSchool.panNumber}', ${tieUpSchool.syllabusId}, NOW(), ${tieUpSchool.createdById})`;
             
             dbConn.query(sql, (error, result) => 
@@ -3165,7 +3165,7 @@ db.updateTieUpSchool = (tieUpSchool) =>
     {
         try
         {
-            let sql = `UPDATE tie_up_school SET name = '${tieUpSchool.name}', email = '${tieUpSchool.email}', mobile = '${tieUpSchool.mobile}', website = '${tieUpSchool.website}', address = '${tieUpSchool.address}', pincode = '${tieUpSchool.pincode}',country_id = ${tieUpSchool.countryId}, state_region_id = ${tieUpSchool.stateRegionId}, district_id = ${tieUpSchool.districtId}, city_id = ${tieUpSchool.cityId}, contact_person = '${tieUpSchool.contactPerson}', pan_number = '${tieUpSchool.panNumber}', syllabus_id = ${tieUpSchool.syllabusId}, updated_on = NOW(), updated_by_id = ${tieUpSchool.createdById} WHERE uuid = '${tieUpSchool.uuid}'`;
+            let sql = `UPDATE tie_up_school SET name = '${tieUpSchool.name}', email = '${tieUpSchool.email}', mobile = '${tieUpSchool.mobile}', website = '${tieUpSchool.website}', address = '${tieUpSchool.address}', pincode = '${tieUpSchool.pincode}',country_id = ${tieUpSchool.countryId}, state_region_id = ${tieUpSchool.stateRegionId}, district_id = ${tieUpSchool.districtId}, city_id = ${tieUpSchool.cityId}, contact_person = '${tieUpSchool.contactPerson}', pan_number = '${tieUpSchool.panNumber}', tie_up_school_syllabus_id = ${tieUpSchool.syllabusId}, updated_on = NOW(), updated_by_id = ${tieUpSchool.createdById} WHERE uuid = '${tieUpSchool.uuid}'`;
             
             dbConn.query(sql, (error, result) => 
             {

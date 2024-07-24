@@ -46,7 +46,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             if(syllabus.length == 1)
                             {
                             ////Check dplicate Grade Wise Syllabus
-                                syllabusWiseSubject = await dbCommon.duplicateGradeWiseSyllabus(academicSessionId, gradeId, syllabusId);
+                                syllabusWiseSubject = await dbCommon.duplicateGradeWiseSyllabus(academicSessionId, gradeId, syllabusId, gradeWiseSyllabusId);
                                 if(syllabusWiseSubject.length == 0)
                                 {                    
                             ///insert Grade Wise Syllabus

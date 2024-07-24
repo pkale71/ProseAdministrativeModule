@@ -6,6 +6,7 @@ let errorCode = new errorCodes();
 ////////Variables 
 let academicSessionId;
 let syllabusId;
+let gradeCategoryId;
 let gradeId;
 let subjectId;
 let action;
@@ -18,6 +19,7 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
     {
         academicSessionId = '';
         syllabusId = '';
+        gradeCategoryId = '';
         gradeId = '';
         subjectId = '';
         action = '';
@@ -36,18 +38,34 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
         {
             academicSessionId = commonFunction.validateNumber(tempParams[0]);
             syllabusId = commonFunction.validateNumber(tempParams[1]);
-            gradeId = commonFunction.validateNumber(tempParams[2]);
+            gradeCategoryId = commonFunction.validateNumber(tempParams[2]);
         }
         else if(tempParams.length == 4)
         {
             academicSessionId = commonFunction.validateNumber(tempParams[0]);
             syllabusId = commonFunction.validateNumber(tempParams[1]);
-            gradeId = commonFunction.validateNumber(tempParams[2]);
-            subjectId = commonFunction.validateNumber(tempParams[3]);
-            action = tempParams[4];
+            gradeCategoryId = commonFunction.validateNumber(tempParams[2]);
+            gradeId = commonFunction.validateNumber(tempParams[3]);
+        }
+        else if(tempParams.length == 5)
+        {
+            academicSessionId = commonFunction.validateNumber(tempParams[0]);
+            syllabusId = commonFunction.validateNumber(tempParams[1]);
+            gradeCategoryId = commonFunction.validateNumber(tempParams[2]);
+            gradeId = commonFunction.validateNumber(tempParams[3]);
+            subjectId = commonFunction.validateNumber(tempParams[4]);
+        }
+        else if(tempParams.length == 6)
+        {
+            academicSessionId = commonFunction.validateNumber(tempParams[0]);
+            syllabusId = commonFunction.validateNumber(tempParams[1]);
+            gradeCategoryId = commonFunction.validateNumber(tempParams[2]);
+            gradeId = commonFunction.validateNumber(tempParams[3]);
+            subjectId = commonFunction.validateNumber(tempParams[4]);
+            action = tempParams[5];
         }
         
-        subjectWiseChapters = await dbCommon.getSubjectWiseChapters(academicSessionId, syllabusId, gradeId, subjectId, action);
+        subjectWiseChapters = await dbCommon.getSubjectWiseChapters(academicSessionId, syllabusId, gradeCategoryId, gradeId, subjectId, action);
         if(subjectWiseChapters.length >= 0)
         {
             res.status(200)

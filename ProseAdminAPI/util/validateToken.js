@@ -14,7 +14,7 @@ app.get('/:id?*',async (req,res,next) =>
             paramCount = parseInt(paramCount) + 1;
         }
     }
-    if(paramCount <= 5)
+    if(paramCount <= 6)
     {
         verifyToken(req,res,next);
     }
@@ -32,7 +32,7 @@ app.get('/:id?*',async (req,res,next) =>
 app.post('/:id?*',async (req,res,next) => 
 {
     let params = (req.params[0]).split("/");
-    if(params?.length <= 5)
+    if(params?.length <= 6)
     {
         verifyToken(req,res,next);
     }

@@ -6,6 +6,7 @@ let errorCode = new errorCodes();
 ////////Variables 
 let academicSessionId;
 let syllabusId;
+let gradeCategoryId;
 let gradeId;
 let subjectId;
 let chapterId;
@@ -19,6 +20,7 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
     {
         academicSessionId = '';
         syllabusId = '';
+        gradeCategoryId = '';
         gradeId = '';
         subjectId = '';
         chapterId = '';
@@ -38,26 +40,44 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
         {
             academicSessionId = commonFunction.validateNumber(tempParams[0]);
             syllabusId = commonFunction.validateNumber(tempParams[1]);
-            gradeId = commonFunction.validateNumber(tempParams[2]);
+            gradeCategoryId = commonFunction.validateNumber(tempParams[2]);
         }
         else if(tempParams.length == 4)
         {
             academicSessionId = commonFunction.validateNumber(tempParams[0]);
             syllabusId = commonFunction.validateNumber(tempParams[1]);
-            gradeId = commonFunction.validateNumber(tempParams[2]);
-            subjectId = commonFunction.validateNumber(tempParams[3]);
+            gradeCategoryId = commonFunction.validateNumber(tempParams[2]);
+            gradeId = commonFunction.validateNumber(tempParams[3]);
         }
         else if(tempParams.length == 5)
         {
             academicSessionId = commonFunction.validateNumber(tempParams[0]);
             syllabusId = commonFunction.validateNumber(tempParams[1]);
-            gradeId = commonFunction.validateNumber(tempParams[2]);
-            subjectId = commonFunction.validateNumber(tempParams[3]);
-            chapterId = commonFunction.validateNumber(tempParams[4]);
-            action = tempParams[5];
+            gradeCategoryId = commonFunction.validateNumber(tempParams[2]);
+            gradeId = commonFunction.validateNumber(tempParams[3]);
+            subjectId = commonFunction.validateNumber(tempParams[4]);
+        }
+        else if(tempParams.length == 6)
+        {
+            academicSessionId = commonFunction.validateNumber(tempParams[0]);
+            syllabusId = commonFunction.validateNumber(tempParams[1]);
+            gradeCategoryId = commonFunction.validateNumber(tempParams[2]);
+            gradeId = commonFunction.validateNumber(tempParams[3]);
+            subjectId = commonFunction.validateNumber(tempParams[4]);
+            chapterId = commonFunction.validateNumber(tempParams[5]);
+        }
+        else if(tempParams.length == 7)
+        {
+            academicSessionId = commonFunction.validateNumber(tempParams[0]);
+            syllabusId = commonFunction.validateNumber(tempParams[1]);
+            gradeCategoryId = commonFunction.validateNumber(tempParams[2]);
+            gradeId = commonFunction.validateNumber(tempParams[3]);
+            subjectId = commonFunction.validateNumber(tempParams[4]);
+            chapterId = commonFunction.validateNumber(tempParams[5]);
+            action = tempParams[6];
         }
         
-        chapterWiseTopics = await dbCommon.getChapterWiseTopics(academicSessionId, syllabusId, gradeId, subjectId, chapterId, action);
+        chapterWiseTopics = await dbCommon.getChapterWiseTopics(academicSessionId, syllabusId, gradeCategoryId, gradeId, subjectId, chapterId, action);
         if(chapterWiseTopics.length >= 0)
         {
             res.status(200)

@@ -1396,7 +1396,7 @@ db.deleteGrade = (id, action) =>
     })
 };
 
-db.getGradeWiseSyllabuses = (academicSessionId, gradeId, action) => 
+db.getGradeWiseSyllabuses = (academicSessionId, gradeCategoryId, gradeId, action) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -1422,6 +1422,10 @@ db.getGradeWiseSyllabuses = (academicSessionId, gradeId, action) =>
                 {
                     sql =sql + ` AND g.id = ${gradeId}`;
                 }
+                if(parseInt(gradeCategoryId) > 0)
+                {
+                    sql =sql + ` AND gc.id = ${gradeCategoryId}`;
+                }
                 if(action == "Active")
                 {
                     sql =sql + ` AND gws.is_active = 1`;
@@ -1432,6 +1436,18 @@ db.getGradeWiseSyllabuses = (academicSessionId, gradeId, action) =>
                 if(parseInt(gradeId) > 0)
                 {
                     sql =sql + ` WHERE g.id = ${gradeId}`;
+                    if(parseInt(gradeCategoryId) > 0)
+                    {
+                        sql =sql + ` AND gc.id = ${gradeCategoryId}`;
+                    }
+                    if(action == "Active")
+                    {
+                        sql =sql + ` AND gws.is_active = 1`;
+                    }
+                }
+                else if(parseInt(gradeCategoryId) > 0)
+                {
+                    sql =sql + ` WHERE gc.id = ${gradeCategoryId}`;
                     if(action == "Active")
                     {
                         sql =sql + ` AND gws.is_active = 1`;
@@ -1492,7 +1508,7 @@ db.getGradeWiseSyllabus = (academicSessionId, gradeId, syllabusId) =>
     })
 }; 
 
-db.duplicateGradeWiseSyllabus = (academicSessionId, gradeId, syllabusId) => 
+db.duplicateGradeWiseSyllabus = (academicSessionId, gradeId, syllabusId, id = '') => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -1501,7 +1517,11 @@ db.duplicateGradeWiseSyllabus = (academicSessionId, gradeId, syllabusId) =>
             let sql = `SELECT gws.id
             FROM grade_wise_syllabus gws 
             WHERE gws.academic_session_id = ${academicSessionId}
-             AND gws.grade_id = ${gradeId} AND gws.syllabus_id = ${syllabusId}`;
+            AND gws.grade_id = ${gradeId} AND gws.syllabus_id = ${syllabusId}`;
+            if(id != '')
+            {
+                sql = sql + ` AND gws.id != ${id}`;
+            }
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1615,7 +1635,7 @@ db.deleteGradeWiseSyllabus = (id) =>
     })
 };
 
-db.getSyllabusWiseSubjects = (academicSessionId, syllabusId, gradeId, action) => 
+db.getSyllabusWiseSubjects = (academicSessionId, syllabusId, gradeCategoryId, gradeId, action) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -1670,6 +1690,17 @@ db.getSyllabusWiseSubjects = (academicSessionId, syllabusId, gradeId, action) =>
                     filters =filters + ` AND s.id = ${syllabusId}`;
                 }
             }            
+            if(parseInt(gradeCategoryId) > 0)
+            {
+                if(filters == "")
+                {
+                    filters =filters + ` WHERE gc.id = ${gradeCategoryId}`;
+                }
+                else
+                {
+                    filters =filters + ` AND gc.id = ${gradeCategoryId}`;
+                }
+            }
             if(parseInt(gradeId) > 0)
             {
                 if(filters == "")
@@ -1858,7 +1889,7 @@ db.deleteSyllabusWiseSubject = (id) =>
     })
 };
 
-db.getSubjectWiseChapters = (academicSessionId, syllabusId, gradeId, subjectId, action) => 
+db.getSubjectWiseChapters = (academicSessionId, syllabusId, gradeCategoryId, gradeId, subjectId, action) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -1876,7 +1907,7 @@ db.getSubjectWiseChapters = (academicSessionId, syllabusId, gradeId, subjectId, 
             FROM subject_wise_chapter swc
             JOIN syllabus_wise_subject sws ON sws.id = swc.syllabus_wise_subject_id
             JOIN grade_wise_syllabus gws ON gws.id = sws.grade_wise_syllabus_id 
-            JOIN academic_session acs ON acs.id = sws.academic_session_id 
+            JOIN academic_session acs ON acs.id = swc.academic_session_id 
             JOIN grade g ON g.id = gws.grade_id
             JOIN grade_category gc ON gc.id = g.grade_category_id
             JOIN syllabus s ON s.id = gws.syllabus_id 
@@ -1915,6 +1946,17 @@ db.getSubjectWiseChapters = (academicSessionId, syllabusId, gradeId, subjectId, 
                     filters =filters + ` AND s.id = ${syllabusId}`;
                 }
             }            
+            if(parseInt(gradeCategoryId) > 0)
+            {
+                if(filters == "")
+                {
+                    filters =filters + ` WHERE gc.id = ${gradeCategoryId}`;
+                }
+                else
+                {
+                    filters =filters + ` AND gc.id = ${gradeCategoryId}`;
+                }
+            }
             if(parseInt(gradeId) > 0)
             {
                 if(filters == "")
@@ -2119,7 +2161,7 @@ db.deleteSubjectWiseChapter = (id) =>
     })
 };
 
-db.getChapterWiseTopics = (academicSessionId, syllabusId, gradeId, subjectId, chapterId, action) => 
+db.getChapterWiseTopics = (academicSessionId, syllabusId, gradeCategoryId, gradeId, subjectId, chapterId, action) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -2138,7 +2180,7 @@ db.getChapterWiseTopics = (academicSessionId, syllabusId, gradeId, subjectId, ch
             JOIN subject_wise_chapter swc ON swc.id = cwt.subject_wise_chapter_id
             JOIN syllabus_wise_subject sws ON sws.id = swc.syllabus_wise_subject_id
             JOIN grade_wise_syllabus gws ON gws.id = sws.grade_wise_syllabus_id 
-            JOIN academic_session acs ON acs.id = sws.academic_session_id 
+            JOIN academic_session acs ON acs.id = cwt.academic_session_id 
             JOIN grade g ON g.id = gws.grade_id
             JOIN grade_category gc ON gc.id = g.grade_category_id
             JOIN syllabus s ON s.id = gws.syllabus_id 
@@ -2176,6 +2218,17 @@ db.getChapterWiseTopics = (academicSessionId, syllabusId, gradeId, subjectId, ch
                     filters =filters + ` AND s.id = ${syllabusId}`;
                 }
             }            
+            if(parseInt(gradeCategoryId) > 0)
+            {
+                if(filters == "")
+                {
+                    filters =filters + ` WHERE gc.id = ${gradeCategoryId}`;
+                }
+                else
+                {
+                    filters =filters + ` AND gc.id = ${gradeCategoryId}`;
+                }
+            }
             if(parseInt(gradeId) > 0)
             {
                 if(filters == "")
