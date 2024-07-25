@@ -74,7 +74,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     if(duplicateEmailMobile.length == 0)
                     {
                         ////Check Syllabus
-                        syllabus = await dbCommon.getSyllabus(syllabusId);
+                        syllabus = await dbBusiness.getTieUpSchoolSyllabus(syllabusId);
                         if(syllabus.length == 1)
                         {
                             ////Check Country
