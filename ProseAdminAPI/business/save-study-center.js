@@ -77,20 +77,22 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 academyEnclosureDocumentIds = reqData.academyEnclosureDocumentIds;
             
             /////check Academy Enclosure Documents And Files
-                academyEnclosureDocument = await dbBusiness.getAcademyEnclosureDocument(academyEnclosureDocumentIds);
-                if(academyEnclosureDocument.length != req.files.length)
+                if(academyEnclosureDocumentIds != "")
                 {
-                    ///Remove Files
-                    commonFunction.deleteFiles(req.files);
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Academy Enclosure Documents And Uploading Files Are Not Matched",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500)
-                    })
+                    academyEnclosureDocument = await dbBusiness.getAcademyEnclosureDocument(academyEnclosureDocumentIds);
+                    if(academyEnclosureDocument.length != req.files.length)
+                    {
+                        ///Remove Files
+                        commonFunction.deleteFiles(req.files);
+                        res.status(500)
+                        return res.json({
+                            "status_code" : 500,
+                            "message" : "Academy Enclosure Documents And Uploading Files Are Not Matched",
+                            "success" : false,
+                            "error" : errorCode.getStatus(500)
+                        })
+                    }
                 }
-
                 ////Check studyCenterType
                 studyCenterType = await dbBusiness.getStudyCenterType(studyCenterTypeId);
                 if(studyCenterType.length == 1)
@@ -259,7 +261,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                         } 
                                                         
                                                         ///////Save Study Center Docs File
-                                                        if(academyEnclosureDocument.length > 0)
+                                                        if(academyEnclosureDocument?.length > 0)
                                                         {
                                                             totalSaved = await saveStudyCenterDocs(req.files, academyEnclosureDocument, insertStudyCenterId, code, authData.id);
                                                     ///Remove Files
@@ -270,7 +272,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                         res.status(200)
                                                         return res.json({
                                                             "uuid" : insertJSON.uuid,
-                                                            "savedDocs" : totalSaved > 0 ? `${totalSaved}/${academyEnclosureDocument.length}` : '',
+                                                            "savedDocs" : totalSaved > 0 ? `${totalSaved}/${academyEnclosureDocument?.length}` : '',
                                                             "status_code" : 200,
                                                             "success" : true,                            
                                                             "message" : errorCode.getStatus(200)

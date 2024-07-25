@@ -61,7 +61,6 @@ commonFunction.validateNumber = function(data, zeroRequired = 'No')
     {
         val = Number.isInteger(Number(data)) ? (parseInt(data) > 0 ? data : '') : '';
     }
-    //console.log(val);
     return (val);
 }
 
@@ -84,15 +83,9 @@ commonFunction.deleteFiles = async function(files)
         for(let i=0;i<files.length;i++)
         {
             let filePath = files[i].path;
-            //console.log("File Path : " + filePath)
             if(fs.existsSync(filePath))
             {
                 fs.unlinkSync(filePath);
-                //console.log(`File ${filePath} has been deleted.`);
-            }
-            else
-            {
-                //console.log(`File ${filePath} not found.`);
             }
         }
     } catch (err) {
@@ -104,15 +97,9 @@ commonFunction.deleteFileByPath = async function(filePath)
 {
     try 
     {
-        //console.log("File Path : " + filePath)
         if(fs.existsSync(filePath))
         {
             fs.unlinkSync(filePath);
-            // console.log(`File ${filePath} has been deleted.`);
-        }
-        else
-        {
-            // console.log(`File ${filePath} not found.`);
         }
     } catch (err) {
         console.error(err);
@@ -126,11 +113,6 @@ commonFunction.copyFile = async function(sourcePath, destiPath)
         if(fs.existsSync(sourcePath))
         {
             fs.copyFileSync(sourcePath, destiPath);
-            // console.log(`File ${destiPath} has been copied.`);
-        }
-        else
-        {
-            // console.log(`File ${destiPath} not copied.`);
         }
     } catch (err) {
         console.error(err);
