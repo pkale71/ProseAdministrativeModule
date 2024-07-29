@@ -78,10 +78,13 @@
             </div>
 
             <div class="col-md-8" *ngIf="isChecked">
-                <div class="form-file mb-3">
-                    <span (click)="getDocuments('State-Region')" class="badge m-2 bg-success" style="float: right;">Download Excel</span>
-                    <input type="file" class="form-control" aria-label="file example" required />
-                    <div class="invalid-feedback"> Example invalid custom file feedback </div>
+                <div class="form-file mb-3">                    
+                    <label for="uploadFile">Upload Excel&nbsp;<span style="color: red;">*</span></label>
+                    <span (click)="getDocuments('City')" class="badge  btn-outline-danger m-1" style="float: right; border-style: solid; border-width: 1px; cursor: pointer;">Download Excel</span>
+                    <input type="file" class="form-control" id="uploadFile" aria-label="file example" [ngRequired]="isChecked" formControlName="uploadFile" (change)="fileChange($event)" [accept]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" [multiple]="false"
+                    [ngClass]="{'is-invalid': !addCityForm.controls['uploadFile'].valid && !isValidForm}"/>
+                    <label style="color: red;" *ngIf="addCityForm.controls['uploadFile'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text">Please Upload File.</label>
                 </div>
             </div>    
         </div>

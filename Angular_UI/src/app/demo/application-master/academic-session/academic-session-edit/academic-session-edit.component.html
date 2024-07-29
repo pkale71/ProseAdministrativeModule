@@ -13,11 +13,10 @@
                 <div class="form-group">
                     <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
                     <input class="form-control input-md" id="name" type="text" required formControlName="name" readonly 
-                        maxlength="12"
-                        [ngClass]="{'is-invalid':editAcademicSessionForm.controls['name'].valid && !isValidForm}" />
+                    [ngClass]="{'is-invalid':editAcademicSessionForm.controls['name'].valid && !isValidForm}" />
                     <label style="color: red;"
-                        *ngIf="editAcademicSessionForm.controls['name'].hasError('required') && !isValidForm"
-                        class="error jquery-validation-error small form-text">Please enter name.
+                    *ngIf="editAcademicSessionForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text">Please enter name.
                     </label>
                 </div>
             </div>

@@ -44,11 +44,11 @@
                     >Please enter valid email.</label>
                 </div>
             </div> 
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="form-group">
                     <label class="form-control-label" for="mobile">Mobile&nbsp;<span style="color: red;">*</span></label>
-                    <input class="form-control input-md" id="mobile" type="number" required
-                    formControlName="mobile" maxlength="10"
+                    <input class="form-control input-md" id="mobile" type="text" required
+                    formControlName="mobile" minlength="10" maxlength="15"
                     [ngClass]="{'is-invalid': !coachForm.controls['mobile'].valid && !isValidForm}"
                     />
                     <label style="color: red;"
@@ -65,7 +65,7 @@
                     >Please enter valid mobile number</label>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <form [formGroup]="businessVerticalTypeForm">
                     <div class="form-group">
                         <label class="form-control-label" for="businessVerticalType">Business Vertical Type&nbsp;<span style="color: red;">*</span></label>

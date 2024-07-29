@@ -27,6 +27,7 @@ export class BusinessVerticalTypeEditComponent
   isValidForm : boolean;
   saveClicked : boolean;
   searchClicked : boolean;
+  searchClickedBusinessVerticalGroup : boolean;
   businessVerticalType : any;
   
   constructor(private businessService: BusinessService, 
@@ -44,6 +45,7 @@ export class BusinessVerticalTypeEditComponent
     this.isValidForm = true;
     this.saveClicked = false;
     this.searchClicked = false;
+    this.searchClickedBusinessVerticalGroup = false;
     this.businessVerticals = [];
     this.businessVerticalGroups = [];
 
@@ -62,10 +64,11 @@ export class BusinessVerticalTypeEditComponent
       "businessVerticalGroup" : ['', Validators.required]
     })
    
-    this.getBusinessVerticals();
     this.editBusinessVerticalTypeForm.patchValue(this.businessVerticalType);
     this.businessVerticalForm.get("businessVertical").setValue(this.businessVerticalType.businessVertical.id);
+    this.getBusinessVerticals(this.businessVerticalType.businessVertical);
     this.businessVerticalGroupForm.get("businessVerticalGroup").setValue(this.businessVerticalType.businessVerticalGroup.id);
+    this.getBusinessVerticalGroups(this.businessVerticalType.businessVerticalGroup);
   }
 
   showNotification(type: string, message: string): void 
@@ -74,101 +77,120 @@ export class BusinessVerticalTypeEditComponent
     this.notifier.notify(type, message);
   }
 
-   // get business vertical
-   async getBusinessVerticals() 
-   {  
-     try
-     {
-       let response = await this.businessService.getBusinessVerticals('All').toPromise();
-       if (response.status_code == 200 && response.message == 'success') 
-       {
-         this.businessVerticals = response.businessVerticals;
-         this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
-         this.getBusinessVerticalGroups();
-       }
-       else
-       {
-         this.businessVerticals = [];
-       }
-     }
-     catch(e)
-     {
-       this.showNotification("error", e);
-     }
-   }
- 
-
-  //get business vertical group
-  async getBusinessVerticalGroups() 
-  {  
-    try
-    {
-      let businessVerticalId = this.businessVerticalForm.get("businessVertical").value;
-      if(businessVerticalId != undefined && businessVerticalId != "")
-      {
-        this.searchClicked = true;  
-        let response = await this.businessService.getBusinessVerticalGroups(businessVerticalId, 'All').toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
-        {
-          this.businessVerticalGroups = response.businessVerticalGroups;
-          this.businessVerticalGroups.unshift({ id : '', name : "Select Business Vertical Group"});
-          this.searchClicked = false;
-        }
-        else
-        {
-          this.businessVerticalGroups = [];
-          this.searchClicked = false;
-        }
-      }
-      else
-      {
-        this.businessVerticalGroups = [];
-        this.searchClicked = false;
-      }
-    }
-    catch(e)
-    {
-      this.showNotification("error", e);
-      this.searchClicked = false;
-    }
-  }
-
-
-  async saveBusinessVertical()
-  {
-    if(!this.saveClicked)
-    {
-      if(this.editBusinessVerticalTypeForm.valid)
-      {
-        this.isValidForm = true;
-        this.saveClicked = true;
+    // get business vertical
+    async getBusinessVerticals(businessVertical : any) 
+    {  
         try
         {
-          let response = await this.businessService.updateBusinessVerticalType(this.editBusinessVerticalTypeForm.value).toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
-          {
-            this.showNotification("success", "Business Vertical Type Updated");
-            this.commonSharedService.businessVerticalTypeListObject.next({result : "success"});
-            this.closeModal();
-          }
+            let response = await this.businessService.getBusinessVerticals('Active').toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                this.businessVerticals = response.businessVerticals;
+                this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
+                if(businessVertical != '')
+                {
+                    let filterBusinessVertical = this.businessVerticals.filter(tempBusinessVertical => parseInt(tempBusinessVertical.id) == parseInt(businessVertical.id));
+                    if(filterBusinessVertical.length == 0)
+                    {
+                        this.businessVerticals.push({ id : businessVertical.id, name : businessVertical.name });
+                    }
+                }
+            }
+            else
+            {
+                this.businessVerticals = [];
+            }
         }
         catch(e)
         {
-          this.showNotification("error", e);
-          this.isValidForm = false;
-          this.saveClicked = false;
+            this.showNotification("error", e);
         }
-      }
-      else
-      {
-        this.isValidForm = false;
-        this.saveClicked = false;
-      }
-    }
-  }
+    } 
 
-  closeModal()
-  {
-    this.activeModal.close(); 
-  }
+    //get business vertical group
+    async getBusinessVerticalGroups(businessVerticalGroup : any) 
+    {  
+        try
+        {
+            let businessVerticalId = this.businessVerticalForm.get("businessVertical").value;
+            if(businessVerticalId != undefined && businessVerticalId != "")
+            {
+                this.searchClickedBusinessVerticalGroup = true;  
+                let response = await this.businessService.getBusinessVerticalGroups(businessVerticalId, 'Active').toPromise();
+                if (response.status_code == 200 && response.message == 'success') 
+                {
+                    this.businessVerticalGroups = response.businessVerticalGroups;
+                    console.log(this.businessVerticalGroups)
+                    this.businessVerticalGroups.unshift({ id : '', name : "Select Business Vertical Group"});
+                    this.searchClickedBusinessVerticalGroup = false;
+                    if(businessVerticalGroup != '')
+                    {
+                        let filterBusinessVerticalGroup = this.businessVerticalGroups.filter(tempBusinessVerticalGroup => parseInt(tempBusinessVerticalGroup.id) == parseInt(businessVerticalGroup.id));
+                        console.log(filterBusinessVerticalGroup)
+                        if(filterBusinessVerticalGroup.length == 0)
+                        {
+                            this.businessVerticalGroups.push({ id : businessVerticalGroup.id, name : businessVerticalGroup.name });
+                        }
+                    }
+                }
+                else
+                {
+                    this.businessVerticalGroups = [];
+                    this.businessVerticalGroups.unshift({ id : '', name : "Select Business Vertical Group"});
+                    this.searchClickedBusinessVerticalGroup = false;
+                }
+            }
+            else
+            {
+                this.businessVerticalGroups = [];
+                this.businessVerticalGroups.unshift({ id : '', name : "Select Business Vertical Group"});
+                this.searchClickedBusinessVerticalGroup = false;
+            }
+        }
+        catch(e)
+        {
+            this.showNotification("error", e);
+            this.searchClickedBusinessVerticalGroup = false;
+        }
+    }
+
+    async saveBusinessVertical()
+    {
+        if(!this.saveClicked)
+        {
+            if(this.editBusinessVerticalTypeForm.valid)
+            {
+                this.isValidForm = true;
+                this.saveClicked = true;
+                this.editBusinessVerticalTypeForm.controls['businessVertical'].get("id").setValue(this.businessVerticalForm.get('businessVertical').value);
+                this.editBusinessVerticalTypeForm.controls['businessVerticalGroup'].get('id').setValue(this.businessVerticalGroupForm.get('businessVerticalGroup').value);
+                try
+                {
+                    let response = await this.businessService.updateBusinessVerticalType(this.editBusinessVerticalTypeForm.value).toPromise();
+                    if (response.status_code == 200 && response.message == 'success') 
+                    {
+                        this.showNotification("success", "Business Vertical Type Updated");
+                        this.commonSharedService.businessVerticalTypeListObject.next({result : "success"});
+                        this.closeModal();
+                    }
+                }
+                catch(e)
+                {
+                    this.showNotification("error", e);
+                    this.isValidForm = false;
+                    this.saveClicked = false;
+                }
+            }
+            else
+            {
+                this.isValidForm = false;
+                this.saveClicked = false;
+            }
+        }
+    }
+
+    closeModal()
+    {
+        this.activeModal.close(); 
+    }
 }

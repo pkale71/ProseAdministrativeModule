@@ -15,7 +15,7 @@
                 <div class="form-group">
                     <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
                     <input class="form-control input-md" id="name" type="text" required
-                    formControlName="name" 
+                    formControlName="name" maxlength="40"
                     [ngClass]="{'is-invalid': !editBusinessPartnerForm.controls['name'].valid && !isValidForm}"/>
                     <label style="color: red;"
                     *ngIf="editBusinessPartnerForm.controls['name'].hasError('required') && !isValidForm"
@@ -78,8 +78,8 @@
             <div class="col-md-3">
                 <form [formGroup]="countryForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="country">Country&nbsp;<span style="color: red;">*</span></label>
-                        <select class="form-control"  required id="country" formControlName="country" (change)="getStateRegions('Active')"
+                        <label class="form-control-label" for="country">Country&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedCountry"></i></label>
+                        <select class="form-control"  required id="country" formControlName="country" (change)="getStateRegions('')"
                         [ngClass]="{'is-invalid': !countryForm.controls['country'].valid && !isValidForm}">
                         <option value="{{country.id}}" *ngFor="let country of countries">{{country?.name}}</option>
                         </select>
@@ -93,8 +93,8 @@
             <div class="col-md-3">
                 <form [formGroup]="stateRegionForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
-                        <select class="form-control"  required id="stateRegion" formControlName="stateRegion" (change)="getDistricts('Active')"
+                        <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedStateRegion"></i></label>
+                        <select class="form-control"  required id="stateRegion" formControlName="stateRegion" (change)="getDistricts('')"
                         [ngClass]="{'is-invalid': !stateRegionForm.controls['stateRegion'].valid && !isValidForm}">
                         <option value="{{stateRegion.id}}" *ngFor="let stateRegion of stateRegions">{{stateRegion?.name}}</option>
                         </select>
@@ -108,8 +108,8 @@
             <div class="col-md-3">
                 <form [formGroup]="districtForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="district">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
-                        <select class="form-control"  required id="district" formControlName="district" (change)="getCities('Active')"
+                        <label class="form-control-label" for="district">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedDistrict"></i></label>
+                        <select class="form-control"  required id="district" formControlName="district" (change)="getCities('')"
                         [ngClass]="{'is-invalid': !districtForm.controls['district'].valid && !isValidForm}">
                         <option value="{{district.id}}" *ngFor="let district of districts">{{district?.name}}</option>
                         </select>
@@ -123,7 +123,7 @@
             <div class="col-md-3">
                 <form [formGroup]="cityForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="city">City&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <label class="form-control-label" for="city">City&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedCity"></i></label>
                         <select class="form-control"  required id="city" formControlName="city"
                         [ngClass]="{'is-invalid': !cityForm.controls['city'].valid && !isValidForm}">
                         <option value="{{city.id}}" *ngFor="let city of cities">{{city?.name}}</option>
@@ -138,8 +138,8 @@
             <div class="col-md-3">
                 <form [formGroup]="businessVerticalForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="businessVertical">Business Vertical&nbsp;<span style="color: red;">*</span></label>
-                        <select class="form-control"  required id="businessVertical" formControlName="businessVertical" (change)="getBusinessVerticalTypes('Active')"
+                        <label class="form-control-label" for="businessVertical">Business Vertical&nbsp;<span style="color: red;">*</span><i class="fa fa-spin fa-spinner" *ngIf="searchClickedBusinessVertical"></i> </label>
+                        <select class="form-control"  required id="businessVertical" formControlName="businessVertical" (change)="getBusinessVerticalTypes([],'')"
                         [ngClass]="{'is-invalid': !businessVerticalForm.controls['businessVertical'].valid && !isValidForm}">
                         <option value="{{businessVertical.id}}" *ngFor="let businessVertical of businessVerticals">{{businessVertical?.name}}</option>
                         </select>
@@ -257,6 +257,7 @@
                     <label class="form-control-label" for="applicableTo">Applicable To&nbsp;<span
                     style="color: red;">*</span></label>
                     <input class="form-control input-md" id="applicableTo" type="date" required formControlName="applicableTo" 
+                    min="{{editBusinessPartnerForm.controls['applicableFrom'].value}}"
                     [ngClass]="{'is-invalid': !editBusinessPartnerForm.controls['applicableTo'].valid && !isValidForm}" />
                     <label style="color: red;"
                     *ngIf="editBusinessPartnerForm.controls['applicableTo'].hasError('required') && !isValidForm"

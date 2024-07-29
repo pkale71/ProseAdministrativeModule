@@ -26,6 +26,7 @@ import { BusinessVerticalTypeAddComponent } from '../business-vertical-type-add/
 export class BusinessVerticalTypeListComponent {
   searchClicked : boolean;
   businessVerticalTypes : any[];
+  masterBusinessVerticalTypes : any[];
   businessVerticalForm : FormGroup;
   businessVerticalGroupForm : FormGroup;
   businessVerticals : any[];
@@ -41,6 +42,7 @@ export class BusinessVerticalTypeListComponent {
     private router : Router)
     {
       this.businessVerticalTypes = [];
+      this.masterBusinessVerticalTypes = [];
       this.businessVerticals = [];
       this.businessVerticalGroups = [];
     }
@@ -153,7 +155,8 @@ export class BusinessVerticalTypeListComponent {
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblBusinessVerticalType').DataTable().destroy();
-        this.businessVerticalTypes = response.businessVerticalTypes;
+        this.masterBusinessVerticalTypes = response.businessVerticalTypes;
+        this.businessVerticalTypes = this.masterBusinessVerticalTypes;
         setTimeout(function(){
           $('#tblBusinessVerticalType').DataTable();
         },1000);
@@ -219,7 +222,7 @@ export class BusinessVerticalTypeListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Business Vertical Type Status Updated");
+              this.showNotification("success", "Business Vertical Type " + (businessVerticalType.isActive == 1 ? 'De-activated' : 'Activated'));
               this.commonSharedService.businessVerticalTypeListObject.next({
                 result : "success"
               });

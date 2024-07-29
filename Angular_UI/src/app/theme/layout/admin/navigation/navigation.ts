@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { param } from 'jquery';
 
 export interface NavigationItem {
   id: string;
@@ -326,6 +327,27 @@ const NavigationItems = [
             target: false
           },
 
+          {
+            id: 'tieUpSchools',
+            title: 'Tie-Up Schools',
+            type: 'item',
+            url: '/business/tieUpSchools',
+            param: "",
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false
+          },
+
+          {
+            id: 'studyCenters',
+            title: 'Study Centers',
+            type: 'item',
+            url: '/business/studyCenters',
+            param: '',
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            target: false,
+          }
         ]
       }
 

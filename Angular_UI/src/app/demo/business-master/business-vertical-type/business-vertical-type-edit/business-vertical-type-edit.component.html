@@ -15,7 +15,7 @@
                 <form [formGroup]="businessVerticalForm">
                     <div class="form-group">
                         <label class="form-control-label" for="businessVertical">Business Vertical&nbsp;<span style="color: red;">*</span></label>
-                        <select class="form-control"  required id="businessVertical" formControlName="businessVertical" (click)="getBusinessVerticalGroups()"
+                        <select class="form-control"  required id="businessVertical" formControlName="businessVertical" (change)="getBusinessVerticalGroups('')"
                         [ngClass]="{'is-invalid': !businessVerticalForm.controls['businessVertical'].valid && !isValidForm}">
                         <option value="{{businessVertical.id}}" *ngFor="let businessVertical of businessVerticals">{{businessVertical?.name}}</option>
                         </select>
@@ -29,7 +29,7 @@
             <div class="col-md-4">
                 <form [formGroup]="businessVerticalGroupForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="businessVerticalGroup">Business Vertical Group&nbsp;<span style="color: red;">*</span><i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <label class="form-control-label" for="businessVerticalGroup">Business Vertical Group&nbsp;<span style="color: red;">*</span><i class="fa fa-spin fa-spinner" *ngIf="searchClickedBusinessVerticalGroup"></i></label>
                         <select class="form-control"  required id="businessVerticalGroup" formControlName="businessVerticalGroup"
                         [ngClass]="{'is-invalid': !businessVerticalGroupForm.controls['businessVerticalGroup'].valid && !isValidForm}">
                         <option value="{{businessVerticalGroup.id}}" *ngFor="let businessVerticalGroup of businessVerticalGroups">{{businessVerticalGroup?.name}}</option>
@@ -44,7 +44,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
-                    <input class="form-control input-md" id="name" type="text" required formControlName="name" maxlength="100"
+                    <input class="form-control input-md" id="name" type="text" required formControlName="name"
                     [ngClass]="{'is-invalid':editBusinessVerticalTypeForm.controls['name'].valid && !isValidForm}" />
                     <label style="color: red;"
                     *ngIf="editBusinessVerticalTypeForm.controls['name'].hasError('required') && !isValidForm"

@@ -3,7 +3,7 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NotifierService } from 'angular-notifier';
-import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
@@ -12,6 +12,7 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 import Swal from 'sweetalert2';
 import { IOption, SelectModule } from 'ng-select';
 import { BusinessService } from 'src/app/theme/shared/service/business.service';
+import { ValidationErrors } from '@iplab/ngx-file-upload';
 
 @Component({
   selector: 'app-business-partner-contract-add',
@@ -54,8 +55,7 @@ export class BusinessPartnerContractAddComponent {
       businessPartner: {"uuid" : this.uuid },
       contractFrom: ['', Validators.required],
       contractTo: ['', [Validators.required]],
-    },
-      { validators: this.dateValidator() });
+      });
 
     this.getBusinessPartner(this.uuid); 
   }
@@ -82,18 +82,6 @@ export class BusinessPartnerContractAddComponent {
     }
   }
 
-  dateValidator() 
-  {
-    const contractFrom = this.addBusinessPartnerContractForm.get('contractFrom').value;
-    const contractTo = this.addBusinessPartnerContractForm.get('contractTo').value;
-    let validate : boolean = false;
-    if (contractFrom && contractTo && new Date(contractFrom) > new Date(contractTo)) {
-      this.addBusinessPartnerContractForm.get('contractTo').setErrors({ dateRange: true });
-       validate = true;
-    }
-    return validate;
-  }
-
   async saveBusinessPartnerContract()
   {
     if(!this.saveClicked)
@@ -108,7 +96,7 @@ export class BusinessPartnerContractAddComponent {
           if (response.status_code == 200 && response.message == 'success') 
           {
             this.showNotification("success", "Business Partner Contract Saved");            
-            this.commonSharedService.businessPartnerContractHistoryDocumentListObject.next({result : "success"});
+            this.commonSharedService.businessPartnerCoachContractHistoryDocumentListObject.next({result : "success"});
             this.closeModal();
             this.saveClicked = false;
             this.isValidForm = false;

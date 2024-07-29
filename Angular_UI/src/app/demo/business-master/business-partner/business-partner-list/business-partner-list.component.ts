@@ -27,11 +27,9 @@ export class BusinessPartnerListComponent
 {
   businessPartners : any[];
   businessPartnerTypes : any[];
-  masterBusinessPartnerTypes : any[];
   businessPartnerTypeForm : FormGroup;
   searchClicked : boolean;
   businessPartnerType : any;
-  masterBusinessPartnerType : any[];
   id : number;
   businessPartner : any;
   uuid : string;
@@ -59,13 +57,13 @@ export class BusinessPartnerListComponent
     });
 
     this.getBusinessPartnerTypes();
-    this.getBusinessPartners("");
+    this.getBusinessPartners('', 'Active');
   }
 
   public businessPartnerAddResult:any = this.commonSharedService.businessPartnerListObject.subscribe(res =>{
     if(res.result == "success")
     {
-      this.getBusinessPartners('');
+      this.getBusinessPartners('', 'Active');
     }
   }) 
 
@@ -93,12 +91,12 @@ export class BusinessPartnerListComponent
   }
 
   // get business partner with business partner type id
-  async getBusinessPartners(businessPartnerTypeId : any) 
+  async getBusinessPartners(businessPartnerTypeId : any, action : string) 
   {
     try
     {
       this.searchClicked = true;
-      let response = await this.businessService.getBusinessPartners(businessPartnerTypeId).toPromise();
+      let response = await this.businessService.getBusinessPartners(businessPartnerTypeId, 'Active').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblBusinessPartner').DataTable().destroy();
@@ -174,7 +172,7 @@ export class BusinessPartnerListComponent
           if (response.status_code == 200 && response.message == 'success') 
           {
             let businessPartnerType = businessPartner?.businessPartnerType?.name;
-            this.showNotification("success", businessPartnerType  + " " + "Status Updated");
+            this.showNotification("success", businessPartnerType  + " " +  (businessPartner.isActive == 1 ? 'De-activated' : 'Activated'));
             this.commonSharedService.businessPartnerListObject.next({result : "success"});
           }
         }
@@ -186,7 +184,7 @@ export class BusinessPartnerListComponent
     });   
   }
 
-  addBusinessPartnerType(id : string)
+  addBusinessPartnerType(id : number)
   {
     this.router.navigateByUrl("/business/businessPartner/add/" + id);
   }

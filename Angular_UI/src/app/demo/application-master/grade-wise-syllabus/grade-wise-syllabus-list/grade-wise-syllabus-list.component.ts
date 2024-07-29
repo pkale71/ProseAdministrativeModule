@@ -261,7 +261,7 @@ export class GradeWiseSyllabusListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Grade wise syllabus " + (gradeWiseSyllabus.isActive == 1 ? 'de-activated' : 'activated'));
+              this.showNotification("success", "Grade wise syllabus " + (gradeWiseSyllabus.isActive == 1 ? 'De-activated' : 'Activated'));
               this.commonSharedService.gradeWiseSyllabusListObject.next({
                 result : "success", 
                 responseData : {

@@ -15,7 +15,7 @@
                 <form [formGroup]="countryForm">
                     <div class="form-group">
                         <label class="form-control-label" for="country">Country&nbsp;<span style="color: red;">*</span></label>
-                        <select class="form-control"  required id="country" formControlName="country" (change)="getStateRegions('All')"
+                        <select class="form-control"  required id="country" formControlName="country" (change)="getStateRegions('Active')"
                         [ngClass]="{'is-invalid': !countryForm.controls['country'].valid && !isValidForm}">
                         <option value="{{country.id}}" *ngFor="let country of countries">{{country?.name}}</option>
                         </select>
@@ -30,7 +30,7 @@
                 <form [formGroup]="stateRegionForm">
                     <div class="form-group">
                         <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
-                        <select class="form-control"  required id="stateRegion" formControlName="stateRegion" (change)="getDistricts('All')"
+                        <select class="form-control"  required id="stateRegion" formControlName="stateRegion" (change)="getDistricts('Active')"
                         [ngClass]="{'is-invalid': !stateRegionForm.controls['stateRegion'].valid && !isValidForm}">
                         <option value="{{stateRegion.id}}" *ngFor="let stateRegion of stateRegions">{{stateRegion?.name}}</option>
                         </select>

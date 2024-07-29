@@ -14,7 +14,7 @@
               <div class="form-group">
                 <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
                 <input class="form-control input-md" id="name" type="text" required
-                formControlName="name" 
+                formControlName="name" maxlength="40"
                 [ngClass]="{'is-invalid': !addBusinessPartnerForm.controls['name'].valid && !isValidForm}"/>
                 <label style="color: red;"
                 *ngIf="addBusinessPartnerForm.controls['name'].hasError('required') && !isValidForm"
@@ -168,7 +168,7 @@
               <div class="form-group">
                 <label class="form-control-label" for="contactPerson">Contact Person&nbsp;<span style="color: red;">*</span></label>
                 <input class="form-control input-md" id="contactPerson" type="text" required
-                formControlName="contactPerson" maxlength="100"
+                formControlName="contactPerson" maxlength="40"
                 [ngClass]="{'is-invalid': !addBusinessPartnerForm.controls['contactPerson'].valid && !isValidForm}"/>
                 <label style="color: red;"
                 *ngIf="addBusinessPartnerForm.controls['contactPerson'].hasError('required') && !isValidForm"
@@ -221,7 +221,7 @@
               <div class="form-group">
                 <label class="form-control-label" for="inchargePerson">Incharge Person&nbsp;</label>
                 <input class="form-control input-md" id="inchargePerson" type="text" 
-                formControlName="inchargePerson" maxlength="100">
+                formControlName="inchargePerson" maxlength="40">
               </div>                 
             </div>
             <div class="col-md-3">
@@ -256,8 +256,9 @@
                 <label class="form-control-label" for="applicableTo">Applicable To&nbsp;<span
                 style="color: red;">*</span></label>
                 <input class="form-control input-md" id="applicableTo" type="date" required formControlName="applicableTo" 
+                min="{{addBusinessPartnerForm.controls['applicableFrom'].value}}"
                 [ngClass]="{'is-invalid': !addBusinessPartnerForm.controls['applicableTo'].valid && !isValidForm}" />
-                <label style="color: red;"
+                <label style="color: red;" 
                 *ngIf="addBusinessPartnerForm.controls['applicableTo'].hasError('required') && !isValidForm"
                 class="error jquery-validation-error small form-text">Please enter your end date.</label>
               </div>
@@ -295,9 +296,9 @@
               <div class="form-group">
                 <label class="form-control-label" for="contractTo">Contract To&nbsp;<span
                 style="color: red;" *ngIf = "isRequiredContract">*</span></label>
-                <input class="form-control input-md" id="contractTo" type='date' [ngRequired]="isRequiredContract" formControlName="contractTo" 
+                <input class="form-control input-md" id="contractTo" type='date' [ngRequired]="isRequiredContract" formControlName="contractTo" min="{{addBusinessPartnerForm.controls['contractFrom'].value}}"
                 [ngClass]="{'is-invalid': !addBusinessPartnerForm.controls['contractTo'].valid && !isValidForm && isRequiredContract}" />
-                <label style="color: red;"
+                <label style="color: red;" 
                 *ngIf="addBusinessPartnerForm.controls['contractTo'].hasError('required') && !isValidForm"
                 class="error jquery-validation-error small form-text">Please enter your end date.</label>
               </div>
@@ -377,7 +378,7 @@
             <div class="col-md-4" *ngIf="businessPartnerType?.code == 'B2B'">
               <form [formGroup]="commercialTermForm">
                 <div class="form-group">
-                  <label class="form-control-label" for="commercialTerm">Commercial Term&nbsp;<span style="color: red;">*</span><i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                  <label class="form-control-label" for="commercialTerm">Commercial Term&nbsp;<span style="color: red;">*</span></label>
                   <select class="form-control"  required id="commercialTermForm" formControlName="commercialTerm"
                   [ngClass]="{'is-invalid': !commercialTermForm.controls['commercialTerm'].valid && !isValidForm}">
                   <option value="{{commercialTerm.id}}" *ngFor="let commercialTerm of commercialTerms">{{commercialTerm?.name}}</option>
@@ -427,7 +428,7 @@
                         <td>
                           <select class="form-select"  required id="academyEnclosureDocument" formControlName="academyEnclosureDocument" (change) = "getDocumentSelect()"
                           [ngClass]="{'is-invalid': !isValidForm1 && !getEnclosureDocDetailsForm[i].controls['academyEnclosureDocument'].valid}">
-                          <option value="{{academyEnclosureDocument.id}}" [disabled] = "academyEnclosureDocument?.isUploaded" *ngFor="let academyEnclosureDocument of academyEnclosureDocuments;">{{academyEnclosureDocument?.name}} {{academyEnclosureDocument?.isUploaded}}</option>
+                          <option value="{{academyEnclosureDocument.id}}" [disabled] = "academyEnclosureDocument?.isUploaded" *ngFor="let academyEnclosureDocument of academyEnclosureDocuments;">{{academyEnclosureDocument?.name}}</option>
                           </select>
                           <div class="invalid-feedback" *ngIf="getEnclosureDocDetailsForm[i].controls['academyEnclosureDocument'].hasError('required') && !isValidForm1">
                             Please select enclosure document

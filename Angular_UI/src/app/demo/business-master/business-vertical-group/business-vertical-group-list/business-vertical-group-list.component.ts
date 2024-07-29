@@ -26,6 +26,7 @@ import { BusinessVerticalGroupAddComponent } from '../business-vertical-group-ad
 export class BusinessVerticalGroupListComponent {
   searchClicked : boolean;
   businessVerticalGroups : any[];
+  masterBusinessVerticalGroups : any[];
   businessVerticals : any[];
   businessVerticalForm : FormGroup;
   
@@ -111,7 +112,8 @@ export class BusinessVerticalGroupListComponent {
       if (response.status_code == 200 && response.message == 'success') 
       {
         $('#tblBusinessVerticalGroup').DataTable().destroy();
-        this.businessVerticalGroups = response.businessVerticalGroups;
+        this.masterBusinessVerticalGroups = response.businessVerticalGroups;
+        this.businessVerticalGroups = this.masterBusinessVerticalGroups;
         setTimeout(function(){
           $('#tblBusinessVerticalGroup').DataTable();
         },800);
@@ -178,7 +180,7 @@ export class BusinessVerticalGroupListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Business Vertical Group Status Updated");
+              this.showNotification("success", "Business Vertical Group " + (businessVerticalGroup.isActive == 1 ? 'De-activated' : 'Activated'));
               this.commonSharedService.businessVerticalGroupListObject.next({
                 result : "success"
               });

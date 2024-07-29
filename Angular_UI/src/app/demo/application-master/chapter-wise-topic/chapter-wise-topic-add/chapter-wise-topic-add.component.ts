@@ -33,7 +33,6 @@ export class ChapterWiseTopicAppComponent
   academicSessions : any[];
   gradeCategories : any[];
   grades : any[];
-  masterGrades : any[];
   gradeWiseSyllabuses : any[];
   syllabusWiseSubjects : any[];
   subjectWiseChapters : any[];

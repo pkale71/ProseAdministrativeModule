@@ -22,7 +22,7 @@
             <div class="col-md-12" *ngIf="!isChecked">
                 <div class="form-group">
                     <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
-                    <input class="form-control input-md" id="name" type="text" required 
+                    <input class="form-control input-md" id="name" type="text" [ngRequired]="!isChecked"
                     formControlName="name" 
                     [ngClass]="{'is-invalid': !addCountryForm.controls['name'].valid && !isValidForm}"/>
                     <label style="color: red;"
@@ -31,18 +31,17 @@
                     >Please enter name.</label>
                 </div>                
             </div> 
-              <!-- upload excel -->
+              <!-- upload excel -->  
             <div class="col-md-12" *ngIf="isChecked">
                 <div class="form-file mb-3">
                     <label for="uploadFile">Upload Excel&nbsp;<span style="color: red;">*</span></label>
                     <span (click)="getDocuments('Country')" class="badge  btn-outline-danger m-1" style="float: right; border-style: solid; border-width: 1px;">Download Excel</span>
-                    <input type="file" class="form-control" aria-label="file example" formControlName="uploadFile"
-                    [ngClass]="{'is-invalid': !addCountryForm.controls['uploadFile'].valid && !isValidForm}" required />
+                    <input type="file" id="uploadFile" class="form-control"   formControlName="uploadFile" (change)="fileChange($event)" [accept]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" [multiple]="false"
+                    [ngRequired]="isChecked" [ngClass]="{'is-invalid': !addCountryForm.controls['uploadFile'].valid && !isValidForm}" />
                     <label style="color: red;"
                     *ngIf="addCountryForm.controls['uploadFile'].hasError('required') && !isValidForm"
                     class="error jquery-validation-error small form-text"
                     >Please upload file.</label>
-                    <div class="invalid-feedback"> Example invalid custom file feedback </div>
                 </div>
             </div>  
         </div>

@@ -36,6 +36,11 @@ import { CityListComponent } from './demo/application-master/city/city-list/city
 import { BusinessPartnerListComponent } from './demo/business-master/business-partner/business-partner-list/business-partner-list.component';
 import { BusinessPartnerAddComponent } from './demo/business-master/business-partner/business-partner-add/business-partner-add.component';
 import { BusinessPartnerDetailComponent } from './demo/business-master/business-partner/business-partner-detail/business-partner-detail.component';
+import { TieUpSchoolListComponent } from './demo/business-master/tie-up-school/tie-up-school-list/tie-up-school-list.component';
+import { TieUpSchoolDetailComponent } from './demo/business-master/tie-up-school/tie-up-school-detail/tie-up-school-detail.component';
+import { StudyCenterListComponent } from './demo/business-master/study-center/study-center-list/study-center-list.component';
+import { StudyCenterAddComponent } from './demo/business-master/study-center/study-center-add/study-center-add.component';
+import { StudyCenterDetailComponent } from './demo/business-master/study-center/study-center-detail/study-center-detail.component';
 
 const routes: Routes = [
   {
@@ -213,6 +218,31 @@ const routes: Routes = [
       {
         path: 'business/businessPartner/detail/:uuid',
         loadComponent: () => BusinessPartnerDetailComponent,
+        canActivate: [AuthGuardService],
+      },
+      {
+        path: 'business/tieUpSchools',
+        loadComponent : () => TieUpSchoolListComponent,
+        canActivate: [AuthGuardService],
+      },
+      {
+        path: 'business/tieUpSchool/detail/:uuid',
+        loadComponent: () => TieUpSchoolDetailComponent,
+        canActivate: [AuthGuardService],
+      },
+      {
+        path: 'business/studyCenters',
+        loadComponent: () => StudyCenterListComponent,
+        canActivate: [AuthGuardService],
+      },
+      {
+        path: 'business/studyCenter/add/:id',
+        loadComponent: () => StudyCenterAddComponent,
+        canActivate: [AuthGuardService],
+      },
+      {
+        path: 'business/studyCenter/detail/:uuid',
+        loadComponent: () => StudyCenterDetailComponent,
         canActivate: [AuthGuardService],
       },
     ]

@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label class="form-control-label" for="lastName">Last Name</label>
                     <input class="form-control input-md" id="lastName" type="text"  readonly
-                    formControlName="lastName" maxlength="25"
+                    formControlName="lastName" maxlength="40"
                     [ngClass]="{'is-invalid': !editUserForm.controls['lastName'].valid && !isValidForm}"/>
                     <label style="color: red;"
                     *ngIf="editUserForm.controls['lastName'].hasError('pattern') && !isValidForm"

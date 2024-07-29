@@ -167,7 +167,7 @@ export class SchoolingProgramListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Schooling Program " + (schoolingProgram.isActive == 1 ? 'de-activated' : 'activated'));
+              this.showNotification("success", "Schooling Program " + (schoolingProgram.isActive == 1 ? 'De-activated' : 'Activated'));
               this.commonSharedService.schoolingProgramListObject.next({
                 result : "success", 
                 responseData : {

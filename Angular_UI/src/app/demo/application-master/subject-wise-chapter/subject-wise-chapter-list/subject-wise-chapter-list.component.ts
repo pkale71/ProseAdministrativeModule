@@ -356,7 +356,7 @@ export class SubjectWiseChapterListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Subject Wise Chapter " + (subjectWiseChapter.isActive == 1 ? 'de-activated' : 'activated'));
+              this.showNotification("success", "Subject Wise Chapter " + (subjectWiseChapter.isActive == 1 ? 'De-activated' : 'Activated'));
               this.commonSharedService.subjectWiseChapterListObject.next({
                 result : "success", 
                 responseData : {

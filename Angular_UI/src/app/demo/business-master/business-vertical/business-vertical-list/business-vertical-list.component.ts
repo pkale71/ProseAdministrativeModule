@@ -133,7 +133,7 @@ export class BusinessVerticalListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Business Vertical Status Updated");
+              this.showNotification("success", "Business Vertical "  + (businessVertical.isActive == 1 ? 'De-activated' : 'Activated'));
               this.commonSharedService.businessVerticalListObject.next({
                 result : "success"
               });

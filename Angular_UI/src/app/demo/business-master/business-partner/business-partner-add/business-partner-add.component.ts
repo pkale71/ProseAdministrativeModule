@@ -646,7 +646,7 @@ export class BusinessPartnerAddComponent {
   fileChange(event : any, i : number)
   {
     if(this.getEnclosureDocDetailsForm[i].get('docFile').value)
-    { 
+    { // console.log(event.target.files[0])
       const file = event.target.files[0]; //this.getEnclosureDocDetailsForm[i].get('docFile').value;
       let fSize : number = parseFloat((file.size / 1024).toFixed(2));
       if(file.type == 'image/png' || file.type == 'image/jpeg' || file.type == 'application/pdf')
@@ -693,7 +693,7 @@ export class BusinessPartnerAddComponent {
             }
             this.saveClicked = false;
             this.isValidForm = false;
-            this.router.navigateByUrl("/business/businessPartner/detail/" + response.businessPartnerTypeUUID);
+            this.router.navigateByUrl("/business/businessPartner/detail/" + response.uuid);
           }
         }
         catch (e) 

@@ -128,25 +128,25 @@
                   <label class="form-control-label" for="isHavingContract">Is Having Contract</label>
                   <label class="form-control input-md">{{businessPartner?.isHavingContract == 1 ? 'Yes' : 'No'}}</label>                
                 </div> 
-                <div class="col-sm-3">
+                <!-- <div class="col-sm-3">
                   <label class="form-control-label" for="contractFrom">Contract From</label>
                   <label class="form-control input-md">{{businessPartner?.contract?.contractFrom != "" ? (businessPartner?.contract?.contractFrom | date : "dd/MM/yyyy")  : '----' }}</label>                
                 </div>
                 <div class="col-sm-3">
                   <label class="form-control-label" for="contractTo">Contract To</label>
                   <label class="form-control input-md">{{businessPartner?.contract?.contractTo != "" ? (businessPartner?.contract?.contractTo | date : "dd/MM/yyyy") : '----'}}</label>                
-                </div>
+                </div> -->
                 <div class="col-sm-3">
                   <label class="form-control-label" for="rewardApplicable">Reward Applicable</label>
                   <label class="form-control input-md">{{businessPartner?.rewardApplicable == 1 ? 'Yes' : 'No'}}</label>                
                 </div>
-              </div>
-              <div class="{{businessPartner?.businessPartnerType?.code == 'B2B' ? 'row' : 'row mt-2'}}">  
                 <div class="col-sm-3" *ngIf="businessPartner?.businessPartnerType?.code == 'B2C'">
                   <label class="form-control-label" for="commissionTerm">Commission Term</label>
                   <label class="form-control input-md">{{businessPartner?.commissionTerm?.name != '' ? businessPartner?.commissionTerm?.name : '----'}}</label>                
-                </div>                  
-                <div class="col-sm-3" *ngIf="businessPartner?.businessPartnerType?.code == 'B2B'">
+                </div> 
+              </div>
+              <div class="{{businessPartner?.businessPartnerType?.code == 'B2B' ? 'row' : 'row mt-2'}}">                   
+                <div class="col-sm-4" *ngIf="businessPartner?.businessPartnerType?.code == 'B2B'">
                   <label class="form-control-label" for="commercialTerm">Commercial Term</label>
                   <label class="form-control input-md">{{businessPartner?.commercialTerm?.name != '' ? businessPartner?.commercialTerm?.name : '----'}}</label>                
                 </div>
@@ -164,6 +164,7 @@
                     <th>Sno</th>
                     <th>Enclosure Document</th>
                     <th>File Name</th>
+                    <th>Uploaded On</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -172,11 +173,13 @@
                     <td>{{i+1}}</td>
                     <td>{{businessPartnerDocument?.enclosureDocument?.name}}</td>
                     <td>{{businessPartnerDocument?.fileName}}</td>
+                    <td>{{businessPartnerDocument?.uploadedOn | date : "dd/MM/yyyy"}}</td>
                     <td>
-                      <i class="fa fa-trash-alt" title="Delete" (click)="deleteBusinessPartnerDocument(businessPartnerDocument)"></i>
+                      <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteBusinessPartnerDocument(businessPartnerDocument)"></i>
                     </td>
                   </tr>
                   <tr *ngIf="businessPartnerDocuments.length == 0">
+                    <td></td>
                     <td></td>
                     <td>No record(s) found</td>
                     <td></td>
@@ -187,7 +190,7 @@
             </ng-template>
           </li>
           <li class="nav-item" [ngbNavItem]="3" *ngIf="businessPartner?.businessPartnerType?.code == 'B2C'">
-            <a class="nav-link text-uppercase" aria-controls="contacts" aria-selected="true" ngbNavLink>Contract History</a>
+            <a class="nav-link text-uppercase" aria-controls="contacts" aria-selected="true" ngbNavLink>Contract Histories</a>
             <ng-template ngbNavContent>
               <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
               (click)="addRenew(businessPartner.uuid)">Add/Renew</button>  
@@ -204,19 +207,66 @@
                 <tbody>
                   <tr *ngFor="let businessPartnerContractHistory of businessPartnerContractHistories; let i = index">
                     <td>{{i+1}}</td>
-                    <td>{{businessPartnerContractHistory?.contractFrom  | date : "yyyy/MM/dd"}}</td>
-                    <td>{{businessPartnerContractHistory?.contractTo  | date : "yyyy/MM/dd"}}</td>
+                    <td>{{businessPartnerContractHistory?.contractFrom  | date : "dd/MM/yyyy"}}</td>
+                    <td>{{businessPartnerContractHistory?.contractTo  | date : "dd/MM/yyyy"}}</td>
                     <td>
                       <span [ngClass]="businessPartnerContractHistory.isActive ? 'badge bg-success' : ' badge bg-danger'" style="cursor: pointer;" title="Change Status" (click)="updateStatus(businessPartnerContractHistory)">{{businessPartnerContractHistory.isActive? 'Yes' : 'No'}}</span>
                     </td>
                     <td>
-                      <i class="fa fa-trash-alt" title="Delete" (click)="deleteBusinessPartnerContract(businessPartnerContractHistory)"></i>
+                      <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteBusinessPartnerContract(businessPartnerContractHistory)"></i>
                     </td>
                   </tr>
                   <tr *ngIf="businessPartnerContractHistories.length == 0">
                     <td></td>
                     <td></td>
                     <td>No record(s) found</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </li>
+          <li class="nav-item" [ngbNavItem]="4">
+            <a class="nav-link text-uppercase" aria-controls="coaches" aria-selected="true" ngbNavLink>Coaches</a>
+            <ng-template ngbNavContent>
+              <button type="button" class="btn btn-rounded btn-primary float-end"
+              (click)="addCoach(businessPartner.uuid)">Add Coach</button>  
+              <table datatable id="tblBusinessPartnerCoach" class="table table-striped row-border table-hover pt-10">
+                <thead>
+                  <tr>
+                    <th>Sno</th>
+                    <th>Coach</th>
+                    <th>Business Vertical Type</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Active</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let businessPartnerCoach of businessPartnerCoaches let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{businessPartnerCoach?.coach?.name}}</td>
+                    <td>{{businessPartnerCoach?.businessVerticalType?.name}}</td>
+                    <td>{{businessPartnerCoach?.coach?.email}}</td>
+                    <td>{{businessPartnerCoach?.coach?.mobile}}</td>
+                    <td>
+                      <span [ngClass]="businessPartnerCoach.isActive ? 'badge bg-success' : 'badge bg-danger'" 
+                      style="cursor: pointer;" title="Change Status" (click)="updateStatusCoach(businessPartnerCoach)">
+                        {{businessPartnerCoach.isActive ? 'Yes' : 'No'}}
+                      </span>
+                    </td>
+                    <td style="width:40px;text-align: right;">
+                      <i class="fa fa-trash-alt" style="cursor: pointer;"  (click)="deleteBusinessPartnerCoach(businessPartnerCoach)" title="Delete" style="cursor: pointer;"></i>&nbsp;
+                    </td>
+                  </tr>
+                  <tr *ngIf="businessPartnerCoaches.length == 0">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                   </tr>

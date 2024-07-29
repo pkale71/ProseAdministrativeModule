@@ -131,7 +131,7 @@ export class AcademicSessionListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Academic Session Status Updated");
+              this.showNotification("success", "Academic Session " + (academicSession.isActive == 0 ? 'De-activated' : 'Activated'));
               this.commonSharedService.academicSessionListObject.next({
                 result : "success"
               });

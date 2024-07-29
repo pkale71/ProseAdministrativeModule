@@ -11,7 +11,6 @@
                 <div class="form-group">
                     <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
                     <input class="form-control input-md" id="name" type="text" required formControlName="name" readonly 
-                    maxlength="12"
                     [ngClass]="{'is-invalid': !addAcademicSessionForm.controls['name'].valid && !isValidForm}" />
                     <label style="color: red;"
                     *ngIf="addAcademicSessionForm.controls['name'].hasError('required') && !isValidForm"

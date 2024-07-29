@@ -27,6 +27,11 @@ export class BusinessPartnerEditComponent {
   isRequiredPanGst : boolean;
   isRequiredReward : boolean;
   searchClicked : boolean;
+  searchClickedCountry : boolean;
+  searchClickedStateRegion : boolean;
+  searchClickedDistrict : boolean;
+  searchClickedCity : boolean;
+  searchClickedBusinessVertical : boolean;
   editBusinessPartnerForm: FormGroup;
   countryForm : FormGroup;
   stateRegionForm : FormGroup;
@@ -78,6 +83,11 @@ export class BusinessPartnerEditComponent {
     this.isValidForm = true;
     this.saveClicked = false;
     this.searchClicked = false;
+    this.searchClickedCountry = false;
+    this.searchClickedStateRegion = false;
+    this.searchClickedDistrict = false;
+    this.searchClickedCity = false;
+    this.searchClickedBusinessVertical = false;
     this.isRequiredContract = false;
     this.isRequiredPanGst = false;
     this.isRequiredReward = false;
@@ -136,9 +146,6 @@ export class BusinessPartnerEditComponent {
     })
 
     this.getBusinessPartner(this.uuid); 
-    this.getCountries('Active');
-    this.getBusinessVerticals('Active');
-    this.getBusinessVerticalTypes('Active');
     this.getReferralPartner();
     this.getCommissionTerms();
     this.getCommercialTerms();
@@ -159,16 +166,22 @@ export class BusinessPartnerEditComponent {
       this.businessPartner = response.businessPartner;
       this.editBusinessPartnerForm.patchValue(this.businessPartner);
       this.countryForm.get('country').setValue(this.businessPartner.country.id);
+      this.getCountries(this.businessPartner.country);
       this.stateRegionForm.get('stateRegion').setValue(this.businessPartner.stateRegion.id);
+      this.getStateRegions(this.businessPartner.stateRegion)
       this.districtForm.get('district').setValue(this.businessPartner.district.id);
+      this.getDistricts(this.businessPartner.district)
       this.cityForm.get('city').setValue(this.businessPartner.city.id);
+      this.getCities(this.businessPartner.city)
       this.businessVerticalForm.get('businessVertical').setValue(this.businessPartner.businessVertical.id);
+      this.getBusinessVerticals(this.businessPartner.businessVertical);
       let businessVerticalTypes : any = [];
       for(let j = 0; j<this.businessPartner.businessVerticalTypes.length; j++)
       {
         businessVerticalTypes.push(this.businessPartner.businessVerticalTypes[j].id.toString());
       }
       this.businessVerticalTypeForm.get('businessVerticalTypeIds').setValue(businessVerticalTypes);
+      this.getBusinessVerticalTypes(this.businessPartner.businessVerticalTypes, 'Active');
       if(this.editBusinessPartnerForm.controls['rewardApplicable'].value == 1)
       {
         this.getReferralPartner();
@@ -185,57 +198,76 @@ export class BusinessPartnerEditComponent {
   }
 
   //get country
-  async getCountries(action : string) 
+  async getCountries(country : any) 
   {  
     try
     {
+      this.searchClickedCountry = true;
       let response = await this.businessService.getCountries('Active').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         this.countries = response.countries;
         this.countries.unshift({ id : '', name : 'Select Country'});
-        this.getStateRegions('Active');
+        this.searchClickedCountry = false;
+        if(country != '')
+        {
+          let filterCountry = this.countries.filter(tempCountry => parseInt(tempCountry.id) == parseInt(country.id));
+          if(filterCountry.length == 0)
+          {
+            this.countries.push({ id : country.id, name : country.name });
+          }
+        }
       }
       else
       { 
         this.countries = [];
         this.countries.unshift({ id : '', name : 'Select Country'});
+        this.searchClickedCountry = false;
       }
     }
     catch(e)
     {
       this.showNotification("error", e);
+      this.searchClickedCountry = false;
     }
   }
  
    //get state/region
-  async getStateRegions(action : string) 
+  async getStateRegions(stateRegion : any) 
   {  
     try
     {
       let countryId = this.countryForm.get('country').value;
       if(countryId != undefined && countryId != "")
       {
-        this.searchClicked = true;  
+        this.searchClickedStateRegion = true;  
         let response = await this.businessService.getStateRegions(countryId, 'Active').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         { 
           this.stateRegions = response.stateRegions;
           this.stateRegions.unshift({ id : '', name : 'Select State/Region'});
-          this.getDistricts('Active');
-          this.searchClicked = false;
+          this.searchClickedStateRegion = false;
+          if(stateRegion != '')
+          {
+            let filterStateRegion = this.stateRegions.filter(tempStateRegion => parseInt(tempStateRegion.id) == parseInt(stateRegion.id))
+            if(filterStateRegion.length == 0)
+            {
+              this.stateRegions.push({ id : stateRegion.id, name : stateRegion.name });
+            }
+          }  
         }
         else
         {
           this.stateRegions = [];
           this.stateRegions.unshift({ id : '', name : 'Select State/Region'});
-          this.searchClicked = false;
+          this.searchClickedStateRegion = false;
         }
       }
       else
       {
         this.stateRegions = [];
-        this.stateRegions.unshift({ id : '', name : 'Select State/Region'});          
+        this.stateRegions.unshift({ id : '', name : 'Select State/Region'});   
+        this.searchClickedStateRegion = false;       
       }  
     }
     catch(e)
@@ -246,7 +278,7 @@ export class BusinessPartnerEditComponent {
   }
  
    // get district
-  async getDistricts(action : string) 
+  async getDistricts(district : any) 
   {  
     try
     {
@@ -254,38 +286,45 @@ export class BusinessPartnerEditComponent {
       let stateRegionId = this.stateRegionForm.get('stateRegion').value;
       if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '')
       {
-        this.searchClicked = true;  
+        this.searchClickedDistrict = true;  
         let response = await this.businessService.getDistricts(countryId, stateRegionId, 'Active').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.districts = response.districts;
           this.districts.unshift({ id : '', name : "Select District"});
-          this.getCities('Active');
-          this.searchClicked = false;
+          this.searchClickedDistrict = false;
+          if(district != '')
+          {
+            let filterDistrict = this.districts.filter(tempDistrict => parseInt(tempDistrict.id) == parseInt(district.id))
+            if(filterDistrict.length == 0)
+            {
+              this.districts.push({ id : district.id, name : district.name });
+            }
+          }
         }
         else
         {
           this.districts = [];
           this.districts.unshift({ id : '', name : "Select District"});
-          this.searchClicked = false;
+          this.searchClickedDistrict = false;
         }
       }
       else
       {
         this.districts = [];
         this.districts.unshift({ id : '', name : "Select District"});
-        this.searchClicked = false;
+        this.searchClickedDistrict = false;
       } 
     }
     catch(e)
     {
       this.showNotification("error", e);
-      this.searchClicked = false;
+      this.searchClickedDistrict = false;
     }
   }
 
    //get city
-  async getCities(action : string) 
+  async getCities(city : any) 
   {  
     try
     {
@@ -294,61 +333,80 @@ export class BusinessPartnerEditComponent {
       let districtId = this.districtForm.get('district').value;
       if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '' && districtId != undefined && districtId != '')
       {
-        this.searchClicked = true;  
+        this.searchClickedCity = true;  
         let response = await this.businessService.getCities(countryId, stateRegionId, districtId, 'Active').toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           this.cities = response.cities;
           this.cities.unshift({ id : '', name : "Select City"});
-          this.searchClicked = false;
+          this.searchClickedCity = false;
+          if(city != '')
+          {
+            let filterCity = this.cities.filter(tempCity => parseInt(tempCity.id) == parseInt(city.id))
+            if(filterCity.length == 0)
+            {
+              this.cities.push({ id : city.id, name : city.name});
+            }
+          }
         }
         else
         {
           this.cities = [];
           this.cities.unshift({ id : '', name : "Select City"});
-          this.searchClicked = false;
+          this.searchClickedCity = false;
         } 
       }
       else
       {
         this.cities = [];
         this.cities.unshift({ id : '', name : "Select City"});
-        this.searchClicked = false;
+        this.searchClickedCity = false;
       }   
     }
     catch(e)
     {
       this.showNotification("error", e);
-      this.searchClicked = false;
+      this.searchClickedCity = false;
     }
   }
 
   // get business vertical
-  async getBusinessVerticals(action : string) 
+  async getBusinessVerticals(businessVertical : any) 
   {  
     try
     {
+      this.searchClickedBusinessVertical = true;
       let response = await this.businessService.getBusinessVerticals('Active').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       { 
         this.businessVerticals = response.businessVerticals;
         this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
-        this.getBusinessVerticalTypes('Active');
+        this.searchClickedBusinessVertical = false;
+        if(businessVertical != '')
+        {
+          let filterBusinessVertical = this.businessVerticals.filter( tempBusinessVertical => { return parseInt(tempBusinessVertical.id) == parseInt(businessVertical.id)})
+          if(filterBusinessVertical.length == 0)
+          {
+            this.businessVerticals.push({ id : businessVertical.id, name : businessVertical.name });
+          }
+        }
       }
       else
       {
         this.businessVerticals = [];
         this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
+        this.searchClickedBusinessVertical = false;
       }
     }
     catch(e)
     {
       this.showNotification("error", e);
+      this.searchClickedBusinessVertical = false;
     }
   }
   
   //get business vertical type
-  async getBusinessVerticalTypes(action : string) 
+  async getBusinessVerticalTypes(selBusinessVerticalTypes : any[], action : string) 
   {  
     try
     {
@@ -356,19 +414,29 @@ export class BusinessPartnerEditComponent {
       if(businessVerticalId != undefined && businessVerticalId != "")
       {
         this.searchClicked = true; 
-        let tempBusinessVerticalTypes : Array<IOption> = [];
-        let response = await this.businessService.getBusinessVerticalTypes(businessVerticalId, 0, 'Active').toPromise();
+        let tempBusinessVerticalTypeIds : Array<IOption> = [];
+        let response = await this.businessService.getBusinessVerticalTypes(businessVerticalId, 0, action).toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         { 
-          let businessVerticalTypeIds : any[] = response.businessVerticalTypes;
-          for(let i = 0; i < businessVerticalTypeIds.length; i++)
+          let businessVerticalTypes : any[] = response.businessVerticalTypes;
+          //Check De-active Business Vertical Type      
+          for(let k=0;k<selBusinessVerticalTypes.length;k++)
           {
-            tempBusinessVerticalTypes.push({
-              'value' : businessVerticalTypeIds[i].id.toString(),
-              'label' : businessVerticalTypeIds[i].name
+            let filterBusinessVerticalTypeIds = businessVerticalTypes.filter(tempBusinessVerticalType => parseInt(tempBusinessVerticalType?.id.toString()) == parseInt(selBusinessVerticalTypes[k].id));
+            if(filterBusinessVerticalTypeIds.length == 0)
+            {
+              businessVerticalTypes.push(selBusinessVerticalTypes[k]);
+            }
+          }
+          // get business vertical types
+          for(let i = 0; i < businessVerticalTypes.length; i++)
+          {
+            tempBusinessVerticalTypeIds.push({
+              'value' : businessVerticalTypes[i].id.toString(),
+              'label' : businessVerticalTypes[i].name
             })
           }
-          this.businessVerticalTypeIds = this.commonSharedService.prepareSelectOptions(tempBusinessVerticalTypes);
+          this.businessVerticalTypeIds = this.commonSharedService.prepareSelectOptions(tempBusinessVerticalTypeIds);
           this.searchClicked = false;
         }
       } 

@@ -53,9 +53,9 @@ export class BusinessVerticalGroupEditComponent
       'businessVertical' : ['', Validators.required]
     })
 
-    this.getBusinessVerticals('All');
     this.editBusinessVerticalGroupForm.patchValue(this.businessVerticalGroup);
     this.businessVerticalForm.get("businessVertical").setValue(this.businessVerticalGroup.businessVertical.id);
+    this.getBusinessVerticals(this.businessVerticalGroup.businessVertical);
   }
 
   showNotification(type: string, message: string): void 
@@ -65,15 +65,23 @@ export class BusinessVerticalGroupEditComponent
   }
 
   // get business vertical
-  async getBusinessVerticals(action : string) 
+  async getBusinessVerticals(businessVertical : any) 
   {  
     try
     {
-      let response = await this.businessService.getBusinessVerticals('All').toPromise();
+      let response = await this.businessService.getBusinessVerticals('Active').toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
         this.businessVerticals = response.businessVerticals;
-        this.businessVerticals.unshift({ id : '', name : "Select Business Vertical" })
+        this.businessVerticals.unshift({ id : '', name : "Select Business Vertical" });
+        if(businessVertical != '')
+        {
+          let filterBusinessVertical = this.businessVerticals.filter(tempBusinessVertical => parseInt(tempBusinessVertical.id) == parseInt(businessVertical.id));
+          if(filterBusinessVertical.length == 0)
+          {
+            this.businessVerticals.push({ id : businessVertical.id, name : businessVertical.name });
+          }
+        }
       }
       else
       {
@@ -94,6 +102,7 @@ export class BusinessVerticalGroupEditComponent
       {
         this.isValidForm = true;
         this.saveClicked = true;
+        this.editBusinessVerticalGroupForm.controls['businessVertical'].get('id').setValue(this.businessVerticalForm.get('businessVertical').value);
         try
         {
           let response = await this.businessService.updateBusinessVerticalGroup(this.editBusinessVerticalGroupForm.value).toPromise();

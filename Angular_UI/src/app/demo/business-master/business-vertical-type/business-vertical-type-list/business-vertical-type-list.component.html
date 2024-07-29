@@ -55,8 +55,8 @@
                   <tr *ngFor="let businessVerticalType of businessVerticalTypes let i=index">
                     <td>{{i+1}}</td>
                     <td>{{businessVerticalType.name}}</td>
-                    <td>{{businessVerticalType.businessVertical?.name}}</td>
                     <td>{{businessVerticalType.businessVerticalGroup?.name}}</td>
+                    <td>{{businessVerticalType.businessVertical?.name}}</td>
                     <td>
                       <span [ngClass]="businessVerticalType.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(businessVerticalType)" 
                       style="cursor: pointer;" title="Update Status">
@@ -72,8 +72,8 @@
                   <tr *ngIf="businessVerticalTypes.length == 0">
                     <td></td>
                     <td></td>
-                    <td></td>
                     <td>No record(s) found</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                   </tr>

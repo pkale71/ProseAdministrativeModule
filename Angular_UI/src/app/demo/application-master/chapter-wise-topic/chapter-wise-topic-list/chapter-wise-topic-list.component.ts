@@ -421,7 +421,7 @@ export class ChapterWiseTopicListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "Chapter Wise Topic " + (chapterWiseTopic.isActive == 1 ? 'de-activated' : 'activated'));
+            this.showNotification("success", "Chapter Wise Topic " + (chapterWiseTopic.isActive == 1 ? 'De-activated' : 'Activated'));
             this.commonSharedService.chapterWiseTopicListObject.next({
               result : "success", 
               responseData : {

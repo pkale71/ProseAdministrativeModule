@@ -123,7 +123,7 @@ export class AcademyEnclosureDocumentListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Academy Enclosure Document Status Updated");
+              this.showNotification("success", "Academy Enclosure Document " + (academyEnclosureDocument.isActive == 1 ? 'De-activated' : 'Activated'));
               this.commonSharedService.academyEnclosureDocumentListObject.next({
                 result : "success"
               });
