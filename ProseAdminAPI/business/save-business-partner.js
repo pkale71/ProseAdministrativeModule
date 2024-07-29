@@ -506,7 +506,14 @@ async function saveBusinessPartnerDocs(files, documentIds, businessPartnerId, bu
         } 
         catch (e) 
         {
-            console.error(`Error processing file ${documentIds[fc].name}:`, e);
+            // console.error(`Error processing file ${documentIds[fc].name}:`, e);
+            res.status(500)
+            return res.json({
+            "status_code" : 500,
+            "message" : "Something Went Wrong",
+            "success" : false,
+            "error" : e,
+        });
         }
     }
 

@@ -16,8 +16,11 @@ module.exports = require('express').Router().get('/:countryId/?*', async(req,res
         countryId = '';
         action = '';
 
-        let tempParams = (req.params?.countryId + "/" + req.params[0]);
+        let tempParams = req.params?.countryId;
+        tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);
+        
         tempParams = tempParams.toString().split("/");
+        
         if(tempParams.length == 1)
         {
             countryId = commonFunction.validateNumber(tempParams[0]);
@@ -27,7 +30,7 @@ module.exports = require('express').Router().get('/:countryId/?*', async(req,res
             countryId = commonFunction.validateNumber(tempParams[0]);
             action = tempParams[1];
         }
-
+        
         stateRegions = await dbBusiness.getStateRegions(countryId, action);
         if(stateRegions.length >= 0)
         {
@@ -47,7 +50,7 @@ module.exports = require('express').Router().get('/:countryId/?*', async(req,res
             "status_code" : 500,
             "message" : "Something Went Wrong",
             "success" : false,
-            "error" : e,
+            "error" : e?.stack,
         });
     }
 })
