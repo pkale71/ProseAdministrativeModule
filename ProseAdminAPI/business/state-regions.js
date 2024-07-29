@@ -9,7 +9,7 @@ let action;
 //////
 let stateRegions;
 
-module.exports = require('express').Router().get('/:countryId/?*', async(req,res) =>
+module.exports = require('express').Router().get('/:countryId/:optParam?*', async(req,res) =>
 {
     try
     {

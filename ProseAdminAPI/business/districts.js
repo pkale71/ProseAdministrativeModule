@@ -10,7 +10,7 @@ let action;
 //////
 let districts;
 
-module.exports = require('express').Router().get('/:countryId/?*', async(req,res) =>
+module.exports = require('express').Router().get('/:countryId/:optParam?*', async(req,res) =>
 {
     try
     {
@@ -19,10 +19,11 @@ module.exports = require('express').Router().get('/:countryId/?*', async(req,res
         action = '';
 
         let tempParams = req.params?.countryId;
-        // tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);
-        tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : (req.params[0].toString().indexOf("/") == -1 ? req.params[0] : ("/" + req.params[0])));
 
+        req.params[0] = req.params['optParam'] ? '/' + req.params['optParam'] + req.params[0] : req.params[0];
+        tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);
         tempParams = tempParams.toString().split("/");
+        
         if(tempParams.length == 1)
         {
             countryId = commonFunction.validateNumber(tempParams[0]);

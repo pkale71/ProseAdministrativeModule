@@ -66,7 +66,7 @@ commonFunction.validateNumber = function(data, zeroRequired = 'No')
 
 commonFunction.databaseName = function()
 {
-    return "prose_administrative_module_dev";
+    return "prose_administrative";
 }
 
 commonFunction.trimSpaces = function(data)

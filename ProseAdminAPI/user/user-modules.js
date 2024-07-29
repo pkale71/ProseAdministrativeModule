@@ -9,7 +9,7 @@ let action;
 //////
 let userModules;
 
-module.exports = require('express').Router().get('/:userUUID/?*',async(req,res) =>
+module.exports = require('express').Router().get('/:userUUID/:optParam?*',async(req,res) =>
 {
     try
     {

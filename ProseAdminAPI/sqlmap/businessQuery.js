@@ -1545,6 +1545,7 @@ db.getStateRegions = (countryId, action) =>
             }
             sql = sql + ` GROUP BY sr.id
             ORDER BY sr.name`;
+            
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
