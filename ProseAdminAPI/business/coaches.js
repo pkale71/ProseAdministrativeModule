@@ -4,7 +4,8 @@ let dbBusiness = require('../sqlmap/businessQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables
-let businessVerticalTypeId; 
+let businessVerticalId;
+let businessVerticalTypeId;
 let action;
 //////
 let coaches;
@@ -19,15 +20,21 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
         let tempParams = req.params[0].split("/");
         if(tempParams.length == 1)
         {
-            businessVerticalTypeId = commonFunction.validateNumber(tempParams[0]);
+            businessVerticalId = commonFunction.validateNumber(tempParams[0]);
         }
         else if(tempParams.length == 2)
         {
-            businessVerticalTypeId = commonFunction.validateNumber(tempParams[0]);
-            action = tempParams[1];
+            businessVerticalId = commonFunction.validateNumber(tempParams[0]);
+            businessVerticalTypeId = commonFunction.validateNumber(tempParams[1]);
+        }
+        else if(tempParams.length == 3)
+        {
+            businessVerticalId = commonFunction.validateNumber(tempParams[0]);
+            businessVerticalTypeId = commonFunction.validateNumber(tempParams[1]);
+            action = tempParams[2];
         }
 
-        coaches = await dbBusiness.getCoaches(businessVerticalTypeId, action);
+        coaches = await dbBusiness.getCoaches(businessVerticalId, businessVerticalTypeId, action);
         if(coaches.length >= 0)
         {
             res.status(200)

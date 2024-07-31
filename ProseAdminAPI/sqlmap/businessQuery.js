@@ -948,7 +948,7 @@ db.deleteBusinessVerticalType = (id) =>
     })
 };
 
-db.getCoaches = (businessVerticalTypeId, action) => 
+db.getCoaches = (businessVerticalId, businessVerticalTypeId, action) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -963,7 +963,19 @@ db.getCoaches = (businessVerticalTypeId, action) =>
             JOIN business_vertical bv ON bv.id = bvt.business_vertical_id
             JOIN business_vertical_group bvg ON bvg.id = bvt.business_vertical_group_id
             LEFT JOIN business_partner_coach bpc ON bpc.coach_id = c.id`;
-            if(businessVerticalTypeId != "")
+            if(businessVerticalId != "")
+            {
+                sql = sql + ` WHERE bv.id = ${businessVerticalId}`
+                if(businessVerticalTypeId != "")
+                {
+                    sql = sql + ` AND c.business_vertical_type_id = ${businessVerticalTypeId}`
+                }
+                if(action == "Active")
+                {
+                    sql = sql + ` AND c.is_active = 1`
+                }
+            }
+            else if(businessVerticalTypeId != "")
             {
                 sql = sql + ` WHERE c.business_vertical_type_id = ${businessVerticalTypeId}`
                 if(action == "Active")
@@ -971,7 +983,7 @@ db.getCoaches = (businessVerticalTypeId, action) =>
                     sql = sql + ` AND c.is_active = 1`
                 }
             }
-            if(action == "Active")
+            else if(action == "Active")
             {
                 sql = sql + ` WHERE c.is_active = 1`
             }

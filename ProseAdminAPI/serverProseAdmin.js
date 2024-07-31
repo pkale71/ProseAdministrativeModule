@@ -1,6 +1,6 @@
 let host = "localhost";
 let port = "3000";
-const apiBaseUrl = `http//${host}:${port}`;
+const apiBaseUrl = `http://${host}:${port}`;
 let express = require('express');
 let bodyParser = require('body-parser');
 let cors = require('cors');
