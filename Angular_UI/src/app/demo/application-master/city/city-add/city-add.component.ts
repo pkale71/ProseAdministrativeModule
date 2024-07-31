@@ -255,7 +255,30 @@ export class CityAddComponent
                         let response = await this.businessService.uploadCities(formData).toPromise();
                         if (response.status_code == 200 && response.message == 'success') 
                         {
-                            this.showNotification("success", "City Saved");
+                            let totalCount = response?.totalCount;
+                            let saved = response?.insertCount;
+                            let msg = '';
+                            if(totalCount > 0)
+                            {
+                                msg = saved / totalCount + " Cities Are Saved Successfully. ";
+                                let duplicateCount = response?.duplicateCount;
+                                if(duplicateCount > 0)
+                                {
+                                    msg = msg + duplicateCount + " Cities Are Duplicate.";
+                                }
+                            }  
+                            else
+                            {
+                                msg = "No Record Found.";
+                            } 
+                            if(totalCount > 0)
+                            {
+                                this.showNotification("success", msg);
+                            }
+                            else
+                            {
+                                this.showNotification("warning", msg);
+                            }
                             this.commonSharedService.cityListObject.next({
                                 result : "success",
                                 countryId : this.countryForm.get('country').value,
@@ -264,7 +287,6 @@ export class CityAddComponent
                             });
                             this.closeModal();
                         }
-
                     }
                     else
                     {

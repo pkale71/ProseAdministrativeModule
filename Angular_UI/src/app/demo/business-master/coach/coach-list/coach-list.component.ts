@@ -25,8 +25,10 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
     })
     export class CoachListComponent {
         searchClicked : boolean;
-        businessVerticalTypes : any[];
+        businessVerticalForm : FormGroup;
         businessVerticalTypeForm : FormGroup;
+        businessVerticals : any[];
+        businessVerticalTypes : any[];
         masterCoaches : any[];
         coaches : any[];
     
@@ -39,27 +41,30 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
         private formbuilder: FormBuilder,
         private router : Router)
         {
-        this.businessVerticalTypes = [];
-        this.coaches = [];
-        this.masterCoaches = [];
+            this.businessVerticalTypes = [];
+            this.coaches = [];
+            this.masterCoaches = [];
         }
 
     ngOnInit() 
     {
         this.searchClicked = false;
-        this.getCoaches(0, 'All');
+        this.getCoaches(0, 0, 'All');
 
+        this.businessVerticalForm = this.formbuilder.group({
+            "businessVertical" : ['0']
+        });
         this.businessVerticalTypeForm = this.formbuilder.group({
-        "businessVerticalType" : ['0']
-        })
+            "businessVerticalType" : ['0']
+        });
 
-        this.getBusinessVerticalTypes(0,0,'All');
+        this.getBusinessVerticals('All');
     }
 
     public businessVerticalGroupAddResult:any = this.commonSharedService.coachListObject.subscribe(res =>{
         if(res.result == "success")
         {
-        this.getCoaches(0, 'All');
+            this.getCoaches(0, 0, 'All');
         }
     })
 
@@ -69,23 +74,55 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
         this.notifier.notify(type, message);
     }
 
-    async getBusinessVerticalTypes(businessVerticalId : number, businessVerticalGroupId : number, action : string) 
+    // get business vertical
+    async getBusinessVerticals(action : string) 
     {  
         try
         {
-            this.searchClicked = true;  
-            let response = await this.businessService.getBusinessVerticalTypes(businessVerticalId, businessVerticalGroupId, 'All').toPromise();
+            let response = await this.businessService.getBusinessVerticals('All').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
-                this.businessVerticalTypes = response.businessVerticalTypes;
-                this.businessVerticalTypes.unshift({ id : '0', name : "All"});
-                this.searchClicked = false;
-                this.modalService.dismissAll();
+                this.businessVerticals = response.businessVerticals;
+                this.businessVerticals.unshift({ id : '0', name : "All" });
+                this.getBusinessVerticalTypes(0,'All');
+            }
+            else
+            {
+                this.businessVerticals = [];
+            }
+        }
+        catch(e)
+        {
+            this.showNotification("error", e);
+        }
+    }
+
+    // get business type
+    async getBusinessVerticalTypes(businessVerticalGroupId : number, action : string) 
+    {  
+        try
+        {
+            let businessVerticalId = this.businessVerticalForm.get('businessVertical').value;
+            if(businessVerticalId != undefined && businessVerticalId != '')
+            {
+                this.searchClicked = true;  
+                let response = await this.businessService.getBusinessVerticalTypes(businessVerticalId, businessVerticalGroupId, 'All').toPromise();
+                if (response.status_code == 200 && response.message == 'success') 
+                {
+                    this.businessVerticalTypes = response.businessVerticalTypes;
+                    this.businessVerticalTypes.unshift({ id : '0', name : "All"});
+                    this.searchClicked = false;
+                }
+                else
+                {
+                    this.businessVerticalTypes = [];
+                    this.businessVerticalTypes.unshift({ id : '', name : "All"});
+                    this.searchClicked = false; 
+                }
             }
             else
             {
                 this.searchClicked = false;
-                this.modalService.dismissAll(); 
             }
         }
         catch(e)
@@ -97,23 +134,24 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
     
     filterData()
     {
+        let businessVerticalId : number = this.businessVerticalForm.get('businessVertical').value;
         let businessVerticalTypeId : number = this.businessVerticalTypeForm.get("businessVerticalType").value;
-        if(!isNaN(businessVerticalTypeId) && businessVerticalTypeId > 0)
+        if(!isNaN(businessVerticalId) && businessVerticalId > 0 && businessVerticalTypeId > 0)
         {
-            this.getCoaches(businessVerticalTypeId, 'All');
+            this.getCoaches(businessVerticalId, businessVerticalTypeId, 'All');
         }
         else
         {
-            this.getCoaches(businessVerticalTypeId, 'All');
+            this.getCoaches(businessVerticalId, businessVerticalTypeId, 'All');
         }
     }
 
-    async getCoaches(businessVerticalTypeId : number, action : string) 
+    async getCoaches(businessVerticalId : number, businessVerticalTypeId : number, action : string) 
     {  
         try
         {
             this.searchClicked = true;  
-            let response = await this.businessService.getCoaches(businessVerticalTypeId, 'All').toPromise();
+            let response = await this.businessService.getCoaches(businessVerticalId, businessVerticalTypeId, 'All').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 $('#tblCoach').DataTable().destroy();
@@ -142,7 +180,7 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
     {
         const dialogRef = this.modalService.open(CoachAddComponent, 
         { 
-        size: 'md', backdrop: 'static' 
+            size: 'lg', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = {};
     }
@@ -151,7 +189,7 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
     {
         const dialogRef = this.modalService.open(CoachEditComponent, 
         { 
-        size: 'md', backdrop: 'static' 
+            size: 'lg', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = coach;
     }
@@ -176,19 +214,19 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
         {        
             try
             {
-            let tempJson = {
-                id : coach.uuid,
-                tableName : coach.tableName
-            }
-            this.showNotification("info", "Please wait...");
-            let response = await this.commonService.updateStatus(tempJson).toPromise();
-            if (response.status_code == 200 && response.message == 'success') 
-            {
-                this.showNotification("success", "Coach Status " + (coach.isActive == 1 ? 'De-activated' : 'Activated'));
-                this.commonSharedService.coachListObject.next({
-                result : "success"
-                });
-            }
+                let tempJson = {
+                    id : coach.uuid,
+                    tableName : coach.tableName
+                }
+                this.showNotification("info", "Please wait...");
+                let response = await this.commonService.updateStatus(tempJson).toPromise();
+                if (response.status_code == 200 && response.message == 'success') 
+                {
+                    this.showNotification("success", "Coach Status " + (coach.isActive == 1 ? 'De-activated' : 'Activated'));
+                    this.commonSharedService.coachListObject.next({
+                    result : "success"
+                    });
+                }
             }
             catch(e)
             {
@@ -220,12 +258,12 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
             let tempJSON = { "uuid" : coach.uuid };
             try
             {
-            let response = await this.businessService.deleteCoach(tempJSON).toPromise();
-            if (response.status_code == 200 && response.message == 'success') 
-            {
-                this.showNotification("success", "Coach Deleted.");
-                this.commonSharedService.coachListObject.next({result : "success"});
-            }
+                let response = await this.businessService.deleteCoach(tempJSON).toPromise();
+                if (response.status_code == 200 && response.message == 'success') 
+                {
+                    this.showNotification("success", "Coach Deleted.");
+                    this.commonSharedService.coachListObject.next({result : "success"});
+                }
             }
             catch(e)
             {

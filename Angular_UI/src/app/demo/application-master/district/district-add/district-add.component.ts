@@ -207,7 +207,30 @@ export class DistrictAddComponent
                         let response = await this.businessService.uploadDistricts(formData).toPromise();
                         if (response.status_code == 200 && response.message == 'success') 
                         {
-                            this.showNotification("success", "State Region Saved");
+                            let totalCount = response?.totalCount;
+                            let saved = response?.insertCount;
+                            let msg = "";
+                            if( parseInt(totalCount) > 0)
+                            {
+                                msg = saved / totalCount + " Districts Are Saved Successfully. ";
+                                let duplicateCount = response?.duplicateCount;
+                                if( duplicateCount > 0)
+                                {
+                                    msg = msg + duplicateCount + " Districts Are Duplicate.";
+                                }
+                            }
+                            else
+                            {
+                                msg = "No Record Found";
+                            }    
+                            if(totalCount > 0)
+                            {
+                                this.showNotification("success", msg);
+                            }
+                            else
+                            {
+                                this.showNotification("warning", msg);
+                            }
                             this.commonSharedService.districtListObject.next({
                                 result : "success",
                                 countryId : this.countryForm.get('country').value,

@@ -160,7 +160,30 @@ export class StateRegionAddComponent
                         let response = await this.businessService.uploadStateRegions(formData).toPromise();
                         if (response.status_code == 200 && response.message == 'success') 
                         {
-                            this.showNotification("success", "State/Region Saved");
+                            let totalCount = response?.totalCount;
+                            let saved = response?.insertCount;
+                            let msg = "";
+                            if( totalCount > 0)
+                            {
+                                msg = saved / totalCount + " StateRegions Are Saved Successfully. ";
+                                let duplicateCount = response?.duplicateCount;
+                                if( duplicateCount > 0)
+                                {
+                                    msg = msg + duplicateCount + " StateRegions Are Duplicate.";
+                                }
+                            }
+                            else
+                            {
+                                msg = "No Record Found";
+                            }    
+                            if(totalCount > 0)
+                            {
+                                this.showNotification("success", msg);
+                            }
+                            else
+                            {
+                                this.showNotification("warning", msg);
+                            }
                             this.commonSharedService.stateRegionListObject.next({
                                 countryId : this.countryForm.get('country').value,
                                 result : "success"});

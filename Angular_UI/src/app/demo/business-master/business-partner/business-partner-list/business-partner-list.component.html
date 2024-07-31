@@ -1,84 +1,85 @@
 <div class="row">
     <div class="col-sm-12">
-      <div class="card">
-        <div class="card-header" style="padding: 10px 25px;">
-          <h5 style="margin-top: 0.8rem;"><i class="fa fa-handshake"></i>&nbsp; Business Partners &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
-          <div class="btn-group mb-2 mt-0.8rem me-2 float-end" ngbDropdown >
-          <button class="btn btn-primary" ngbDropdownToggle type="button"> Add Partner </button>
-          <div ngbDropdownMenu>
-            <a class="dropdown-item" href="javascript:" *ngFor="let businessPartnerType of businessPartnerTypes | slice:1:3" (click)="addBusinessPartnerType(businessPartnerType.id)">{{businessPartnerType.name}}</a>
-          </div>
-        </div>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-3">
-                <form [formGroup]="businessPartnerTypeForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="businessPartnerType">Business Partner Type</label>
-                        <select class="form-control" required id="businessPartnerType" formControlName="businessPartnerType">
-                          <option value="{{businessPartnerType.id}}" *ngFor="let businessPartnerType of businessPartnerTypes">{{businessPartnerType.name}}</option>
-                        </select>
+        <div class="card">
+            <div class="card-header" style="padding: 10px 25px;">
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-handshake"></i>&nbsp; Business Partners &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+                <div class="btn-group mb-2 mt-0.8rem me-2 float-end" ngbDropdown >
+                    <button class="btn btn-primary" ngbDropdownToggle type="button"> Add Partner </button>
+                    <div ngbDropdownMenu>
+                        <a class="dropdown-item" href="javascript:" *ngFor="let businessPartnerType of businessPartnerTypes | slice:1:3" (click)="addBusinessPartnerType(businessPartnerType.id)">{{businessPartnerType.name}}</a>
                     </div>
-                </form>
+                </div>
             </div>
-          <!-- search button -->
-            <div class="col-md-3">
-              <br/>
-              <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked"
-              (click)="getBusinessPartners(businessPartnerTypeForm.controls['businessPartnerType'].value)"><i class="fa fa-search"></i>&nbsp;Search</button>
-              <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
-                <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <form [formGroup]="businessPartnerTypeForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="businessPartnerType">Business Partner Type</label>
+                                <select class="form-control" required id="businessPartnerType" formControlName="businessPartnerType">
+                                    <option value="{{businessPartnerType.id}}" *ngFor="let businessPartnerType of businessPartnerTypes">{{businessPartnerType.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                <!-- search button -->
+                    <div class="col-md-3">
+                        <br/>
+                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked"
+                        (click)="getBusinessPartners(businessPartnerTypeForm.controls['businessPartnerType'].value)"><i class="fa fa-search"></i>&nbsp;Search</button>
+                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                            <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table datatable id="tblBusinessPartner" class="table table-striped row-border table-hover pt-10">
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Business Partner Type</th>
+                                <th>Applicable From</th>
+                                <th>Applicable To</th>
+                                <th>Active</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let businessPartner of businessPartners let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{businessPartner.name}}</td>
+                                <td>{{businessPartner.email}}</td>
+                                <td>{{businessPartner.businessPartnerType?.name}}</td>
+                                <td>{{businessPartner.applicableFrom | date : "dd/MM/yyyy"}}</td>
+                                <td>{{businessPartner.applicableTo | date : "dd/MM/yyyy"}}</td>
+                                <td>
+                                    <span [ngClass]="businessPartner.isActive ? 'badge bg-success' : 'badge bg-danger'" 
+                                    style="cursor: pointer;" title="Change Status" (click)="updateStatus(businessPartner)">
+                                    {{businessPartner.isActive ? 'Yes' : 'No'}}
+                                    </span>
+                                </td>
+                                <td style="width:40px;text-align: right;">
+                                    <i class="fa fa-edit" (click)="editBusinessPartner(businessPartner.uuid)" title="Edit" style="cursor: pointer;" *ngIf="businessPartner.isExist == 0"></i>&nbsp;
+                                    <i class="fa fa-trash-alt" (click)="deleteBusinessPartner(businessPartner)" title="Delete" style="cursor: pointer;" *ngIf="businessPartner.isExist == 0"></i>&nbsp;
+                                    <i class="fa fa-list" (click)="detailBusinessPartner(businessPartner.uuid)" title="Detail" style="cursor: pointer;"></i>
+                                </td>
+                            </tr>
+                            <tr *ngIf="businessPartners.length == 0">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>No record(s) found</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-          </div>
-          <div class="table-responsive">
-            <table datatable id="tblBusinessPartner" class="table table-striped row-border table-hover pt-10">
-              <thead>
-                <tr>
-                  <th>Sno</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Business Partner Type</th>
-                  <th>Applicable From</th>
-                  <th>Applicable To</th>
-                  <th>Active</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let businessPartner of businessPartners let i=index">
-                  <td>{{i+1}}</td>
-                  <td>{{businessPartner.name}}</td>
-                  <td>{{businessPartner.email}}</td>
-                  <td>{{businessPartner.businessPartnerType?.name}}</td>
-                  <td>{{businessPartner.applicableFrom | date : "dd/MM/yyyy"}}</td>
-                  <td>{{businessPartner.applicableTo | date : "dd/MM/yyyy"}}</td>
-                  <td>
-                    <span [ngClass]="businessPartner.isActive ? 'badge bg-success' : 'badge bg-danger'" 
-                    style="cursor: pointer;" title="Change Status" (click)="updateStatus(businessPartner)">
-                      {{businessPartner.isActive ? 'Yes' : 'No'}}
-                    </span>
-                  </td>
-                  <td style="width:40px;text-align: right;">
-                    <i class="fa fa-edit" (click)="editBusinessPartner(businessPartner.uuid)" title="Edit" style="cursor: pointer;" *ngIf="businessPartner.isExist == 0"></i>&nbsp;
-                    <i class="fa fa-trash-alt" (click)="deleteBusinessPartner(businessPartner)" title="Delete" style="cursor: pointer;" *ngIf="businessPartner.isExist == 0"></i>&nbsp;
-                    <i class="fa fa-list" (click)="detailBusinessPartner(businessPartner.uuid)" title="Detail" style="cursor: pointer;"></i>
-                  </td>
-                </tr>
-                <tr *ngIf="businessPartners.length == 0">
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>No record(s) found</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
-      </div>
     </div>
 </div>

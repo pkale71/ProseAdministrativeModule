@@ -117,9 +117,9 @@ export class BusinessService {
         return this.apiService.post('/business/saveCoach', coach);
     }
 
-    getCoaches(businessVerticalTypeId : number, action : string) 
+    getCoaches(businessVerticalId : number, businessVerticalTypeId : number, action : string) 
     {
-        return this.apiService.get('/business/getCoaches/' + businessVerticalTypeId + '/' + action);
+        return this.apiService.get('/business/getCoaches/' + businessVerticalId + '/' + businessVerticalTypeId + '/' + action);
     }
 
     updateCoach(coach : any) 

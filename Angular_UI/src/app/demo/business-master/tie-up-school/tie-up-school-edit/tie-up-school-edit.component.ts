@@ -70,7 +70,8 @@ export class TieUpSchoolEditComponent {
         address : ['', Validators.required],
         website : ['', [
             Validators.required,
-        ]],
+            Validators.pattern("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*?$")
+            ]],
         country : this.formbuilder.group({ 'id' : ['']}),
         stateRegion : this.formbuilder.group({ 'id' : ['']}),
         district : this.formbuilder.group({ 'id' : ['']}),
@@ -81,20 +82,20 @@ export class TieUpSchoolEditComponent {
         });
 
         this.countryForm = this.formbuilder.group({
-        'country' : ['', Validators.required]
-        })
+            'country' : ['', Validators.required]
+        });
         this.stateRegionForm = this.formbuilder.group({
-        'stateRegion' : ['', Validators.required]
-        })
+            'stateRegion' : ['', Validators.required]
+        });
         this.districtForm = this.formbuilder.group({
-        'district' : ['', Validators.required]
-        })
+            'district' : ['', Validators.required]
+        });
         this.cityForm = this.formbuilder.group({
-        'city' : ['', Validators.required]
-        })
+            'city' : ['', Validators.required]
+        });
         this.syllabusForm = this.formbuilder.group({
-        'syllabus' : ['', Validators.required]
-        })
+            'syllabus' : ['', Validators.required]
+        });
 
         this.getTieUpSchool(this.uuid);
         this.getTieUpSchoolSyllabuses('All');

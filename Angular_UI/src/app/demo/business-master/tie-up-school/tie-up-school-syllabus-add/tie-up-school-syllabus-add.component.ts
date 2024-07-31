@@ -42,7 +42,7 @@ export class TieUpSchoolSyllabusAddComponent
         this.addTieUpSchoolSyllabusForm = this.formbuilder.group({
             id:[''],
             name: [''],
-            });  
+        });  
     }
 
     showNotification(type: string, message: string): void 

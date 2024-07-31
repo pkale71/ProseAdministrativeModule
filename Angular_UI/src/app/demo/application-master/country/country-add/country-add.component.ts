@@ -119,13 +119,35 @@ export class CountryAddComponent
                     this.saveClicked = true;
                     if(this.isChecked)
                     { 
-                        console.log(this.addCountryForm.get('selectedFile').value)
                         let formData = new FormData();
                         formData.append('uploadFile', this.addCountryForm.get('selectedFile').value);
                         let response = await this.businessService.uploadCountries(formData).toPromise();
                         if (response.status_code == 200 && response.message == 'success') 
                         {
-                            this.showNotification("success", "Country Saved");
+                            let totalCount = response?.totalCount;
+                            let saved = response?.insertCount;
+                            let msg = "";
+                            if( totalCount > 0)
+                            {
+                                msg = saved / totalCount + " Countries Are Saved Successfully. ";
+                                let duplicateCount = response?.duplicateCount;
+                                if( duplicateCount > 0)
+                                {
+                                    msg = msg + duplicateCount + " Countries Are Duplicate.";
+                                }
+                            }
+                            else
+                            {
+                                msg = "No Record Found";
+                            }    
+                            if(totalCount > 0)
+                            {
+                                this.showNotification("success", msg);
+                            }
+                            else
+                            {
+                                this.showNotification("warning", msg);
+                            }
                             this.commonSharedService.countryListObject.next({result : "success"});
                             this.closeModal();
                         }

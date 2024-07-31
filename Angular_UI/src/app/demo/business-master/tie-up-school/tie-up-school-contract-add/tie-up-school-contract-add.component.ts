@@ -51,9 +51,9 @@ export class TieUpSchoolContractAddComponent {
         this.searchClicked = false;
 
         this.addTieUpSchoolContractForm = this.formbuilder.group({
-        tieUpSchool: {"uuid" : this.uuid },
-        contractFrom: ['', Validators.required],
-        contractTo: ['', [Validators.required]],
+            tieUpSchool: {"uuid" : this.uuid },
+            contractFrom: ['', Validators.required],
+            contractTo: ['', [Validators.required]],
         },
         // { validators: this.dateValidator() }
         );

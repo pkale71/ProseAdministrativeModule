@@ -81,41 +81,41 @@ export class TieUpSchoolAddComponent {
         this.academyEnclosureDocuments = [];
 
         this.addTieUpSchoolForm = this.formbuilder.group({
-        name : ['', Validators.required],
-        email : ['', [Validators.required, Validators.email]],
-        mobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$'), Validators.maxLength(15), Validators.minLength(10)]],
-        pincode : ['', Validators.required],
-        address : ['', Validators.required],
-        website : ['', [
-            Validators.required,
-            //Validators.pattern("/^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?")
-        ]],
-        country : this.formbuilder.group({ 'id' : ['']}),
-        stateRegion : this.formbuilder.group({ 'id' : ['']}),
-        district : this.formbuilder.group({ 'id' : ['']}),
-        syllabus : this.formbuilder.group({ 'id' : ['']}),
-        businessVerticalTypes : this.formbuilder.group({ 'id' : ['']}),
-        contactPerson : ['', Validators.required],contractFrom : ['', Validators.required],
-        contractTo : ['', Validators.required],
-        panNumber : ['', [Validators.pattern("^[a-zA-Z]{5}[0-9]{4}[A-Za-z]{1}$"), Validators.minLength(10)]],  
-        })
+            name : ['', Validators.required],
+            email : ['', [Validators.required, Validators.email]],
+            mobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$'), Validators.maxLength(15), Validators.minLength(10)]],
+            pincode : ['', Validators.required],
+            address : ['', Validators.required],
+            website : ['', [
+                Validators.required,
+                Validators.pattern("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*?$")
+                ]],
+            country : this.formbuilder.group({ 'id' : ['']}),
+            stateRegion : this.formbuilder.group({ 'id' : ['']}),
+            district : this.formbuilder.group({ 'id' : ['']}),
+            syllabus : this.formbuilder.group({ 'id' : ['']}),
+            businessVerticalTypes : this.formbuilder.group({ 'id' : ['']}),
+            contactPerson : ['', Validators.required],contractFrom : ['', Validators.required],
+            contractTo : ['', Validators.required],
+            panNumber : ['', [Validators.pattern("^[a-zA-Z]{5}[0-9]{4}[A-Za-z]{1}$"), Validators.minLength(10)]],  
+        });
 
         this.countryForm = this.formbuilder.group({
-        'country' : ['', Validators.required]
-        })
+            'country' : ['', Validators.required]
+        });
         this.stateRegionForm = this.formbuilder.group({
-        'stateRegion' : ['', Validators.required]
-        })
+            'stateRegion' : ['', Validators.required]
+        });
         this.districtForm = this.formbuilder.group({
-        'district' : ['', Validators.required]
-        })
+            'district' : ['', Validators.required]
+        });
         this.cityForm = this.formbuilder.group({
-        'city' : ['', Validators.required]
-        })
+            'city' : ['', Validators.required]
+        });
         this.syllabusForm = this.formbuilder.group({
-        'syllabus' : ['', Validators.required]
-        })
-
+            'syllabus' : ['', Validators.required]
+        });
+        
         this.getCountries('Active');
         this.getTieUpSchoolSyllabuses('All');
         this.getAcademyEnclosureDocuments('Active');
@@ -132,17 +132,17 @@ export class TieUpSchoolAddComponent {
     {  
         try
         {
-        let response = await this.businessService.getCountries('Active').toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
-        {
-            this.countries = response.countries;
-            this.countries.unshift({ id : '', name : 'Select Country'});
-        }
-        else
-        { 
-            this.countries = [];
-            this.countries.unshift({ id : '', name : 'Select Country'});
-        }
+            let response = await this.businessService.getCountries('Active').toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                this.countries = response.countries;
+                this.countries.unshift({ id : '', name : 'Select Country'});
+            }
+            else
+            { 
+                this.countries = [];
+                this.countries.unshift({ id : '', name : 'Select Country'});
+            }
         }
         catch(e)
         {

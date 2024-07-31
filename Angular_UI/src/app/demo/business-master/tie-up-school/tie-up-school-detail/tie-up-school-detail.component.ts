@@ -37,11 +37,11 @@ export class TieUpSchoolDetailComponent {
         private location : Location, 
         private route: ActivatedRoute)
         {
-        this.uuid = this.route.params['value'].uuid;
-        this.searchClicked = false;
-        this.getTieUpSchool(this.uuid);
-        this.getTieUpSchoolDocuments(this.uuid);
-        this.getTieUpSchoolContractHistories(this.uuid);
+            this.uuid = this.route.params['value'].uuid;
+            this.searchClicked = false;
+            this.getTieUpSchool(this.uuid);
+            this.getTieUpSchoolDocuments(this.uuid);
+            this.getTieUpSchoolContractHistories(this.uuid);
         }
 
     ngOnInit() 
@@ -51,8 +51,8 @@ export class TieUpSchoolDetailComponent {
     public TieUpSchoolContractHistoryAddResult:any = this.commonSharedService.tieUpSchoolContractHistoryDocumentListObject.subscribe(res =>{
         if(res.result == "success")
         {
-        this.getTieUpSchoolDocuments(this.uuid);
-        this.getTieUpSchoolContractHistories(this.uuid);
+            this.getTieUpSchoolDocuments(this.uuid);
+            this.getTieUpSchoolContractHistories(this.uuid);
         }
     }) 
 
@@ -121,11 +121,11 @@ export class TieUpSchoolDetailComponent {
     addRenew(uuid : string)
     {
         let params = {
-        "uuid" : uuid
+            "uuid" : uuid
         }
         const dialogRef = this.modalService.open(TieUpSchoolContractAddComponent, 
         { 
-        size: 'md', backdrop: 'static' 
+            size: 'md', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = params;
     }
@@ -134,11 +134,11 @@ export class TieUpSchoolDetailComponent {
     addDocument(uuid : string)
     {
         let params = {
-        "uuid" : uuid
+            "uuid" : uuid
         }
         const dialogRef = this.modalService.open(TieUpSchoolDocumentAddComponent, 
         { 
-        size: 'md', backdrop: 'static' 
+            size: 'md', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = params;
     }
@@ -205,8 +205,8 @@ export class TieUpSchoolDetailComponent {
         {
             this.showNotification("info", "Please wait...");
             let tempJson = {
-            id : tieUpSchoolContractHistory.id,
-            tieUpSchool : {"uuid" : this.uuid}
+                id : tieUpSchoolContractHistory.id,
+                tieUpSchool : {"uuid" : this.uuid}
             }
             try
             {
@@ -246,8 +246,8 @@ export class TieUpSchoolDetailComponent {
         {
             this.showNotification("info", "Please wait...");
             let tempJson = {
-            id : tieUpSchoolDocument.id,
-            tieUpSchool : {"uuid" : this.uuid}
+                id : tieUpSchoolDocument.id,
+                tieUpSchool : {"uuid" : this.uuid}
             }
             try
             {

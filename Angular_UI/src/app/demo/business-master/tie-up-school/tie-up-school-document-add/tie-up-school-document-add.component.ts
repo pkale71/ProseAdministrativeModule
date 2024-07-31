@@ -54,14 +54,14 @@ export class TieUpSchoolDocumentAddComponent {
         this.academyEnclosureDocuments = [];
 
         this.addTieUpSchoolDocumentForm = this.formbuilder.group({
-        tieUpSchool: {"uuid" : this.uuid },
-        academyEnclosureDocument: this.formbuilder.group({ "id" : ['']}),
-        docFile : ['', Validators.required]
+            tieUpSchool: {"uuid" : this.uuid },
+            academyEnclosureDocument: this.formbuilder.group({ "id" : ['']}),
+            docFile : ['', Validators.required]
         });
 
         this.academyEnclosureDocumentForm = this.formbuilder.group({
-        'academyEnclosureDocument' : ['', Validators.required],
-        'docFile' : ['', Validators.required]
+            'academyEnclosureDocument' : ['', Validators.required],
+            'docFile' : ['', Validators.required]
         })
 
         this.getTieUpSchool(this.uuid); 

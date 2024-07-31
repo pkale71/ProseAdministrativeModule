@@ -51,11 +51,10 @@ import { DistrictAddComponent } from '../district-add/district-add.component';
 
         this.countryForm = this.formbuilder.group({
             'country' : ['']
-        })
-
+        });
         this.stateRegionForm = this.formbuilder.group({
             'stateRegion' : ['']
-        })
+        });
 
         this.getCountries('All');
     }
@@ -185,7 +184,7 @@ import { DistrictAddComponent } from '../district-add/district-add.component';
     {
         const dialogRef = this.modalService.open(DistrictAddComponent, 
         { 
-        size: 'md', backdrop: 'static' 
+            size: 'md', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = {};
     }
@@ -194,7 +193,7 @@ import { DistrictAddComponent } from '../district-add/district-add.component';
     {
         const dialogRef = this.modalService.open(DistrictEditComponent, 
         { 
-        size: 'lg', backdrop: 'static' 
+            size: 'lg', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = district;
     }
@@ -266,17 +265,17 @@ import { DistrictAddComponent } from '../district-add/district-add.component';
             {
                 let tempJSON = { 
                     "id" : district.id ,
-                    "country" : { "id" :  this.countryForm.get('country').value },
+                    "country" : { "id" :  district.country.id },
                     "stateRegion" : { "id" : district.stateRegion.id }
                     };
                 let response = await this.businessService.deleteDistrict(tempJSON).toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
-                    this.showNotification("success", "State Region Deleted.");
+                    this.showNotification("success", "District Deleted.");
                     this.commonSharedService.districtListObject.next({
-                    result : "success",
-                    countryId : this.countryForm.get('country').value,
-                    stateRegionId : this.stateRegionForm.get('stateRegion').value
+                        result : "success",
+                        countryId : this.countryForm.get('country').value,
+                        stateRegionId : this.stateRegionForm.get('stateRegion').value
                     });
                 }
             }

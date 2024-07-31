@@ -17,171 +17,170 @@ import { BusinessVerticalEditComponent } from '../business-vertical-edit/busines
 import { BusinessVerticalAddComponent } from '../business-vertical-add/business-vertical-add.component';
 
 @Component({
-  selector: 'app-business-vertical-list',
-  standalone: true,
-  imports: [CommonModule, SharedModule, DataTablesModule],
-  templateUrl: './business-vertical-list.component.html',
-  styleUrls: ['./business-vertical-list.component.scss']
+    selector: 'app-business-vertical-list',
+    standalone: true,
+    imports: [CommonModule, SharedModule, DataTablesModule],
+    templateUrl: './business-vertical-list.component.html',
+    styleUrls: ['./business-vertical-list.component.scss']
 })
 export class BusinessVerticalListComponent {
-  searchClicked : boolean;
-  businessVerticals : any[];
-  
-  constructor(private notifier: NotifierService, 
-    private activatedRoute: ActivatedRoute,
-    private modalService: NgbModal,
-    private businessService: BusinessService, 
-    private commonService: CommonService, 
-    public commonSharedService : CommonSharedService,
-    private formbuilder: FormBuilder,
-    private router : Router)
-    {
-      this.businessVerticals = [];
-    }
-
-  ngOnInit() 
-  {
-    this.searchClicked = false;
-    this.getBusinessVerticals('All');
-  }
-
-  public academyEnclosureDocumentAddResult:any = this.commonSharedService.businessVerticalListObject.subscribe(res =>{
-    if(res.result == "success")
-    {
-      this.getBusinessVerticals('All');
-    }
-  })
-
-  showNotification(type: string, message: string): void 
-  {
-    //type : default, info, success, warning, error
-    this.notifier.notify(type, message);
-  }
-
-  async getBusinessVerticals(action : string) 
-  {  
-    try
-    {
-      this.searchClicked = true;  
-      let response = await this.businessService.getBusinessVerticals('All').toPromise();
-      if (response.status_code == 200 && response.message == 'success') 
+    searchClicked : boolean;
+    businessVerticals : any[];
+    
+    constructor(private notifier: NotifierService, 
+        private activatedRoute: ActivatedRoute,
+        private modalService: NgbModal,
+        private businessService: BusinessService, 
+        private commonService: CommonService, 
+        public commonSharedService : CommonSharedService,
+        private formbuilder: FormBuilder,
+        private router : Router)
         {
-          $('#tblBusinessVertical').DataTable().destroy();
-          this.businessVerticals = response.businessVerticals;
-          setTimeout(function(){
-            $('#tblBusinessVertical').DataTable();
-          },1000);
-          this.searchClicked = false;
-          this.modalService.dismissAll();
+            this.businessVerticals = [];
         }
-        else
-        {
+
+    ngOnInit() 
+    {
         this.searchClicked = false;
-        this.modalService.dismissAll(); 
-        }
+        this.getBusinessVerticals('All');
     }
-    catch(e)
+
+    public academyEnclosureDocumentAddResult:any = this.commonSharedService.businessVerticalListObject.subscribe(res =>{
+        if(res.result == "success")
+        {
+            this.getBusinessVerticals('All');
+        }
+    })
+
+    showNotification(type: string, message: string): void 
     {
-      this.showNotification("error", e);
-      this.searchClicked = false;
+        //type : default, info, success, warning, error
+        this.notifier.notify(type, message);
     }
-  }
 
-  addBusinessVertical()
-  {
-    const dialogRef = this.modalService.open(BusinessVerticalAddComponent, 
-    { 
-      size: 'sm', backdrop: 'static' 
-    });
-    dialogRef.componentInstance.modalParams = {};
-  }
-
-  editBusinessVertical(businessVertical : any)
-  {
-    const dialogRef = this.modalService.open(BusinessVerticalEditComponent, 
-    { 
-      size: 'sm', backdrop: 'static' 
-    });
-    dialogRef.componentInstance.modalParams = businessVertical;
-  }
-
-  updateStatus(businessVertical : any)
-  {
-    Swal.fire({
-      customClass: {
-        container: 'my-swal'
-      },
-      title: 'Confirmation',
-      text: 'Are you sure to ' + (businessVertical.isActive == 1 ? 'de-active' : 'active') + ' the business vertical?',
-      icon: 'warning',
-      allowOutsideClick: false,
-      showCloseButton: true,
-      showCancelButton: true 
-    }).then(async (willUpdate) => {
-      if (willUpdate.dismiss) 
-      {
-      } 
-      else 
-      {        
+    async getBusinessVerticals(action : string) 
+    {  
         try
         {
-          let tempJson = {
-            id : businessVertical.id,
-            tableName : businessVertical.tableName
-          }
-          this.showNotification("info", "Please wait...");
-          let response = await this.commonService.updateStatus(tempJson).toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
-          {
-              this.showNotification("success", "Business Vertical "  + (businessVertical.isActive == 1 ? 'De-activated' : 'Activated'));
-              this.commonSharedService.businessVerticalListObject.next({
-                result : "success"
-              });
-          }
+            this.searchClicked = true;  
+            let response = await this.businessService.getBusinessVerticals('All').toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                $('#tblBusinessVertical').DataTable().destroy();
+                this.businessVerticals = response.businessVerticals;
+                setTimeout(function(){
+                    $('#tblBusinessVertical').DataTable();
+                },1000);
+                this.searchClicked = false;
+                this.modalService.dismissAll();
+            }
+            else
+            {
+                this.searchClicked = false;
+                this.modalService.dismissAll(); 
+            }
         }
         catch(e)
         {
-          this.showNotification("error", e);
+            this.showNotification("error", e);
+            this.searchClicked = false;
         }
-      }
-    });   
-  }
+    }
 
-  deleteBusinessVertical(businessVertical : any)
-  {
-    Swal.fire({
-      customClass: {
-        container: 'my-swal'
-      },
-      title: 'Confirmation',
-      text: 'Are you sure to delete business vertical?',
-      icon: 'warning',
-      showCloseButton: true,
-      showCancelButton: true
-    }).then(async (willDelete) => {
-      if (willDelete.dismiss) 
-      {
-        
-      } 
-      else 
-      {
-        this.showNotification("info", "Please wait...");
-        let tempJSON = { "id" : businessVertical.id };
-        try
+    addBusinessVertical()
+    {
+        const dialogRef = this.modalService.open(BusinessVerticalAddComponent, 
+        { 
+            size: 'sm', backdrop: 'static' 
+        });
+        dialogRef.componentInstance.modalParams = {};
+    }
+
+    editBusinessVertical(businessVertical : any)
+    {
+        const dialogRef = this.modalService.open(BusinessVerticalEditComponent, 
+        { 
+            size: 'sm', backdrop: 'static' 
+        });
+        dialogRef.componentInstance.modalParams = businessVertical;
+    }
+
+    updateStatus(businessVertical : any)
+    {
+        Swal.fire({
+        customClass: {
+            container: 'my-swal'
+        },
+        title: 'Confirmation',
+        text: 'Are you sure to ' + (businessVertical.isActive == 1 ? 'de-active' : 'active') + ' the business vertical?',
+        icon: 'warning',
+        allowOutsideClick: false,
+        showCloseButton: true,
+        showCancelButton: true 
+        }).then(async (willUpdate) => {
+        if (willUpdate.dismiss) 
         {
-          let response = await this.businessService.deleteBusinessVertical(tempJSON).toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
-          {
-            this.showNotification("success", "Business Vertical Deleted.");
-            this.commonSharedService.businessVerticalListObject.next({result : "success"});
-          }
+        } 
+        else 
+        {        
+            try
+            {
+                let tempJson = {
+                    id : businessVertical.id,
+                    tableName : businessVertical.tableName
+                }
+                this.showNotification("info", "Please wait...");
+                let response = await this.commonService.updateStatus(tempJson).toPromise();
+                if (response.status_code == 200 && response.message == 'success') 
+                {
+                    this.showNotification("success", "Business Vertical "  + (businessVertical.isActive == 1 ? 'De-activated' : 'Activated'));
+                    this.commonSharedService.businessVerticalListObject.next({
+                        result : "success"
+                    });
+                }
+            }
+            catch(e)
+            {
+                this.showNotification("error", e);
+            }
         }
-        catch(e)
+        });   
+    }
+
+    deleteBusinessVertical(businessVertical : any)
+    {
+        Swal.fire({
+        customClass: {
+            container: 'my-swal'
+        },
+        title: 'Confirmation',
+        text: 'Are you sure to delete business vertical?',
+        icon: 'warning',
+        showCloseButton: true,
+        showCancelButton: true
+        }).then(async (willDelete) => {
+        if (willDelete.dismiss) 
         {
-          this.showNotification("error", e);
+            
+        } 
+        else 
+        {
+            this.showNotification("info", "Please wait...");
+            let tempJSON = { "id" : businessVertical.id };
+            try
+            {
+                let response = await this.businessService.deleteBusinessVertical(tempJSON).toPromise();
+                if (response.status_code == 200 && response.message == 'success') 
+                {
+                    this.showNotification("success", "Business Vertical Deleted.");
+                    this.commonSharedService.businessVerticalListObject.next({result : "success"});
+                }
+            }
+            catch(e)
+            {
+                this.showNotification("error", e);
+            }
         }
-      }
-    });
-  }
-  
+        });
+    }  
 }

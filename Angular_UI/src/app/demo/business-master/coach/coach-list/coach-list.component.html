@@ -10,9 +10,19 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-3">
+                <form [formGroup]="businessVerticalForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="businessVertical">Business Vertical</label>
+                        <select class="form-control" required id="businessVertical" formControlName="businessVertical" (change)="getBusinessVerticalTypes(0,'All')">
+                          <option value="{{businessVertical.id}}" *ngFor="let businessVertical of businessVerticals">{{businessVertical.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div> 
+              <div class="col-md-3">
                 <form [formGroup]="businessVerticalTypeForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="businessVerticalType">Business Vertical Type</label>
+                        <label class="form-control-label" for="businessVerticalType">Business Vertical Type&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
                         <select class="form-control" required id="businessVerticalType" formControlName="businessVerticalType">
                           <option value="{{businessVerticalType.id}}" *ngFor="let businessVerticalType of businessVerticalTypes">{{businessVerticalType.name}}</option>
                         </select>

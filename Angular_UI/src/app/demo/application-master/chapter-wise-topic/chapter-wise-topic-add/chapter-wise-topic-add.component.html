@@ -1,7 +1,6 @@
 <div class="modal-header">
     <h5 class="modal-title" id="gradeAddModal"><i class="fa fa-plus"></i>&nbsp;Add Chapter Wise Topic</h5>
      <!-- <div>{{addChapterWiseSubject.value | json}}</div> -->
-
     <button
     type="button"
     class="btn-close"
@@ -13,8 +12,7 @@
 <form [formGroup]="addChapterWiseSubject" id="addChapterWiseSubject" (ngSubmit)="saveChapterWiseTopic()" autocomplete="off">
     <div class="modal-body">    
         <div class="row">
-
-             <div class="col-md-3">
+            <div class="col-md-3">
                 <form [formGroup]="academicSessionForm">
                     <div class="form-group">
                         <label class="form-control-label" for="academicSession">Academic Session &nbsp;<span style="color: red;">*</span></label>
@@ -29,7 +27,6 @@
                     </div>
                 </form>                
             </div> 
-
             <div class="col-md-3">
                 <form [formGroup]="gradeCategoryForm">
                     <div class="form-group">
@@ -46,7 +43,6 @@
                     </div>
                 </form>                
             </div>
-
             <div class="col-md-3">
                 <form [formGroup]="gradeForm">
                     <div class="form-group">
@@ -62,8 +58,7 @@
                         >Please select grade.</label>
                     </div>
                 </form>                
-            </div> 
-            
+            </div>             
             <div class="col-md-3">
                 <form [formGroup]="syllabusForm">
                     <div class="form-group">
@@ -80,7 +75,6 @@
                     </div>
                 </form>                
             </div> 
-
             <div class="col-md-3">
                 <form [formGroup]="subjectForm">
                     <div class="form-group">
@@ -97,7 +91,6 @@
                     </div>
                 </form>                
             </div> 
-
             <div class="col-md-4">
                 <form [formGroup]="chapterForm">
                     <div class="form-group">
@@ -113,8 +106,7 @@
                         >Please select chapter.</label>
                     </div>
                 </form>                
-            </div> 
-            
+            </div>             
               <!-- Name field -->
             <div class="col-md-5">
                 <div class="form-group">

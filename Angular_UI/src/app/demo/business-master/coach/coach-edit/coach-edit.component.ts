@@ -20,10 +20,13 @@ export class CoachEditComponent
 {
     @Input() public modalParams;
     editCoachForm : FormGroup;
+    businessVerticalForm : FormGroup;
     businessVerticalTypeForm : FormGroup;
+    businessVerticals : any[];
     businessVerticalTypes : any[];
     isValidForm : boolean;
     saveClicked : boolean;
+    searchClicked : boolean;
     coach : any;
     
     constructor(private businessService: BusinessService, 
@@ -40,21 +43,29 @@ export class CoachEditComponent
         this.coach = this.modalParams;
         this.isValidForm = true;
         this.saveClicked = false;
+        this.searchClicked = false;
+        this.businessVerticals = [];
         this.businessVerticalTypes = [];
 
         this.editCoachForm = this.formbuilder.group({
-        uuid: this.coach.uuid,
-        name: ['', [Validators.required]],
-        email: ['', [Validators.required, Validators.email]],
-        mobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,10}'), Validators.maxLength(10), Validators.minLength(10)]],
-        businessVerticalType: this.formbuilder.group({ id : ['']}),
+            uuid: this.coach.uuid,
+            name: ['', [Validators.required]],
+            email: ['', [Validators.required, Validators.email]],
+            mobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,10}'), Validators.maxLength(10), Validators.minLength(10)]],
+            businessVertical: this.formbuilder.group({ "id" : [''] }),
+            businessVerticalType: this.formbuilder.group({ "id" : [''] }),
         });  
 
+        this.businessVerticalForm = this.formbuilder.group({
+            'businessVertical' : ['', Validators.required]
+        });
         this.businessVerticalTypeForm = this.formbuilder.group({
-        'businessVerticalType' : ['', Validators.required]
-        })
+            'businessVerticalType' : ['', Validators.required]
+        });
     
         this.editCoachForm.patchValue(this.coach);
+        this.businessVerticalForm.get('businessVertical').setValue(this.coach.businessVertical.id);
+        this.getBusinessVerticals(this.coach.businessVertical);
         this.businessVerticalTypeForm.get("businessVerticalType").setValue(this.coach.businessVerticalType.id);
         this.getBusinessVerticalTypes(this.coach.businessVerticalType);
     }
@@ -65,35 +76,61 @@ export class CoachEditComponent
         this.notifier.notify(type, message);
     }
 
-    // get business type
-    async getBusinessVerticalTypes(businessVerticalType : any) 
-    {  
-        try
-        {
-            let response = await this.businessService.getBusinessVerticalTypes(0, 0, 'Active').toPromise();
-            if (response.status_code == 200 && response.message == 'success') 
-            {
-                this.businessVerticalTypes = response.businessVerticalTypes;
-                this.businessVerticalTypes.unshift({ id : '', name : "Select Business Vertical Type"});
-                if(businessVerticalType != '')
-                {
-                    let filterBusinessVerticalType = this.businessVerticalTypes.filter(tempBusinessVerticalType => parseInt(tempBusinessVerticalType.id) == parseInt(businessVerticalType.id));
-                    if(filterBusinessVerticalType.length == 0)
-                    {
-                        this.businessVerticalTypes.push({ id : businessVerticalType.id, name : businessVerticalType.name });
-                    }
-                }
-            }
-            else
-            {
-                this.businessVerticalTypes = [];
-                this.businessVerticalTypes.unshift({ id : '', name : "Select Business Vertical Type"});
-            }
-        }
-        catch(e)
-        {
-            this.showNotification("error", e);
-        }
+   // get business vertical
+   async getBusinessVerticals(action : string) 
+   {  
+       try
+       {
+           let response = await this.businessService.getBusinessVerticals('Active').toPromise();
+           if (response.status_code == 200 && response.message == 'success') 
+           {
+               this.businessVerticals = response.businessVerticals;
+               this.businessVerticals.unshift({ id : '', name : "Select Business Vertical" });
+           }
+           else
+           {
+               this.businessVerticals = [];
+           }
+       }
+       catch(e)
+       {
+           this.showNotification("error", e);
+       }
+   }
+
+   // get business type
+   async getBusinessVerticalTypes(businessVerticalType : any) 
+   {  
+       try
+       {
+           let businessVerticalId = this.businessVerticalForm.get('businessVertical').value;
+           if(businessVerticalId != undefined && businessVerticalId != '')
+           {
+               this.searchClicked = true;  
+               let response = await this.businessService.getBusinessVerticalTypes(businessVerticalId, 0, 'Active').toPromise();
+               if (response.status_code == 200 && response.message == 'success') 
+               {
+                   this.businessVerticalTypes = response.businessVerticalTypes;
+                   this.businessVerticalTypes.unshift({ id : '', name : "Select Business Vertical Type"});
+                   this.searchClicked = false;
+               }
+               else
+               {
+                   this.businessVerticalTypes = [];
+                   this.businessVerticalTypes.unshift({ id : '', name : "Select Business Vertical Type"});
+                   this.searchClicked = false; 
+               }
+           }
+           else
+           {
+               this.searchClicked = false;
+           }
+       }
+       catch(e)
+       {
+           this.showNotification("error", e);
+           this.searchClicked = false;
+       }
     }
 
     async saveCoach()

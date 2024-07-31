@@ -163,7 +163,7 @@ export class TieUpSchoolListComponent
     {
         const dialogRef = this.modalService.open(TieUpSchoolAddComponent, 
         { 
-        size: 'xl', backdrop: 'static' 
+            size: 'xl', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = {};
     }
@@ -171,11 +171,11 @@ export class TieUpSchoolListComponent
     editTieUpSchool(uuid : string)
     {
         let params = {
-        "uuid" : uuid
+            "uuid" : uuid
         }
         const dialogRef = this.modalService.open(TieUpSchoolEditComponent, 
         { 
-        size: 'xl', backdrop: 'static' 
+            size: 'xl', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = params;
     }
@@ -205,7 +205,7 @@ export class TieUpSchoolListComponent
         {
             this.showNotification("info", "Please wait...");
             let tempJson = {
-            uuid : tieUpSchool.uuid,
+                uuid : tieUpSchool.uuid,
             }
             try
             {

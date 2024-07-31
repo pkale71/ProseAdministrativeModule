@@ -66,7 +66,7 @@
             <div class="col-md-8" *ngIf="isChecked">
                 <div class="form-file mb-3">
                     <label for="">Upload Excel&nbsp;<span style="color: red;">*</span></label>
-                    <span (click)="getDocuments('District')" class="badge  btn-outline-danger m-1" style="float: right; border-style: solid; border-width: 1px;">Download Excel</span>
+                    <span (click)="getDocuments('District')" class="badge  btn-outline-danger m-1" style="float: right; border-style: solid; border-width: 1px; cursor: pointer;">Download Excel</span>
                     <input type="file" class="form-control" id="uploadFile" aria-label="file example" [ngRequired]="isChecked" formControlName="uploadFile" (change)="fileChange($event)" [accept]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" [multiple]="false" [ngClass]="{'is-invalid': !addDistrictForm.controls['uploadFile'].valid && !isValidForm}" />
                     <label style="color: red;"
                     *ngIf="addDistrictForm.controls['uploadFile'].hasError('required') && !isValidForm"

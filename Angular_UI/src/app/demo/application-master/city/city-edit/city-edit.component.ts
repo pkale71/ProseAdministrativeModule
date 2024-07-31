@@ -8,8 +8,6 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 import { Router } from '@angular/router';
 import { BusinessService } from 'src/app/theme/shared/service/business.service';
 
-
-
 @Component({
     selector: 'app-city-edit',
     standalone: true,
@@ -27,6 +25,8 @@ export class CityEditComponent
     isValidForm: boolean;
     saveClicked: boolean;
     searchClicked: boolean;
+    searchClickedStateRegion: boolean;
+    searchClickedDistrict: boolean;
     city: any;
     countries: any[];
     stateRegions: any[];
@@ -47,6 +47,7 @@ export class CityEditComponent
         this.isValidForm = true;
         this.saveClicked = false;
         this.searchClicked = false;
+        this.searchClickedStateRegion = false;
         this.countries = [];
         this.stateRegions = [];
         this.districts = [];
@@ -123,13 +124,13 @@ export class CityEditComponent
             let countryId = this.countryForm.get('country').value;
             if(countryId != undefined && countryId != '')
             {
-                this.searchClicked = true;  
+                this.searchClickedStateRegion = true;  
                 let response = await this.businessService.getStateRegions(countryId, 'All').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.stateRegions = response.stateRegions;
                     this.stateRegions.unshift({ id : '', name : 'All'});
-                    this.searchClicked = false;
+                    this.searchClickedStateRegion = false;
                     if(stateRegion != '')
                     {
                         let filterStateRegion = this.stateRegions.filter(tempStateRegion => parseInt(tempStateRegion.id) == parseInt(stateRegion.id));
@@ -143,20 +144,20 @@ export class CityEditComponent
                 {
                     this.stateRegions = [];
                     this.stateRegions.unshift({ id : '', name : 'All'});
-                    this.searchClicked = false;
+                    this.searchClickedStateRegion = false;
                 }
             }
             else
             {
                 this.stateRegions = [];
                 this.stateRegions.unshift({ id : '', name : 'All'});
-                this.searchClicked = false;
+                this.searchClickedStateRegion = false;
             }  
         }
         catch(e)
         {
             this.showNotification("error", e);
-            this.searchClicked = false;
+            this.searchClickedStateRegion = false;
         }
     }
 
@@ -169,13 +170,13 @@ export class CityEditComponent
             let stateRegionId = this.stateRegionForm.get('stateRegion').value;
             if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '')
             {
-                this.searchClicked = true;  
+                this.searchClickedDistrict = true;  
                 let response = await this.businessService.getDistricts(countryId, stateRegionId, 'All').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.districts = response.districts;
                     this.districts.unshift({ id : '', name : "Select District"});
-                    this.searchClicked = false;
+                    this.searchClickedDistrict = false;
                     if(district != '')
                     {
                         let filterDistrict = this.districts.filter(tempDistrict => parseInt(tempDistrict.id) == parseInt(district.id));
@@ -189,20 +190,20 @@ export class CityEditComponent
                 {
                     this.districts = [];
                     this.districts.unshift({ id : '', name : "Select District"});
-                    this.searchClicked = false;
+                    this.searchClickedDistrict = false;
                 }
             }
             else
             {
                 this.districts = [];
                 this.districts.unshift({ id : '', name : "Select District"});
-                this.searchClicked = false;
+                this.searchClickedDistrict = false;
             } 
         }
         catch(e)
         {
             this.showNotification("error", e);
-            this.searchClicked = false;
+            this.searchClickedDistrict = false;
         }
     }
 

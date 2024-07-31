@@ -29,7 +29,7 @@
             <div class="col-md-6">
                 <form [formGroup]="stateRegionForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedStateRegion"></i></label>
                         <select class="form-control"  required id="stateRegion" formControlName="stateRegion" (change)="getDistricts('Active')"
                         [ngClass]="{'is-invalid': !stateRegionForm.controls['stateRegion'].valid && !isValidForm}">
                         <option value="{{stateRegion.id}}" *ngFor="let stateRegion of stateRegions">{{stateRegion?.name}}</option>
@@ -44,7 +44,7 @@
             <div class="col-md-6">
                 <form [formGroup]="districtForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="district">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <label class="form-control-label" for="district">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedDistrict"></i></label>
                         <select class="form-control"  required id="district" formControlName="district"
                         [ngClass]="{'is-invalid': !districtForm.controls['district'].valid && !isValidForm}">
                         <option value="{{district.id}}" *ngFor="let district of districts">{{district?.name}}</option>
