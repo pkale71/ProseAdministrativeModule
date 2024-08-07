@@ -12,7 +12,6 @@
 <form [formGroup]="addSubjectWiseChapterForm" id="addSubjectWiseChapterForm" (ngSubmit)="saveSubjectWiseChapter()" autocomplete="off">
     <div class="modal-body">    
         <div class="row">
-
             <div class="col-md-4">
                 <form [formGroup]="academicSessionForm">
                     <div class="form-group">
@@ -28,7 +27,6 @@
                     </div>
                 </form>                
             </div> 
-
             <div class="col-md-4">
                 <form [formGroup]="gradeCategoryForm">
                     <div class="form-group">
@@ -41,11 +39,10 @@
                         <label style="color: red;"
                         *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
                         class="error jquery-validation-error small form-text"
-                        >Please select grade.</label>
+                        >Please select grade category.</label>
                     </div>
                 </form>                
             </div>
-
             <div class="col-md-4">
                 <form [formGroup]="gradeForm">
                     <div class="form-group">
@@ -61,8 +58,7 @@
                         >Please select grade.</label>
                     </div>
                 </form>                
-            </div> 
-            
+            </div>             
             <div class="col-md-3">
                 <form [formGroup]="syllabusForm">
                     <div class="form-group">
@@ -78,7 +74,6 @@
                     </div>
                 </form>                
             </div> 
-
             <div class="col-md-4">
                 <form [formGroup]="subjectForm">
                     <div class="form-group">
@@ -95,7 +90,6 @@
                     </div>
                 </form>                
             </div> 
-
             <!-- Name field -->
             <div class="col-md-5">
                 <div class="form-group">

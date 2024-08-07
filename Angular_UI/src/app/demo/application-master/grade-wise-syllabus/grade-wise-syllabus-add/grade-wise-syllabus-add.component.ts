@@ -111,6 +111,7 @@ export class GradeWiseSyllabusAddComponent
             else
             {
                 this.academicSessions = [];
+                this.academicSessions.unshift({ id: "", name: "Select Academin Session" });
                 this.academicSessionClicked = false;
             }
         }
@@ -164,25 +165,29 @@ export class GradeWiseSyllabusAddComponent
                 {
                     this.schoolingPrograms = response.schoolingPrograms;
                     this.schoolingPrograms.unshift({ id: "", name: "Select School Program" });
-                    this.schoolingProgramClicked = false;
                     this.getSyllabuses();
+                    this.schoolingProgramClicked = false;
                 }
                 else
                 {
-                    this.schoolingProgramClicked = false;
+                    this.schoolingPrograms = [];
+                    this.schoolingPrograms.unshift({ id: "", name: "Select School Program" });
                     this.getSyllabuses();
+                    this.schoolingProgramClicked = false;
                 }
             }
             else
             {
-                this.schoolingProgramClicked = false;
+                this.schoolingPrograms = [];
+                this.schoolingPrograms.unshift({ id: "", name: "Select School Program" });
                 this.getSyllabuses();
+                this.schoolingProgramClicked = false;
             }
         }
         catch(e)
         {
-            this.schoolingProgramClicked = false;
             this.showNotification("error",e);
+            this.schoolingProgramClicked = false;
         }
     }
 
@@ -199,24 +204,27 @@ export class GradeWiseSyllabusAddComponent
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.grades = response.grades;
-                    this.gradeClicked = false;
                     this.grades.unshift({ id: "", name: "Select Grade" });
+                    this.gradeClicked = false;
                 }
                 else
                 {
                     this.grades = [];
+                    this.grades.unshift({ id : "", name : "Select Grade" });
                     this.gradeClicked = false;
                 }
             }
             else
             {
                 this.grades = [];
+                this.grades.unshift({ id : "", name : "Select Grade" });
                 this.gradeClicked = false;
             }    
         }
         catch(e)
         {
             this.showNotification("error", e);
+            this.gradeClicked = false;
         }
     }
 
@@ -240,12 +248,14 @@ export class GradeWiseSyllabusAddComponent
                 else
                 {
                     this.syllabuses = [];
+                    this.syllabuses.unshift({ id: "", name: "Select Syllabus" });
                     this.syllabusClicked = false;
                 }
             }
             else
             {
                 this.syllabuses = [];
+                this.syllabuses.unshift({ id: "", name: "Select Syllabus" });
                 this.syllabusClicked = false;
             }
         }

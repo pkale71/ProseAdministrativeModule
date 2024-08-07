@@ -8,8 +8,6 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 import { Router } from '@angular/router';
 import { BusinessService } from 'src/app/theme/shared/service/business.service';
 
-
-
 @Component({
     selector: 'app-state-region-add',
     standalone: true,
@@ -44,15 +42,15 @@ export class StateRegionAddComponent
         this.countries = [];
 
         this.addStateRegionForm = this.formbuilder.group({
-        id:[''],
-        name: [''],
-        country: this.formbuilder.group({ 'id' : ['']}),
-        uploadFile: [''],
-        selectedFile: ['']
+            id:[''],
+            name: [''],
+            country: this.formbuilder.group({ 'id' : ['']}),
+            uploadFile: [''],
+            selectedFile: ['']
         });  
 
         this.countryForm = this.formbuilder.group({
-        'country' : ['', Validators.required]
+            'country' : ['', Validators.required]
         });
 
         this.addStateRegionForm.controls['uploadFile'].clearValidators();
@@ -72,7 +70,7 @@ export class StateRegionAddComponent
     {  
         try
         {
-            let response = await this.businessService.getCountries('All').toPromise();
+            let response = await this.businessService.getCountries('Active').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.countries = response.countries;

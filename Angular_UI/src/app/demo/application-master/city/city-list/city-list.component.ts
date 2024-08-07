@@ -43,10 +43,10 @@ export class CityListComponent {
         private formbuilder: FormBuilder,
         private router : Router)
         {
-        this.cities = [];
-        this.districts = [];
-        this.countries = [];
-        this.stateRegions = [];
+            this.cities = [];
+            this.districts = [];
+            this.countries = [];
+            this.stateRegions = [];
         }
 
     ngOnInit() 
@@ -54,17 +54,16 @@ export class CityListComponent {
         this.searchClicked = false;
 
         this.countryForm = this.formbuilder.group({
-        'country' : ['0']
-        })
+            'country' : ['0']
+        });
         this.stateRegionForm = this.formbuilder.group({
-        'stateRegion' : ['0']
-        })
+            'stateRegion' : ['0']
+        });
         this.districtForm = this.formbuilder.group({
-        'district' : ['0']
-        })
+            'district' : ['0']
+        });
 
         this.getCountries('All');
-
     }
 
     public stateAddResult:any = this.commonSharedService.cityListObject.subscribe(res =>{
@@ -236,7 +235,7 @@ export class CityListComponent {
     {
         const dialogRef = this.modalService.open(CityAddComponent, 
         { 
-        size: 'lg', backdrop: 'static' 
+            size: 'lg', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = {};
     }
@@ -245,7 +244,7 @@ export class CityListComponent {
     {
         const dialogRef = this.modalService.open(CityEditComponent, 
         { 
-        size: 'md', backdrop: 'static' 
+            size: 'md', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = city;
     }

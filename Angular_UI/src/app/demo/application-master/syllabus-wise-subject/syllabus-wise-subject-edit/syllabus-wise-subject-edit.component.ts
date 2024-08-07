@@ -42,7 +42,8 @@ export class SyllabusWiseSubjectEditComponent {
         private formbuilder: FormBuilder,
         public commonSharedService: CommonSharedService,
         private router: Router
-    ) {
+    ) 
+    {
         this.academicSessions = [],
         this.gradeCategories = [],
         this.grades = [],
@@ -79,16 +80,16 @@ export class SyllabusWiseSubjectEditComponent {
             "syllabus" : ['', Validators.required]
         });
         
-        this.getGradeCategories();
         ///Assign Form Data
         this.editSyllabusWiseSubjectForm.patchValue(this.syllabusWiseSubject);
         this.getAcademicSessions();
         this.academicSessionForm.get("academicSession").setValue(this.syllabusWiseSubject.academicSession.id);
         this.gradeCategoryForm.get("gradeCategory").setValue(this.syllabusWiseSubject.gradeCategory.id);
-        this.getGrades();
+        this.getGradeCategories(this.syllabusWiseSubject.gradeCategory);
         this.gradeForm.get("grade").setValue(this.syllabusWiseSubject.grade.id);
-        this.getGradeWiseSyllabuses();
+        this.getGrades(this.syllabusWiseSubject.grade);
         this.syllabusForm.get("syllabus").setValue(this.syllabusWiseSubject.syllabus.id);
+        this.getGradeWiseSyllabuses(this.syllabusWiseSubject.syllabus);
     }
 
     showNotification(type: string, message: string): void 
@@ -106,10 +107,12 @@ export class SyllabusWiseSubjectEditComponent {
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.academicSessions = response.academicSessions;
+                this.academicSessions.unshift({ id : "", name : "Select Academic Session"});
             }
             else
             {
                 this.academicSessions = [];
+                this.academicSessions.unshift({ id : "", name : "Select Academic Session"});
             }
         }
         catch(e)
@@ -119,7 +122,7 @@ export class SyllabusWiseSubjectEditComponent {
     }
 
     //gradeCategory
-    async getGradeCategories() 
+    async getGradeCategories(gradeCategory : any) 
     {
         try
         {
@@ -128,6 +131,15 @@ export class SyllabusWiseSubjectEditComponent {
             {
                 this.gradeCategories = response.gradeCategories;
                 this.gradeCategories.unshift({ id : "", name : "Select Grade Category"});
+                // here access deactivate data 
+                if(gradeCategory != '')
+                {
+                    let filterGradeCategory = this.gradeCategories.filter( tempGradeCategory => parseInt(tempGradeCategory.id) == parseInt(gradeCategory.id));
+                    if(filterGradeCategory.length == 0)
+                    {
+                        this.gradeCategories.push({ id : gradeCategory.id, name : gradeCategory.name });
+                    }
+                }
             }
             else
             {
@@ -142,32 +154,44 @@ export class SyllabusWiseSubjectEditComponent {
     }
     
     // get grades
-    async getGrades() 
+    async getGrades(grade : any) 
     {  
         try 
         {
-            this.gradeForm.get("grade").setValue("");
-            this.syllabusForm.get("syllabus").setValue("");
+            // this.gradeForm.get("grade").setValue("");
+            // this.syllabusForm.get("syllabus").setValue("");
             let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
             if(gradeCategoryId != undefined && gradeCategoryId != "")
             {
                 this.gradeClicked = true;
-                let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
+                let response = await this.commonService.getGrades(gradeCategoryId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.grades = response.grades;
-                    this.gradeClicked = false;
                     this.grades.unshift({ id: "", name: "Select Grade" });
+                    this.gradeClicked = false;
+                    // here access deactivate data
+                    if(grade != '')
+                    {
+                        let filterGrade = this.grades.filter(tempGrade => parseInt(tempGrade.id) == parseInt(grade.id));
+                        if(filterGrade.length == 0)
+                        {
+                            this.grades.push({ id : grade.id, name : grade.name });
+                        }
+                    }
+
                 }
                 else
                 {
                     this.grades = [];
+                    this.grades.unshift({ id: "", name: "Select Grade" });
                     this.gradeClicked = false;
                 }
             }
             else
             {
                 this.grades = [];
+                this.grades.unshift({ id: "", name: "Select Grade" });
                 this.gradeClicked = false;
             }    
         }
@@ -179,7 +203,7 @@ export class SyllabusWiseSubjectEditComponent {
     }
 
     // grade wise syllabus
-    async getGradeWiseSyllabuses() 
+    async getGradeWiseSyllabuses(gradeWiseSyllabus : any) 
     {
         try
         {
@@ -194,13 +218,22 @@ export class SyllabusWiseSubjectEditComponent {
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.gradeWiseSyllabuses = response.gradeWiseSyllabuses;
-                    this.syllabusClicked = false;
                     this.gradeWiseSyllabuses.unshift({ id : "", syllabus : {
                         id : "",
                         name : "Select Syllabus"
                         }
                     });
                     this.syllabusForm.get("syllabus").setValue(this.syllabusWiseSubject.syllabus.id);
+                    this.syllabusClicked = false;
+                    // here access deactivate data
+                    if(gradeWiseSyllabus != '')
+                    {
+                        let filterGradeWiseSyllabus = this.gradeWiseSyllabuses.filter(tempGradeWiseSyllabus => parseInt(tempGradeWiseSyllabus.id) == parseInt(gradeWiseSyllabus.id));
+                        if(filterGradeWiseSyllabus.length == 0)
+                        {
+                            this.gradeWiseSyllabuses.push({ id : gradeWiseSyllabus.id, name : gradeWiseSyllabus.name });
+                        }
+                    }
                 }
                 else
                 {

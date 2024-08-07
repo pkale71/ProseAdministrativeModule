@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h5 class="modal-title" id="gradeAddModal"><i class="fa fa-plus"></i>&nbsp;Add Chapter Wise Topic</h5>
-     <!-- <div>{{addChapterWiseSubject.value | json}}</div> -->
+     <!-- <div>{{addChapterWiseSubjectForm.value | json}}</div> -->
     <button
     type="button"
     class="btn-close"
@@ -9,7 +9,7 @@
     (click)="closeModal()"
     ></button>
 </div>
-<form [formGroup]="addChapterWiseSubject" id="addChapterWiseSubject" (ngSubmit)="saveChapterWiseTopic()" autocomplete="off">
+<form [formGroup]="addChapterWiseSubjectForm" id="addChapterWiseSubjectForm" (ngSubmit)="saveChapterWiseTopic()" autocomplete="off">
     <div class="modal-body">    
         <div class="row">
             <div class="col-md-3">
@@ -39,7 +39,7 @@
                         <label style="color: red;"
                         *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
                         class="error jquery-validation-error small form-text"
-                        >Please select grade.</label>
+                        >Please select grade category.</label>
                     </div>
                 </form>                
             </div>
@@ -49,7 +49,7 @@
                         <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="gradeClicked"></i></label>
                         <select class="form-control"  required id="grade" formControlName="grade" (change) = "getGradeWiseSyllabuses()"
                         [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}" 
-                          >
+                        >
                         <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade?.name}}</option>
                         </select>
                         <label style="color: red;"
@@ -106,20 +106,40 @@
                         >Please select chapter.</label>
                     </div>
                 </form>                
-            </div>             
+            </div>           
+            <div class="col-md-4 mt-4">
+                <div class="form-group">
+                    <div class="checkbox d-inline">
+                      <input type="checkbox" name="checkbox-1" id="checkbox-1" (change)="getChange($event)"/>
+                      <label for="checkbox-1" class="cr">Upload Excel</label>
+                    </div>
+                </div>
+            </div>  
               <!-- Name field -->
-            <div class="col-md-5">
+            <div class="col-md-6" *ngIf="!isChecked">
                 <div class="form-group">
                     <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
-                    <input class="form-control input-md" id="name" type="text" required 
-                    formControlName="name" 
-                    [ngClass]="{'is-invalid': !addChapterWiseSubject.controls['name'].valid && !isValidForm}"/>
+                    <input class="form-control input-md" id="name" type="text" [ngRequired]="!isChecked" formControlName="name" 
+                    [ngClass]="{'is-invalid': !addChapterWiseSubjectForm.controls['name'].valid && !isValidForm}"/>
                     <label style="color: red;"
-                    *ngIf="addChapterWiseSubject.controls['name'].hasError('required') && !isValidForm"
+                    *ngIf="addChapterWiseSubjectForm.controls['name'].hasError('required') && !isValidForm"
                     class="error jquery-validation-error small form-text"
                     >Please enter topic name.</label>
                 </div>
             </div> 
+              <!-- upload excel -->  
+            <div class="col-md-6" *ngIf="isChecked">
+                <div class="form-file mb-3">
+                    <label for="uploadFile">Upload Excel&nbsp;<span style="color: red;">*</span></label>
+                    <span (click)="getDocuments('Topic')" class="badge btn-outline-danger m-1" style="float: right; border-style: solid; border-width: 1px; cursor: pointer;">Download Excel</span>
+                    <input type="file" id="uploadFile" class="form-control" formControlName="uploadFile" (change)="fileChange($event)" [accept]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" [multiple]="false"
+                    [ngRequired]="isChecked" [ngClass]="{'is-invalid': !addChapterWiseSubjectForm.controls['uploadFile'].valid && !isValidForm}" />
+                    <label style="color: red;"
+                    *ngIf="addChapterWiseSubjectForm.controls['uploadFile'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please upload file.</label>
+                </div>
+            </div>  
         </div>
     </div>
     <div class="modal-footer">

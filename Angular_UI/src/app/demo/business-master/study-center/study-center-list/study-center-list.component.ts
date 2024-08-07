@@ -56,7 +56,7 @@ export class StudyCenterListComponent
 
         this.studyCenterTypeForm = this.formbuilder.group({
             'studyCenterType' : ['0']
-        })
+        });
         this.getStudyCenterTypes();
         this.getStudyCenters("");
     }

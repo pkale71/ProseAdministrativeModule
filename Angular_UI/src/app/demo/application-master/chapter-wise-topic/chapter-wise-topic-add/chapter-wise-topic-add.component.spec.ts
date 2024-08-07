@@ -1,23 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChapterWiseTopicAppComponent } from './chapter-wise-topic-add.component';
 
-import { GradeAddComponent } from './chapter-wise-topic-add.component';
+describe('ChapterWiseTopicAppComponent', () => {
+    let component: ChapterWiseTopicAppComponent;
+    let fixture: ComponentFixture<ChapterWiseTopicAppComponent>;
 
-describe('GradeCategoryAddComponent', () => {
-  let component: GradeAddComponent;
-  let fixture: ComponentFixture<GradeAddComponent>;
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+        declarations: [ ChapterWiseTopicAppComponent ]
+        })
+        .compileComponents();
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ GradeAddComponent ]
-    })
-    .compileComponents();
+        fixture = TestBed.createComponent(ChapterWiseTopicAppComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-    fixture = TestBed.createComponent(GradeAddComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

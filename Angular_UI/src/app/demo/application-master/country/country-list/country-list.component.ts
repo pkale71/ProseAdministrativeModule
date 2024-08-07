@@ -36,7 +36,7 @@ export class CountryListComponent {
         private formbuilder: FormBuilder,
         private router : Router)
         {
-        this.countries = [];
+            this.countries = [];
         }
 
     ngOnInit() 
@@ -91,7 +91,7 @@ export class CountryListComponent {
     {
         const dialogRef = this.modalService.open(CountryAddComponent, 
         { 
-        size: 'sm', backdrop: 'static' 
+            size: 'sm', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = {};
     }
@@ -100,7 +100,7 @@ export class CountryListComponent {
     {
         const dialogRef = this.modalService.open(CountryEditComponent, 
         { 
-        size: 'sm', backdrop: 'static' 
+            size: 'sm', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = country;
     }

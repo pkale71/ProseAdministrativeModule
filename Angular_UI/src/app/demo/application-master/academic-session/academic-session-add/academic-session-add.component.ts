@@ -30,8 +30,7 @@ export class AcademicSessionAddComponent {
         public commonSharedService: CommonSharedService,
         private router: Router,
         public datePipe: DatePipe
-    ) {
-
+    ){
         this.isOpenAdmissionSessions = [{
             "id": 1,
             "name": "Yes"

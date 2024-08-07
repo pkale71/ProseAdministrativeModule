@@ -15,162 +15,162 @@ declare var $;
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-grade-category-list',
-  standalone: true,
-  imports: [CommonModule, SharedModule, DataTablesModule],
-  templateUrl: './grade-category-list.component.html',
-  styleUrls: ['./grade-category-list.component.scss']
+    selector: 'app-grade-category-list',
+    standalone: true,
+    imports: [CommonModule, SharedModule, DataTablesModule],
+    templateUrl: './grade-category-list.component.html',
+    styleUrls: ['./grade-category-list.component.scss']
 })
 export class GradeCategoryListComponent {
-  gradeCategories : any[];
-  searchClicked : boolean;
-  
-  constructor(private notifier: NotifierService, 
-    private activatedRoute: ActivatedRoute,
-    private modalService: NgbModal,
-    private commonService: CommonService, 
-    public commonSharedService : CommonSharedService,
-    private formbuilder: FormBuilder,
-    private router : Router)
-    {
-    }
-
-  ngOnInit() 
-  {
-    this.searchClicked = false;
-    this.gradeCategories = [];
-    this.getGradeCategories('All');
-  }
-
-  public gradeAddResult:any = this.commonSharedService.gradeCategoryListObject.subscribe(res =>{
-    if(res.result == "success")
-    {
-      this.getGradeCategories('All');
-    }
-  })
-
-  showNotification(type: string, message: string): void 
-  {
-    //type : default, info, success, warning, error
-    this.notifier.notify(type, message);
-  }
-
-  async getGradeCategories(action : string) 
-  {
-    try 
-      {
-        this.searchClicked = true;
-        let response = await this.commonService.getGradeCategories('All').toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
+    gradeCategories : any[];
+    searchClicked : boolean;
+    
+    constructor(private notifier: NotifierService, 
+        private activatedRoute: ActivatedRoute,
+        private modalService: NgbModal,
+        private commonService: CommonService, 
+        public commonSharedService : CommonSharedService,
+        private formbuilder: FormBuilder,
+        private router : Router)
         {
-          $('#tblGradeCategory').DataTable().destroy();
-          this.gradeCategories = response.gradeCategories;
-          setTimeout(function(){
-            $('#tblGradeCategory').DataTable();
-          },800);
-          this.searchClicked = false;
-          this.modalService.dismissAll();
         }
-        else
-        {
-          this.gradeCategories = [];
-          this.searchClicked = false;
-          this.modalService.dismissAll();
-        }
-      } 
-      catch (error) 
-      {
-        this.showNotification("error", error);
+
+    ngOnInit() 
+    {
         this.searchClicked = false;
-        this.modalService.dismissAll();
-      }
-  }
+        this.gradeCategories = [];
+        this.getGradeCategories('All');
+    }
 
-  addGradeCategory()
-  {
-    const dialogRef = this.modalService.open(GradeCategoryAddComponent, 
-    { 
-      size: 'md', backdrop: 'static' 
-    });
-    dialogRef.componentInstance.modalParams = {};
-  }
+    public gradeAddResult:any = this.commonSharedService.gradeCategoryListObject.subscribe(res =>{
+        if(res.result == "success")
+        {
+            this.getGradeCategories('All');
+        }
+    })
 
-  updateStatus(gradeCategory : any)
-  {
-    Swal.fire({
-      customClass: {
-        container: 'my-swal'
-      },
-      title: 'Confirmation',
-      text: 'Are you sure to ' + (gradeCategory.isActive == 1 ? 'de-active' : 'active') + ' the grade category?',
-      icon: 'warning',
-      allowOutsideClick: false,
-      showCloseButton: true,
-      showCancelButton: true 
-    }).then(async (willDelete) => {
-      if (willDelete.dismiss) 
-      {
-      } 
-      else 
-      {        
-        try
+    showNotification(type: string, message: string): void 
+    {
+        //type : default, info, success, warning, error
+        this.notifier.notify(type, message);
+    }
+
+    async getGradeCategories(action : string) 
+    {
+        try 
         {
-          let tempJson = {
-            id : gradeCategory.id,
-            tableName : gradeCategory.tableName
-          }
-          this.showNotification("info", "Please wait...");
-          let response = await this.commonService.updateStatus(tempJson).toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
-          {
-              this.showNotification("success", "Grade Category " + (gradeCategory.isActive == 1 ? 'De-activated' : 'Activated'));
-              this.commonSharedService.gradeCategoryListObject.next({
-                result : "success"
-              });
-          }
-        }
-        catch(e)
+            this.searchClicked = true;
+            let response = await this.commonService.getGradeCategories('All').toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                $('#tblGradeCategory').DataTable().destroy();
+                this.gradeCategories = response.gradeCategories;
+                setTimeout(function(){
+                    $('#tblGradeCategory').DataTable();
+                },800);
+                this.searchClicked = false;
+                this.modalService.dismissAll();
+            }
+            else
+            {
+                this.gradeCategories = [];
+                this.searchClicked = false;
+                this.modalService.dismissAll();
+            }
+        } 
+        catch (error) 
         {
-          this.showNotification("error", e);
+            this.showNotification("error", error);
+            this.searchClicked = false;
+            this.modalService.dismissAll();
         }
-      }
-    });   
-  }
-  
-  deleteGradeCategory(gradeCategory : any)
-  {
-    Swal.fire({
-      customClass: {
-        container: 'my-swal'
-      },
-      title: 'Confirmation',
-      text: 'Are you sure to delete grade category?',
-      icon: 'warning',
-      showCloseButton: true,
-      showCancelButton: true
-    }).then(async (willDelete) => {
-      if (willDelete.dismiss) 
-      {
-        
-      } 
-      else 
-      {
-        this.showNotification("info", "Please wait...");
-        let tempJSON = { "id" : gradeCategory.id };
-        try
+    }
+
+    addGradeCategory()
+    {
+        const dialogRef = this.modalService.open(GradeCategoryAddComponent, 
+        { 
+            size: 'md', backdrop: 'static' 
+        });
+        dialogRef.componentInstance.modalParams = {};
+    }
+
+    updateStatus(gradeCategory : any)
+    {
+        Swal.fire({
+        customClass: {
+            container: 'my-swal'
+        },
+        title: 'Confirmation',
+        text: 'Are you sure to ' + (gradeCategory.isActive == 1 ? 'de-active' : 'active') + ' the grade category?',
+        icon: 'warning',
+        allowOutsideClick: false,
+        showCloseButton: true,
+        showCancelButton: true 
+        }).then(async (willDelete) => {
+        if (willDelete.dismiss) 
         {
-          let response = await this.commonService.deleteGradeCategory(tempJSON).toPromise();
-          if (response.status_code == 200 && response.message == 'success') 
-          {
-            this.showNotification("success", "Grade Category Deleted.");
-            this.commonSharedService.gradeCategoryListObject.next({result : "success"});
-          }
+        } 
+        else 
+        {        
+            try
+            {
+                let tempJson = {
+                    id : gradeCategory.id,
+                    tableName : gradeCategory.tableName
+                }
+                this.showNotification("info", "Please wait...");
+                let response = await this.commonService.updateStatus(tempJson).toPromise();
+                if (response.status_code == 200 && response.message == 'success') 
+                {
+                    this.showNotification("success", "Grade Category " + (gradeCategory.isActive == 1 ? 'De-activated' : 'Activated'));
+                    this.commonSharedService.gradeCategoryListObject.next({
+                        result : "success"
+                    });
+                }
+            }
+            catch(e)
+            {
+                this.showNotification("error", e);
+            }
         }
-        catch(e)
+        });   
+    }
+    
+    deleteGradeCategory(gradeCategory : any)
+    {
+        Swal.fire({
+        customClass: {
+            container: 'my-swal'
+        },
+        title: 'Confirmation',
+        text: 'Are you sure to delete grade category?',
+        icon: 'warning',
+        showCloseButton: true,
+        showCancelButton: true
+        }).then(async (willDelete) => {
+        if (willDelete.dismiss) 
         {
-          this.showNotification("error", e);
+            
+        } 
+        else 
+        {
+            this.showNotification("info", "Please wait...");
+            let tempJSON = { "id" : gradeCategory.id };
+            try
+            {
+                let response = await this.commonService.deleteGradeCategory(tempJSON).toPromise();
+                if (response.status_code == 200 && response.message == 'success') 
+                {
+                    this.showNotification("success", "Grade Category Deleted.");
+                    this.commonSharedService.gradeCategoryListObject.next({result : "success"});
+                }
+            }
+            catch(e)
+            {
+                this.showNotification("error", e);
+            }
         }
-      }
-    });
-  }
+        });
+    }
 }

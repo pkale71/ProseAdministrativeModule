@@ -11,102 +11,102 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 
 @Component({
-  selector: 'app-auth-signin-v2',
-  standalone: true,
-  imports: [CommonModule, RouterModule, SharedModule],
-  templateUrl: './auth-signin-v2.component.html',
-  styleUrls: ['./auth-signin-v2.component.scss']
+    selector: 'app-auth-signin-v2',
+    standalone: true,
+    imports: [CommonModule, RouterModule, SharedModule],
+    templateUrl: './auth-signin-v2.component.html',
+    styleUrls: ['./auth-signin-v2.component.scss']
 })
 export default class AuthSigninV2Component implements OnInit {
-  // public method
-  loginForm!: FormGroup;
-  submitted = false;
-  error = '';
-  signinClicked : boolean = false;
+     // public method
+    loginForm!: FormGroup;
+    submitted = false;
+    error = '';
+    signinClicked : boolean = false;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private commonService : CommonService,
-    private userService: UserService,
-    public commonSharedService : CommonSharedService
-  ) 
-  {  
-    localStorage.clear();
-  }
-
-  ngOnInit() {
-    this.loginForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-
-    const togglePassword = document.querySelector('#togglePassword');
-    const password = document.querySelector('#password');
-
-    togglePassword.addEventListener('click', function () {
-      // toggle the type attribute
-      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-      password.setAttribute('type', type);
-
-      // toggle the icon
-      if(this.classList.value == "fa fa-eye-slash")
-      {
-        this.classList.remove("fa-eye-slash");
-        this.classList.add("fa-eye");
-      }
-      else
-      {
-        this.classList.remove("fa-eye");
-        this.classList.add("fa-eye-slash");
-      }
-    });
-  }
-
-  // convenience getter for easy access to form fields
-  get f() {
-    return this.loginForm.controls;
-  }
-
-  async onSubmit() {
-    this.submitted = true;
-    // stop here if form is invalid
-    if (this.loginForm.invalid) 
-    {
-      return;
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private commonService : CommonService,
+        private userService: UserService,
+        public commonSharedService : CommonSharedService
+    ) 
+    {  
+        localStorage.clear();
     }
-    this.error = '';
-    try
-    {
-      this.signinClicked = true;
-      let response = await this.userService.authenticateUser(this.loginForm.value).toPromise();
-      if (response.status_code == 200 && response.message == 'success') 
-      {
-        if(response.authData)
+
+    ngOnInit() {
+        this.loginForm = this.formBuilder.group({
+            email: ['', Validators.required],
+            password: ['', Validators.required]
+        });
+
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+            // toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            // toggle the icon
+            if(this.classList.value == "fa fa-eye-slash")
+            {
+                this.classList.remove("fa-eye-slash");
+                this.classList.add("fa-eye");
+            }
+            else
+            {
+                this.classList.remove("fa-eye");
+                this.classList.add("fa-eye-slash");
+            }
+        });
+    }
+
+    // convenience getter for easy access to form fields
+    get f() {
+        return this.loginForm.controls;
+    }
+
+    async onSubmit() {
+        this.submitted = true;
+        // stop here if form is invalid
+        if (this.loginForm.invalid) 
         {
-          localStorage.setItem("user", JSON.stringify(response.authData));
-          this.commonSharedService.loginUser = response.authData;
-          this.signinClicked = false;
-          this.router.navigate(['/dashboard/default']);
+        return;
         }
-        else
+        this.error = '';
+        try
         {
-          this.error = "Invalid Login";
-          this.signinClicked = false;
+            this.signinClicked = true;
+            let response = await this.userService.authenticateUser(this.loginForm.value).toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                if(response.authData)
+                {
+                    localStorage.setItem("user", JSON.stringify(response.authData));
+                    this.commonSharedService.loginUser = response.authData;
+                    this.signinClicked = false;
+                    this.router.navigate(['/dashboard/default']);
+                }
+                else
+                {
+                    this.error = "Invalid Login";
+                    this.signinClicked = false;
+                }
+            }
+            else
+            {
+                this.error = "Invalid Email or Password";
+                this.signinClicked = false;
+            }
         }
-      }
-      else
-      {
-        this.error = "Invalid Email or Password";
-        this.signinClicked = false;
-      }
+        catch(e)
+        {
+            this.error = "Login Failed";
+            this.signinClicked = false;
+            this.router.navigate(['/auth/signin']);
+        }
     }
-    catch(e)
-    {
-      this.error = "Login Failed";
-      this.signinClicked = false;
-      this.router.navigate(['/auth/signin']);
-    }
-  }
 }

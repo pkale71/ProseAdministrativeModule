@@ -48,7 +48,7 @@ export class BusinessVerticalGroupListComponent {
         
         this.businessVerticalForm = this.formbuilder.group({
             "businessVertical" : ['0']
-        })
+        });
 
         this.getBusinessVerticals();
         this.getBusinessVerticalGroups(0,'All');

@@ -158,7 +158,7 @@ export class GradeWiseSyllabusEditComponent {
                     // here access deactive data
                     if(gradeCategoryId != "")
                     {
-                        let filterGradeCategory = this.gradeCategories.filter(gradeCategory => {gradeCategory.id == gradeCategoryId}); 
+                        let filterGradeCategory = this.gradeCategories.filter(gradeCategory => { return gradeCategory.id == gradeCategoryId}); 
                         if(filterGradeCategory.length == 0)
                         {
                             this.gradeCategories.push({ id: this.gradeWiseSyllabus.gradeCategory.id, name: this.gradeWiseSyllabus.gradeCategory.name});
@@ -193,11 +193,12 @@ export class GradeWiseSyllabusEditComponent {
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.grades = response.grades;
-                    this.gradeClicked = false;
                     this.grades.unshift({ id : "", name : "Select Grade"});
+                    this.gradeClicked = false;
+                    //here access deactivate data
                     if(gradeId != "")
                     {
-                        let filterGrade = this.grades.filter(grade => {grade.id == gradeId}); 
+                        let filterGrade = this.grades.filter(grade => { return grade.id == gradeId }); 
                         if(filterGrade.length == 0)
                         {
                             this.grades.push({ id: this.gradeWiseSyllabus.grade.id, name: this.gradeWiseSyllabus.grade.name});
@@ -226,7 +227,7 @@ export class GradeWiseSyllabusEditComponent {
     }
 
     // schooling program
-    async getSchoolingPrograms(schoolingProgramId : any) 
+    async getSchoolingPrograms(schoolingProgram : any) 
     {
         try
         {
@@ -242,13 +243,13 @@ export class GradeWiseSyllabusEditComponent {
                     this.schoolingPrograms = response.schoolingPrograms;
                     this.schoolingPrograms.unshift({ id: "", name: "Select School Program" });
                     this.schoolingProgramClicked = false;
-                    
-                    if(schoolingProgramId != "")
+                    // here access deactivate data
+                    if(schoolingProgram != "")
                     {
-                        let filterSchoolingProgram = this.schoolingPrograms.filter(schoolingProgram => {schoolingProgram.id == schoolingProgramId}); 
+                        let filterSchoolingProgram = this.schoolingPrograms.filter(tempSchoolingProgram => parseInt(tempSchoolingProgram.id) == parseInt(schoolingProgram.id)); 
                         if(filterSchoolingProgram.length == 0)
                         {
-                            this.schoolingPrograms.push({ id: this.gradeWiseSyllabus.schoolingProgram.id, name: this.gradeWiseSyllabus.schoolingProgram.name});
+                            this.schoolingPrograms.push({ id : schoolingProgram.id, name : schoolingProgram.name });
                         }
                     }
                     // this.getSyllabuses(this.gradeWiseSyllabus.syllabus);
@@ -291,6 +292,15 @@ export class GradeWiseSyllabusEditComponent {
                     this.syllabuses = response.syllabuses;
                     this.syllabuses.unshift({ id : '', name : 'Select Syllabus'});
                     this.syllabusClicked = false;
+                    // here access deactive data
+                    if(syllabus != '')
+                    {
+                        let filterSyllabus = this.syllabuses.filter(tempSyllabus => parseInt(tempSyllabus.id) == parseInt(syllabus.id));
+                        if(filterSyllabus.length == 0)
+                        {
+                            this.syllabuses.push({ id : syllabus.id, name : syllabus.name });
+                        }
+                    }
 
                 }
                 else

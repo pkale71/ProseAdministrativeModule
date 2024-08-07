@@ -54,10 +54,10 @@ export class BusinessVerticalTypeListComponent {
 
         this.businessVerticalForm = this.formbuilder.group({
             "businessVertical" : ['0']
-        })
+        });
         this.businessVerticalGroupForm = this.formbuilder.group({
             "businessVerticalGroup" : ['0']
-        })
+        });
 
         this.getBusinessVerticals();
     }
@@ -90,6 +90,7 @@ export class BusinessVerticalTypeListComponent {
             else
             {
                 this.businessVerticals = [];
+                this.businessVerticals.unshift({ id : '0', name : "All"});
             }
         }
         catch(e)
@@ -116,12 +117,14 @@ export class BusinessVerticalTypeListComponent {
                 else
                 {
                     this.businessVerticalGroups = [];
+                    this.businessVerticalGroups.unshift({ id : '0', name : "All"});
                     this.searchClicked = false;
                 }
             }
             else
             {
                 this.businessVerticalGroups = [];
+                this.businessVerticalGroups.unshift({ id : '0', name : "All"});
                 this.searchClicked = false;
             }
         }

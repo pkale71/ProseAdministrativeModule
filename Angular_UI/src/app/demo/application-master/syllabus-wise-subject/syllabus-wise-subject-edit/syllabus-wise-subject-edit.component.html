@@ -16,7 +16,7 @@
                 <form [formGroup]="academicSessionForm">
                     <div class="form-group">
                         <label class="form-control-label" for="academicSession">Academic Session &nbsp;<span style="color: red;">*</span></label>
-                        <select class="form-control"  required id="academicSession" formControlName="academicSession" (change)="getGradeWiseSyllabuses()"
+                        <select class="form-control"  required id="academicSession" formControlName="academicSession" (change)="getGradeWiseSyllabuses('')"
                         [ngClass]="{'is-invalid': !academicSessionForm.controls['academicSession'].valid && !isValidForm}">
                         <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession?.name}}</option>
                         </select>
@@ -31,7 +31,7 @@
                 <form [formGroup]="gradeCategoryForm">
                     <div class="form-group">
                         <label class="form-control-label" for="gradeCategory">Grade Category &nbsp;<span style="color: red;">*</span></label>
-                        <select class="form-control"  required id="gradeCategory" formControlName="gradeCategory" (change) ="getGrades()"
+                        <select class="form-control"  required id="gradeCategory" formControlName="gradeCategory" (change) ="getGrades('')"
                         [ngClass]="{'is-invalid': !gradeCategoryForm.controls['gradeCategory'].valid && !isValidForm}"
                           >
                         <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory?.name}}</option>
@@ -48,7 +48,7 @@
                     <div class="form-group">
                         <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="gradeClicked"></i></label>
                         <select class="form-control"  required id="grade" formControlName="grade"
-                        [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}" (change) = "getGradeWiseSyllabuses()"
+                        [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}" (change) = "getGradeWiseSyllabuses('')"
                           >
                         <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade?.name}}</option>
                         </select>

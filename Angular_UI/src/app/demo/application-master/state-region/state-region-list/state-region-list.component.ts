@@ -50,7 +50,7 @@ export class StateRegionListComponent {
         this.searchClicked = false;
 
         this.countryForm = this.formbuilder.group({
-        'country' : ['']
+            'country' : ['']
         });
 
         this.getCountries('All');
@@ -142,7 +142,7 @@ export class StateRegionListComponent {
     {
         const dialogRef = this.modalService.open(StateRegionAddComponent, 
         { 
-        size: 'md', backdrop: 'static' 
+            size: 'md', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = {};
     }
@@ -151,7 +151,7 @@ export class StateRegionListComponent {
     {
         const dialogRef = this.modalService.open(StateRegionEditComponent, 
         { 
-        size: 'md', backdrop: 'static' 
+            size: 'md', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = stateRegion;
     }
@@ -229,8 +229,8 @@ export class StateRegionListComponent {
                 {
                     this.showNotification("success", "State/Region Deleted.");
                     this.commonSharedService.stateRegionListObject.next({
-                    countryId : this.countryForm.get('country').value,
-                    result : "success"
+                        countryId : this.countryForm.get('country').value,
+                        result : "success"
                     });
                 }
             }

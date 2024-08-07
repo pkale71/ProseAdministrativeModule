@@ -87,7 +87,7 @@ export class CityAddComponent
     {  
         try
         {
-            let response = await this.businessService.getCountries('All').toPromise();
+            let response = await this.businessService.getCountries('Active').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.countries = response.countries;
@@ -114,7 +114,7 @@ export class CityAddComponent
             if(countryId != undefined && countryId != "")
             {
                 this.searchClicked = true;  
-                let response = await this.businessService.getStateRegions(countryId, 'All').toPromise();
+                let response = await this.businessService.getStateRegions(countryId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.stateRegions = response.stateRegions;
@@ -151,7 +151,7 @@ export class CityAddComponent
             if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '')
             {
                 this.searchClicked = true;  
-                let response = await this.businessService.getDistricts(countryId, stateRegionId, 'All').toPromise();
+                let response = await this.businessService.getDistricts(countryId, stateRegionId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.districts = response.districts;

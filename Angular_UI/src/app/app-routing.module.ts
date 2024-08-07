@@ -43,233 +43,232 @@ import { StudyCenterAddComponent } from './demo/business-master/study-center/stu
 import { StudyCenterDetailComponent } from './demo/business-master/study-center/study-center-detail/study-center-detail.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: AdminComponent,
-    children: [
-      {
+    {
         path: '',
-        redirectTo: '/auth/signin',
-        pathMatch: 'full'
-      },
-      {
-        path: 'dashboard',
-        loadChildren: () => import('./demo/dashboard/dashboard.module').then((m) => m.DashboardModule)
-      },
-      
-   // for user 
-      {
-        path: 'users',
-        loadComponent: () => UserListComponent,
-        canActivate: [AuthGuardService],
-        // resolve: 
-        // { 
-          // users : UserListResolver,
-        // },
-      },
-      {
-        path: 'user/detail/:userUUID',
-        loadComponent: () => UserDetailComponent,
-        canActivate: [AuthGuardService],
-        resolve: 
-        { 
-          // user : UserDetailResolver,
-        },
-      },
-      {
-        path: 'user/onBoardingLinks',
-        loadComponent : () => OnBoardingLinkListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/grades',
-        loadComponent: () => GradeListComponent,
-        canActivate: [AuthGuardService],
-        resolve: 
-        { 
-          grades : GradeListResolver,
-        },
-      },
-      {
-        path: 'applicationMaster/userRoles',
-        loadComponent: () => UserRoleListComponent,
-        canActivate: [AuthGuardService],
-        resolve: 
-        { 
-        },
-      },
-      {
-        path: 'applicationMaster/userTypes',
-        loadComponent: () => UserTypeListComponent,
-        canActivate: [AuthGuardService],
-        resolve: 
-        { 
-        },
-      },  
-      {
-        path: 'applicationMaster/gradeCategories',
-        loadComponent: () => GradeCategoryListComponent,
-        canActivate: [AuthGuardService],
-        resolve: 
-        { 
-        },
-      },
-      //routing
-      {
-        path: 'applicationMaster/grade',
-        loadComponent: () => GradeListComponent,
-        canActivate: [AuthGuardService],
-      },
+        component: AdminComponent,
+        children: [
+            {
+                path: '',
+                redirectTo: '/auth/signin',
+                pathMatch: 'full'
+            },
+            {
+                path: 'dashboard',
+                loadChildren: () => import('./demo/dashboard/dashboard.module').then((m) => m.DashboardModule)
+            },
+        
+        // for user 
+            {
+                path: 'users',
+                loadComponent: () => UserListComponent,
+                canActivate: [AuthGuardService],
+                // resolve: 
+                // { 
+                // users : UserListResolver,
+                // },
+            },
+            {
+                path: 'user/detail/:userUUID',
+                loadComponent: () => UserDetailComponent,
+                canActivate: [AuthGuardService],
+                resolve: 
+                { 
+                // user : UserDetailResolver,
+                },
+            },
+            {
+                path: 'user/onBoardingLinks',
+                loadComponent : () => OnBoardingLinkListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/grades',
+                loadComponent: () => GradeListComponent,
+                canActivate: [AuthGuardService],
+                resolve: 
+                { 
+                grades : GradeListResolver,
+                },
+            },
+            {
+                path: 'applicationMaster/userRoles',
+                loadComponent: () => UserRoleListComponent,
+                canActivate: [AuthGuardService],
+                resolve: 
+                { 
+                },
+            },
+            {
+                path: 'applicationMaster/userTypes',
+                loadComponent: () => UserTypeListComponent,
+                canActivate: [AuthGuardService],
+                resolve: 
+                { 
+                },
+            },  
+            {
+                path: 'applicationMaster/gradeCategories',
+                loadComponent: () => GradeCategoryListComponent,
+                canActivate: [AuthGuardService],
+                resolve: 
+                { 
+                },
+            },
+            //routing
+            {
+                path: 'applicationMaster/grade',
+                loadComponent: () => GradeListComponent,
+                canActivate: [AuthGuardService],
+            },
 
-      {
-        path: 'applicationMaster/academicSessions',
-        loadComponent: () => AcademicSessionListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/schoolingPrograms',
-        loadComponent : () => SchoolingProgramListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/syllabuses',
-        loadComponent: () => SyllabusListComponent,
-        canActivate: [AuthGuardService],
-        // resolve: 
-        // { 
-        //   syllabuses : SyllabusListResolver,
-        // },
-      },
-      {
-        path: 'applicationMaster/grade-wise-syllabus',
-        loadComponent: () => GradeWiseSyllabusListComponent,
-        canActivate: [AuthGuardService],
-      },      
-      {
-        path: 'applicationMaster/SyllabusWiseSubjects',
-        loadComponent : () => SyllabusWiseSubjectListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/SubjectWiseChapters',
-        loadComponent : () => SubjectWiseChapterListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/ChapterWiseTopics',
-        loadComponent : () => ChapterWiseTopicListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/academyEnclosureDocument',
-        loadComponent : () => AcademyEnclosureDocumentListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/businessVertical',
-        loadComponent : () => BusinessVerticalListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/businessVerticalGroup',
-        loadComponent : () => BusinessVerticalGroupListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/businessVerticalType',
-        loadComponent : () => BusinessVerticalTypeListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/coaches',
-        loadComponent : () => CoachListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/countries',
-        loadComponent : () => CountryListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/stateRegions',
-        loadComponent : () => StateRegionListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/districts',
-        loadComponent : () => DistrictListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'applicationMaster/cities',
-        loadComponent : () => CityListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/businessPartners',
-        loadComponent : () => BusinessPartnerListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/businessPartner/add/:id',
-        loadComponent: () => BusinessPartnerAddComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/businessPartner/detail/:uuid',
-        loadComponent: () => BusinessPartnerDetailComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/tieUpSchools',
-        loadComponent : () => TieUpSchoolListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/tieUpSchool/detail/:uuid',
-        loadComponent: () => TieUpSchoolDetailComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/studyCenters',
-        loadComponent: () => StudyCenterListComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/studyCenter/add/:id',
-        loadComponent: () => StudyCenterAddComponent,
-        canActivate: [AuthGuardService],
-      },
-      {
-        path: 'business/studyCenter/detail/:uuid',
-        loadComponent: () => StudyCenterDetailComponent,
-        canActivate: [AuthGuardService],
-      },
-    ]
-  },
-  {
-    path: '',
-    component: GuestComponent,
-    children: [
-      {
-        path: 'auth',
-        loadChildren: () => import('./demo/pages/authentication/authentication.module').then((m) => m.AuthenticationModule)
-      },
-      {
-        path: 'userProfile/:code',
-        loadChildren: () => import('./demo/pages/user-profile/user-profile.module').then((m) => m.UserProfileModule)
-      }    
-    ]
-  },
-  {
-    path: 'reset-link/:code',
-    loadComponent: () => AuthChangePasswordComponent,
-  },
-  
+            {
+                path: 'applicationMaster/academicSessions',
+                loadComponent: () => AcademicSessionListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/schoolingPrograms',
+                loadComponent : () => SchoolingProgramListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/syllabuses',
+                loadComponent: () => SyllabusListComponent,
+                canActivate: [AuthGuardService],
+                // resolve: 
+                // { 
+                //   syllabuses : SyllabusListResolver,
+                // },
+            },
+            {
+                path: 'applicationMaster/grade-wise-syllabus',
+                loadComponent: () => GradeWiseSyllabusListComponent,
+                canActivate: [AuthGuardService],
+            },      
+            {
+                path: 'applicationMaster/SyllabusWiseSubjects',
+                loadComponent : () => SyllabusWiseSubjectListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/SubjectWiseChapters',
+                loadComponent : () => SubjectWiseChapterListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/ChapterWiseTopics',
+                loadComponent : () => ChapterWiseTopicListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/academyEnclosureDocument',
+                loadComponent : () => AcademyEnclosureDocumentListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/businessVertical',
+                loadComponent : () => BusinessVerticalListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/businessVerticalGroup',
+                loadComponent : () => BusinessVerticalGroupListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/businessVerticalType',
+                loadComponent : () => BusinessVerticalTypeListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/coaches',
+                loadComponent : () => CoachListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/countries',
+                loadComponent : () => CountryListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/stateRegions',
+                loadComponent : () => StateRegionListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/districts',
+                loadComponent : () => DistrictListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'applicationMaster/cities',
+                loadComponent : () => CityListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/businessPartners',
+                loadComponent : () => BusinessPartnerListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/businessPartner/add/:id',
+                loadComponent: () => BusinessPartnerAddComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/businessPartner/detail/:uuid',
+                loadComponent: () => BusinessPartnerDetailComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/tieUpSchools',
+                loadComponent : () => TieUpSchoolListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/tieUpSchool/detail/:uuid',
+                loadComponent: () => TieUpSchoolDetailComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/studyCenters',
+                loadComponent: () => StudyCenterListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/studyCenter/add/:id',
+                loadComponent: () => StudyCenterAddComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/studyCenter/detail/:uuid',
+                loadComponent: () => StudyCenterDetailComponent,
+                canActivate: [AuthGuardService],
+            },
+        ]
+    },
+    {
+        path: '',
+        component: GuestComponent,
+        children: [
+            {
+                path: 'auth',
+                loadChildren: () => import('./demo/pages/authentication/authentication.module').then((m) => m.AuthenticationModule)
+            },
+            {
+                path: 'userProfile/:code',
+                loadChildren: () => import('./demo/pages/user-profile/user-profile.module').then((m) => m.UserProfileModule)
+            }    
+        ]
+    },
+    {
+        path: 'reset-link/:code',
+        loadComponent: () => AuthChangePasswordComponent,
+    },  
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash : true})],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes, {useHash : true})],
+    exports: [RouterModule]
 })
 export class AppRoutingModule {}

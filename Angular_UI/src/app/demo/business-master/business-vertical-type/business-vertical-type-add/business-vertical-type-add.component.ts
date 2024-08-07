@@ -98,6 +98,7 @@ export class BusinessVerticalTypeAddComponent
             else
             {
                 this.businessVerticals = [];
+                this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
             }
         }
         catch(e)
@@ -125,12 +126,14 @@ export class BusinessVerticalTypeAddComponent
                 else
                 {
                     this.businessVerticalGroups = [];
+                    this.businessVerticalGroups.unshift({ id : '', name : "Select Business Vertical Group"});
                     this.searchClicked = false;
                 }
             }
             else
             {
                 this.businessVerticalGroups = [];
+                this.businessVerticalGroups.unshift({ id : '', name : "Select Business Vertical Group"});
                 this.searchClicked = false;
             }
         }

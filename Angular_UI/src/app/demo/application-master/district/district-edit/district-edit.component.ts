@@ -8,8 +8,6 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 import { Router } from '@angular/router';
 import { BusinessService } from 'src/app/theme/shared/service/business.service';
 
-
-
 @Component({
     selector: 'app-district-edit',
     standalone: true,
@@ -17,8 +15,8 @@ import { BusinessService } from 'src/app/theme/shared/service/business.service';
     templateUrl: './district-edit.component.html',
     styleUrls: ['./district-edit.component.scss']
 })
-    export class DistrictEditComponent 
-    {
+export class DistrictEditComponent 
+{
     @Input() public modalParams;
     editDistrictForm: FormGroup;
     countryForm: FormGroup;
@@ -48,10 +46,10 @@ import { BusinessService } from 'src/app/theme/shared/service/business.service';
         this.stateRegions = [];
 
         this.editDistrictForm = this.formbuilder.group({
-        id: [''],
-        name: ['',[Validators.required]],
-        country: this.formbuilder.group({ 'id' : ['']}),
-        stateRegion: this.formbuilder.group({ 'id' : ['']})
+            id: [''],
+            name: ['',[Validators.required]],
+            country: this.formbuilder.group({ 'id' : ['']}),
+            stateRegion: this.formbuilder.group({ 'id' : ['']})
         });  
 
         this.countryForm = this.formbuilder.group({
@@ -79,11 +77,12 @@ import { BusinessService } from 'src/app/theme/shared/service/business.service';
     {  
         try
         {
-            let response = await this.businessService.getCountries('All').toPromise();
+            let response = await this.businessService.getCountries('Active').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.countries = response.countries;
                 this.countries.unshift({ id : '', name : 'Select Country'});
+                //here access deactive data
                 if(country != '')
                 {
                     let filterCountry = this.countries.filter(tempCountry => parseInt(tempCountry.id) == parseInt(country.id));
@@ -114,12 +113,13 @@ import { BusinessService } from 'src/app/theme/shared/service/business.service';
             if(countryId != undefined && countryId != '')
             {
                 this.searchClicked = true;  
-                let response = await this.businessService.getStateRegions(countryId, 'All').toPromise();
+                let response = await this.businessService.getStateRegions(countryId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.stateRegions = response.stateRegions;
                     this.stateRegions.unshift({ id : '', name : 'Select State/Region'});
                     this.searchClicked = false;
+                    // here access deactivate data
                     if(stateRegion != '')
                     {
                         let filterStateRegion = this.stateRegions.filter(tempStateRegion => parseInt(tempStateRegion.id) == parseInt(stateRegion.id));
@@ -150,7 +150,6 @@ import { BusinessService } from 'src/app/theme/shared/service/business.service';
         }
     }
 
-
     async saveDistrict()
     {
         if(!this.saveClicked)
@@ -168,9 +167,9 @@ import { BusinessService } from 'src/app/theme/shared/service/business.service';
                     {
                         this.showNotification("success", "District Updated");
                         this.commonSharedService.districtListObject.next({
-                        countryId : this.countryForm.get('country').value,
-                        stateRegionId : this.stateRegionForm.get('stateRegion').value,
-                        result : "success"
+                            countryId : this.countryForm.get('country').value,
+                            stateRegionId : this.stateRegionForm.get('stateRegion').value,
+                            result : "success"
                         });
                         this.closeModal();
                     }

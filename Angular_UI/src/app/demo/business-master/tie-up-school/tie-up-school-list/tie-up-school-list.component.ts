@@ -17,11 +17,11 @@ import { BusinessService } from 'src/app/theme/shared/service/business.service';
 import { TieUpSchoolAddComponent } from '../tie-up-school-add/tie-up-school-add.component';
 
 @Component({
-  selector: 'app-tie-up-school-list',
-  standalone: true,
-  imports: [CommonModule, SharedModule, DataTablesModule],
-  templateUrl: './tie-up-school-list.component.html',
-  styleUrls: ['./tie-up-school-list.component.scss']
+    selector: 'app-tie-up-school-list',
+    standalone: true,
+    imports: [CommonModule, SharedModule, DataTablesModule],
+    templateUrl: './tie-up-school-list.component.html',
+    styleUrls: ['./tie-up-school-list.component.scss']
 })
 export class TieUpSchoolListComponent 
 {
@@ -30,7 +30,7 @@ export class TieUpSchoolListComponent
     searchClicked : boolean;
     tieUpSchool : any;
     
-  constructor(private router : Router,
+    constructor(private router : Router,
         private formbuilder : FormBuilder,
         private notifier: NotifierService, 
         private activatedRoute: ActivatedRoute,

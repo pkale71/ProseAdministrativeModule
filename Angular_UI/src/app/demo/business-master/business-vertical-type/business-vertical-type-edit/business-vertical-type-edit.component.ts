@@ -50,19 +50,18 @@ export class BusinessVerticalTypeEditComponent
     this.businessVerticalGroups = [];
 
     this.editBusinessVerticalTypeForm = this.formbuilder.group({
-      id: [''],
-      name: [this.businessVerticalType.name, [Validators.required]],
-      businessVertical: this.formbuilder.group({ id : ['']}),
-      businessVerticalGroup: this.formbuilder.group({ id : [''] })
+        id: [''],
+        name: [this.businessVerticalType.name, [Validators.required]],
+        businessVertical: this.formbuilder.group({ id : ['']}),
+        businessVerticalGroup: this.formbuilder.group({ id : [''] })
     });  
 
     this.businessVerticalForm = this.formbuilder.group({
       'businessVertical' : ['', Validators.required]
-    })
-
+    });
     this.businessVerticalGroupForm = this.formbuilder.group({
       "businessVerticalGroup" : ['', Validators.required]
-    })
+    });
    
     this.editBusinessVerticalTypeForm.patchValue(this.businessVerticalType);
     this.businessVerticalForm.get("businessVertical").setValue(this.businessVerticalType.businessVertical.id);
@@ -99,6 +98,7 @@ export class BusinessVerticalTypeEditComponent
             else
             {
                 this.businessVerticals = [];
+                this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
             }
         }
         catch(e)
@@ -123,6 +123,7 @@ export class BusinessVerticalTypeEditComponent
                     console.log(this.businessVerticalGroups)
                     this.businessVerticalGroups.unshift({ id : '', name : "Select Business Vertical Group"});
                     this.searchClickedBusinessVerticalGroup = false;
+                    // here access deactivate data
                     if(businessVerticalGroup != '')
                     {
                         let filterBusinessVerticalGroup = this.businessVerticalGroups.filter(tempBusinessVerticalGroup => parseInt(tempBusinessVerticalGroup.id) == parseInt(businessVerticalGroup.id));

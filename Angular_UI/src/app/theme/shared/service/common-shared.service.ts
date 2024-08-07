@@ -5,7 +5,7 @@ import { IOption } from 'ng-select';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class CommonSharedService 
 {

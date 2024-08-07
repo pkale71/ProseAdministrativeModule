@@ -23,7 +23,7 @@ import { DistrictAddComponent } from '../district-add/district-add.component';
     templateUrl: './district-list.component.html',
     styleUrls: ['./district-list.component.scss']
 })
-    export class DistrictListComponent {
+export class DistrictListComponent {
     searchClicked : boolean;
     districts : any;
     countryForm : FormGroup;
@@ -40,9 +40,9 @@ import { DistrictAddComponent } from '../district-add/district-add.component';
         private formbuilder: FormBuilder,
         private router : Router)
         {
-        this.districts = [];
-        this.countries = [];
-        this.stateRegions = [];
+            this.districts = [];
+            this.countries = [];
+            this.stateRegions = [];
         }
 
     ngOnInit() 

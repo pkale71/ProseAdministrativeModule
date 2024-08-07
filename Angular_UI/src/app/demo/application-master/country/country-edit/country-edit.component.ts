@@ -39,8 +39,8 @@ export class CountryEditComponent
         this.saveClicked = false;
 
         this.editCountryForm = this.formbuilder.group({
-        id: [''],
-        name: ['',[Validators.required]],
+            id: [''],
+            name: ['',[Validators.required]],
         });  
 
         this.editCountryForm.patchValue(this.countries);

@@ -22,8 +22,8 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
     imports: [CommonModule, SharedModule, DataTablesModule],
     templateUrl: './coach-list.component.html',
     styleUrls: ['./coach-list.component.scss']
-    })
-    export class CoachListComponent {
+})
+export class CoachListComponent {
         searchClicked : boolean;
         businessVerticalForm : FormGroup;
         businessVerticalTypeForm : FormGroup;
@@ -122,6 +122,8 @@ import { CoachAddComponent } from '../coach-add/coach-add.component';
             }
             else
             {
+                this.businessVerticalTypes = [];
+                this.businessVerticalTypes.unshift({ id : '', name : "All"});
                 this.searchClicked = false;
             }
         }

@@ -61,24 +61,24 @@ export class TieUpSchoolEditComponent {
         this.searchClicked = false;
 
         this.editTieUpSchoolForm = this.formbuilder.group({
-        uuid: this.uuid,
-        name : ['', Validators.required],
-        businessPartnerType : [{ id : ''}],
-        email : ['', [Validators.required, Validators.email]],
-        mobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$'), Validators.maxLength(15), Validators.minLength(10)]],
-        pincode : ['', Validators.required],
-        address : ['', Validators.required],
-        website : ['', [
-            Validators.required,
-            Validators.pattern("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*?$")
-            ]],
-        country : this.formbuilder.group({ 'id' : ['']}),
-        stateRegion : this.formbuilder.group({ 'id' : ['']}),
-        district : this.formbuilder.group({ 'id' : ['']}),
-        city : this.formbuilder.group({ 'id' : ['']}),
-        contactPerson : ['', Validators.required],
-        panNumber : ['', [Validators.pattern("^[a-zA-Z]{5}[0-9]{4}[A-Za-z]{1}$"), Validators.minLength(10)]],
-        syllabus : this.formbuilder.group({ 'id' : ['']}),
+            uuid: this.uuid,
+            name : ['', Validators.required],
+            businessPartnerType : [{ id : ''}],
+            email : ['', [Validators.required, Validators.email]],
+            mobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$'), Validators.maxLength(15), Validators.minLength(10)]],
+            pincode : ['', Validators.required],
+            address : ['', Validators.required],
+            website : ['', [
+                Validators.required,
+                Validators.pattern("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*?$")
+                ]],
+            country : this.formbuilder.group({ 'id' : ['']}),
+            stateRegion : this.formbuilder.group({ 'id' : ['']}),
+            district : this.formbuilder.group({ 'id' : ['']}),
+            city : this.formbuilder.group({ 'id' : ['']}),
+            contactPerson : ['', Validators.required],
+            panNumber : ['', [Validators.pattern("^[a-zA-Z]{5}[0-9]{4}[A-Za-z]{1}$"), Validators.minLength(10)]],
+            syllabus : this.formbuilder.group({ 'id' : ['']}),
         });
 
         this.countryForm = this.formbuilder.group({

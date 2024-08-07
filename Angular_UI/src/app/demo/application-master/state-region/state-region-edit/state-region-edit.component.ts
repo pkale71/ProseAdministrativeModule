@@ -42,9 +42,9 @@ export class StateRegionEditComponent
         this.countries = [];
 
         this.editStateRegionForm = this.formbuilder.group({
-        id: [''],
-        name: ['',[Validators.required]],
-        country: this.formbuilder.group({ 'id' : ['']})
+            id: [''],
+            name: ['',[Validators.required]],
+            country: this.formbuilder.group({ 'id' : ['']})
         });  
 
         this.countryForm = this.formbuilder.group({
@@ -67,11 +67,12 @@ export class StateRegionEditComponent
     {  
         try
         {
-            let response = await this.businessService.getCountries('All').toPromise();
+            let response = await this.businessService.getCountries('Active').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.countries = response.countries;
                 this.countries.unshift({ id : '', name : 'Select Country'});
+                // here access deactivate data
                 if( country != '')
                 {
                     let filterCountry = this.countries.filter(tempCountry => parseInt(tempCountry.id) == parseInt(country.id));
@@ -109,8 +110,8 @@ export class StateRegionEditComponent
                     {
                         this.showNotification("success", "State/Region Updated");
                         this.commonSharedService.stateRegionListObject.next({
-                        countryId : this.countryForm.get('country').value,
-                        result : "success"
+                            countryId : this.countryForm.get('country').value,
+                            result : "success"
                         });
                         this.closeModal();
                     }

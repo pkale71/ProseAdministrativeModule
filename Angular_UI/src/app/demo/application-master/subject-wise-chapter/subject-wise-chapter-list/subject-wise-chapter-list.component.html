@@ -1,130 +1,127 @@
 <div class="row">
     <div class="col-sm-12">
-      <div class="card">
-        <div class="card-header" style="padding: 10px 25px;">
-          <h5 style="margin-top: 0.8rem;"><i class="fa fa-book"></i>&nbsp;Subject Wise Chapters&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
-          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
-           (click)="addSubjectWiseChapter()">Add Subject Wise Chapter</button>
-        </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-3">
-                <form [formGroup]="academicSessionForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="academicSession">Academic Session</label>
-                        <select class="form-control" required id="academicSession" formControlName="academicSession" >
-                            <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession.name}}</option>
-                        </select>
-                    </div>
-                </form>
-              </div>
-              <div class="col-md-3">
-                <form [formGroup]="gradeCategoryForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="gradeCategory">Grade Category</label>
-                        <select class="form-control" required id="gradeCategory" formControlName="gradeCategory" (change) ="getGrades()">
-                            <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory.name}}</option>
-                        </select>
-                    </div>
-                </form>
-              </div>
-              <div class="col-md-3">
-                <form [formGroup]="gradeForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="grade">Grade &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
-                        <select class="form-control" required id="grade" formControlName="grade" (change) = "getGradeWiseSyllabuses()">
-                            <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
-                        </select>
-                    </div>
-                </form>
-              </div>
-              <div class="col-md-3">
-                <form [formGroup]="syllabusForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
-                        <select class="form-control" required id="syllabus" formControlName="syllabus"  (change) = "getSyllabusWiseSubjects()">
-                          <option value="{{gradeWiseSyllabus.syllabus?.id}}" *ngFor="let gradeWiseSyllabus of gradeWiseSyllabuses">{{gradeWiseSyllabus.syllabus?.name}}</option>
-                        </select>
-                    </div>
-                </form>
-              </div>
+        <div class="card">
+            <div class="card-header" style="padding: 10px 25px;">
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-book"></i>&nbsp;Subject Wise Chapters&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+                <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                (click)="addSubjectWiseChapter()">Add Subject Wise Chapter</button>
             </div>
-            <div class="row">
-              <div class="col-md-3">
-                <form [formGroup]="subjectForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="subject">Subject &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
-                        <select class="form-control" required id="subject" formControlName="subject" >
-                          <option value="{{syllabusWiseSubject?.id}}" *ngFor="let syllabusWiseSubject of syllabusWiseSubjects">{{syllabusWiseSubject?.name}}</option>
-                        </select>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <form [formGroup]="academicSessionForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="academicSession">Academic Session</label>
+                                <select class="form-control" required id="academicSession" formControlName="academicSession" >
+                                    <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession.name}}</option>
+                                </select>
+                            </div>
+                        </form>
                     </div>
-                </form>
-              </div>
-              <div class="col-md-3">
-                <br/>
-                <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
-                (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
-                <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
-                  <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
-              </div>
+                    <div class="col-md-3">
+                        <form [formGroup]="gradeCategoryForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="gradeCategory">Grade Category</label>
+                                <select class="form-control" required id="gradeCategory" formControlName="gradeCategory" (change) ="getGrades()">
+                                    <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <form [formGroup]="gradeForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="grade">Grade &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i></label>
+                                <select class="form-control" required id="grade" formControlName="grade" (change) = "getGradeWiseSyllabuses()">
+                                    <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <form [formGroup]="syllabusForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="syllabus">Syllabus &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSyllabus"></i></label>
+                                <select class="form-control" required id="syllabus" formControlName="syllabus"  (change) = "getSyllabusWiseSubjects()">
+                                    <option value="{{gradeWiseSyllabus.syllabus?.id}}" *ngFor="let gradeWiseSyllabus of gradeWiseSyllabuses">{{gradeWiseSyllabus.syllabus?.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <form [formGroup]="subjectForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="subject">Subject &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSubject"></i></label>
+                                <select class="form-control" required id="subject" formControlName="subject" >
+                                    <option value="{{syllabusWiseSubject?.id}}" *ngFor="let syllabusWiseSubject of syllabusWiseSubjects">{{syllabusWiseSubject?.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <br/>
+                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
+                        (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
+                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                        <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table datatable id="tblSubjectWiseChapter" class="table table-striped row-border table-hover pt-10">
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Academic Session</th>
+                                <th>Schooling Program</th>
+                                <th>Grade Category</th>
+                                <th>Grade</th>
+                                <th>Syllabus</th>
+                                <th>Subject</th>
+                                <th>Chapter</th>
+                                <th>Active</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let subjectWiseChapter of subjectWiseChapters let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{subjectWiseChapter.academicSession?.name}}</td>
+                                <td>{{subjectWiseChapter.schoolingProgram?.name}}</td>
+                                <td>{{subjectWiseChapter.gradeCategory?.name}}</td>
+                                <td>{{subjectWiseChapter.grade?.name}}</td>
+                                <td>{{subjectWiseChapter.syllabus?.name}}</td>
+                                <td>{{subjectWiseChapter.subject?.name}}</td>
+                                <td>{{ (subjectWiseChapter.name.length > 7) ? (subjectWiseChapter.name | slice:0:7) + '...' : (subjectWiseChapter.name) }}</td>
+                                <td>
+                                    <span [ngClass]="subjectWiseChapter.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(subjectWiseChapter)" 
+                                    style="cursor: pointer;" title="Update Status">
+                                    {{subjectWiseChapter.isActive? 'Yes' : 'No' }}
+                                    </span>
+                                </td>
+                                <td style="width:40px;text-align: right;">
+                                    <i class="fa fa-edit" (click)="editSubjectWiseChapter(subjectWiseChapter)"  *ngIf = "subjectWiseChapter.isExist == 0" title="Edit" style="cursor: pointer;"></i>&nbsp;
+                                    <i class="fa fa-trash-alt" (click)="deleteSubjectWiseChapter(subjectWiseChapter)"  *ngIf = "subjectWiseChapter.isExist == 0"
+                                    title="Delete" style="cursor: pointer;"></i>&nbsp;
+                                </td>
+                            </tr>                            
+                            <tr *ngIf="subjectWiseChapters.length == 0">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>No record(s) found</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
-          <div class="table-responsive">
-            <table datatable id="tblSubjectWiseChapter" class="table table-striped row-border table-hover pt-10">
-              <thead>
-                <tr>
-                  <th>Sno</th>
-                  <th>Academic Session</th>
-                  <th>Schooling Program</th>
-                  <th>Grade Category</th>
-                  <th>Grade</th>
-                  <th>Syllabus</th>
-                  <th>Subject</th>
-                  <th>Chapter</th>
-                  <th>Active</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let subjectWiseChapter of subjectWiseChapters let i=index">
-                  <td>{{i+1}}</td>
-                  <td>{{subjectWiseChapter.academicSession?.name}}</td>
-                  <td>{{subjectWiseChapter.schoolingProgram?.name}}</td>
-                  <td>{{subjectWiseChapter.gradeCategory?.name}}</td>
-                  <td>{{subjectWiseChapter.grade?.name}}</td>
-                  <td>{{subjectWiseChapter.syllabus?.name}}</td>
-                  <td>{{subjectWiseChapter.subject?.name}}</td>
-                  <td>{{ (subjectWiseChapter.name.length > 7) ? (subjectWiseChapter.name | slice:0:7) + '...' : (subjectWiseChapter.name) }}</td>
-                  <td>
-                    <span [ngClass]="subjectWiseChapter.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(subjectWiseChapter)" 
-                    style="cursor: pointer;" title="Update Status">
-                      {{subjectWiseChapter.isActive? 'Yes' : 'No' }}
-                    </span>
-                  </td>
-                  <td style="width:40px;text-align: right;">
-                    <i class="fa fa-edit" (click)="editSubjectWiseChapter(subjectWiseChapter)"  *ngIf = "subjectWiseChapter.isExist == 0" title="Edit" style="cursor: pointer;"></i>&nbsp;
-                    <i class="fa fa-trash-alt" (click)="deleteSubjectWiseChapter(subjectWiseChapter)"  *ngIf = "subjectWiseChapter.isExist == 0"
-                    title="Delete" style="cursor: pointer;"></i>&nbsp;
-                  </td>
-                </tr>
-
-                
-                <tr *ngIf="subjectWiseChapters.length == 0">
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>No record(s) found</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
-      </div>
     </div>
 </div>

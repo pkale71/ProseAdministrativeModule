@@ -104,7 +104,7 @@ export class SyllabusWiseSubjectAddComponent
     {
         try
         {
-            let response = await this.commonService.getGradeCategories('All').toPromise();
+            let response = await this.commonService.getGradeCategories('Active').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.gradeCategories = response.gradeCategories;
@@ -134,12 +134,12 @@ export class SyllabusWiseSubjectAddComponent
             if(gradeCategoryId != undefined && gradeCategoryId != "")
             {
                 this.gradeClicked = true;
-                let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
+                let response = await this.commonService.getGrades(gradeCategoryId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.grades = response.grades;
-                    this.gradeClicked = false;
                     this.grades.unshift({ id: "", name: "Select Grade" });
+                    this.gradeClicked = false;
                 }
                 else
                 {       
@@ -172,16 +172,16 @@ export class SyllabusWiseSubjectAddComponent
             if(academicSessionId != undefined && academicSessionId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "")
             {
                 this.syllabusClicked = true;
-                let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeCategoryId, gradeId, 'All').toPromise();
+                let response = await this.commonService.getGradeWiseSyllabuses(academicSessionId, gradeCategoryId, gradeId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.gradeWiseSyllabuses = response.gradeWiseSyllabuses;
-                    this.syllabusClicked = false;
                     this.gradeWiseSyllabuses.unshift({ id : "", syllabus : {
                         id : "",
                         name : "Select Syllabus"
                         }
                     });
+                    this.syllabusClicked = false;
                 }
                 else
                 {

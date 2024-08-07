@@ -25,38 +25,37 @@
                         >Please select academic session.</label>
                     </div>
                 </form>                
-            </div> 
-            
+            </div>             
            <div class="col-md-12">
-            <form [formGroup]="schoolingProgramForm">
-                <div class="form-group">
-                   <label class="form-control-label" for="schoolingProgram">Shooling Program&nbsp;<span style="color: red;">*</span></label>
-                   <select class="form-control"  required id="schoolingProgram" formControlName="schoolingProgram"
-                   [ngClass]="{'is-invalid': !schoolingProgramForm.controls['schoolingProgram'].valid && !isValidForm}"
-                   >
-                   <option value="{{schoolingProgram.id}}" *ngFor="let schoolingProgram of schoolingPrograms">{{schoolingProgram?.name}}</option>
-                   </select>
-                   <div style="color: red;"
-                    *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
-                    class="error jquery-validation-error small form-text"
-                    >Please select shcool program.</div>
-                </div>
-            </form>
+                <form [formGroup]="schoolingProgramForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="schoolingProgram">Shooling Program&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="schoolingProgram" formControlName="schoolingProgram"
+                        [ngClass]="{'is-invalid': !schoolingProgramForm.controls['schoolingProgram'].valid && !isValidForm}"
+                        >
+                        <option value="{{schoolingProgram.id}}" *ngFor="let schoolingProgram of schoolingPrograms">{{schoolingProgram?.name}}</option>
+                        </select>
+                        <div style="color: red;"
+                            *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select shcool program.
+                        </div>
+                    </div>
+                </form>
            </div>
-
             <div class="col-md-12">
                 <div class="form-group">
-                <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
-                <input class="form-control input-md" id="name" type="text" required 
-                formControlName="name" maxlength="40"
-                [ngClass]="{'is-invalid': !addSyllabusForm.controls['name'].valid && !isValidForm}"/>
-                <div style="color: red;"
-                *ngIf="addSyllabusForm.controls['name'].hasError('required') && !isValidForm"
-                class="error jquery-validation-error small form-text"
-                >Please enter name.</div>
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="40"
+                    [ngClass]="{'is-invalid': !addSyllabusForm.controls['name'].valid && !isValidForm}"/>
+                    <div style="color: red;"
+                        *ngIf="addSyllabusForm.controls['name'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please enter name.
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="modal-footer">

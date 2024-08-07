@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 
 @Injectable({
-providedIn: 'root'
+    providedIn: 'root'
 })
 export class BusinessService {
 

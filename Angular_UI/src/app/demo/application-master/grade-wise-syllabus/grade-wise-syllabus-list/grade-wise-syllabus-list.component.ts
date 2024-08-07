@@ -25,6 +25,7 @@ export class GradeWiseSyllabusListComponent {
 
     gradeWiseSyllabuses : any [];
     searchClicked : boolean;
+    searchClickedGrade : boolean;
     gradeCategories : any[];
     grades : any[];
     academicSessionForm : FormGroup;
@@ -134,7 +135,7 @@ export class GradeWiseSyllabusListComponent {
     {  
         try 
         {
-            this.searchClicked = true;
+            this.searchClickedGrade = true;
             let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
             if(gradeCategoryId != undefined && gradeCategoryId != "")
             {
@@ -142,7 +143,6 @@ export class GradeWiseSyllabusListComponent {
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.grades = response.grades;
-                    this.searchClicked = false;
                     this.grades.unshift({ id : "0", name : "All"});
                     
                     if(gradeId == '')
@@ -153,24 +153,26 @@ export class GradeWiseSyllabusListComponent {
                     {
                         this.gradeForm.get("grade").setValue(gradeId);
                     }
+                    this.searchClickedGrade = false;
                 }
                 else
                 {
-                    this.searchClicked = false;
                     this.grades = [];
                     this.grades.unshift({ id : "0", name : "All"});
+                    this.searchClickedGrade = false;
                 }
             }
             else
             {
-            this.searchClicked = false;
-            this.grades = [];
-            this.grades.unshift({ id : "0", name : "All"});
+                this.grades = [];
+                this.grades.unshift({ id : "0", name : "All"});
+                this.searchClickedGrade = false;
             }    
         }
         catch(e)
         {
             this.showNotification("error", e);
+            this.searchClickedGrade = false;
         }
     }
 
@@ -201,15 +203,15 @@ export class GradeWiseSyllabusListComponent {
             }
             else
             {
-                this.searchClicked = false;
                 this.gradeWiseSyllabuses = [];
+                this.searchClicked = false;
             }
         }
         catch(e)
         {
             this.showNotification("error", e);
-            this.searchClicked = false;
             this.gradeWiseSyllabuses = [];
+            this.searchClicked = false;
         }
     }
     
