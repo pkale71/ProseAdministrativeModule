@@ -51,7 +51,11 @@ export class CoachEditComponent
             uuid: this.coach.uuid,
             name: ['', [Validators.required]],
             email: ['', [Validators.required, Validators.email]],
+<<<<<<< HEAD
             mobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,15}'), Validators.maxLength(15), Validators.minLength(10)]],
+=======
+            mobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,10}'), Validators.maxLength(10), Validators.minLength(10)]],
+>>>>>>> parent of c617e70 (ss)
             businessVertical: this.formbuilder.group({ "id" : [''] }),
             businessVerticalType: this.formbuilder.group({ "id" : [''] }),
         });  

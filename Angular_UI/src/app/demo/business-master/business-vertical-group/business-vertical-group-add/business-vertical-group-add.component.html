@@ -16,7 +16,11 @@
                 <form [formGroup]="businessVerticalForm">
                     <div class="form-group">
                         <label class="form-control-label" for="businessVertical">Business Vertical&nbsp;<span style="color: red;">*</span></label>
+<<<<<<< HEAD
                         <select class="form-control" required id="businessVertical" formControlName="businessVertical"
+=======
+                        <select class="form-control"  required id="businessVertical" formControlName="businessVertical"
+>>>>>>> parent of c617e70 (ss)
                         [ngClass]="{'is-invalid': !businessVerticalForm.controls['businessVertical'].valid && !isValidForm}">
                         <option value="{{businessVertical.id}}" *ngFor="let businessVertical of businessVerticals">{{businessVertical?.name}}</option>
                         </select>

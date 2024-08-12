@@ -4,7 +4,6 @@ let errorCodes = require('../util/errorCodes.js');
 const commonFunction = require('../util/commonFunctions.js');
 let errorCode = new errorCodes();
 ////////Variables 
-//////
 let emailMobile;
 let actionOn;
 let tableName;

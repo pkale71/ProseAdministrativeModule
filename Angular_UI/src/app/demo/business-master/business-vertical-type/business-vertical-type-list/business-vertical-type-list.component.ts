@@ -25,7 +25,10 @@ import { BusinessVerticalTypeAddComponent } from '../business-vertical-type-add/
 })
 export class BusinessVerticalTypeListComponent {
     searchClicked : boolean;
+<<<<<<< HEAD
     businessVerticalGroupClicked : boolean;
+=======
+>>>>>>> parent of c617e70 (ss)
     businessVerticalTypes : any[];
     masterBusinessVerticalTypes : any[];
     businessVerticalForm : FormGroup;
@@ -107,32 +110,52 @@ export class BusinessVerticalTypeListComponent {
             let businessVerticalId = this.businessVerticalForm.get("businessVertical").value;
             if(businessVerticalId != undefined && businessVerticalId != "")
             {
+<<<<<<< HEAD
                 this.businessVerticalGroupClicked = true;  
+=======
+                this.searchClicked = true;  
+>>>>>>> parent of c617e70 (ss)
                 let response = await this.businessService.getBusinessVerticalGroups(businessVerticalId, 'All').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.businessVerticalGroups = response.businessVerticalGroups;
                     this.businessVerticalGroups.unshift({ id : '0', name : "All"});
+<<<<<<< HEAD
                     this.businessVerticalGroupClicked = false;
+=======
+                    this.searchClicked = false;
+>>>>>>> parent of c617e70 (ss)
                 }
                 else
                 {
                     this.businessVerticalGroups = [];
                     this.businessVerticalGroups.unshift({ id : '0', name : "All"});
+<<<<<<< HEAD
                     this.businessVerticalGroupClicked = false;
+=======
+                    this.searchClicked = false;
+>>>>>>> parent of c617e70 (ss)
                 }
             }
             else
             {
                 this.businessVerticalGroups = [];
                 this.businessVerticalGroups.unshift({ id : '0', name : "All"});
+<<<<<<< HEAD
                 this.businessVerticalGroupClicked = false;
+=======
+                this.searchClicked = false;
+>>>>>>> parent of c617e70 (ss)
             }
         }
         catch(e)
         {
             this.showNotification("error", e);
+<<<<<<< HEAD
             this.businessVerticalGroupClicked = false;
+=======
+            this.searchClicked = false;
+>>>>>>> parent of c617e70 (ss)
         }
     }
 

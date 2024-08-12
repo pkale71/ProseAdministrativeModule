@@ -499,7 +499,11 @@ export class BusinessPartnerAddComponent {
             this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
             this.addBusinessPartnerForm.controls['contractFrom'].disable();
             this.addBusinessPartnerForm.controls['contractFrom'].clearAsyncValidators();
+<<<<<<< HEAD
             this.addBusinessPartnerForm.controls['contractTo'].setValue('');
+=======
+            this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
+>>>>>>> parent of c617e70 (ss)
             this.addBusinessPartnerForm.controls['contractTo'].disable();
             this.addBusinessPartnerForm.controls['contractTo'].clearAsyncValidators();
             //both are false then pan and gst not required  
@@ -519,7 +523,11 @@ export class BusinessPartnerAddComponent {
             this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
             this.addBusinessPartnerForm.controls['contractFrom'].disable();
             this.addBusinessPartnerForm.controls['contractFrom'].clearValidators();
+<<<<<<< HEAD
             this.addBusinessPartnerForm.controls['contractTo'].setValue('');
+=======
+            this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
+>>>>>>> parent of c617e70 (ss)
             this.addBusinessPartnerForm.controls['contractTo'].disable();
             this.addBusinessPartnerForm.controls['contractTo'].clearValidators();
             this.isRequiredPanGst = false;

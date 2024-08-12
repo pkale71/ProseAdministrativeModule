@@ -237,7 +237,11 @@ export class SubjectwiseChapterEditComponent {
                         id : "",
                         name : "Select Syllabus"
                         }
+<<<<<<< HEAD
                     }); 
+=======
+                    });  
+>>>>>>> parent of c617e70 (ss)
                     this.syllabusClicked = false;
                     //here access deactivate data
                     if(gradeWiseSyllabus != '')

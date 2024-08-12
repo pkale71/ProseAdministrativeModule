@@ -13,7 +13,11 @@
                             <form [formGroup]="businessVerticalForm">
                                 <div class="form-group">
                                     <label class="form-control-label" for="businessVertical">Business Vertical</label>
+<<<<<<< HEAD
                                     <select class="form-control" required id="businessVertical" formControlName="businessVertical" (change) = "getBusinessVerticalGroups()">
+=======
+                                    <select class="form-control" required id="businessVertical" formControlName="businessVertical" (click) = "getBusinessVerticalGroups()">
+>>>>>>> parent of c617e70 (ss)
                                     <option value="{{businessVertical.id}}" *ngFor="let businessVertical of businessVerticals">{{businessVertical.name}}</option>
                                     </select>
                                 </div>
@@ -22,7 +26,11 @@
                         <div class="col-md-3">
                             <form [formGroup]="businessVerticalGroupForm">
                                 <div class="form-group">
+<<<<<<< HEAD
                                     <label class="form-control-label" for="businessVerticalGroup">Business Vertical Group</label><i class="fa fa-spin fa-spinner" *ngIf="businessVerticalGroupClicked"></i>
+=======
+                                    <label class="form-control-label" for="businessVerticalGroup">Business Vertical Group</label><i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i>
+>>>>>>> parent of c617e70 (ss)
                                     <select class="form-control" required id="businessVerticalGroup" formControlName="businessVerticalGroup">
                                     <option value="{{businessVerticalGroup.id}}" *ngFor="let businessVerticalGroup of businessVerticalGroups">{{businessVerticalGroup.name}}</option>
                                     </select>

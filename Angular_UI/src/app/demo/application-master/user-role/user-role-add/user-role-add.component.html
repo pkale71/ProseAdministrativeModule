@@ -9,7 +9,25 @@
     ></button>
 </div>
 <form [formGroup]="addUserRoleForm" id="addUserRoleForm" (ngSubmit)="saveUserRole()" autocomplete="off">
+<<<<<<< HEAD
     <div class="modal-body"> 
+=======
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="40"
+                    [ngClass]="{'is-invalid': !addUserRoleForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addUserRoleForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter name.</label>
+                </div>
+            </div>
+        </div>
+>>>>>>> parent of c617e70 (ss)
         <div class="row">           
             <div class="col-md-12">
                 <form [formGroup]="moduleForm">
@@ -27,6 +45,7 @@
                     </div>
                 </form>
             </div>
+<<<<<<< HEAD
         </div>   
         <div class="row">
             <div class="col-md-12">
@@ -41,6 +60,8 @@
                     >Please enter name.</label>
                 </div>
             </div>
+=======
+>>>>>>> parent of c617e70 (ss)
         </div>
     </div>
     <div class="modal-footer">

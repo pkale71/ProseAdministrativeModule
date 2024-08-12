@@ -25,13 +25,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
 
-        if(reqData.academicSession != undefined && reqData.syllabus != undefined && reqData.gradeCategory != undefined && reqData.grade != undefined && reqData.subject != undefined && reqData.chapter != undefined)
+        if(reqData.academicSession != undefined && reqData.syllabus != undefined && reqData.grade != undefined && reqData.subject != undefined && reqData.chapter != undefined)
         {
-            if(JSON.parse(reqData.academicSession)?.id != "" && JSON.parse(reqData.syllabus)?.id != "" && JSON.parse(reqData.gradeCategory)?.id != '' && JSON.parse(reqData.grade)?.id != "" && JSON.parse(reqData.subject)?.id != "" && JSON.parse(reqData.chapter)?.id != "")
+            if(JSON.parse(reqData.academicSession)?.id != "" && JSON.parse(reqData.syllabus)?.id != "" && JSON.parse(reqData.grade)?.id != "" && JSON.parse(reqData.subject)?.id != "" && JSON.parse(reqData.chapter)?.id != "")
             {
                 academicSessionId = commonFunction.validateNumber(JSON.parse(reqData.academicSession)?.id);
                 syllabusId = commonFunction.validateNumber(JSON.parse(reqData.syllabus)?.id);
-                gradeCategoryId = commonFunction.validateNumber(JSON.parse(reqData.gradeCategory)?.id);
                 gradeId = commonFunction.validateNumber(JSON.parse(reqData.grade)?.id);
                 subjectId = commonFunction.validateNumber(JSON.parse(reqData.subject)?.id);
                 chapterId = commonFunction.validateNumber(JSON.parse(reqData.chapter)?.id);
@@ -44,54 +43,35 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     syllabus = await dbCommon.checkSyllabusExist(syllabusId);
                     if(syllabus.length == 1)
                     {
-                        // check grade category exist
-                        gradeCategory = await dbCommon.getGradeCategory(gradeCategoryId);
-                        if(gradeCategory.length == 1)
-                        {                                
                         ///check Grade Exist
-                            grade = await dbCommon.getGrade(gradeId);
-                            if(grade.length == 1)
+                        grade = await dbCommon.getGrade(gradeId);
+                        if(grade.length == 1)
+                        {
+                            ///check Subject Exist
+                            subject = await dbCommon.checkSyllabusWiseSubjectExist(subjectId);
+                            if(subject.length == 1)
                             {
-                                ///check Subject Exist
-                                subject = await dbCommon.checkSyllabusWiseSubjectExist(subjectId);
-                                if(subject.length == 1)
-                                {
-                                    ///check Chapter Exist
-                                    chapter = await dbCommon.checkSubjectWiseChapterExist(chapterId);
-                                    if(chapter.length == 1)
-                                    {    
-                                        if(req.files.length == 1)
+                                ///check Chapter Exist
+                                chapter = await dbCommon.checkSubjectWiseChapterExist(chapterId);
+                                if(chapter.length == 1)
+                                {    
+                                    if(req.files.length == 1)
+                                    {
+                                        if(req.files[0].mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                                         {
-                                            if(req.files[0].mimetype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                                            /////get Topics
+                                            topics = await dbCommon.getChapterWiseTopics(academicSessionId, syllabusId, gradeId, subjectId, chapterId, 'All');                                    
+                                            if(topics.length >= 0)
                                             {
-                                                /////get Topics
-                                                topics = await dbCommon.getChapterWiseTopics(academicSessionId, syllabusId, gradeCategoryId, gradeId, subjectId, chapterId, 'All');                                               
-                                                if(topics.length >= 0)
-                                                {
-                                                    let fileData = readFileAndFormatCheck(req.files[0], topics, req, res);
-                                                    if(fileData != "")
-                                                    {  
-                                                        if(fileData.data.length > 0)
-                                                        {                  
-                                                            let insertTopicResult = await dbCommon.insertMultipleTopic(fileData.data, academicSessionId, chapterId, authData.id);
-                                                            if(insertTopicResult.insertId > 0)
-                                                            {
-                                                                ///Remove Files
-                                                                commonFunction.deleteFiles(req.files);
-                                                                res.status(200)
-                                                                return res.json({
-                                                                    "totalCount" : fileData.totalRows,
-                                                                    "insertCount" : fileData.insertRows,
-                                                                    "duplicateCount" : fileData.duplicateRows,
-                                                                    "status_code" : 200,
-                                                                    "success" : true,                            
-                                                                    "message" : errorCode.getStatus(200)
-                                                                })
-                                                            }
-                                                        }
-                                                        else
+                                                let fileData = readFileAndFormatCheck(req.files[0], topics, req, res);
+                                                if(fileData != "")
+                                                {  
+                                                    if(fileData.data.length > 0)
+                                                    {                  
+                                                        let insertTopicResult = await dbCommon.insertMultipleTopic(fileData.data, academicSessionId, chapterId, authData.id);
+                                                        if(insertTopicResult.insertId > 0)
                                                         {
-                                                        ///Remove Files
+                                                            ///Remove Files
                                                             commonFunction.deleteFiles(req.files);
                                                             res.status(200)
                                                             return res.json({
@@ -103,32 +83,34 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                                 "message" : errorCode.getStatus(200)
                                                             })
                                                         }
-                                                    }    
+                                                    }
                                                     else
                                                     {
-                                                        ///Remove Files
+                                                    ///Remove Files
                                                         commonFunction.deleteFiles(req.files);
-                                                        res.status(500)
+                                                        res.status(200)
                                                         return res.json({
-                                                            "status_code" : 500,
-                                                            "message" : "Worksheet Is Empty",
-                                                            "success" : false,
-                                                            "error" : errorCode.getStatus(500),
-                                                        });
-                                                    }  
-                                                }
-                                            }
-                                            else
-                                            {
-                                                ///Remove Files
-                                                commonFunction.deleteFiles(req.files);
-                                                res.status(500)
+                                                            "totalCount" : fileData.totalRows,
+                                                            "insertCount" : fileData.insertRows,
+                                                            "duplicateCount" : fileData.duplicateRows,
+                                                            "status_code" : 200,
+                                                            "success" : true,                            
+                                                            "message" : errorCode.getStatus(200)
+                                                        })
+                                                    }
+                                                }    
+                                                else
+                                                {
+                                                    ///Remove Files
+                                                    commonFunction.deleteFiles(req.files);
+                                                    res.status(500)
                                                     return res.json({
                                                         "status_code" : 500,
-                                                        "message" : "Invalid File Format",
+                                                        "message" : "Worksheet Is Empty",
                                                         "success" : false,
                                                         "error" : errorCode.getStatus(500),
                                                     });
+                                                }  
                                             }
                                         }
                                         else
@@ -136,12 +118,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                             ///Remove Files
                                             commonFunction.deleteFiles(req.files);
                                             res.status(500)
-                                            return res.json({
-                                                "status_code" : 500,
-                                                "message" : "Missing File",
-                                                "success" : false,
-                                                "error" : errorCode.getStatus(500),
-                                            });
+                                                return res.json({
+                                                    "status_code" : 500,
+                                                    "message" : "Invalid File Format",
+                                                    "success" : false,
+                                                    "error" : errorCode.getStatus(500),
+                                                });
                                         }
                                     }
                                     else
@@ -151,7 +133,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                         res.status(500)
                                         return res.json({
                                             "status_code" : 500,
-                                            "message" : "Chapter Not Exist",
+                                            "message" : "Missing File",
                                             "success" : false,
                                             "error" : errorCode.getStatus(500),
                                         });
@@ -164,7 +146,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                     res.status(500)
                                     return res.json({
                                         "status_code" : 500,
-                                        "message" : "Subject Not Exist",
+                                        "message" : "Chapter Not Exist",
                                         "success" : false,
                                         "error" : errorCode.getStatus(500),
                                     });
@@ -177,7 +159,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                 res.status(500)
                                 return res.json({
                                     "status_code" : 500,
-                                    "message" : "Grade Not Exist",
+                                    "message" : "Subject Not Exist",
                                     "success" : false,
                                     "error" : errorCode.getStatus(500),
                                 });
@@ -190,14 +172,14 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             res.status(500)
                             return res.json({
                                 "status_code" : 500,
-                                "message" : "GradeCategory Not Exist",
+                                "message" : "Grade Not Exist",
                                 "success" : false,
                                 "error" : errorCode.getStatus(500),
                             });
                         }
                     }
                     else
-                    { 
+                    {
                         ///Remove Files
                         commonFunction.deleteFiles(req.files);
                         res.status(500)
@@ -259,7 +241,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 "status_code" : 500,
                 "message" : "Something Went Wrong",
                 "success" : false,
-                "error" : e?.stack,
+                "error" : e,
             });
         }
     }

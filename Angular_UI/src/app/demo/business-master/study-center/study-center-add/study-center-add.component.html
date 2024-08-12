@@ -113,7 +113,11 @@
                         <div class="col-md-3">
                             <form [formGroup]="stateRegionForm">
                                 <div class="form-group">
+<<<<<<< HEAD
                                     <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedStateRegion"></i></label>
+=======
+                                    <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+>>>>>>> parent of c617e70 (ss)
                                     <select class="form-control"  required id="stateRegion" formControlName="stateRegion" (change)="getDistricts('Active')"
                                     [ngClass]="{'is-invalid': !stateRegionForm.controls['stateRegion'].valid && !isValidForm}">
                                     <option value="{{stateRegion.id}}" *ngFor="let stateRegion of stateRegions">{{stateRegion?.name}}</option>
@@ -128,7 +132,11 @@
                         <div class="col-md-3">
                             <form [formGroup]="districtForm">
                                 <div class="form-group">
+<<<<<<< HEAD
                                     <label class="form-control-label" for="district">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedDistrict"></i></label>
+=======
+                                    <label class="form-control-label" for="district">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+>>>>>>> parent of c617e70 (ss)
                                     <select class="form-control"  required id="district" formControlName="district" (change)="getCities('Active')"
                                     [ngClass]="{'is-invalid': !districtForm.controls['district'].valid && !isValidForm}">
                                     <option value="{{district.id}}" *ngFor="let district of districts">{{district?.name}}</option>
@@ -143,7 +151,11 @@
                         <div class="col-md-3">
                             <form [formGroup]="cityForm">
                                 <div class="form-group">
+<<<<<<< HEAD
                                     <label class="form-control-label" for="city">City&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedCity"></i></label>
+=======
+                                    <label class="form-control-label" for="city">City&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+>>>>>>> parent of c617e70 (ss)
                                     <select class="form-control"  required id="city" formControlName="city"
                                     [ngClass]="{'is-invalid': !cityForm.controls['city'].valid && !isValidForm}">
                                     <option value="{{city.id}}" *ngFor="let city of cities">{{city?.name}}</option>
@@ -305,7 +317,10 @@
                                 >Please enter valid gst number.</label>  
                             </div>                 
                         </div>
+<<<<<<< HEAD
                         <!-- && isPartnerCaptive in label -->
+=======
+>>>>>>> parent of c617e70 (ss)
                         <div class="col-md-3" *ngIf="studyCenterType.name == 'Partner Captive'">
                             <form [formGroup]="businessPartnerForm">
                                 <div class="form-group">
@@ -317,7 +332,11 @@
                                     </option>
                                     </select>
                                     <label style="color: red;"
+<<<<<<< HEAD
                                     *ngIf="businessPartnerForm.controls['businessPartner'].hasError('required') && !isValidForm"
+=======
+                                    *ngIf="businessPartnerForm.controls['businessPartner'].hasError('required') && !isValidForm && isPartnerCaptive"
+>>>>>>> parent of c617e70 (ss)
                                     class="error jquery-validation-error small form-text"
                                     >Please select business partner.</label>
                                 </div>   

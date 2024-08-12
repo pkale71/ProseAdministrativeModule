@@ -22,7 +22,11 @@
                         <div class="col-md-3">
                             <form [formGroup]="businessVerticalTypeForm">
                                 <div class="form-group">
+<<<<<<< HEAD
                                     <label class="form-control-label" for="businessVerticalType">Business Vertical Type&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedVerticalType"></i></label>
+=======
+                                    <label class="form-control-label" for="businessVerticalType">Business Vertical Type&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+>>>>>>> parent of c617e70 (ss)
                                     <select class="form-control" required id="businessVerticalType" formControlName="businessVerticalType">
                                     <option value="{{businessVerticalType.id}}" *ngFor="let businessVerticalType of businessVerticalTypes">{{businessVerticalType.name}}</option>
                                     </select>
