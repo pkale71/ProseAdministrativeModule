@@ -1,0 +1,67 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="syllabusAddModal"><i class="fa fa-plus"></i>&nbsp;Add Syllabus</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addSyllabusForm" id="addSyllabusForm" (ngSubmit)="saveSyllabus()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-12">
+                <form [formGroup]="academicSessionForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="academicSession">Academic Session&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="academicSession" formControlName="academicSession" (change) = "getSchoolingPrograms()"
+                        [ngClass]="{'is-invalid': !academicSessionForm.controls['academicSession'].valid && !isValidForm}">
+                        <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="academicSessionForm.controls['academicSession'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select academic session.</label>
+                    </div>
+                </form>                
+            </div>             
+           <div class="col-md-12">
+                <form [formGroup]="schoolingProgramForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="schoolingProgram">Shooling Program&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="schoolingProgram" formControlName="schoolingProgram"
+                        [ngClass]="{'is-invalid': !schoolingProgramForm.controls['schoolingProgram'].valid && !isValidForm}"
+                        >
+                        <option value="{{schoolingProgram.id}}" *ngFor="let schoolingProgram of schoolingPrograms">{{schoolingProgram?.name}}</option>
+                        </select>
+                        <div style="color: red;"
+                            *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select shcool program.
+                        </div>
+                    </div>
+                </form>
+           </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="40"
+                    [ngClass]="{'is-invalid': !addSyllabusForm.controls['name'].valid && !isValidForm}"/>
+                    <div style="color: red;"
+                        *ngIf="addSyllabusForm.controls['name'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please enter name.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

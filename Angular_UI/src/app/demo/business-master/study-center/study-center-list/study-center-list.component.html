@@ -1,0 +1,82 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header" style="padding: 10px 25px;">
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-building"></i>&nbsp; Study Centers &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+                <div class="btn-group mb-2 mt-0.8rem me-2 float-end" ngbDropdown >
+                    <button class="btn btn-primary" ngbDropdownToggle type="button"> Add Study Center </button>
+                    <div ngbDropdownMenu>
+                        <a class="dropdown-item" href="javascript:" *ngFor="let studyCenterType of studyCenterTypes | slice:1:4" (click)="addStudyCenterType(studyCenterType.id)">{{studyCenterType.name}}
+                        </a>
+                    </div>
+                </div>
+            </div>    
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <form [formGroup]="studyCenterTypeForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="studyCenterType">Study Center Type</label>
+                                <select class="form-control" required id="studyCenterType" formControlName="studyCenterType">
+                                    <option value="{{studyCenterType.id}}" *ngFor="let studyCenterType of studyCenterTypes">{{studyCenterType.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- search button -->
+                    <div class="col-md-3">
+                        <br/>
+                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked"
+                        (click)="getStudyCenters(studyCenterTypeForm.controls['studyCenterType'].value)"><i class="fa fa-search"></i>&nbsp;Search</button>
+                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                            <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table datatable id="tblStudyCenter" class="table table-striped row-border table-hover pt-10">
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th>Email</th>
+                                <th>Study Center Type</th>
+                                <th>Active</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let studyCenter of studyCenters let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{studyCenter.name}}</td>
+                                <td>{{studyCenter.code}}</td>
+                                <td>{{studyCenter.email}}</td>
+                                <td>{{studyCenter.studyCenterType?.name}}</td>
+                                <td>
+                                    <span [ngClass]="studyCenter.isActive ? 'badge bg-success' : 'badge bg-danger'" 
+                                    style="cursor: pointer;" title="Change Status" (click)="updateStatus(studyCenter)">
+                                    {{studyCenter.isActive ? 'Yes' : 'No'}}
+                                    </span>
+                                </td>
+                                <td style="width:40px;text-align: right;">
+                                    <i class="fa fa-edit" (click)="editStudyCenter(studyCenter.uuid)" title="Edit" style="cursor: pointer;"></i>&nbsp;
+                                    <i class="fa fa-trash-alt" (click)="deleteStudyCenter(studyCenter)" title="Delete" style="cursor: pointer;"></i>&nbsp;
+                                    <i class="fa fa-list" (click)="detailStudyCenter(studyCenter.uuid)" title="Detail" style="cursor: pointer;"></i>
+                                </td>
+                            </tr>
+                            <tr *ngIf="studyCenters.length == 0">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>No record(s) found</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

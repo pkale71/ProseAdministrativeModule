@@ -1,0 +1,234 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="businessPartnerEditModal"><i class="fa fa-edit"></i>&nbsp;Edit Tie-Up School</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="editTieUpSchoolForm" id="editTieUpSchoolForm" (ngSubmit)="saveTieUpSchool()" autoComplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required
+                    formControlName="name" 
+                    [ngClass]="{'is-invalid': !editTieUpSchoolForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter name.</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['name'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid name.</label>  
+                </div>                 
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="email">Email&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="email" type="text" required 
+                    formControlName="email" maxlength="100"
+                    [ngClass]="{'is-invalid': !editTieUpSchoolForm.controls['email'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['email'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter email.</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['email'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid email.</label>   
+                </div>                 
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-control-label" for="address">Address&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="address" type="text" required 
+                    formControlName="address" maxlength="200"
+                    [ngClass]="{'is-invalid': !editTieUpSchoolForm.controls['address'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['address'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter address.</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['address'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid address.</label>   
+                </div>                 
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="pincode">Pincode&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="pincode" type="text" required 
+                    formControlName="pincode" maxlength="6"
+                    [ngClass]="{'is-invalid': !editTieUpSchoolForm.controls['pincode'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['pincode'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter pincode.</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['pincode'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid pincode.</label>   
+                </div>                 
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="mobile">Mobile&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="mobile" type="text" required  
+                    formControlName="mobile" maxlength="15" minlength="10"
+                    [ngClass]="{'is-invalid': !editTieUpSchoolForm.controls['mobile'].valid && !isValidForm}"
+                    />
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['mobile'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter contact mobile.</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['mobile'].hasError('minlength') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Contact Mobile number should be 10 to 15 digits long</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['mobile'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid contact mobile number</label>
+                </div>    
+            </div>
+            <div class="col-md-3">
+                <form [formGroup]="countryForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="country">Country&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="country" formControlName="country" (change)="getStateRegions('')"
+                        [ngClass]="{'is-invalid': !countryForm.controls['country'].valid && !isValidForm}">
+                        <option value="{{country.id}}" *ngFor="let country of countries">{{country?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="countryForm.controls['country'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select country.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-3">
+                <form [formGroup]="stateRegionForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <select class="form-control"  required id="stateRegion" formControlName="stateRegion" (change)="getDistricts('')"
+                        [ngClass]="{'is-invalid': !stateRegionForm.controls['stateRegion'].valid && !isValidForm}">
+                        <option value="{{stateRegion.id}}" *ngFor="let stateRegion of stateRegions">{{stateRegion?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="stateRegionForm.controls['stateRegion'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select state/region.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-3">
+                <form [formGroup]="districtForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="district">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <select class="form-control"  required id="district" formControlName="district" (change)="getCities('')"
+                        [ngClass]="{'is-invalid': !districtForm.controls['district'].valid && !isValidForm}">
+                        <option value="{{district.id}}" *ngFor="let district of districts">{{district?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="districtForm.controls['district'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select district.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-3">
+                <form [formGroup]="cityForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="city">City&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <select class="form-control"  required id="city" formControlName="city"
+                        [ngClass]="{'is-invalid': !cityForm.controls['city'].valid && !isValidForm}">
+                        <option value="{{city.id}}" *ngFor="let city of cities">{{city?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="cityForm.controls['city'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select city.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-3">
+                <form [formGroup]="syllabusForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="syllabus" formControlName="syllabus" 
+                        [ngClass]="{'is-invalid': !syllabusForm.controls['syllabus'].valid && !isValidForm}">
+                        <option value="{{tieUpSchoolSyllabus.id}}" *ngFor="let tieUpSchoolSyllabus of tieUpSchoolSyllabuses">{{tieUpSchoolSyllabus?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select business vertical.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="panNumber">PAN Number&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="panNumber" type="text"    formControlName="panNumber" maxlength="10" required
+                    pattern="[a-zA-Z]{5}[0-9]{4}[A-Za-z]{1}"
+                    [ngClass]="{'is-invalid': !editTieUpSchoolForm.controls['panNumber'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['panNumber'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter pan number.</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['panNumber'].hasError('minlength') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >pan number should be 10 number long</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['panNumber'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid pan number.</label>  
+                </div>                 
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="contactPerson">Contact Person&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="contactPerson" type="text" required
+                    formControlName="contactPerson" maxlength="40"
+                    [ngClass]="{'is-invalid': !editTieUpSchoolForm.controls['contactPerson'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['contactPerson'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter contact person.</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['contactPerson'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid contact person.</label>  
+                </div>                 
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-control-label" for="website">Website&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="website" type="text" required
+                    formControlName="website" 
+                    [ngClass]="{'is-invalid': !editTieUpSchoolForm.controls['website'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['website'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter website.</label>
+                    <label style="color: red;"
+                    *ngIf="editTieUpSchoolForm.controls['website'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid website.</label>  
+                </div>                        
+            </div> 
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

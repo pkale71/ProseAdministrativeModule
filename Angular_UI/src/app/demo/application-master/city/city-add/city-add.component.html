@@ -1,0 +1,98 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="cityAddModal"><i class="fa fa-plus"></i>&nbsp;Add City</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addCityForm" id="addCityForm" (ngSubmit)="saveCity()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row"> 
+            <div class="col-md-6">
+                <form [formGroup]="countryForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="country">Country&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="country" formControlName="country" (change)="getStateRegions('All')"
+                        [ngClass]="{'is-invalid': !countryForm.controls['country'].valid && !isValidForm}">
+                        <option value="{{country.id}}" *ngFor="let country of countries">{{country?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="countryForm.controls['country'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select country.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-6">
+                <form [formGroup]="stateRegionForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <select class="form-control"  required id="stateRegion" formControlName="stateRegion" (change)="getDistricts('All')"
+                        [ngClass]="{'is-invalid': !stateRegionForm.controls['stateRegion'].valid && !isValidForm}">
+                        <option value="{{stateRegion.id}}" *ngFor="let stateRegion of stateRegions">{{stateRegion?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="stateRegionForm.controls['stateRegion'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select state/region.</label>
+                    </div>
+                </form>                
+            </div> 
+             <div class="col-md-4">
+                <form [formGroup]="districtForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="district">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                        <select class="form-control"  required id="district" formControlName="district"
+                        [ngClass]="{'is-invalid': !districtForm.controls['district'].valid && !isValidForm}">
+                        <option value="{{district.id}}" *ngFor="let district of districts">{{district?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="districtForm.controls['district'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select district.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-3 mt-4">
+                <div class="form-group">
+                    <div class="checkbox d-inline">
+                      <input type="checkbox" name="checkbox-1" id="checkbox-1" (change)="getChange($event)"/>
+                      <label for="checkbox-1" class="cr">Upload Excel</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5" *ngIf="!isChecked">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" [ngRequired]="!isChecked" 
+                    formControlName="name" 
+                    [ngClass]="{'is-invalid': !addCityForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addCityForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter name.</label>
+                </div>                
+            </div>
+
+            <div class="col-md-8" *ngIf="isChecked">
+                <div class="form-file mb-3">                    
+                    <label for="uploadFile">Upload Excel&nbsp;<span style="color: red;">*</span></label>
+                    <span (click)="getDocuments('City')" class="badge  btn-outline-danger m-1" style="float: right; border-style: solid; border-width: 1px; cursor: pointer;">Download Excel</span>
+                    <input type="file" class="form-control" id="uploadFile" aria-label="file example" [ngRequired]="isChecked" formControlName="uploadFile" (change)="fileChange($event)" [accept]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" [multiple]="false"
+                    [ngClass]="{'is-invalid': !addCityForm.controls['uploadFile'].valid && !isValidForm}"/>
+                    <label style="color: red;" *ngIf="addCityForm.controls['uploadFile'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text">Please Upload File.</label>
+                </div>
+            </div>    
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

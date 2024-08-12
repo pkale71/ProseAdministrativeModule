@@ -1,0 +1,184 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="mb-3"> {{studyCenter?.studyCenterType?.name}} &nbsp;
+                    <span class="{{studyCenter?.isActive == 1 ? 'badge bg-success' :  'badge bg-danger'}}">
+                        Status : {{studyCenter?.isActive == 1 ? 'Yes' : 'No'}}
+                    </span>
+                    <button type="button" class="btn btn-rounded btn-black float-end" style="margin-top: 0rem;"
+                    (click)="back()">Back</button>
+                </h5>
+                <ul class="nav nav-tabs" ngbNav #nav="ngbNav">
+                    <li class="nav-item" [ngbNavItem]="1">
+                        <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                        Study Center Info
+                        </a>
+                        <ng-template ngbNavContent>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="code">Code</label>
+                                    <label class="form-control input-md">{{studyCenter?.code}}</label>    
+                                </div>
+                                <div class="col-sm-5">
+                                    <label class="form-control-label" for="name">Name</label>
+                                    <label class="form-control input-md">{{studyCenter?.name}}</label>                 
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="email">Email</label>
+                                    <label class="form-control input-md">{{studyCenter?.email}}</label>                  
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="mobile">Mobile</label>
+                                    <label class="form-control input-md">{{studyCenter?.mobile}}</label>                
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="pincode">Pincode</label>
+                                    <label class="form-control input-md">{{studyCenter?.pincode}}</label>                
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="address">Address</label>
+                                    <label class="form-control input-md">{{studyCenter?.address}}</label>                
+                                </div>
+                            </div>
+                            <div class="row mt-2">  
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="country">Country</label>
+                                    <label class="form-control input-md">{{studyCenter?.country?.name}}</label>                
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="stateRegion">State/Region</label>
+                                    <label class="form-control input-md">{{studyCenter?.stateRegion?.name}}</label>                
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="district">District</label>
+                                    <label class="form-control input-md">{{studyCenter?.district?.name}}</label>                
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="city">City</label>
+                                    <label class="form-control input-md">{{studyCenter?.city?.name}}</label>                
+                                </div>
+                            </div>
+                            <hr class="mt-3" *ngIf="studyCenter?.studyCenterType?.name == 'Company Operated'">
+                            <div class="row" *ngIf="studyCenter?.studyCenterType?.name == 'Company Operated'">                  
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="landlordName">Landlord Name</label>
+                                    <label class="form-control input-md">{{studyCenter?.landlordName}}</label>                
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="contactPersonName">Contact Person Name</label>
+                                    <label class="form-control input-md">{{studyCenter?.contactPersonName}}</label>                
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="contactPersonEmail">Contact Person Email</label>
+                                    <label class="form-control input-md">{{studyCenter?.contactPersonEmail}}</label>                
+                                </div>
+                            </div>
+                            <div class="row mt-2" *ngIf="studyCenter?.studyCenterType?.name == 'Company Operated'">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="contactPersonMobile">Contact Person Mobile</label>
+                                    <label class="form-control input-md">{{studyCenter?.contactPersonMobile}}</label>                
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="panNumber">PanNumber</label>
+                                    <label class="form-control input-md">{{studyCenter?.panNumber}}</label>                
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="gstNumber">GstNumber</label>
+                                    <label class="form-control input-md">{{studyCenter?.gstNumber}}</label>                
+                                </div>     
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="rewardType">Reward Type</label>
+                                    <label class="form-control input-md">{{studyCenter?.rewardType?.name}}</label>                
+                                </div>                   
+                            </div>
+                            <div class="row mt-2" *ngIf="studyCenter?.studyCenterType?.name == 'Partner Captive'">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="businessPartner">Business Partner</label>
+                                    <label class="form-control input-md">{{studyCenter?.businessPartner?.name}}</label>                
+                                </div>
+                            </div>  
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="2">
+                        <a class="nav-link text-uppercase" aria-controls="documents" aria-selected="true" ngbNavLink>Enclosure Documents</a>
+                        <ng-template ngbNavContent>
+                            <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                            (click)="addDocument(studyCenter.uuid)">Add Document</button>  
+                            <table class="table table-striped row-border table-hover pt-1">
+                                <thead>
+                                    <tr>
+                                        <th>Sno</th>
+                                        <th>Enclosure Document</th>
+                                        <th>File Name</th>
+                                        <th>Uploaded On</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let studyCenterDocument of studyCenterDocuments let i=index" >
+                                        <td>{{i+1}}</td>
+                                        <td>{{studyCenterDocument?.enclosureDocument?.name}}</td>
+                                        <td>{{studyCenterDocument?.fileName}}</td>
+                                        <td>{{studyCenterDocument?.uploadedOn | date : "dd/MM/yyyy"}}</td>
+                                        <td>
+                                            <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteStudyCenterDocument(studyCenterDocument)"></i>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="studyCenterDocuments.length == 0">
+                                        <td></td>
+                                        <td></td>
+                                        <td>No record(s) found</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="3" *ngIf="studyCenter?.studyCenterType?.name == 'Company Operated'">
+                        <a class="nav-link text-uppercase" aria-controls="contacts" aria-selected="true" ngbNavLink>Agreement Histories</a>
+                        <ng-template ngbNavContent>
+                            <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                            (click)="addRenew(studyCenter.uuid)">Add/Renew</button>  
+                            <table class="table table-striped row-border table-hover pt-10">
+                                <thead>
+                                    <tr>
+                                        <th>Sno</th>
+                                        <th>Agreement From</th>
+                                        <th>Agreement To</th>
+                                        <th>Active</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let studyCenterAgreementHistory of studyCenterAgreementHistories; let i = index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{studyCenterAgreementHistory?.agreementFrom  | date : "dd/MM/yyyy"}}</td>
+                                        <td>{{studyCenterAgreementHistory?.agreementTo  | date : "dd/MM/yyyy"}}</td>
+                                        <td>
+                                            <span [ngClass]="studyCenterAgreementHistory.isActive ? 'badge bg-success' : ' badge bg-danger'" style="cursor: pointer;" title="Change Status" (click)="updateStatus(studyCenterAgreementHistory)">{{studyCenterAgreementHistory.isActive? 'Yes' : 'No'}}</span>
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteStudyCenterAgreement(studyCenterAgreementHistory)"></i>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="studyCenterAgreementHistories.length == 0">
+                                        <td></td>
+                                        <td></td>
+                                        <td>No record(s) found</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-template>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="nav"></div>
+            </div>
+        </div>
+    </div>
+</div>
