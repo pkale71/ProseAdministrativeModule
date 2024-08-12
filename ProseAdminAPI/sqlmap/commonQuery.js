@@ -862,6 +862,7 @@ db.checkSyllabusExist = (id) =>
         {
             let sql = `SELECT gws.id AS gradeWiseSyllabusId
             FROM grade_wise_syllabus gws WHERE gws.syllabus_id = ${id}`;
+            
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -2263,7 +2264,6 @@ db.getChapterWiseTopics = (academicSessionId, syllabusId, gradeCategoryId, grade
                 }
             }
             sql = sql + filters + ` ORDER BY swc.name`;
-
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
