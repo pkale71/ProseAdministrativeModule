@@ -228,17 +228,10 @@ export class DistrictListComponent {
                 {
                     this.showNotification("success", "District " + (district.isActive == 1 ? 'De-activated' : 'Activated'));
                     this.commonSharedService.districtListObject.next({
-<<<<<<< HEAD
                         countryId : this.countryForm.get('country').value,
                         stateRegionId : this.stateRegionForm.get('stateRegion').value,
                         result : "success"
                     });                    
-=======
-                    countryId : this.countryForm.get('country').value,
-                    stateRegionId : this.stateRegionForm.get('stateRegion').value,
-                    result : "success"
-                    });
->>>>>>> parent of c617e70 (ss)
                 }
             }
             catch(e)
@@ -280,15 +273,9 @@ export class DistrictListComponent {
                 {
                     this.showNotification("success", "District Deleted.");
                     this.commonSharedService.districtListObject.next({
-<<<<<<< HEAD
                         countryId : this.countryForm.get('country').value,
                         stateRegionId : this.stateRegionForm.get('stateRegion').value,
                         result : "success"
-=======
-                        result : "success",
-                        countryId : this.countryForm.get('country').value,
-                        stateRegionId : this.stateRegionForm.get('stateRegion').value
->>>>>>> parent of c617e70 (ss)
                     });
                 }
             }

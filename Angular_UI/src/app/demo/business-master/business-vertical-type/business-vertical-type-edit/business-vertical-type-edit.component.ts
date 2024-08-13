@@ -120,14 +120,12 @@ export class BusinessVerticalTypeEditComponent
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.businessVerticalGroups = response.businessVerticalGroups;
-                    console.log(this.businessVerticalGroups)
                     this.businessVerticalGroups.unshift({ id : '', name : "Select Business Vertical Group"});
                     this.searchClickedBusinessVerticalGroup = false;
                     // here access deactivate data
                     if(businessVerticalGroup != '')
                     {
                         let filterBusinessVerticalGroup = this.businessVerticalGroups.filter(tempBusinessVerticalGroup => parseInt(tempBusinessVerticalGroup.id) == parseInt(businessVerticalGroup.id));
-                        console.log(filterBusinessVerticalGroup)
                         if(filterBusinessVerticalGroup.length == 0)
                         {
                             this.businessVerticalGroups.push({ id : businessVerticalGroup.id, name : businessVerticalGroup.name });
@@ -159,7 +157,7 @@ export class BusinessVerticalTypeEditComponent
     {
         if(!this.saveClicked)
         {
-            if(this.editBusinessVerticalTypeForm.valid)
+            if(this.editBusinessVerticalTypeForm.valid && this.businessVerticalForm.valid && this.businessVerticalGroupForm.valid)
             {
                 this.isValidForm = true;
                 this.saveClicked = true;

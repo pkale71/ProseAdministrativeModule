@@ -129,7 +129,7 @@ export class CountryAddComponent
                             let msg = "";
                             if( totalCount > 0)
                             {
-                                msg = saved / totalCount + " Countries Are Saved Successfully. ";
+                                msg = saved + "/" + totalCount + " Countries Are Saved Successfully. ";
                                 let duplicateCount = response?.duplicateCount;
                                 if( duplicateCount > 0)
                                 {

@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="container-fluid">
+        <div class="m-4">
+            <img src="./assets/images/logo/logo.png" style="width: 180px; margin-left: 0px; margin-top: -7px;">
+        </div>
+        <div class="m-3">
+            <div class="row justify-content-md-center" style="text-align: center;">
+                <div class="col-md-12">
+                  <h3 class="wow fadeInUp" data-wow-delay="0s"><i class="fa fa-layer-group" ></i>&nbsp; Select Module</h3>
+                </div>
+            </div>            
+        </div> 
+        <div class="mt-4" style="text-align: center;">
+            <ng-container *ngIf="loginUser?.userModules?.length;">
+                <div class="mb-3" *ngFor="let module of loginUser.userModules; let i=index">
+                    <button type="button" class="btn btn-rounded btn-info" (click)="getUserModulesData(i)">
+                        {{module?.module?.name}}&nbsp;&nbsp; > &nbsp;&nbsp; 
+                        {{loginUser?.userCategory?.name}}&nbsp;&nbsp; > &nbsp;&nbsp; 
+                        {{module?.userType?.name}}
+                    </button>
+                </div>    
+            </ng-container>
+            <ng-container *ngIf="loginUser?.userModules?.length == 0 ">
+                <p style="font-size: 20px;">No Module(s) Assigned.</p>
+            </ng-container>
+        </div>
+    </div>
+</div>

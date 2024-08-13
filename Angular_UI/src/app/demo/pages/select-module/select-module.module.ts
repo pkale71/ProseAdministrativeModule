@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserProfileRoutingModule } from './user-profile-routing.module';
+import { SelectModuleRoutingModule } from './select-module-routing.module';
 
 @NgModule({
     declarations: [],
     imports: [
         CommonModule,
-        UserProfileRoutingModule
+        SelectModuleRoutingModule
     ]
 })
-export class UserProfileModule {}
+export class SelectModule {}

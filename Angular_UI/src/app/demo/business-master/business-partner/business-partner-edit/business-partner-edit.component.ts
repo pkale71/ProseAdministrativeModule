@@ -500,7 +500,7 @@ export class BusinessPartnerEditComponent {
             this.isRequiredReward = true;
             this.commissionTermForm.controls['commissionTerm'].enable();
             this.commissionTermForm.controls['commissionTerm'].addValidators(Validators.required);
-            this.commissionTermForm.updateValueAndValidity();
+            this.commissionTermForm.controls['commissionTerm'].updateValueAndValidity();
         }
         else
         {
@@ -508,6 +508,7 @@ export class BusinessPartnerEditComponent {
             this.commissionTermForm.controls['commissionTerm'].setValue('');
             this.commissionTermForm.controls['commissionTerm'].disable();
             this.commissionTermForm.controls['commissionTerm'].clearValidators();
+            this.commissionTermForm.controls['commissionTerm'].updateValueAndValidity();
         }  
     }
 

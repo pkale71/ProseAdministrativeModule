@@ -76,8 +76,8 @@ export class BusinessPartnerAddComponent {
         this.id = this.route.params['value'].id;
 
         this.isHavingContracts = [{
-        "id": 1,
-        "name": "Yes"
+            "id": 1,
+            "name": "Yes"
         },
         {
             "id": 0,
@@ -168,10 +168,10 @@ export class BusinessPartnerAddComponent {
             'commercialTerm' : ['', Validators.required]
         });
 
+        this.getReferralPartner();
         this.getCountries('Active');
         this.getBusinessVerticals('Active');
         this.getCommercialTerms();
-        this.getReferralPartner();
         this.getCommissionTerms();
         this.getAcademyEnclosureDocuments('Active');
     }
@@ -460,21 +460,23 @@ export class BusinessPartnerAddComponent {
         {
             this.isRequiredContract = true;
             this.addBusinessPartnerForm.controls['contractFrom'].enable();
-            this.addBusinessPartnerForm.controls['contractTo'].enable();
             this.addBusinessPartnerForm.controls['contractFrom'].addValidators(Validators.required);
+            this.addBusinessPartnerForm.controls['contractTo'].enable();
             this.addBusinessPartnerForm.controls['contractTo'].addValidators(Validators.required);
-            this.addBusinessPartnerForm.updateValueAndValidity();
+            this.addBusinessPartnerForm.controls['contractFrom'].updateValueAndValidity();
+            this.addBusinessPartnerForm.controls['contractTo'].updateValueAndValidity();;
             if(this.addBusinessPartnerForm.controls['rewardApplicable'].value == 1)
             {
                 this.isRequiredReward = true;
                 this.commissionTermForm.controls['commissionTerm'].enable();
                 this.commissionTermForm.controls['commissionTerm'].addValidators(Validators.required);
-                this.commissionTermForm.updateValueAndValidity();
+                this.commissionTermForm.controls['commissionTerm'].updateValueAndValidity();
                 //both are true then pan and gst required    
                 this.isRequiredPanGst = true;
                 this.addBusinessPartnerForm.controls['panNumber'].addValidators(Validators.required);
                 this.addBusinessPartnerForm.controls['gstNumber'].addValidators(Validators.required);
-                this.addBusinessPartnerForm.updateValueAndValidity();
+                this.addBusinessPartnerForm.controls['panNumber'].updateValueAndValidity();
+                this.addBusinessPartnerForm.controls['gstNumber'].updateValueAndValidity();
             }
             else
             {
@@ -482,11 +484,13 @@ export class BusinessPartnerAddComponent {
                 this.commissionTermForm.controls['commissionTerm'].setValue('');
                 this.commissionTermForm.controls['commissionTerm'].disable();
                 this.commissionTermForm.controls['commissionTerm'].clearValidators();
+                this.commissionTermForm.controls['commissionTerm'].updateValueAndValidity();
                 //both are false then pan and gst not required    
                 this.isRequiredPanGst = false;
-                this.addBusinessPartnerForm.controls['panNumber'].removeValidators(Validators.required);
-                this.addBusinessPartnerForm.controls['gstNumber'].removeValidators(Validators.required);
-                this.addBusinessPartnerForm.updateValueAndValidity();
+                this.addBusinessPartnerForm.controls['panNumber'].clearAsyncValidators();
+                this.addBusinessPartnerForm.controls['gstNumber'].clearAsyncValidators();
+                this.addBusinessPartnerForm.controls['panNumber'].updateValueAndValidity();
+                this.addBusinessPartnerForm.controls['gstNumber'].updateValueAndValidity();
             }  
         }
         else if(this.addBusinessPartnerForm.controls['rewardApplicable'].value == 1)
@@ -494,23 +498,22 @@ export class BusinessPartnerAddComponent {
             this.isRequiredReward = true;
             this.commissionTermForm.controls['commissionTerm'].enable();
             this.commissionTermForm.controls['commissionTerm'].addValidators(Validators.required);
-            this.commissionTermForm.updateValueAndValidity();
+            this.commissionTermForm.controls['commissionTerm'].updateValueAndValidity();
             this.isRequiredContract = false;
             this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
             this.addBusinessPartnerForm.controls['contractFrom'].disable();
             this.addBusinessPartnerForm.controls['contractFrom'].clearAsyncValidators();
-<<<<<<< HEAD
             this.addBusinessPartnerForm.controls['contractTo'].setValue('');
-=======
-            this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
->>>>>>> parent of c617e70 (ss)
             this.addBusinessPartnerForm.controls['contractTo'].disable();
             this.addBusinessPartnerForm.controls['contractTo'].clearAsyncValidators();
+            this.addBusinessPartnerForm.controls['contractFrom'].updateValueAndValidity();
+            this.addBusinessPartnerForm.controls['contractTo'].updateValueAndValidity();
             //both are false then pan and gst not required  
             this.isRequiredPanGst = false;
-            this.addBusinessPartnerForm.controls['panNumber'].removeValidators(Validators.required);
-            this.addBusinessPartnerForm.controls['gstNumber'].removeValidators(Validators.required);
-            this.addBusinessPartnerForm.updateValueAndValidity();
+            this.addBusinessPartnerForm.controls['panNumber'].clearAsyncValidators();
+            this.addBusinessPartnerForm.controls['gstNumber'].clearAsyncValidators();
+            this.addBusinessPartnerForm.controls['panNumber'].updateValueAndValidity();
+            this.addBusinessPartnerForm.controls['gstNumber'].updateValueAndValidity();
         }
         else
         {
@@ -518,22 +521,21 @@ export class BusinessPartnerAddComponent {
             this.commissionTermForm.controls['commissionTerm'].setValue('');
             this.commissionTermForm.controls['commissionTerm'].disable();
             this.commissionTermForm.controls['commissionTerm'].clearValidators();
-            this.commissionTermForm.updateValueAndValidity();
+            this.commissionTermForm.controls['commissionTerm'].updateValueAndValidity();
             this.isRequiredContract = false;
             this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
             this.addBusinessPartnerForm.controls['contractFrom'].disable();
             this.addBusinessPartnerForm.controls['contractFrom'].clearValidators();
-<<<<<<< HEAD
             this.addBusinessPartnerForm.controls['contractTo'].setValue('');
-=======
-            this.addBusinessPartnerForm.controls['contractFrom'].setValue('');
->>>>>>> parent of c617e70 (ss)
             this.addBusinessPartnerForm.controls['contractTo'].disable();
             this.addBusinessPartnerForm.controls['contractTo'].clearValidators();
+            this.addBusinessPartnerForm.controls['contractFrom'].updateValueAndValidity();
+            this.addBusinessPartnerForm.controls['contractTo'].updateValueAndValidity();
             this.isRequiredPanGst = false;
             this.addBusinessPartnerForm.controls['panNumber'].removeValidators(Validators.required);
             this.addBusinessPartnerForm.controls['gstNumber'].removeValidators(Validators.required);
-            this.addBusinessPartnerForm.updateValueAndValidity();
+            this.addBusinessPartnerForm.controls['panNumber'].updateValueAndValidity();
+            this.addBusinessPartnerForm.controls['gstNumber'].updateValueAndValidity();
         }
     }
 
@@ -690,7 +692,11 @@ export class BusinessPartnerAddComponent {
     {
         if (!this.saveClicked) 
         {
-            if (this.addBusinessPartnerForm.valid) 
+            if (this.addBusinessPartnerForm.valid && this.countryForm.valid && this.stateRegionForm.valid && this.districtForm.valid && this.cityForm.valid && this.businessVerticalForm.valid && this.businessVerticalTypeForm.valid && ((this.businessPartnerType.code == 'B2C' && this.addBusinessPartnerForm.controls['rewardApplicable'].value == 1 && 
+            this.commissionTermForm.valid)||(this.businessPartnerType.code == 'B2C' && 
+            this.addBusinessPartnerForm.controls['rewardApplicable'].value == 0)) ||    
+            (this.businessPartnerType.code == 'B2B' && this.commercialTermForm.valid) && 
+            ((this.businessPartnerType.code == 'B2C' && this.addBusinessPartnerForm.controls['isHavingContract'].value == 1 && this.addBusinessPartnerForm.controls['contractFrom'].value.valid && this.addBusinessPartnerForm.controls['contractTo'].value.valid))) 
             {
                 this.isValidForm = true;
                 this.saveClicked = true;

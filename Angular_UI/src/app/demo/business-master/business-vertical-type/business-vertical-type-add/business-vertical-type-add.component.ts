@@ -148,7 +148,7 @@ export class BusinessVerticalTypeAddComponent
     {
         if(!this.saveClicked)
         {
-            if(this.addBusinessVerticalTypeForm.valid)
+            if(this.addBusinessVerticalTypeForm.valid && this.businessVerticalForm.valid && this.businessVerticalGroupForm.valid)
             {
                 this.isValidForm = true;
                 this.saveClicked = true;

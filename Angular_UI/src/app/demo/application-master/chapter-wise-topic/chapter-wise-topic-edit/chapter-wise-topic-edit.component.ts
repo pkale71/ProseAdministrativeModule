@@ -236,11 +236,7 @@ export class ChapterWiseTopicEditComponent {
                 {
                     this.gradeWiseSyllabuses = response.gradeWiseSyllabuses;
                     this.gradeWiseSyllabuses.unshift({ id : "", syllabus : {
-<<<<<<< HEAD
                         id : "",
-=======
-                        id : "0",
->>>>>>> parent of c617e70 (ss)
                         name : "Select Syllabus"
                         }
                     });
@@ -248,17 +244,10 @@ export class ChapterWiseTopicEditComponent {
                     // here access dactive data
                     if(syllabus != '')
                     {
-<<<<<<< HEAD
                         let filterGradeWiseSyllabus = this.gradeWiseSyllabuses.filter(tempGradeWiseSyllabus => parseInt(tempGradeWiseSyllabus.syllabus.id) == parseInt(syllabus.id));
                         if(filterGradeWiseSyllabus.length == 0)
                         {
                             this.gradeWiseSyllabuses.push({ id : "", syllabus : { id : syllabus.id, name : syllabus.name } });
-=======
-                        let filterGradeWiseSyllabus = this.gradeWiseSyllabuses.filter(tempGradeWiseSyllabus => parseInt(tempGradeWiseSyllabus.id) == parseInt(syllabus.id));
-                        if(filterGradeWiseSyllabus.length == 0)
-                        {
-                            this.gradeWiseSyllabuses.push({ id : syllabus.id, name : syllabus.name });
->>>>>>> parent of c617e70 (ss)
                         }
                     }
                 }
@@ -266,11 +255,7 @@ export class ChapterWiseTopicEditComponent {
                 {
                     this.gradeWiseSyllabuses = [];
                     this.gradeWiseSyllabuses.unshift({ id : "", syllabus : {
-<<<<<<< HEAD
                         id : "",
-=======
-                        id : "0",
->>>>>>> parent of c617e70 (ss)
                         name : "Select Syllabus"
                         }
                     });
@@ -346,7 +331,6 @@ export class ChapterWiseTopicEditComponent {
         { 
             // this.chapterForm.get("subjectWiseChapter").setValue("");
             // this.subjectWiseChapters = [];
-<<<<<<< HEAD
             let academicSessionId = this.academicSessionForm.get("academicSession").value;
             let syllabusId = this.syllabusForm.get("syllabus").value
             let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
@@ -355,25 +339,11 @@ export class ChapterWiseTopicEditComponent {
             if(academicSessionId != undefined && academicSessionId != "" && syllabusId != undefined && syllabusId != "" && gradeId != undefined && gradeId != "" && subjectId != undefined && subjectId != "" )
             {
                 this.chapterClicked = true;
-=======
-            this.chapterClicked = true;
-            let academicSessionId = this.academicSessionForm.get("academicSession").value;
-            let syllabusId = this.syllabusForm.get("syllabus").value
-            let gradeId = this.gradeForm.get("grade").value;
-            let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
-            let subjectId = this.subjectForm.get("syllabusWiseSubject").value
-            if(academicSessionId != undefined && academicSessionId != "" && syllabusId != undefined && syllabusId != "" && gradeId != undefined && gradeId != "" && subjectId != undefined && subjectId != "" )
-            {
->>>>>>> parent of c617e70 (ss)
                 let response = await this.commonService.getSubjectWiseChapters(academicSessionId, syllabusId, gradeCategoryId, gradeId, subjectId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.subjectWiseChapters = response.subjectWiseChapters;
-<<<<<<< HEAD
                     this.subjectWiseChapters.unshift({ id : "", name : "Select Chapter" });
-=======
-                    this.subjectWiseChapters.unshift({ id : "", name : "Select Chapter"});
->>>>>>> parent of c617e70 (ss)
                     this.chapterClicked = false;
                     // here access deactive data
                     if(chapter != '')

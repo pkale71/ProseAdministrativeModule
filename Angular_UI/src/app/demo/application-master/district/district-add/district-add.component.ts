@@ -212,7 +212,7 @@ export class DistrictAddComponent
                             let msg = "";
                             if( parseInt(totalCount) > 0)
                             {
-                                msg = saved / totalCount + " Districts Are Saved Successfully. ";
+                                msg = saved + "/" + totalCount + " Districts Are Saved Successfully. ";
                                 let duplicateCount = response?.duplicateCount;
                                 if( duplicateCount > 0)
                                 {
@@ -246,7 +246,6 @@ export class DistrictAddComponent
                             stateRegion : { "id" : this.stateRegionForm.get('stateRegion').value},
                             name : this.addDistrictForm.get('name').value
                         }
-                        console.log(tempJSON);
                         let response = await this.businessService.saveDistrict(tempJSON).toPromise();
                         if (response.status_code == 200 && response.message == 'success') 
                         {

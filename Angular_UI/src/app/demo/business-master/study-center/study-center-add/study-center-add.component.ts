@@ -25,12 +25,9 @@ import { FileUploadValidators } from '@iplab/ngx-file-upload';
 })
 export class StudyCenterAddComponent {
     searchClicked : boolean;
-<<<<<<< HEAD
     searchClickedStateRegion : boolean;
     searchClickedDistrict : boolean;
     searchClickedCity : boolean;
-=======
->>>>>>> parent of c617e70 (ss)
     saveClicked : boolean;
     isValidForm : boolean;
     isValidForm1 : boolean;
@@ -191,52 +188,32 @@ export class StudyCenterAddComponent {
             let countryId = this.countryForm.get('country').value;
             if(countryId != undefined && countryId != "")
             {
-<<<<<<< HEAD
                 this.searchClickedStateRegion = true;  
-=======
-                this.searchClicked = true;  
->>>>>>> parent of c617e70 (ss)
                 let response = await this.businessService.getStateRegions(countryId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 { 
                     this.stateRegions = response.stateRegions;
                     this.stateRegions.unshift({ id : '', name : 'Select State/Region'});
-<<<<<<< HEAD
                     this.searchClickedStateRegion = false;
-=======
-                    this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
                 }
                 else
                 {
                     this.stateRegions = [];
                     this.stateRegions.unshift({ id : '', name : 'Select State/Region'});
-<<<<<<< HEAD
                     this.searchClickedStateRegion = false;
-=======
-                    this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
                 }
             }
             else
             {
                 this.stateRegions = [];
-<<<<<<< HEAD
                 this.stateRegions.unshift({ id : '', name : 'Select State/Region'});     
                 this.searchClickedStateRegion = false;     
-=======
-                this.stateRegions.unshift({ id : '', name : 'Select State/Region'});          
->>>>>>> parent of c617e70 (ss)
             }  
         }
         catch(e)
         {
             this.showNotification("error", e);
-<<<<<<< HEAD
             this.searchClickedStateRegion = false;
-=======
-            this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
         }
     }
     
@@ -249,52 +226,32 @@ export class StudyCenterAddComponent {
             let stateRegionId = this.stateRegionForm.get('stateRegion').value;
             if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '')
             {
-<<<<<<< HEAD
                 this.searchClickedDistrict = true;  
-=======
-                this.searchClicked = true;  
->>>>>>> parent of c617e70 (ss)
                 let response = await this.businessService.getDistricts(countryId, stateRegionId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.districts = response.districts;
                     this.districts.unshift({ id : '', name : "Select District"});
-<<<<<<< HEAD
                     this.searchClickedDistrict = false;
-=======
-                    this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
                 }
                 else
                 {
                     this.districts = [];
                     this.districts.unshift({ id : '', name : "Select District"});
-<<<<<<< HEAD
                     this.searchClickedDistrict = false;
-=======
-                    this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
                 }
             }
             else
             {
                 this.districts = [];
                 this.districts.unshift({ id : '', name : "Select District"});
-<<<<<<< HEAD
                 this.searchClickedDistrict = false;
-=======
-                this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
             } 
         }
         catch(e)
         {
             this.showNotification("error", e);
-<<<<<<< HEAD
             this.searchClickedDistrict = false;
-=======
-            this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
         }
     }
 
@@ -308,52 +265,32 @@ export class StudyCenterAddComponent {
             let districtId = this.districtForm.get('district').value;
             if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '' && districtId != undefined && districtId != '')
             {
-<<<<<<< HEAD
                 this.searchClickedCity = true;  
-=======
-                this.searchClicked = true;  
->>>>>>> parent of c617e70 (ss)
                 let response = await this.businessService.getCities(countryId, stateRegionId, districtId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.cities = response.cities;
                     this.cities.unshift({ id : '', name : "Select City"});
-<<<<<<< HEAD
                     this.searchClickedCity = false;
-=======
-                    this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
                 }
                 else
                 {
                     this.cities = [];
                     this.cities.unshift({ id : '', name : "Select City"});
-<<<<<<< HEAD
                     this.searchClickedCity = false;
-=======
-                    this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
                 } 
             }
             else
             {
                 this.cities = [];
                 this.cities.unshift({ id : '', name : "Select City"});
-<<<<<<< HEAD
                 this.searchClickedCity = false;
-=======
-                this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
             }   
         }
         catch(e)
         {
             this.showNotification("error", e);
-<<<<<<< HEAD
             this.searchClickedCity = false;
-=======
-            this.searchClicked = false;
->>>>>>> parent of c617e70 (ss)
         }
     }
 
@@ -501,19 +438,13 @@ export class StudyCenterAddComponent {
         {
             this.isPartnerCaptive = true;
             this.businessPartnerForm.controls['businessPartner'].addValidators(Validators.required);
-<<<<<<< HEAD
             this.businessPartnerForm.controls['businessPartner'].updateValueAndValidity();
-=======
->>>>>>> parent of c617e70 (ss)
         }
         else
         {
             this.isPartnerCaptive = false;
             this.businessPartnerForm.controls['businessPartner'].removeValidators(Validators.required);
-<<<<<<< HEAD
             this.businessPartnerForm.controls['businessPartner'].updateValueAndValidity();
-=======
->>>>>>> parent of c617e70 (ss)
         }
     }
 

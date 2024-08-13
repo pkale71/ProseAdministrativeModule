@@ -100,7 +100,7 @@ export class BusinessVerticalGroupEditComponent
     {
         if(!this.saveClicked)
         {
-            if(this.editBusinessVerticalGroupForm.valid)
+            if(this.editBusinessVerticalGroupForm.valid && this.businessVerticalForm.valid)
             {
                 this.isValidForm = true;
                 this.saveClicked = true;

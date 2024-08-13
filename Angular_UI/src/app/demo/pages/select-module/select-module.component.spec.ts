@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { OnBoardingLinkAddComponent } from './on-boarding-link-add.component';
+import { SelectModuleComponent } from './select-module.component';
 
-describe('OnBoardingLinkAddComponent', () => {
-    let component: OnBoardingLinkAddComponent;
-    let fixture: ComponentFixture<OnBoardingLinkAddComponent>;
+describe('SelectModuleComponent', () => {
+    let component: SelectModuleComponent;
+    let fixture: ComponentFixture<SelectModuleComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-        declarations: [ OnBoardingLinkAddComponent ]
+        declarations: [ SelectModuleComponent ]
         })
         .compileComponents();
 
-        fixture = TestBed.createComponent(OnBoardingLinkAddComponent);
+        fixture = TestBed.createComponent(SelectModuleComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

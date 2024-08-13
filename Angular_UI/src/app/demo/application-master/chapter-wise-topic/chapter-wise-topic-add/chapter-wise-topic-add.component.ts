@@ -395,7 +395,7 @@ export class ChapterWiseTopicAppComponent
                             let msg = '';
                             if(totalCount > 0)
                             {
-                                msg = saved / totalCount + " Chapter Wise Topics Are Saved Successfully. ";
+                                msg = saved + "/" + totalCount + " Chapter Wise Topics Are Saved Successfully. ";
                                 let duplicateCount = response?.duplicateCount;
                                 if(duplicateCount > 0)
                                 {

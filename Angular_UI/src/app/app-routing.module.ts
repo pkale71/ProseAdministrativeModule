@@ -258,6 +258,10 @@ const routes: Routes = [
             {
                 path: 'userProfile/:code',
                 loadChildren: () => import('./demo/pages/user-profile/user-profile.module').then((m) => m.UserProfileModule)
+            },
+            {
+                path: 'pages',
+                loadChildren: () => import('./demo/pages/select-module/select-module.module').then((m) => m.SelectModule)
             }    
         ]
     },

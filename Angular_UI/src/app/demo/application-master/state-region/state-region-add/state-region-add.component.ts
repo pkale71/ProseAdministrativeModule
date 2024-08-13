@@ -163,11 +163,11 @@ export class StateRegionAddComponent
                             let msg = "";
                             if( totalCount > 0)
                             {
-                                msg = saved / totalCount + " StateRegions Are Saved Successfully. ";
+                                msg = saved + "/" + totalCount + " State/Regions Are Saved Successfully. ";
                                 let duplicateCount = response?.duplicateCount;
                                 if( duplicateCount > 0)
                                 {
-                                    msg = msg + duplicateCount + " StateRegions Are Duplicate.";
+                                    msg = msg + duplicateCount + " State/Regions Are Duplicate.";
                                 }
                             }
                             else

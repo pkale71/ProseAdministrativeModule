@@ -85,10 +85,17 @@ export default class AuthSigninV2Component implements OnInit {
             {
                 if(response.authData)
                 {
-                    localStorage.setItem("user", JSON.stringify(response.authData));
+                    localStorage.setItem("user", JSON.stringify(response.authData));                    
                     this.commonSharedService.loginUser = response.authData;
                     this.signinClicked = false;
-                    this.router.navigate(['/dashboard/default']);
+                    if(this.commonSharedService.loginUser.userGrade.code == "MOADM" || this.commonSharedService.loginUser.userGrade.code == "MOUSR")
+                    {
+                        this.router.navigate(['/pages/module-selection']);
+                    }
+                    else
+                    {
+                        this.router.navigate(['/dashboard/default']);
+                    }
                 }
                 else
                 {

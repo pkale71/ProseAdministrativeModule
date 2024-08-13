@@ -260,7 +260,7 @@ export class CityAddComponent
                             let msg = '';
                             if(totalCount > 0)
                             {
-                                msg = saved / totalCount + " Cities Are Saved Successfully. ";
+                                msg = saved  + "/" +  totalCount + " Cities Are Saved Successfully. ";
                                 let duplicateCount = response?.duplicateCount;
                                 if(duplicateCount > 0)
                                 {

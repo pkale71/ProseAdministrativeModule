@@ -1,6 +1,5 @@
 <div class="row">
     <div class="col-sm-12">
-<<<<<<< HEAD
         <div class="card">
             <div class="card-header" style="padding: 10px 25px;">
                 <h5 style="margin-top: 0.8rem;"><i class="fa fa-handshake"></i>&nbsp;User On-Boarding Links&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
@@ -86,93 +85,5 @@
                 </div>
             </div>
         </div>
-=======
-      <div class="card">
-        <div class="card-header" style="padding: 10px 25px;">
-          <h5 style="margin-top: 0.8rem;"><i class="fa fa-handshake"></i>&nbsp;User On-Boarding Links&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
-          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
-           (click)="addOnBoardingLink()">Add User On-Boarding Link</button>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-3">
-              <form [formGroup]="statusForm">
-                  <div class="form-group">
-                      <label class="form-control-label" for="status">Status</label>
-                      <select class="form-control" required id="status" formControlName="status">
-                          <option value="Pending">Pending</option>
-                          <option value="Completed">Completed</option>
-                      </select>
-                  </div>
-              </form>
-            </div>
-            <!-- search button -->
-            <div class="col-md-3">
-              <br/>
-              <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
-              (click)="getOnBoardingLinks()"><i class="fa fa-search"></i>&nbsp;Search</button>
-              <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
-                <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
-            </div>
-          </div>
-
-
-          <div class="table-responsive">
-            <table datatable id="tblOnBoardingLink" class="table table-striped row-border table-hover pt-10">
-              <thead>
-                <tr>
-                  <th>Sno</th>
-                  <th>Email</th>
-                  <th>Mobile</th>
-                  <th>Code</th>
-                  <th>Is Sent</th>
-                  <th>Sent On</th>
-                  <th>Created On</th>
-                  <th>Status</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let userOnBoardingLink of userOnBoardingLinks let i=index">
-                  <td>{{i+1}}</td>
-                  <td>{{userOnBoardingLink.email}}</td>
-                  <td>{{userOnBoardingLink.mobile}}</td>
-                  <td>{{userOnBoardingLink.code}}</td>
-                  <td>
-                    <span [ngClass]="userOnBoardingLink.isSent ? 'badge bg-success':'badge bg-danger'" style="cursor: pointer;" >
-                      {{ userOnBoardingLink.isSent ? 'Yes' : 'No'}}
-                    </span>
-                  </td>
-                  <td>{{ userOnBoardingLink.sentOn | date:"dd/MM/yyyy"}}</td>
-                  <td>{{ userOnBoardingLink?.createdOn | date:"dd/MM/yyyy"}}</td>
-                  <td>
-                    <span [ngClass]="userOnBoardingLink.status == 'Completed' ? 'badge bg-success':'badge bg-danger'" style="cursor: pointer;" >
-                      {{userOnBoardingLink.status}}
-                    </span>
-                  </td>  
-                  <td style="width:40px;text-align: right;">
-                    <i class="{{linkClicked[i] ? 'fa fa-spin fa-spinner' : 'fa fa-paper-plane'}}" (click) = "sendOnBoardingLink(userOnBoardingLink.code, i)" title="Send Link" *ngIf="statusForm.controls['status'].value != 'Completed'"
-                    style="cursor: pointer;"></i>&nbsp;
-                    <i class="fa fa-trash-alt" (click)="deleteOnBoardingLink(userOnBoardingLink)" 
-                    title="Delete" *ngIf="statusForm.controls['status'].value != 'Completed'" style="cursor: pointer;"></i>&nbsp;
-                  </td>
-                </tr>
-                <tr *ngIf="userOnBoardingLinks.length == 0">
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>No record(s) found</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
->>>>>>> parent of c617e70 (ss)
     </div>
 </div>

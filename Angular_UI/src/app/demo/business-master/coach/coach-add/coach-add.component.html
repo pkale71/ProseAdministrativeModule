@@ -83,11 +83,7 @@
             <div class="col-md-4">
                 <form [formGroup]="businessVerticalTypeForm">
                     <div class="form-group">
-<<<<<<< HEAD
                         <label class="form-control-label" for="businessVerticalType">Business Vertical Type&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
-=======
-                        <label class="form-control-label" for="businessVerticalType">Business Vertical Type&nbsp;<span style="color: red;">*</span></label>
->>>>>>> parent of c617e70 (ss)
                         <select class="form-control"  required id="businessVerticalType" formControlName="businessVerticalType"
                         [ngClass]="{'is-invalid': !businessVerticalTypeForm.controls['businessVerticalType'].valid && !isValidForm}">
                         <option value="{{businessVerticalType.id}}" *ngFor="let businessVerticalType of businessVerticalTypes">{{businessVerticalType?.name}}</option>

@@ -425,7 +425,7 @@ export class TieUpSchoolAddComponent {
     {
         if (!this.saveClicked) 
         {
-            if (this.addTieUpSchoolForm.valid) 
+            if (this.addTieUpSchoolForm.valid && this.countryForm.valid && this.stateRegionForm.valid && this.districtForm.valid && this.cityForm.valid) 
             {
                 this.isValidForm = true;
                 this.saveClicked = true;

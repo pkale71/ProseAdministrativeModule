@@ -22,11 +22,7 @@
                         <div class="col-md-3">
                             <form [formGroup]="businessVerticalTypeForm">
                                 <div class="form-group">
-<<<<<<< HEAD
                                     <label class="form-control-label" for="businessVerticalType">Business Vertical Type&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedVerticalType"></i></label>
-=======
-                                    <label class="form-control-label" for="businessVerticalType">Business Vertical Type&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
->>>>>>> parent of c617e70 (ss)
                                     <select class="form-control" required id="businessVerticalType" formControlName="businessVerticalType">
                                     <option value="{{businessVerticalType.id}}" *ngFor="let businessVerticalType of businessVerticalTypes">{{businessVerticalType.name}}</option>
                                     </select>
@@ -47,9 +43,9 @@
                             <thead>
                                 <tr>
                                     <th>Sno</th>
-                                    <th>Coach</th>
-                                    <th>Email</th>
                                     <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
                                     <th>Business Vertical Type</th>
                                     <th>Active</th>
                                     <th></th>
@@ -58,9 +54,9 @@
                             <tbody>
                                 <tr *ngFor="let coach of coaches let i=index">
                                     <td>{{i+1}}</td>
+                                    <td>{{coach.code}}</td>
                                     <td>{{coach.name}}</td>
                                     <td>{{coach.email}}</td>
-                                    <td>{{coach.code}}</td>
                                     <td>{{coach.businessVerticalType?.name}}</td>
                                     <td>
                                         <span [ngClass]="coach.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(coach)" 
