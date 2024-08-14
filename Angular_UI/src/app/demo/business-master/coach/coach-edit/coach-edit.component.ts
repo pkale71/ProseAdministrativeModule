@@ -77,20 +77,30 @@ export class CoachEditComponent
     }
 
    // get business vertical
-   async getBusinessVerticals(action : string) 
+   async getBusinessVerticals(businessVertical : any) 
    {  
        try
        {
            let response = await this.businessService.getBusinessVerticals('Active').toPromise();
            if (response.status_code == 200 && response.message == 'success') 
-           {
+            {
                this.businessVerticals = response.businessVerticals;
                this.businessVerticals.unshift({ id : '', name : "Select Business Vertical" });
-           }
-           else
-           {
-               this.businessVerticals = [];
-           }
+               // here access deactive data
+               if(businessVertical != '')
+                {
+                    let filterBusinessVertical = this.businessVerticals.filter(tempBusinessVertical => { return parseInt(tempBusinessVertical.id) == parseInt(businessVertical.id)});
+                    if(filterBusinessVertical.length == 0)
+                    {
+                        this.businessVerticals.push({ id : businessVertical.id, name : businessVertical.name });
+                    }
+                }
+            }
+            else
+            {
+                this.businessVerticals = [];
+                this.businessVerticals.unshift({ id : "", name : "Select Business Vertical" });
+            }
        }
        catch(e)
        {
@@ -113,6 +123,15 @@ export class CoachEditComponent
                    this.businessVerticalTypes = response.businessVerticalTypes;
                    this.businessVerticalTypes.unshift({ id : '', name : "Select Business Vertical Type"});
                    this.searchClicked = false;
+                   //here access deactive data
+                   if(businessVerticalType != '')
+                   {
+                        let filterBusinessVerticalType = this.businessVerticalTypes.filter( tempBusinessVerticalType => parseInt(tempBusinessVerticalType.id) == parseInt(businessVerticalType.id));
+                        if(filterBusinessVerticalType.length == 0)
+                        {
+                            this.businessVerticalTypes.push({ id : businessVerticalType.id, name : businessVerticalType.id });
+                        }
+                   }
                }
                else
                {

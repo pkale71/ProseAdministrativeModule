@@ -86,6 +86,7 @@ export class BusinessVerticalTypeEditComponent
             {
                 this.businessVerticals = response.businessVerticals;
                 this.businessVerticals.unshift({ id : '', name : "Select Business Vertical"});
+                // here access deactive data
                 if(businessVertical != '')
                 {
                     let filterBusinessVertical = this.businessVerticals.filter(tempBusinessVertical => parseInt(tempBusinessVertical.id) == parseInt(businessVertical.id));

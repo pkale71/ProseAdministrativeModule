@@ -195,7 +195,8 @@ export class BusinessPartnerAddComponent {
                     this.isRequiredPanGst = true;
                     this.addBusinessPartnerForm.controls['panNumber'].addValidators(Validators.required);
                     this.addBusinessPartnerForm.controls['gstNumber'].addValidators(Validators.required);
-                    this.addBusinessPartnerForm.updateValueAndValidity();
+                    this.addBusinessPartnerForm.controls['panNumber'].updateValueAndValidity();
+                    this.addBusinessPartnerForm.controls['gstNumber'].updateValueAndValidity();
                 }
             }
             else
@@ -449,9 +450,20 @@ export class BusinessPartnerAddComponent {
 
     getChange(event : any)
     {
-        this.isChecked = event.target.checked;
-        this.getEnclosureDocDetailsForm = [];
-        this.addRow();
+        alert(this.isChecked = event.target.checked)
+        if(this.isChecked = event.target.checked)
+        {
+            alert("1")
+            this.getEnclosureDocDetailsForm = [];
+            alert(this.getEnclosureDocDetailsForm.values);
+            this.addRow();
+        }
+        else
+        {
+            alert("2")
+            this.getEnclosureDocDetailsForm
+            // this.deleteRow();
+        }        
     }
     
     getReferralPartner()
@@ -487,8 +499,8 @@ export class BusinessPartnerAddComponent {
                 this.commissionTermForm.controls['commissionTerm'].updateValueAndValidity();
                 //both are false then pan and gst not required    
                 this.isRequiredPanGst = false;
-                this.addBusinessPartnerForm.controls['panNumber'].clearAsyncValidators();
-                this.addBusinessPartnerForm.controls['gstNumber'].clearAsyncValidators();
+                this.addBusinessPartnerForm.controls['panNumber'].removeValidators(Validators.required);
+                this.addBusinessPartnerForm.controls['gstNumber'].removeValidators(Validators.required);
                 this.addBusinessPartnerForm.controls['panNumber'].updateValueAndValidity();
                 this.addBusinessPartnerForm.controls['gstNumber'].updateValueAndValidity();
             }  
@@ -510,8 +522,8 @@ export class BusinessPartnerAddComponent {
             this.addBusinessPartnerForm.controls['contractTo'].updateValueAndValidity();
             //both are false then pan and gst not required  
             this.isRequiredPanGst = false;
-            this.addBusinessPartnerForm.controls['panNumber'].clearAsyncValidators();
-            this.addBusinessPartnerForm.controls['gstNumber'].clearAsyncValidators();
+            this.addBusinessPartnerForm.controls['panNumber'].removeValidators(Validators.required);
+            this.addBusinessPartnerForm.controls['gstNumber'].removeValidators(Validators.required);
             this.addBusinessPartnerForm.controls['panNumber'].updateValueAndValidity();
             this.addBusinessPartnerForm.controls['gstNumber'].updateValueAndValidity();
         }
@@ -543,8 +555,8 @@ export class BusinessPartnerAddComponent {
     {
         let i : number = this.getEnclosureDocDetailsForm.length;
         this.getEnclosureDocDetailsForm[i] = this.formbuilder.group({
-        academyEnclosureDocument : new FormControl('', Validators.required),
-        docFile : new FormControl('', Validators.required)
+            academyEnclosureDocument : new FormControl('', Validators.required),
+            docFile : new FormControl('', Validators.required)
         })
     }
 
@@ -553,16 +565,16 @@ export class BusinessPartnerAddComponent {
         if(this.getEnclosureDocDetailsForm.length > 1)
         {
             let i : number = this.getEnclosureDocDetailsForm.length - 1;
-            let id:any = this.getEnclosureDocDetailsForm[i].controls['academyEnclosureDocument'].value
+            let id : any = this.getEnclosureDocDetailsForm[i].controls['academyEnclosureDocument'].value
             this.academyEnclosureDocuments.forEach((ele:any, i:number)=>{
-            if(ele.id == id)
-            {
-                ele.isUploaded = false;
-            }
+                if(ele.id == id)
+                {
+                    ele.isUploaded = false;
+                }
             })
-                this.getEnclosureDocDetailsForm.splice(i, 1);
-                this.docFiles.splice(i, 1);
-            }
+            this.getEnclosureDocDetailsForm.splice(i, 1);
+            this.docFiles.splice(i, 1);
+        }
     }  
 
     async getAcademyEnclosureDocuments(action : string) 
@@ -575,7 +587,7 @@ export class BusinessPartnerAddComponent {
                 this.academyEnclosureDocuments = response.academyEnclosureDocuments;
                 this.academyEnclosureDocuments.unshift({ id : '', name : 'Select Document'}); 
                 this.academyEnclosureDocuments.forEach((ele:any)=>{
-                ele['isUploaded'] = false;
+                    ele['isUploaded'] = false;
                 })
             }
             else
@@ -692,11 +704,12 @@ export class BusinessPartnerAddComponent {
     {
         if (!this.saveClicked) 
         {
-            if (this.addBusinessPartnerForm.valid && this.countryForm.valid && this.stateRegionForm.valid && this.districtForm.valid && this.cityForm.valid && this.businessVerticalForm.valid && this.businessVerticalTypeForm.valid && ((this.businessPartnerType.code == 'B2C' && this.addBusinessPartnerForm.controls['rewardApplicable'].value == 1 && 
-            this.commissionTermForm.valid)||(this.businessPartnerType.code == 'B2C' && 
-            this.addBusinessPartnerForm.controls['rewardApplicable'].value == 0)) ||    
-            (this.businessPartnerType.code == 'B2B' && this.commercialTermForm.valid) && 
-            ((this.businessPartnerType.code == 'B2C' && this.addBusinessPartnerForm.controls['isHavingContract'].value == 1 && this.addBusinessPartnerForm.controls['contractFrom'].value.valid && this.addBusinessPartnerForm.controls['contractTo'].value.valid))) 
+            if (this.addBusinessPartnerForm.valid && this.countryForm.valid && this.stateRegionForm.valid 
+                && this.districtForm.valid && this.cityForm.valid && this.businessVerticalForm.valid && 
+                this.businessVerticalTypeForm.valid || ((this.businessPartnerType.code == 'B2C' && 
+                this.addBusinessPartnerForm.controls['rewardApplicable'].value == 1 && 
+                this.commissionTermForm.valid)) || (this.businessPartnerType.code == 'B2B' 
+                && this.commercialTermForm.valid)) 
             {
                 this.isValidForm = true;
                 this.saveClicked = true;

@@ -328,7 +328,7 @@ export class GradeWiseSyllabusEditComponent {
     {
         if (!this.saveClicked) 
         {
-            if (this.editGradeWiseSyllabusForm.valid && this.academicSessionForm.valid && this.gradeForm.valid && this.syllabusForm.valid )
+            if (this.editGradeWiseSyllabusForm.valid && this.academicSessionForm.valid && this.gradeCategoryForm.valid && this.gradeForm.valid && this.syllabusForm.valid )
             { 
                 this.isValidForm = true;
                 this.saveClicked = true;

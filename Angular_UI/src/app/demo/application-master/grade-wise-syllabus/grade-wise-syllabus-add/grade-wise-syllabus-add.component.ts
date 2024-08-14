@@ -270,7 +270,7 @@ export class GradeWiseSyllabusAddComponent
     {
         if(!this.saveClicked)
         {
-            if( this.addGradeWiseFrm.valid && this.gradeCategoryForm.valid && this.gradeForm.valid && this.academicSessionForm.valid && this.syllabusForm.valid)
+            if( this.addGradeWiseFrm.valid && this.academicSessionForm.valid && this.gradeCategoryForm.valid && this.gradeForm.valid &&  this.syllabusForm.valid)
             {
                 this.isValidForm = true;
                 this.saveClicked = true;  
