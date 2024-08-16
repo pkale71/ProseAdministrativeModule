@@ -48,7 +48,8 @@ export class SelectModuleComponent {
         this.loginUser = this.commonSharedService.loginUser;
         this.selectedModule = this.loginUser;    
         this.selectedModule['userModule'] = this.loginUser?.userModules[index];
-        delete this.selectedModule.userModules;       
+        //delete this.selectedModule.userModules;     
+        alert(JSON.stringify(this.selectedModule))  
     }
 
 }

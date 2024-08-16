@@ -10,19 +10,32 @@
                 </div>
             </div>            
         </div> 
-        <div class="mt-4" style="text-align: center;">
-            <ng-container *ngIf="loginUser?.userModules?.length;">
-                <div class="mb-3" *ngFor="let module of loginUser.userModules; let i=index">
-                    <button type="button" class="btn btn-rounded btn-info" (click)="getUserModulesData(i)">
-                        {{module?.module?.name}}&nbsp;&nbsp; > &nbsp;&nbsp; 
-                        {{loginUser?.userCategory?.name}}&nbsp;&nbsp; > &nbsp;&nbsp; 
-                        {{module?.userType?.name}}
-                    </button>
-                </div>    
-            </ng-container>
-            <ng-container *ngIf="loginUser?.userModules?.length == 0 ">
-                <p style="font-size: 20px;">No Module(s) Assigned.</p>
-            </ng-container>
+        <div class="card" *ngIf="loginUser?.userModules?.length > 0">     
+            <div class="row">
+                <div class="ng-trigger ng-trigger-collapsedCard col-md-4" style="text-align: center;" *ngFor="let module of loginUser.userModules; let i=index">
+                    <div class="card-block theme-bg2" (click)="getUserModulesData(i)" style="cursor: pointer;">
+                        <div class="d-flex">
+                            <div class="flex-grow-1 me-3">
+                                <h4 class="text-white">{{module?.module?.name}}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto flex-grow-1">
+                                <p class="text-white text-sm text-opacity-50 mb-1">Category</p>
+                                <h6 class="text-white mb-0">{{loginUser?.userCategory?.name}}</h6>
+                            </div>
+                            <div class="col-auto flex-grow-1">
+                                <p class="text-white text-sm text-opacity-50 mb-1">User Type</p>
+                                <h6 class="text-white mb-0">{{module?.userType?.name}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <!---->
+                </div>
+            </div>      
+        </div>
+        <div class="card" *ngIf="loginUser?.userModules?.length == 0 ">
+            <p class="mt-2" style="font-size: 20px;text-align: center;">No Module(s) Assigned.</p>
         </div>
     </div>
 </div>
