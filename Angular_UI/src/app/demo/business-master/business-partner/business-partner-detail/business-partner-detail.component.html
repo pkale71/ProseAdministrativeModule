@@ -205,7 +205,7 @@
                                             <span [ngClass]="businessPartnerContractHistory.isActive ? 'badge bg-success' : ' badge bg-danger'" style="cursor: pointer;" title="Change Status" (click)="updateStatus(businessPartnerContractHistory)">{{businessPartnerContractHistory.isActive? 'Yes' : 'No'}}</span>
                                         </td>
                                         <td>
-                                            <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteBusinessPartnerContract(businessPartnerContractHistory)"></i>
+                                            <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" *ngIf="businessPartnerContractHistory.isActive == 1" (click)="deleteBusinessPartnerContract(businessPartnerContractHistory)"></i>
                                         </td>
                                     </tr>
                                     <tr *ngIf="businessPartnerContractHistories.length == 0">

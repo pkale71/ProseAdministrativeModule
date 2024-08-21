@@ -291,9 +291,24 @@ export class TieUpSchoolAddComponent {
 
     getChange(event : any)
     {
-        this.isChecked = event.target.checked;
-        this.getEnclosureDocDetailsForm = [];
-        this.addRow();
+        if(this.isChecked = event.target.checked)
+        {
+            this.getEnclosureDocDetailsForm = [];
+            this.addRow();
+        }
+        else if(this.getEnclosureDocDetailsForm.length > 0)
+        {
+            let i : number = this.getEnclosureDocDetailsForm.length - 1;
+            let id : any = this.getEnclosureDocDetailsForm[i].controls['academyEnclosureDocument'].value
+            this.academyEnclosureDocuments.forEach((ele:any, i:number)=>{
+                if(ele.id == id)
+                {
+                    ele.isUploaded = false;
+                }
+            })
+            this.getEnclosureDocDetailsForm.splice(i, 1);
+            this.docFiles.splice(i, 1);
+        }         
     }
 
     addRow()
@@ -394,7 +409,7 @@ export class TieUpSchoolAddComponent {
             {
                 if(fSize > 0)
                 {
-                this.docFiles[i] = file;
+                    this.docFiles[i] = file;
                 }
             }
         }  
@@ -413,11 +428,11 @@ export class TieUpSchoolAddComponent {
     {
         const dialogRef = this.modalService.open(TieUpSchoolSyllabusAddComponent, 
         { 
-        size: 'md', backdrop: 'static' 
+            size: 'md', backdrop: 'static' 
         });
-        dialogRef.componentInstance.modalParams = {};
-        dialogRef.result.then(( value : any ) => { 
-        this.getTieUpSchoolSyllabuses('All');
+            dialogRef.componentInstance.modalParams = {};
+            dialogRef.result.then(( value : any ) => { 
+            this.getTieUpSchoolSyllabuses('All');
         });
     }
 

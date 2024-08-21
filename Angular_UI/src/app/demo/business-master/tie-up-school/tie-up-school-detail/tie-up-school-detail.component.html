@@ -133,7 +133,7 @@
                                         <span [ngClass]="tieUpSchoolContractHistory.isActive ? 'badge bg-success' : ' badge bg-danger'" style="cursor: pointer;" title="Change Status" (click)="updateStatus(tieUpSchoolContractHistory)">{{tieUpSchoolContractHistory.isActive? 'Yes' : 'No'}}</span>
                                         </td>
                                         <td>
-                                        <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteTieUpSchoolContract(tieUpSchoolContractHistory)"></i>
+                                        <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" *ngIf="tieUpSchoolContractHistory.isActive == 1" (click)="deleteTieUpSchoolContract(tieUpSchoolContractHistory)"></i>
                                         </td>
                                     </tr>
                                     <tr *ngIf="tieUpSchoolContractHistories.length == 0">

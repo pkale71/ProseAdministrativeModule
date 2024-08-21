@@ -51,5 +51,4 @@ export class SelectModuleComponent {
         //delete this.selectedModule.userModules;     
         alert(JSON.stringify(this.selectedModule))  
     }
-
 }

@@ -162,7 +162,7 @@
                                             <span [ngClass]="studyCenterAgreementHistory.isActive ? 'badge bg-success' : ' badge bg-danger'" style="cursor: pointer;" title="Change Status" (click)="updateStatus(studyCenterAgreementHistory)">{{studyCenterAgreementHistory.isActive? 'Yes' : 'No'}}</span>
                                         </td>
                                         <td>
-                                            <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteStudyCenterAgreement(studyCenterAgreementHistory)"></i>
+                                            <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" *ngIf="studyCenterAgreementHistory.isActive == 1" (click)="deleteStudyCenterAgreement(studyCenterAgreementHistory)"></i>
                                         </td>
                                     </tr>
                                     <tr *ngIf="studyCenterAgreementHistories.length == 0">

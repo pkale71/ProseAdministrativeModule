@@ -450,20 +450,24 @@ export class BusinessPartnerAddComponent {
 
     getChange(event : any)
     {
-        alert(this.isChecked = event.target.checked)
         if(this.isChecked = event.target.checked)
         {
-            alert("1")
             this.getEnclosureDocDetailsForm = [];
-            alert(this.getEnclosureDocDetailsForm.values);
             this.addRow();
         }
-        else
+        else if(this.getEnclosureDocDetailsForm.length > 0)
         {
-            alert("2")
-            this.getEnclosureDocDetailsForm
-            // this.deleteRow();
-        }        
+            let i : number = this.getEnclosureDocDetailsForm.length - 1;
+            let id : any = this.getEnclosureDocDetailsForm[i].controls['academyEnclosureDocument'].value
+            this.academyEnclosureDocuments.forEach((ele:any, i:number)=>{
+                if(ele.id == id)
+                {
+                    ele.isUploaded = false;
+                }
+            })
+            this.getEnclosureDocDetailsForm.splice(i, 1);
+            this.docFiles.splice(i, 1);
+        }         
     }
     
     getReferralPartner()
