@@ -22,7 +22,7 @@
                 <tbody>
                   <tr *ngFor="let academyEnclosureDocument of academyEnclosureDocuments let i=index">
                     <td>{{i+1}}</td>
-                    <td>{{academyEnclosureDocument.name}}</td>
+                    <td>{{academyEnclosureDocument.name|titlecase}}</td>
                     <td>
                       <span [ngClass]="academyEnclosureDocument.isCompulsory? 'badge bg-success':'badge bg-danger'" 
                        title="Update Status">

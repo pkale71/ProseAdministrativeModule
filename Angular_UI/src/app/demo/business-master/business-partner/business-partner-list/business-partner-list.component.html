@@ -49,7 +49,7 @@
                         <tbody>
                             <tr *ngFor="let businessPartner of businessPartners let i=index">
                                 <td>{{i+1}}</td>
-                                <td>{{businessPartner.name}}</td>
+                                <td>{{businessPartner.name|titlecase}}</td>
                                 <td>{{businessPartner.email}}</td>
                                 <td>{{businessPartner.businessPartnerType?.name}}</td>
                                 <td>{{businessPartner.applicableFrom | date : "dd/MM/yyyy"}}</td>

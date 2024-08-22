@@ -20,7 +20,7 @@
                         <tbody>
                             <tr *ngFor="let gradeCategory of gradeCategories let i=index">
                                 <td>{{i+1}}</td>
-                                <td>{{gradeCategory.name}}</td>
+                                <td>{{gradeCategory.name|titlecase}}</td>
                                 <td>
                                     <span [ngClass]="gradeCategory.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(gradeCategory)" 
                                     style="cursor: pointer;" title="Update Status">

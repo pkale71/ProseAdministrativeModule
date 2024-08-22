@@ -88,7 +88,7 @@
                                 <td>{{syllabusWiseSubject.gradeCategory?.name}}</td>
                                 <td>{{syllabusWiseSubject.grade?.name}}</td>
                                 <td>{{syllabusWiseSubject.syllabus?.name}}</td>
-                                <td>{{syllabusWiseSubject.name}}</td>
+                                <td>{{syllabusWiseSubject.name|titlecase}}</td>
                                 <td>
                                     <span [ngClass]="syllabusWiseSubject.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(syllabusWiseSubject)" 
                                     style="cursor: pointer;" title="Update Status">

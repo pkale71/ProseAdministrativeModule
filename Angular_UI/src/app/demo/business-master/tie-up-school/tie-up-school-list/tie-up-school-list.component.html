@@ -24,7 +24,7 @@
                         <tbody>
                             <tr *ngFor="let tieUpSchool of tieUpSchools let i=index">
                                 <td>{{i+1}}</td>
-                                <td>{{tieUpSchool.name}}</td>
+                                <td>{{tieUpSchool.name|titlecase}}</td>
                                 <td>{{tieUpSchool.email}}</td>
                                 <td>{{tieUpSchool.city?.name}}</td>
                                 <td>{{tieUpSchool.panNumber}}</td>

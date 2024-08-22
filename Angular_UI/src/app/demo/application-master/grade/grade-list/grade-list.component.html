@@ -42,7 +42,7 @@
                                 <tr *ngFor="let grade of grades let i=index">
                                     <td>{{i+1}}</td>
                                     <td>{{grade.gradeCategory?.name}}</td>
-                                    <td>{{grade.name}}</td>
+                                    <td>{{grade.name|titlecase}}</td>
                                     <td>
                                         <span [ngClass]="grade.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(grade)" 
                                         style="cursor: pointer;" title="Update Status">

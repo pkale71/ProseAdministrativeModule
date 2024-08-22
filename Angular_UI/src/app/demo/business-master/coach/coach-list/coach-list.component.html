@@ -55,7 +55,7 @@
                                 <tr *ngFor="let coach of coaches let i=index">
                                     <td>{{i+1}}</td>
                                     <td>{{coach.code}}</td>
-                                    <td>{{coach.name}}</td>
+                                    <td>{{coach.name|titlecase}}</td>
                                     <td>{{coach.email}}</td>
                                     <td>{{coach.businessVerticalType?.name}}</td>
                                     <td>

@@ -42,7 +42,7 @@
                             <tbody>
                                 <tr *ngFor="let stateRegion of stateRegions let i=index">
                                     <td>{{i+1}}</td>
-                                    <td>{{stateRegion.name}}</td>
+                                    <td>{{stateRegion.name|titlecase}}</td>
                                     <td>{{stateRegion.country.name}}</td>
                                     <td>
                                         <span [ngClass]="stateRegion.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(stateRegion)" 

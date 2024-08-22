@@ -21,7 +21,7 @@
                             <tbody>
                                 <tr *ngFor="let country of countries let i=index">
                                     <td>{{i+1}}</td>
-                                    <td>{{country.name}}</td>
+                                    <td>{{country.name|titlecase}}</td>
                                     <td>
                                         <span [ngClass]="country.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(country)" 
                                         style="cursor: pointer;" title="Update Status">

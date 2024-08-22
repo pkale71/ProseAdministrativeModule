@@ -48,7 +48,7 @@
                         <tbody>
                             <tr *ngFor="let studyCenter of studyCenters let i=index">
                                 <td>{{i+1}}</td>
-                                <td>{{studyCenter.name}}</td>
+                                <td>{{studyCenter.name|titlecase}}</td>
                                 <td>{{studyCenter.code}}</td>
                                 <td>{{studyCenter.email}}</td>
                                 <td>{{studyCenter.studyCenterType?.name}}</td>

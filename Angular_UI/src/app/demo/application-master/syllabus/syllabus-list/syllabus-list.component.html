@@ -53,7 +53,7 @@
                                 <td>{{i+1}}</td>
                                 <td>{{syllabus.academicSession?.name}}</td>
                                 <td>{{syllabus.schoolingProgram?.name}}</td>
-                                <td>{{syllabus.name}}</td>  
+                                <td>{{syllabus.name|titlecase}}</td>  
                                 <td>
                                     <span [ngClass]="syllabus.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(syllabus)" 
                                     style="cursor: pointer;" title="Update Status">

@@ -21,7 +21,7 @@
                             <tbody>
                                 <tr *ngFor="let businessVertical of businessVerticals let i=index">
                                     <td>{{i+1}}</td>
-                                    <td>{{businessVertical.name}}</td>
+                                    <td>{{businessVertical.name|titlecase}}</td>
                                     <td>
                                         <span [ngClass]="businessVertical.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(businessVertical)" 
                                         style="cursor: pointer;" title="Update Status">
