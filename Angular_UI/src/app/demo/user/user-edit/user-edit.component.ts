@@ -271,7 +271,6 @@ export class UserEditComponent {
                         this.showNotification("success", "User Updated");
                         this.closeModal();
                         this.commonSharedService.userListObject.next({result : "success"});
-                        // this.router.navigateByUrl("/user/detail/" + this.user.uuid);
                     }
                 }
                 catch(e)
