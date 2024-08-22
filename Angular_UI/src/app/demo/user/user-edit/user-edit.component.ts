@@ -59,7 +59,6 @@ export class UserEditComponent {
         this.isValidForm = true;
         this.saveClicked = false;
         this.isRequired = false;
-        this.getUserCategories();
 
         this.editUserForm = this.formbuilder.group({
             uuid: this.uuid,
@@ -80,8 +79,8 @@ export class UserEditComponent {
         });
 
         this.editUserForm.get("gender").disable();    
-        this.getUser(this.uuid);    
-        this.getUserGrades();
+        this.getUserCategories();
+        this.getUser(this.uuid);            
     }
 
     async getUser(uuid : string) 
@@ -90,9 +89,19 @@ export class UserEditComponent {
         if (response.status_code == 200 && response.message == 'success') 
         {
             this.user = response.user;
+            this.getUserGrades();
             this.editUserForm.patchValue(this.user);
             this.userGradeForm.get("userGrade").setValue(this.user.userGrade.id);
-            this.userCategoryForm.get("userCategory").setValue(this.user.userCategory.id);
+            
+            // if(this.user.userCategory.id != null && this.user.userCategory.id != "")
+            // {
+            //     this.filterUserCategories(this.user.userCategory.id);
+            // }
+            // else
+            // {
+            //     this.userCategories = [];
+            //     this.isRequired = false;
+            // }
         }
         else
         {
@@ -228,7 +237,7 @@ export class UserEditComponent {
         }
         catch(e)
         {
-            this.showNotification("error", e);
+            // this.showNotification("error", e);
         }
     }
     
