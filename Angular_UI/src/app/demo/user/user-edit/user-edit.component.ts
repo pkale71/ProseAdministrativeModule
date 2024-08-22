@@ -228,7 +228,7 @@ export class UserEditComponent {
         }
         catch(e)
         {
-        this.showNotification("error", e);
+            this.showNotification("error", e);
         }
     }
     

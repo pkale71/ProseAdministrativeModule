@@ -296,14 +296,10 @@ export class TieUpSchoolAddComponent {
             this.getEnclosureDocDetailsForm = [];
             this.addRow();
         }
-        else if(this.getEnclosureDocDetailsForm.length > 0)
+        else 
         {
-            let i : number = this.getEnclosureDocDetailsForm.length - 1;
-            this.academyEnclosureDocuments.forEach((ele:any, i:number)=>{
-                ele.isUploaded = false;
-                this.getEnclosureDocDetailsForm.splice(i, 1);
-                this.docFiles.splice(i, 1);
-            })
+            this.clearRow();
+            this.getEnclosureDocDetailsForm = [];
         }         
     }
 
@@ -330,6 +326,19 @@ export class TieUpSchoolAddComponent {
             })
             this.getEnclosureDocDetailsForm.splice(i, 1);
             this.docFiles.splice(i, 1);
+        }
+    }  
+
+    clearRow()
+    {
+        if(this.getEnclosureDocDetailsForm.length > 0)
+        {
+            let i : number = this.getEnclosureDocDetailsForm.length - 1;
+            this.academyEnclosureDocuments.forEach((ele:any, i:number)=>{
+                ele.isUploaded = false;
+                this.getEnclosureDocDetailsForm.splice(i, 1);
+                this.docFiles.splice(i, 1);
+            })
         }
     }  
 
