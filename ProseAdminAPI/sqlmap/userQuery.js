@@ -799,8 +799,8 @@ db.insertUserOnBoarding = (userOnBoarding) =>
     {
         try
         {
-            let sql = `INSERT INTO user_on_boarding_link (code, email, mobile, created_on, created_by_id) 
-            VALUES ('${userOnBoarding.code}', '${userOnBoarding.email}', '${userOnBoarding.mobile}', NOW(), ${userOnBoarding.createdById})`
+            let sql = `INSERT INTO user_on_boarding_link (code, email, mobile, user_grade_id, user_category_id, created_on, created_by_id) 
+            VALUES ('${userOnBoarding.code}', '${userOnBoarding.email}', '${userOnBoarding.mobile}', ${userOnBoarding.userGradeId}, NULLIF('${userOnBoarding.userCategoryId}', ''), NOW(), ${userOnBoarding.createdById})`
             
             dbConn.query(sql, (error, result) => 
             {
@@ -827,8 +827,12 @@ db.getUserOnBoardingLinks = (status) =>
             let sql = `SELECT uobl.id, uobl.code, uobl.email, uobl.mobile, DATE(uobl.created_on) AS createdOn,  
             DATE(uobl.sent_on) AS sentOn, uobl.is_sent AS isSent, 
             IF(uobl.created_user_id IS NULL, 'Pending', 'Completed') AS status, 
-            cu.uuid AS userUUID, TRIM(CONCAT(cu.first_name, ' ', IFNULL(cu.last_name, ''))) AS userFullName
+            cu.uuid AS userUUID, TRIM(CONCAT(cu.first_name, ' ', IFNULL(cu.last_name, ''))) AS userFullName,
+            ug.id AS userGradeId, ug.name AS userGradeName, ug.code AS userGradeCode,
+            uc.id AS userCategoryId, uc.name AS userCategoryName, uc.code AS userCategoryCode
             FROM user_on_boarding_link uobl 
+            JOIN user_grade ug ON ug.id = uobl.user_grade_id
+            LEFT JOIN user_category uc ON uc.id = uobl.user_category_id
             LEFT JOIN user cu ON cu.id = uobl.created_user_id`;
             if(status == 'Pending')
             {
@@ -863,8 +867,12 @@ db.getUserOnBoardingLink = (code) =>
         try
         {
             let sql = `SELECT uobl.code, uobl.email, uobl.mobile, DATE(uobl.created_on) AS createdOn, 
-            uobl.created_by_id AS createdById
+            uobl.created_by_id AS createdById,
+            ug.id AS userGradeId, ug.name AS userGradeName, ug.code AS userGradeCode,
+            uc.id AS userCategoryId, uc.name AS userCategoryName, uc.code AS userCategoryCode
             FROM user_on_boarding_link uobl
+            JOIN user_grade ug ON ug.id = uobl.user_grade_id
+            LEFT JOIN user_category uc ON uc.id = uobl.user_category_id
             WHERE uobl.code = '${code}' 
             AND (SELECT COUNT(*) FROM user WHERE email = uobl.email OR mobile = uobl.mobile) = 0`;
             

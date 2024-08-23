@@ -6,6 +6,8 @@ let errorCode = new errorCodes();
 let code;
 let email;
 let mobile;
+let userGradeId;
+let userCategoryId;
 //////
 
 module.exports = require('express').Router().post('/',async(req,res) =>
@@ -15,12 +17,14 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.email != undefined && reqData.mobile != undefined)
+        if(reqData.email != undefined && reqData.mobile != undefined && reqData.userGrade != undefined && reqData.userCategory != undefined)
         {
-            if(reqData.email != "" && reqData.mobile != "")
+            if(reqData.email != "" && reqData.mobile != "" && reqData.userGrade.id != "" && reqData.userCategory.id != "")
             {
                 email = reqData.email;
                 mobile = reqData.mobile;
+                userGradeId = commonFunction.validateNumber(JSON.parse(reqData.userGrade).id);
+                userCategoryId = commonFunction.validateNumber(JSON.parse(reqData.userCategory)?.id);
                 code = commonFunction.ramdomString(6);
                 
             ///Check User OnBoarding Exist
@@ -32,6 +36,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         "code" : code,
                         "email" : email,
                         "mobile" : mobile,
+                        "userGradeId" : userGradeId,
+                        "userCategoryId" : userCategoryId,
                         "createdById" : authData.id
                     }
                     let insertUserOnBoardingResult = await dbUser.insertUserOnBoarding(insertJSON);

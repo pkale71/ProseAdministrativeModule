@@ -105,6 +105,20 @@ buildUserJSON.userOnBoarding = function(datas, action = 1)
     datas.forEach((data) => 
     {
         userJSON = [];
+        userGradeJSON = [];
+        userCategoryJSON = [];
+
+        userGradeJSON = {
+            "id" : data.userGradeId,
+            "code" : data.userGradeCode,
+            "name" : data.userGradeName
+        }
+        
+        userCategoryJSON = {
+            "id" : data.userCategoryId != null ? data.userCategoryId : "",
+            "code" : data.userCategoryCode != null ? data.userCategoryCode : "",
+            "name" : data.userCategoryName != null ? data.userCategoryName : ""
+        } 
        
         userJSON = {
             "uuid" : data.userUUID != null ? data.userUUID : "",
@@ -120,6 +134,8 @@ buildUserJSON.userOnBoarding = function(datas, action = 1)
             "sentOn" : commonFunction.getFormattedDate(data.sentOn, "yyyy-mm-dd"),
             "isSent" : data.isSent,
             "status" : data.status,
+            "userGrade" : userGradeJSON,
+            "userCategory" : userCategoryJSON,
             "createdUser" : userJSON
         }
 //If action == 1 for mupltiple rows
