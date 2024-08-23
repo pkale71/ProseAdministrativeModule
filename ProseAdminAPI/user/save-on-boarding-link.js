@@ -19,7 +19,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         
         if(reqData.email != undefined && reqData.mobile != undefined && reqData.userGrade != undefined && reqData.userCategory != undefined)
         {
-            if(reqData.email != "" && reqData.mobile != "" && reqData.userGrade.id != "" && reqData.userCategory.id != "")
+            if(reqData.email != "" && reqData.mobile != "" && reqData.userGrade.id != "")
             {
                 email = reqData.email;
                 mobile = reqData.mobile;
