@@ -59,8 +59,6 @@ export class UserProfileComponent {
         this.saveClicked = false;
         this.isValidForm = true;
         this.isRequired = false;
-        this.getUserGrades();
-        this.getUserCategories();
 
         this.userProfileForm = this.formBuilder.group({
             'firstName' : ['', Validators.required],
@@ -184,53 +182,53 @@ export class UserProfileComponent {
         } 
         catch (error) 
         {
-        this.showNotification("error", error);
+            this.showNotification("error", error);
         }
     } 
 
-    filterUserCategories()
-    {
-        this.userCategories = [];
-        let userGradeId = this.userProfileForm.get("userGrade").value;
-        let userGrades = this.masterUserGrades.filter(userGrade => userGrade.id == userGradeId);
-        if(userGrades.length > 0)
-        {    
-            if(userGrades[0].code == "MOADM")
-            {
-                this.isRequired = true;
-                this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code == "STFUSR");
-                this.userCategories.unshift({ id : "", name : "Select User Category"});
-                this.userProfileForm.controls["userCategory"].enable();
-                this.userProfileForm.controls["userCategory"].addValidators(Validators.required);
-                this.userProfileForm.updateValueAndValidity();
-            }
-            else if(userGrades[0].code == "MOUSR")
-            {
-                this.isRequired = true;
-                this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code != "STFUSR");
-                // this.userCategories.unshift({ id : "", name : "Select User Category"});
-                this.userProfileForm.controls["userCategory"].enable();
-                this.userProfileForm.controls["userCategory"].addValidators(Validators.required);
-                this.userProfileForm.updateValueAndValidity();
-            }
-            else
-            {
-                this.isRequired = false;
-                this.userProfileForm.controls["userCategory"].disable();
-                this.userProfileForm.controls["userCategory"].clearAsyncValidators();
-                this.userProfileForm.updateValueAndValidity();
-            }
+    // filterUserCategories()
+    // {
+    //     this.userCategories = [];
+    //     let userGradeId = this.userProfileForm.get("userGrade").value;
+    //     let userGrades = this.masterUserGrades.filter(userGrade => userGrade.id == userGradeId);
+    //     if(userGrades.length > 0)
+    //     {    
+    //         if(userGrades[0].code == "MOADM")
+    //         {
+    //             this.isRequired = true;
+    //             this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code == "STFUSR");
+    //             this.userCategories.unshift({ id : "", name : "Select User Category"});
+    //             this.userProfileForm.controls["userCategory"].enable();
+    //             this.userProfileForm.controls["userCategory"].addValidators(Validators.required);
+    //             this.userProfileForm.updateValueAndValidity();
+    //         }
+    //         else if(userGrades[0].code == "MOUSR")
+    //         {
+    //             this.isRequired = true;
+    //             this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code != "STFUSR");
+    //             // this.userCategories.unshift({ id : "", name : "Select User Category"});
+    //             this.userProfileForm.controls["userCategory"].enable();
+    //             this.userProfileForm.controls["userCategory"].addValidators(Validators.required);
+    //             this.userProfileForm.updateValueAndValidity();
+    //         }
+    //         else
+    //         {
+    //             this.isRequired = false;
+    //             this.userProfileForm.controls["userCategory"].disable();
+    //             this.userProfileForm.controls["userCategory"].clearAsyncValidators();
+    //             this.userProfileForm.updateValueAndValidity();
+    //         }
             
-            if(this.userCategories.length == 2)
-            {
-                this.userProfileForm.get("userCategory").setValue(this.userCategories[1].id);
-            }
-            else
-            {
-                this.userProfileForm.get("userCategory").setValue(""); 
-            }
-        }
-    }
+    //         if(this.userCategories.length == 2)
+    //         {
+    //             this.userProfileForm.get("userCategory").setValue(this.userCategories[1].id);
+    //         }
+    //         else
+    //         {
+    //             this.userProfileForm.get("userCategory").setValue(""); 
+    //         }
+    //     }
+    // }
 
     async getOnBoardingLink(code : string) 
     {
@@ -242,6 +240,11 @@ export class UserProfileComponent {
             {
                 this.userOnBoardingLink = response.userOnBoardingLink;
                 this.userProfileForm.patchValue(this.userOnBoardingLink);
+                this.userProfileForm.get('userGrade').setValue(this.userOnBoardingLink.userGrade.name);
+                if(this.userOnBoardingLink.userCategory.id != "")
+                {
+                    this.userProfileForm.get('userCategory').setValue(this.userOnBoardingLink.userCategory.name);
+                }
                 this.loadingClicked = false;
             }
             else
@@ -277,8 +280,8 @@ export class UserProfileComponent {
                     formData.append("mobile", this.userProfileForm.get("mobile").value);
                     formData.append("password", this.userProfileForm.get("password").value);
                     formData.append("gender", this.userProfileForm.get("gender").value);
-                    formData.append("userGrade", JSON.stringify({"id" : this.userProfileForm.get("userGrade").value}));
-                    formData.append("userCategory", JSON.stringify({"id" : this.userProfileForm.get("userCategory").value}));
+                    formData.append("userGrade", JSON.stringify({"id" : this.userOnBoardingLink.userGrade.id}));
+                    formData.append("userCategory", JSON.stringify({"id" : (this.userOnBoardingLink.userCategory.id != "" ? this.userOnBoardingLink.userCategory.id : "")}));
                     formData.append("userOnBoarding", JSON.stringify({"code" : this.code }));
                     if(this.profileForm.get("profilePic").value != null)
                     {

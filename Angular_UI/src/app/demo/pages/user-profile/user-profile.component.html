@@ -116,11 +116,8 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="userGrade">Grade&nbsp;<span style="color: red;">*</span></label>
-                                <select class="form-control" id="userGrade" required 
-                                [ngClass]="{'is-invalid': !userProfileForm.controls['userGrade'].valid && !isValidForm}" formControlName="userGrade" (change)="filterUserCategories()"
-                                >
-                                <option value="{{userGrade.id}}" *ngFor="let userGrade of userGrades">{{userGrade.name}}</option>
-                                </select>
+                                <input class="form-control input-md" id="userGrade" required readonly type="text"
+                                [ngClass]="{'is-invalid': !userProfileForm.controls['userGrade'].valid && !isValidForm}" formControlName="userGrade" />
                                 <label style="color: red;"
                                 *ngIf="userProfileForm.controls['userGrade'].hasError('required') && !isValidForm"
                                 class="error jquery-validation-error small form-text"
@@ -132,10 +129,8 @@
                                 <label class="form-control-label" for="userCategory" >Category&nbsp;
                                 <span style="color: red;" *ngIf = "isRequired">*</span>
                                 </label>
-                                <select class="form-control" id="userCategory" [ngRequired] = "isRequired"  
-                                [ngClass]="{'is-invalid': !userProfileForm.controls['userCategory'].valid && !isValidForm}" formControlName="userCategory">                       
-                                <option value="{{userCategory.id}}" *ngFor="let userCategory of userCategories">{{userCategory.name}}</option>
-                                </select>
+                                <input class="form-control" id="userCategory" [ngRequired] = "isRequired"  readonly
+                                [ngClass]="{'is-invalid': !userProfileForm.controls['userCategory'].valid && !isValidForm}" formControlName="userCategory" />   
                                 <label style="color: red;"
                                 *ngIf="userProfileForm.controls['userCategory'].hasError('required') && !isValidForm"
                                 class="error jquery-validation-error small form-text"
