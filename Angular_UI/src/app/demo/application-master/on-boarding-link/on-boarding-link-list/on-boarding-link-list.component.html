@@ -36,6 +36,8 @@
                                 <th>Email</th>
                                 <th>Mobile</th>
                                 <th>Code</th>
+                                <th>UserGrade</th>
+                                <th>UserCategory</th>
                                 <th>Is Sent</th>
                                 <th>Sent On</th>
                                 <th>Created On</th>
@@ -49,6 +51,8 @@
                                 <td>{{userOnBoardingLink.email}}</td>
                                 <td>{{userOnBoardingLink.mobile}}</td>
                                 <td>{{userOnBoardingLink.code}}</td>
+                                <td>{{userOnBoardingLink.userGrade.name}}</td>
+                                <td>{{userOnBoardingLink.userCategory.name}}</td>
                                 <td>
                                     <span [ngClass]="userOnBoardingLink.isSent ? 'badge bg-success':'badge bg-danger'">
                                     {{ userOnBoardingLink.isSent ? 'Yes' : 'No'}}
@@ -75,6 +79,8 @@
                                 <td></td>
                                 <td></td>
                                 <td>No record(s) found</td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

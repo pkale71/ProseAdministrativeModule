@@ -21,6 +21,12 @@ export class OnBoardingLinkAddComponent {
     onBoardingLinkForm: FormGroup;
     isValidForm: boolean;
     saveClicked: boolean;
+    userGrades: any[];
+    masterUserGrades: any[];
+    masterUserCategories: any[];
+    userCategories: any[];
+    isRequired: boolean;
+    searchClickedGrade: boolean;
 
     constructor(private userService: UserService,
         private activeModal: NgbActiveModal,
@@ -28,17 +34,27 @@ export class OnBoardingLinkAddComponent {
         private formbuilder: FormBuilder,
         public commonSharedService: CommonSharedService,
         private commonService: CommonService,
-        private router: Router) {
-    }
+        private router: Router) 
+        {
+        }
 
     ngOnInit() {
         this.isValidForm = true;
         this.saveClicked = false;
+        this.isRequired = false;
+        this.searchClickedGrade = false;
+        this.userGrades = [];
+        this.userCategories = [];
 
         this.onBoardingLinkForm = this.formbuilder.group({
-            id: [''], email : ['',[Validators.required, Validators.email]],
-            mobile: ['',[Validators.required, Validators.pattern('^[0-9]{10,15}'), Validators.maxLength(15), Validators.minLength(10)]]
+            id: [''], 
+            email : ['',[Validators.required, Validators.email]],
+            mobile: ['',[Validators.required, Validators.pattern('^[0-9]{10,15}'), Validators.maxLength(15), Validators.minLength(10)]],
+            userGrade : this.formbuilder.group({ 'id' : ['', [Validators.required] ]}),
+            userCategory : this.formbuilder.group({ 'id' : [''] })
         });
+
+        this.getUserGrades();
     }
 
     showNotification(type: string, message: string): void {
@@ -78,6 +94,103 @@ export class OnBoardingLinkAddComponent {
         }
     }
 
+    //get user Grades
+    async getUserGrades()
+    {
+        try 
+        {
+            let response = await this.commonService.getUserGrades().toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                this.masterUserGrades = response.userGrades;
+                this.userGrades = this.masterUserGrades;
+                this.userGrades.unshift({ id : "", name : "Select User Grade"});
+                this.getUserCategories();
+            }
+            else
+            {
+                this.userGrades = [];
+                this.userGrades.unshift({ id : "", name : "Select User Grade"});
+            }
+        } 
+        catch (error) 
+        {
+            this.showNotification("error", error);
+        }
+    }
+
+    //get user category
+    async getUserCategories()
+    {
+        try 
+        {
+            this.searchClickedGrade = true;
+            let response = await this.commonService.getUserCategories().toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                this.masterUserCategories = response.userCategories;
+                this.userCategories = this.masterUserCategories;
+                this.userCategories.unshift({ id : "", name : "Select User Category."});
+                this.searchClickedGrade = false;
+            }
+            else
+            {
+                this.userCategories = [];
+                this.userCategories.unshift({ id : "", name : "Select User Category."});
+                this.searchClickedGrade = false;
+            }
+        } 
+        catch (error) 
+        {
+            this.showNotification("error", error);
+            this.searchClickedGrade = false;
+        }
+    } 
+
+    filterUserCategories()
+    {
+        this.userCategories = [];
+        let userGradeId = this.onBoardingLinkForm.get("userGrade.id").value;
+        let userGrades = this.masterUserGrades.filter(userGrade => userGrade.id == userGradeId);
+        if(userGrades.length > 0)
+        {    
+            if(userGrades[0].code == "MOADM")
+            {
+                this.isRequired = true;
+                this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code == "STFUSR");
+                this.userCategories.unshift({ id : "", name : "Select User Category"});
+                this.onBoardingLinkForm.get("userCategory.id").enable();
+                this.onBoardingLinkForm.get("userCategory.id").addValidators(Validators.required);
+                this.onBoardingLinkForm.get("userCategory.id").updateValueAndValidity();
+            }
+            else if(userGrades[0].code == "MOUSR")
+            {
+                this.isRequired = true;
+                this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code != "STFUSR");
+                // this.userCategories.unshift({ id : "", name : "Select User Category"});
+                this.onBoardingLinkForm.get("userCategory.id").enable();
+                this.onBoardingLinkForm.get("userCategory.id").addValidators(Validators.required);
+                this.onBoardingLinkForm.get("userCategory.id").updateValueAndValidity();
+            }
+            else
+            {
+                this.isRequired = false;
+                this.onBoardingLinkForm.get("userCategory.id").disable();
+                this.onBoardingLinkForm.get("userCategory.id").clearValidators();
+                this.onBoardingLinkForm.get("userCategory.id").updateValueAndValidity();
+            }            
+            if(this.userCategories.length == 2)
+            {
+                this.onBoardingLinkForm.get("userCategory.id").setValue(this.userCategories[1].id);
+            }
+            else
+            {
+                this.onBoardingLinkForm.get("userCategory.id").setValue(""); 
+            }
+        }
+        console.log(this.onBoardingLinkForm.controls)
+    }
+
     async saveOnBoardingLink() 
     {
         if (!this.saveClicked) 
@@ -89,7 +202,13 @@ export class OnBoardingLinkAddComponent {
 
                 try 
                 {
-                    let response = await this.userService.saveOnBoardingLink(this.onBoardingLinkForm.value).toPromise();
+                    let tempJSON = {
+                        email : this.onBoardingLinkForm.controls['email'].value,
+                        mobile : this.onBoardingLinkForm.controls['mobile'].value,
+                        userGrade : { id : this.onBoardingLinkForm.get('userGrade.id').value },
+                        userCategory : { id : this.onBoardingLinkForm.get('userCategory.id').value}
+                    }
+                    let response = await this.userService.saveOnBoardingLink(tempJSON).toPromise();
                     if (response.status_code == 200 && response.message == 'success') 
                     {
                         this.showNotification("success", "User On-Boarding Saved Successfully");

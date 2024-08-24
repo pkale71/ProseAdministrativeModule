@@ -49,6 +49,36 @@
                     >Please enter valid mobile number</label>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group" formGroupName="userGrade">
+                    <label class="form-control-label" for="userGrade">Grade&nbsp;<span style="color: red;">*</span></label>
+                    <select class="form-control" id="userGrade" required 
+                    [ngClass]="{'is-invalid': !onBoardingLinkForm.get('userGrade.id').valid && !isValidForm}" formControlName="id" (change)="filterUserCategories()"
+                    >
+                    <option value="{{userGrade.id}}" *ngFor="let userGrade of userGrades">{{userGrade.name}}</option>
+                    </select>
+                    <label style="color: red;"
+                    *ngIf="onBoardingLinkForm.get('userGrade.id').hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please select grade.</label>
+                </div>
+            </div>
+            <!-- [ngRequired] = "isRequired"  -->
+            <div class="col-md-6">   
+                <div class="form-group" formGroupName="userCategory">
+                    <label class="form-control-label" for="userCategory">Category&nbsp;
+                    <span style="color: red;" *ngIf = "isRequired">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i>
+                    </label>
+                    <select class="form-control" id="userCategory" [required] = "isRequired"
+                    [ngClass]="{'is-invalid': !onBoardingLinkForm.get('userCategory.id')?.valid && !isValidForm && isRequired}" formControlName="id">                       
+                    <option value="{{userCategory.id}}" *ngFor="let userCategory of userCategories">{{userCategory.name}}</option>
+                    </select>
+                    <label style="color: red;"
+                    *ngIf="onBoardingLinkForm.get('userCategory.id').hasError('required') && !isValidForm && isRequired"
+                    class="error jquery-validation-error small form-text"
+                    >Please select user type.</label>
+                </div>
+            </div>
         </div>     
     </div>
     <div class="modal-footer">
