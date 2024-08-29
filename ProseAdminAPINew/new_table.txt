@@ -25,3 +25,22 @@ CREATE TABLE `subject` (
   PRIMARY KEY (`id`)
 );
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` FUNCTION `remove_comma_separated_string`(input_string TEXT,
+    remove_string text) RETURNS text CHARSET latin1
+BEGIN
+DECLARE result TEXT;
+
+    -- Remove the string from the start, middle, and end of the comma-separated string
+    SET result = TRIM(BOTH ',' FROM REPLACE(CONCAT(',', input_string, ','), CONCAT(',', remove_string, ','), ','));
+
+    -- Handle case where the result might become empty or just commas
+    IF result = ',' OR result = '' THEN
+        SET result = '';
+    END IF;
+
+    RETURN result;
+END$$
+DELIMITER ;
+
+

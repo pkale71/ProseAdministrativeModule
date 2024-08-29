@@ -29,6 +29,8 @@ commonRoute.use('/getSyllabuses', require('../util/validateToken.js'), require('
 commonRoute.use('/getSyllabus', require('../util/validateToken.js'), require('./syllabus.js'));
 commonRoute.use('/saveSyllabus', require('../util/validateToken.js'), require('./save-syllabus.js'));
 commonRoute.use('/deleteSyllabus', require('../util/validateToken.js'), require('./delete-syllabus.js'));
+commonRoute.use('/addSyllabusGradeCategories', require('../util/validateToken.js'), require('./add-syllabus-grade-category.js'));
+commonRoute.use('/deleteSyllabusGradeCategory', require('../util/validateToken.js'), require('./delete-syllabus-grade-category.js'));
 
 commonRoute.use('/getAcademicSessions', require('../util/validateToken.js'), require('./academic-sessions.js'));
 commonRoute.use('/saveAcademicSession', require('../util/validateToken.js'), require('./save-academic-session.js'));

@@ -780,6 +780,32 @@ db.getSyllabus = (id) =>
     })
 };
 
+db.getSyllabusGradeCategory = (id, gradeCategoryId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT s.id AS syllabusId, s.name AS syllabusName
+            FROM syllabus s
+            WHERE s.id = ${id} AND FIND_IN_SET(${gradeCategoryId}, s.grade_category_ids) > 0`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.duplicateSyllabus = (name) => 
 {
     return new Promise((resolve, reject) => 
@@ -830,6 +856,30 @@ db.insertSyllabus = (syllabus) =>
     })
 };
 
+db.updateSyllabus = (syllabus) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE syllabus SET grade_category_ids = CONCAT(grade_category_ids, ',${syllabus.gradeCategoryIds}'), updated_on = NOW(), updated_by_id = ${syllabus.createdById} WHERE id = ${syllabus.id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.checkSyllabusExist = (id) => 
 {
     return new Promise((resolve, reject) => 
@@ -862,6 +912,29 @@ db.deleteSyllabus = (id) =>
         try
         {
             let sql = `DELETE FROM syllabus WHERE id = ${id}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });        
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteSyllabusGradeCategory = (id, gradeCategoryId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE syllabus SET grade_category_ids = remove_comma_separated_string(grade_category_ids,'${gradeCategoryId}') WHERE id = ${id}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1093,7 +1166,7 @@ db.getGradeCategory = (id) =>
         {
             let sql = `SELECT gc.id            
             FROM grade_category gc WHERE FIND_IN_SET(gc.id, '${id}') > 0`;
-            console.log(sql);
+            
             dbConn.query(sql, (error, result) => 
             {
                 if(error)

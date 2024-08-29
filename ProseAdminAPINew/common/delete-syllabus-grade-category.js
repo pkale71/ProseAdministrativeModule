@@ -3,11 +3,11 @@ let dbCommon = require('../sqlmap/commonQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables 
-let name;
-let gradeCategoryIds;
+let id;
+let gradeCategoryId;
 //////
-let gradeCategory;
 let syllabus;
+let syllabusGradeCategory;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -15,33 +15,31 @@ module.exports = require('express').Router().post('/',async(req,res) =>
     {
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
-        
-        if(reqData.name != undefined && reqData.gradeCategoryIds != undefined)
+        if(reqData.id != undefined && reqData.gradeCategory != undefined)
         {
-            if(reqData.name != "" && reqData.gradeCategoryIds != "")
+            if(reqData.id != "" && reqData.gradeCategory.id != "")
             {
-                name = reqData.name;
-                gradeCategoryIds = reqData.gradeCategoryIds;
-
-            ///Check GradeCategory Exist
-                gradeCategory = await dbCommon.getGradeCategory(gradeCategoryIds);
-                let gradeCategoryArray = gradeCategoryIds.toString().split(",");
-                if(gradeCategory.length == gradeCategoryArray.length)
-                { 
-                ////Check Duplicate Syllabus
-                    syllabus = await dbCommon.duplicateSyllabus(name);
-                    if(syllabus.length == 0)
-                    {                    
-                ///insert Syllabus
-                        let insertJSON = {
-                            "name" : name,
-                            "gradeCategoryIds" : gradeCategoryIds,
-                            "createdById" : authData.id
-                        }
-                        let insertSyllabusResult = await dbCommon.insertSyllabus(insertJSON);
-                        let insertSyllabusId = insertSyllabusResult.insertId;
-            ///////
-                        if(parseInt(insertSyllabusId) > 0)
+                id = commonFunction.validateNumber(reqData.id);
+                gradeCategoryId = commonFunction.validateNumber(reqData.gradeCategory.id);
+                
+                syllabusGradeCategory = await dbCommon.getSyllabusGradeCategory(id, gradeCategoryId);
+                if(syllabusGradeCategory.length == 0)
+                {
+                    res.status(500)
+                    return res.json({
+                        "status_code" : 500,
+                        "message" : "Grade Category Not Mapped With Syllabus",
+                        "success" : false,
+                        "error" : errorCode.getStatus(500),
+                    })
+                }
+                syllabus = await dbCommon.getSyllabus(id);
+                if(syllabus.length == 1)
+                {
+                    if(syllabus[0].syllabusId != null)
+                    {
+                        let updateResult = await dbCommon.deleteSyllabusGradeCategory(id, gradeCategoryId);
+                        if(updateResult.affectedRows > 0)
                         {
                             res.status(200)
                             return res.json({
@@ -55,9 +53,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             res.status(500)
                             return res.json({
                                 "status_code" : 500,
-                                "message" : "Syllabus Not Saved",
+                                "message" : "Grade Category Already Deleted",
                                 "success" : false,
-                                "error" : errorCode.getStatus(500)
+                                "error" : errorCode.getStatus(500),
                             })
                         }
                     }
@@ -66,9 +64,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Syllabus Already Created",
+                            "message" : "Invalid Syllabus",
                             "success" : false,
-                            "error" : errorCode.getStatus(500)
+                            "error" : errorCode.getStatus(500),
                         })
                     }
                 }
@@ -77,9 +75,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
-                        "message" : "Some Grade Categories Are Invalid",
+                        "message" : "Invalid Syllabus",
                         "success" : false,
-                        "error" : errorCode.getStatus(500)
+                        "error" : errorCode.getStatus(500),
                     })
                 }
             }
@@ -90,7 +88,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     "status_code" : 500,
                     "message" : "Some Values Are Not Filled",
                     "success" : false,
-                    "error" : errorCode.getStatus(500)
+                    "error" : errorCode.getStatus(500),
                 })
             }
         }

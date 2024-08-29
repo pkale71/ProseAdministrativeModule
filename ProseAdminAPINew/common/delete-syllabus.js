@@ -13,7 +13,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
     {
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
-        if(reqData.id != undefined )
+        if(reqData.id != undefined)
         {
             if(reqData.id != "")
             {
