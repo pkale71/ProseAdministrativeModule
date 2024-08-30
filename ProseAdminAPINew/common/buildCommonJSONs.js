@@ -512,4 +512,44 @@ buildCommonJSON.chapterWiseTopics = function(datas)
     return resultJSON;
 }
 
+buildCommonJSON.schoolingGroups = function(datas)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName ? data.tableName : '',
+            "isExist" : data.isExist
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
+buildCommonJSON.schoolingCategories = function(datas)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName ? data.tableName : '',
+            "isExist" : data.isExist
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
 module.exports = buildCommonJSON;

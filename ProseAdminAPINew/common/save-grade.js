@@ -3,7 +3,7 @@ let dbCommon = require('../sqlmap/commonQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables 
-let name;
+let names;
 let gradeCategoryId;
 //////
 let grade;
@@ -16,11 +16,11 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.gradeCategory != undefined)
+        if(reqData.names != undefined && reqData.gradeCategory != undefined)
         {
-            if(reqData.name != "" && reqData.gradeCategory.id != "")
+            if(reqData.names != "" && reqData.gradeCategory.id != "")
             {
-                name = reqData.name;
+                names = reqData.names;
                 gradeCategoryId = commonFunction.validateNumber(reqData.gradeCategory.id);
 
                 ////Check Grade Category Exist
@@ -28,12 +28,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 if(gradeCategory.length == 1)
                 {
                     ////Check Duplicate Grade
-                    grade = await dbCommon.duplicateGrade(name, gradeCategoryId);
+                    grade = await dbCommon.duplicateGrade(names, gradeCategoryId);
                     if(grade.length == 0)
                     {                    
                 ///insert Grade
                         let insertJSON = {
-                            "name" : name,
+                            "names" : names,
                             "gradeCategoryId" : gradeCategoryId,
                             "createdById" : authData.id
                         }
@@ -65,7 +65,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Grade Already Exist For Grade Category " + grade[0].name,
+                            "message" : "Some Grades Already Exist For Grade Category " + grade[0].name,
                             "success" : false,
                             "error" : errorCode.getStatus(500)
                         })

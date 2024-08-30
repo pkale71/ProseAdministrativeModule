@@ -41,6 +41,37 @@ DECLARE result TEXT;
 
     RETURN result;
 END$$
-DELIMITER ;
+DELIMITER;
+
+
+CREATE TABLE `schooling_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `schooling_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `schooling_program` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `schooling_category_id` int(11) NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
 

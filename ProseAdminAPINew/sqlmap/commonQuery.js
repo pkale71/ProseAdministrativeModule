@@ -1347,7 +1347,7 @@ db.getGrade = (id) =>
     })
 };
 
-db.duplicateGrade = (name, gradeCategoryId) => 
+db.duplicateGrade = (names, gradeCategoryId) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -1356,7 +1356,7 @@ db.duplicateGrade = (name, gradeCategoryId) =>
             let sql = `SELECT g.id, gc.name
             FROM grade g 
             JOIN grade_category gc ON gc.id = g.grade_category_id 
-            WHERE g.name = '${name}' AND g.grade_category_id = ${gradeCategoryId}`;
+            WHERE FIND_IN_SET(g.name, '${names}') > 0 AND g.grade_category_id = ${gradeCategoryId}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1379,8 +1379,21 @@ db.insertGrade = (grade) =>
     {
         try
         {
+            let nameArray = (grade.names).toString().split(",");
+            let sqlValues = "";
+            for(let i=0;i<nameArray.length;i++)
+            {
+                if(sqlValues == '')
+                {
+                    sqlValues = `('${nameArray[i].toString().trim()}', ${grade.gradeCategoryId}, NOW(), ${grade.createdById})`;
+                }
+                else
+                {
+                    sqlValues = sqlValues + `,('${nameArray[i].toString().trim()}', ${grade.gradeCategoryId}, NOW(), ${grade.createdById})`;
+                }
+            }
             let sql = `INSERT INTO grade (name, grade_category_id, created_on, created_by_id)
-            VALUES('${grade.name}', ${grade.gradeCategoryId}, NOW(), ${grade.createdById})`;
+            VALUES ${sqlValues}`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -2451,6 +2464,268 @@ db.deleteChapterWiseTopic = (id) =>
         try
         {
             let sql = `DELETE FROM chapter_wise_topic WHERE id = ${id}`;            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }            
+
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSchoolingGroups = (action) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sg.id, sg.name, sg.is_active AS isActive, 'schooling_group' AS tableName, 
+            COUNT(s.id) AS isExist
+            FROM schooling_group sg 
+            LEFT JOIN school s ON s.schooling_group_id = sg.id`;
+            if(action == "Active")
+            {
+                sql = sql + ` WHERE sg.is_active = 1`;
+            }
+            sql = sql + ` GROUP BY sg.id 
+            ORDER BY sg.name`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateSchoolingGroup = (name) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sg.id, sg.name
+            FROM schooling_group sg 
+            WHERE sg.name = '${name}'`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertSchoolingGroup = (schoolingGroup) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO schooling_group (name, created_on, created_by_id)
+            VALUES('${schoolingGroup.name}', NOW(), ${schoolingGroup.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkSchoolingGroupExist = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT s.id AS schoolId
+            FROM school s WHERE s.schooling_group_id = ${id}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteSchoolingGroup = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM schooling_group WHERE id = ${id}`;
+                        
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }            
+
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSchoolingCategories = (action) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sc.id, sc.name, sc.is_active AS isActive, 'schooling_category' AS tableName, 
+            COUNT(sp.id) AS isExist
+            FROM schooling_category sc 
+            LEFT JOIN schooling_program sp ON sp.schooling_category_id = sc.id`;
+            if(action == "Active")
+            {
+                sql = sql + ` WHERE sc.is_active = 1`;
+            }
+            sql = sql + ` GROUP BY sc.id 
+            ORDER BY sc.name`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateSchoolingCategory = (name) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sc.id, sc.name
+            FROM schooling_category sc 
+            WHERE sc.name = '${name}'`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertSchoolingCategory = (schoolingCategory) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO schooling_category (name, created_on, created_by_id)
+            VALUES('${schoolingCategory.name}', NOW(), ${schoolingCategory.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkSchoolingCategoryExist = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sp.id AS schoolingProgramId
+            FROM schooling_program sp WHERE sp.schooling_category_id = ${id}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteSchoolingCategory = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM schooling_category WHERE id = ${id}`;
+                        
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
