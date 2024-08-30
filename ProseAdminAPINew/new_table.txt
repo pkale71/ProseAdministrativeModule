@@ -74,4 +74,33 @@ CREATE TABLE `schooling_program` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `school` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `schooling_group_id` int(11) NOT NULL,
+  `school_sub_group_id` int(11) NOT NULL,
+  `schooling_category_id` int(11) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `mobile1` varchar(15) NOT NULL,
+  `mobile2` varchar(15) DEFAULT NULL,
+  `landline1` varchar(15) DEFAULT NULL,
+  `landline2` varchar(15) DEFAULT NULL,
+  `website` text NOT NULL,
+  `address` text NOT NULL,
+  `logo_file_name` text,
+  `country_id` int(11) NOT NULL,
+  `state_region_id` int(11) NOT NULL,
+  `district_id` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `pincode` varchar(9) NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `uuid` varchar(36) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  `deleted_on` datetime DEFAULT NULL,
+  `deleted_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
