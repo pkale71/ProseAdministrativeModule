@@ -45,6 +45,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         {
                             res.status(200)
                             return res.json({
+                                "id" : insertSyllabusId,
                                 "status_code" : 200,
                                 "success" : true,                            
                                 "message" : errorCode.getStatus(200)
