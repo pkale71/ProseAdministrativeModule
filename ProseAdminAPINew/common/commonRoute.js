@@ -41,8 +41,6 @@ commonRoute.use('/getSchoolingPrograms', require('../util/validateToken.js'), re
 commonRoute.use('/saveSchoolingProgram', require('../util/validateToken.js'), require('./save-schooling-program.js'));
 commonRoute.use('/updateSchoolingProgram', require('../util/validateToken.js'), require('./update-schooling-program.js'));
 commonRoute.use('/deleteSchoolingProgram', require('../util/validateToken.js'), require('./delete-schooling-program.js'));
-
-
 commonRoute.use('/getAcademicSessions', require('../util/validateToken.js'), require('./academic-sessions.js'));
 commonRoute.use('/saveAcademicSession', require('../util/validateToken.js'), require('./save-academic-session.js'));
 commonRoute.use('/updateAcademicSession', require('../util/validateToken.js'), require('./update-academic-session.js'));

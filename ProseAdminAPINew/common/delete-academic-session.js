@@ -6,7 +6,7 @@ let errorCode = new errorCodes();
 ////////Variables 
 let id;
 //////
-let gradeWiseAcademicSession;
+let subject;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -20,8 +20,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
             {
                 id = commonFunction.validateNumber(reqData.id);
                 
-                gradeWiseAcademicSession = await dbCommon.checkAcademicSessionExist(id);
-                if(gradeWiseAcademicSession.length == 0)
+                subject = await dbCommon.checkAcademicSessionExist(id);
+                if(subject.length == 0)
                 {
                     let updateResult = await dbCommon.deleteAcademicSession(id);
                     if(updateResult.affectedRows > 0)

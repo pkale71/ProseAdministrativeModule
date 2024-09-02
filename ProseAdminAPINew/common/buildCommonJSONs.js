@@ -190,10 +190,8 @@ buildCommonJSON.academicSessions = function(datas)
 /////Final JSON
         let finalJSON = {
             "id" : data.id,
-            "name" : data.name,
-            "startDate" : commonFunction.getFormattedDate(data.startDate, "yyyy-mm-dd"),
-            "endDate" : commonFunction.getFormattedDate(data.endDate, "yyyy-mm-dd"),
-            "isAdmissionOpen" : data.isAdmissionOpen,
+            "year" : data.year,
+            "batchYear" : data.batchYear,
             "isCurrentSession" : data.isCurrentSession,
             "isExist" : data.isExist
         }

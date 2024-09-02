@@ -657,7 +657,7 @@ db.checkSchoolingProgramExist = (id) =>
         try
         {
             let sql = `SELECT sspd.id AS schoolSchoolingProgramDetailId
-            FROM school_schooling_program_detail sspd WHERE s.schooling_program_id = ${id}`;
+            FROM school_schooling_program_detail sspd WHERE sspd.schooling_program_id = ${id}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -998,10 +998,9 @@ db.getAcademicSessions = () =>
     {
         try
         {
-            let sql = `SELECT acs.id, acs.name, acs.start_date AS startDate, acs.end_date AS endDate, 
-            acs.is_admission_open AS isAdmissionOpen, acs.is_current_session AS isCurrentSession, COUNT(sp.id) AS isExist
+            let sql = `SELECT acs.id, acs.year, acs.batch_year AS batchYear, acs.is_current_session AS isCurrentSession, COUNT(sub.id) AS isExist
             FROM academic_session acs 
-            LEFT JOIN schooling_program sp ON sp.academic_session_id = acs.id
+            LEFT JOIN subject sub ON (sub.applicable_from_year = acs.id OR sub.effective_till_year = acs.id)
             GROUP BY acs.id
             ORDER BY acs.id`;
             dbConn.query(sql, (error, result) => 
@@ -1044,15 +1043,15 @@ db.getAcademicSession = (id) =>
     })
 };
 
-db.duplicateAcademicSession = (name) => 
+db.duplicateAcademicSession = (year) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
-            let sql = `SELECT acs.id, acs.name
+            let sql = `SELECT acs.id, acs.year
             FROM academic_session acs 
-            WHERE acs.name = '${name}'`;
+            WHERE acs.year = '${year}'`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1075,8 +1074,9 @@ db.insertAcademicSession = (academicSession) =>
     {
         try
         {
-            let sql = `INSERT INTO academic_session (name, start_date, end_date, is_admission_open, is_current_session, created_on, created_by_id)
-            VALUES('${academicSession.name}', '${academicSession.startDate}', '${academicSession.endDate}', ${academicSession.isAdmissionOpen}, ${academicSession.isCurrentSession}, NOW(), ${academicSession.createdById})`;
+            let batchYearArray = academicSession.year.toString().split("-");
+            let sql = `INSERT INTO academic_session (year, batch_year, is_current_session, created_on, created_by_id)
+            VALUES('${academicSession.year}', '${batchYearArray[0].toString().trim()}', ${academicSession.isCurrentSession}, NOW(), ${academicSession.createdById})`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -1100,7 +1100,8 @@ db.updateAcademicSession = (academicSession) =>
     {
         try
         {
-            let sql = `UPDATE academic_session set name = '${academicSession.name}', start_date = '${academicSession.startDate}', end_date = '${academicSession.endDate}', is_admission_open = ${academicSession.isAdmissionOpen}, is_current_session = ${academicSession.isCurrentSession}, modify_on = NOW(), modify_by_id = ${academicSession.modifyById} WHERE id = ${academicSession.id}`;
+            let batchYearArray = academicSession.year.toString().split("-");
+            let sql = `UPDATE academic_session set year = '${academicSession.year}', batch_year = '${batchYearArray[0].toString().trim()}', is_current_session = ${academicSession.isCurrentSession}, modify_on = NOW(), modify_by_id = ${academicSession.modifyById} WHERE id = ${academicSession.id}`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -1124,8 +1125,8 @@ db.checkAcademicSessionExist = (id) =>
     {
         try
         {
-            let sql = `SELECT gws.id AS gradeWiseSyllabusId
-            FROM grade_wise_syllabus gws WHERE gws.academic_session_id = ${id}`;
+            let sql = `SELECT sub.id AS subjectId
+            FROM subject sub WHERE (sub.applicable_from_year = ${id} OR sub.effective_till_year = ${id})`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
