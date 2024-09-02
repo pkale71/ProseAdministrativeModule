@@ -3,7 +3,7 @@ let dbCommon = require('../sqlmap/commonQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables 
-let name;
+let names;
 let schoolingCategoryId;
 //////
 let schoolingProgram;
@@ -16,11 +16,11 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.schoolingCategory != undefined)
+        if(reqData.names != undefined && reqData.schoolingCategory != undefined)
         {
-            if(reqData.name != "" && reqData.schoolingCategory.id != "")
+            if(reqData.names != "" && reqData.schoolingCategory.id != "")
             {
-                name = reqData.name;
+                names = reqData.names;
                 schoolingCategoryId = commonFunction.validateNumber(reqData.schoolingCategory.id);
 
             ////Check Schooling Category Exist
@@ -28,12 +28,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 if(schoolingCategory.length == 1)
                 {
                     ////Check Duplicate Schooling Program
-                    schoolingProgram = await dbCommon.duplicateSchoolingProgram(name, schoolingCategoryId, '');
+                    schoolingProgram = await dbCommon.duplicateSchoolingProgram(names, schoolingCategoryId, '');
                     if(schoolingProgram.length == 0)
                     {                    
                 ///insert Schooling Program
                         let insertJSON = {
-                            "name" : name,
+                            "names" : names,
                             "schoolingCategoryId" : schoolingCategoryId,
                             "createdById" : authData.id
                         }

@@ -622,14 +622,14 @@ db.getSchoolingProgram = (id) =>
     })
 };
 
-db.duplicateSchoolingProgram = (name, schoolingCategoryId, id) => 
+db.duplicateSchoolingProgram = (names, schoolingCategoryId, id) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
             let sql = `SELECT sp.id AS schoolingProgramId
-            FROM schooling_program sp WHERE sp.name = '${name}' AND sp.schooling_category_id = ${schoolingCategoryId}`;
+            FROM schooling_program sp WHERE FIND_IN_SET(sp.name, '${names}') > 0 AND sp.schooling_category_id = ${schoolingCategoryId}`;
             if(id != '')
             {
                 sql = sql + ` AND sp.id != ${id}`;
@@ -680,8 +680,21 @@ db.insertSchoolingProgram = (schoolingProgram) =>
     {
         try
         {
+            let sqlValues = '';
+            let nameArray = names.toString().split(",");
+            for(let i = 0;i<nameArray.length;i++)
+            {
+                if(sqlValues == '')
+                {
+                    sqlValues = `('${nameArray[i]}', ${schoolingProgram.schoolingCategoryId}, NOW(), ${schoolingProgram.createdById})`;
+                }
+                else
+                {
+                    sqlValues = sqlValues + `,('${nameArray[i]}', ${schoolingProgram.schoolingCategoryId}, NOW(), ${schoolingProgram.createdById})`;
+                }
+            }
             let sql = `INSERT INTO schooling_program (name, schooling_category_id, created_on, created_by_id)
-            VALUES('${schoolingProgram.name}', ${schoolingProgram.schoolingCategoryId}, NOW(), ${schoolingProgram.createdById})`;
+            VALUES ${sqlValues}`;
             
             dbConn.query(sql, (error, result) => 
             {
