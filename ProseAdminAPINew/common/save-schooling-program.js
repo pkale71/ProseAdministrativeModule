@@ -4,10 +4,10 @@ let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables 
 let name;
-let academicSessionId;
+let schoolingCategoryId;
 //////
 let schoolingProgram;
-let academicSession;
+let schoolingCategory;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -16,25 +16,25 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.academicSession != undefined)
+        if(reqData.name != undefined && reqData.schoolingCategory != undefined)
         {
-            if(reqData.name != "" && reqData.academicSession.id != "")
+            if(reqData.name != "" && reqData.schoolingCategory.id != "")
             {
                 name = reqData.name;
-                academicSessionId = commonFunction.validateNumber(reqData.academicSession.id);
+                schoolingCategoryId = commonFunction.validateNumber(reqData.schoolingCategory.id);
 
-            ////Check Academic Session Exist
-                academicSession = await dbCommon.getAcademicSession(academicSessionId);
-                if(academicSession.length == 1)
+            ////Check Schooling Category Exist
+                schoolingCategory = await dbCommon.getSchoolingCategory(schoolingCategoryId);
+                if(schoolingCategory.length == 1)
                 {
                     ////Check Duplicate Schooling Program
-                    schoolingProgram = await dbCommon.duplicateSchoolingProgram(name, academicSessionId);
+                    schoolingProgram = await dbCommon.duplicateSchoolingProgram(name, schoolingCategoryId);
                     if(schoolingProgram.length == 0)
                     {                    
-                ///insert User Role
+                ///insert Schooling Program
                         let insertJSON = {
                             "name" : name,
-                            "academicSessionId" : academicSessionId,
+                            "schoolingCategoryId" : schoolingCategoryId,
                             "createdById" : authData.id
                         }
                         let insertSchoolingProgramResult = await dbCommon.insertSchoolingProgram(insertJSON);
@@ -76,7 +76,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
-                        "message" : "Academic Session Not Exist",
+                        "message" : "Schooling Category Not Exist",
                         "success" : false,
                         "error" : errorCode.getStatus(500)
                     })

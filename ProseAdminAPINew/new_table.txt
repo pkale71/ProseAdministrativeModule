@@ -104,3 +104,49 @@ CREATE TABLE `school` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `school_schooling_program_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `school_id` int(11) NOT NULL,
+  `academic_session_id` int(11) NOT NULL,
+  `schooling_program_id` int(11) NOT NULL,
+  `admission_start_date` date NOT NULL,
+  `admission_end_date` date NOT NULL,
+  `schooling_program_start_date` date NOT NULL,
+  `schooling_program_end_date` date NOT NULL,
+  `batch_type_ids` text NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `uuid` varchar(36) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `schooling_program` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text NOT NULL,
+  `schooling_category_id` int(11) NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `academic_session` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `year` varchar(30) NOT NULL,
+  `batch_year` varchar(10) NOT NULL,
+  `is_current_session` int(11) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `modify_on` datetime DEFAULT NULL,
+  `modify_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+
+

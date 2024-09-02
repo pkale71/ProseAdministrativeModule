@@ -558,20 +558,20 @@ db.deleteUserType = (id, action) =>
 };
 
 ///////////Academic Admin
-db.getSchoolingPrograms = (academicSessionId, action) => 
+db.getSchoolingPrograms = (schoolingCategoryId, action) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
             let sql = `SELECT sp.id AS schoolingProgramId, sp.name AS schoolingProgramName, sp.is_active AS isActive, 'schooling_program' AS tableName,
-            ac.id AS academicSessionId, ac.name AS academicSessionName, COUNT(s.id) AS isExist
+            sc.id AS schoolingCategoryId, sc.name AS schoolingCategoryName, COUNT(sspd.id) AS isExist
             FROM schooling_program sp 
-            JOIN academic_session ac ON ac.id = sp.academic_session_id 
-            LEFT JOIN syllabus s ON s.schooling_program_id = sp.id`;
-            if(academicSessionId != "")
+            JOIN schooling_category sc ON sc.id = sp.schooling_category_id 
+            LEFT JOIN school_schooling_program_detail sspd ON sspd.schooling_program_id = sp.id`;
+            if(schoolingCategoryId != "")
             {
-                sql = sql + ` WHERE sp.academic_session_id = ${academicSessionId}`;
+                sql = sql + ` WHERE sp.schooling_category_id = ${schoolingCategoryId}`;
                 if(action == "Active")
                 {
                     sql = sql + ` AND sp.is_active = 1`;
@@ -598,7 +598,7 @@ db.getSchoolingPrograms = (academicSessionId, action) =>
     })
 };
 
-db.getSchoolingProgram = (id, academicSessionId) => 
+db.getSchoolingProgram = (id) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -622,14 +622,14 @@ db.getSchoolingProgram = (id, academicSessionId) =>
     })
 };
 
-db.duplicateSchoolingProgram = (name, academicSessionId) => 
+db.duplicateSchoolingProgram = (name, schoolingCategoryId) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
             let sql = `SELECT sp.id AS schoolingProgramId
-            FROM schooling_program sp WHERE sp.name = '${name}' AND sp.academic_session_id = ${academicSessionId}`;
+            FROM schooling_program sp WHERE sp.name = '${name}' AND sp.schooling_category_id = ${schoolingCategoryId}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -652,8 +652,8 @@ db.checkSchoolingProgramExist = (id) =>
     {
         try
         {
-            let sql = `SELECT s.id AS syllabusId
-            FROM syllabus s WHERE s.schooling_program_id = ${id}`;
+            let sql = `SELECT sspd.id AS schoolSchoolingProgramDetailId
+            FROM school_schooling_program_detail sspd WHERE s.schooling_program_id = ${id}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -676,8 +676,8 @@ db.insertSchoolingProgram = (schoolingProgram) =>
     {
         try
         {
-            let sql = `INSERT INTO schooling_program (name, academic_session_id, created_on, created_by_id)
-            VALUES('${schoolingProgram.name}', ${schoolingProgram.academicSessionId}, NOW(), ${schoolingProgram.createdById})`;
+            let sql = `INSERT INTO schooling_program (name, schooling_category_id, created_on, created_by_id)
+            VALUES('${schoolingProgram.name}', ${schoolingProgram.schoolingCategoryId}, NOW(), ${schoolingProgram.createdById})`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -2628,6 +2628,30 @@ db.getSchoolingCategories = (action) =>
             }
             sql = sql + ` GROUP BY sc.id 
             ORDER BY sc.name`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSchoolingCategory = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sc.id, sc.name, sc.is_active AS isActive
+            FROM schooling_category sc WHERE sc.id = ${id}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)

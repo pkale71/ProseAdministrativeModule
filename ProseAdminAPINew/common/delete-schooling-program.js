@@ -6,7 +6,7 @@ let errorCode = new errorCodes();
 ////////Variables 
 let id;
 //////
-let syllabus;
+let schoolSchoolingProgramDetail;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -20,8 +20,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
             {
                 id = commonFunction.validateNumber(reqData.id);
 
-                syllabus = await dbCommon.checkSchoolingProgramExist(id);
-                if(syllabus.length == 0)
+                schoolSchoolingProgramDetail = await dbCommon.checkSchoolingProgramExist(id);
+                if(schoolSchoolingProgramDetail.length == 0)
                 {
                     let updateResult = await dbCommon.deleteSchoolingProgram(id, 'Hard Delete');
                     if(updateResult.affectedRows > 0)
