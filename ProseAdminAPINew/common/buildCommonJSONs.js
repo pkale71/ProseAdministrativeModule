@@ -117,14 +117,14 @@ buildCommonJSON.userTypes = function(datas)
 buildCommonJSON.schoolingProgrmas = function(datas)
 {
     let resultJSON = [];
-    let academicSessionJSON = [];
+    let schoolingCategoryJSON = [];
 
     datas.forEach((data) => 
     { 
-        academicSessionJSON = [];
-        academicSessionJSON = {
-            "id" : data.academicSessionId,
-            "name" : data.academicSessionName
+        schoolingCategoryJSON = [];
+        schoolingCategoryJSON = {
+            "id" : data.schoolingCategoryId,
+            "name" : data.schoolingCategoryName
         }
 /////Final JSON
         let finalJSON = {
@@ -132,7 +132,7 @@ buildCommonJSON.schoolingProgrmas = function(datas)
             "name" : data.schoolingProgramName,
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '',
-            "academicSession" : academicSessionJSON,
+            "schoolingCategory" : schoolingCategoryJSON,
             "isExist" :  data.isExist
         }
         resultJSON.push(finalJSON);

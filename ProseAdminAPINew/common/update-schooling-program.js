@@ -3,6 +3,7 @@ let dbCommon = require('../sqlmap/commonQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables 
+let id;
 let name;
 let schoolingCategoryId;
 //////
@@ -16,10 +17,11 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.schoolingCategory != undefined)
+        if(reqData.id != undefined && reqData.name != undefined && reqData.schoolingCategory != undefined)
         {
-            if(reqData.name != "" && reqData.schoolingCategory.id != "")
+            if(reqData.id != "" && reqData.name != "" && reqData.schoolingCategory.id != "")
             {
+                id = commonFunction.validateNumber(reqData.id);
                 name = reqData.name;
                 schoolingCategoryId = commonFunction.validateNumber(reqData.schoolingCategory.id);
 
@@ -28,19 +30,19 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 if(schoolingCategory.length == 1)
                 {
                     ////Check Duplicate Schooling Program
-                    schoolingProgram = await dbCommon.duplicateSchoolingProgram(name, schoolingCategoryId, '');
+                    schoolingProgram = await dbCommon.duplicateSchoolingProgram(name, schoolingCategoryId, id);
                     if(schoolingProgram.length == 0)
                     {                    
-                ///insert Schooling Program
-                        let insertJSON = {
+                ///update Schooling Program
+                        let updateJSON = {
+                            "id" : id,
                             "name" : name,
                             "schoolingCategoryId" : schoolingCategoryId,
                             "createdById" : authData.id
                         }
-                        let insertSchoolingProgramResult = await dbCommon.insertSchoolingProgram(insertJSON);
-                        let insertSchoolingProgramId = insertSchoolingProgramResult.insertId;
-            ///////
-                        if(parseInt(insertSchoolingProgramId) > 0)
+                        let updateSchoolingProgramResult = await dbCommon.updateSchoolingProgram(updateJSON);
+                ///////
+                        if(updateSchoolingProgramResult.affectedRows > 0)
                         {
                             res.status(200)
                             return res.json({
@@ -65,7 +67,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Schooling Program Already Exist",
+                            "message" : "Schooling Program Already Exist For Same Schooling Category",
                             "success" : false,
                             "error" : errorCode.getStatus(500)
                         })

@@ -622,7 +622,7 @@ db.getSchoolingProgram = (id) =>
     })
 };
 
-db.duplicateSchoolingProgram = (name, schoolingCategoryId) => 
+db.duplicateSchoolingProgram = (name, schoolingCategoryId, id) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -630,6 +630,10 @@ db.duplicateSchoolingProgram = (name, schoolingCategoryId) =>
         {
             let sql = `SELECT sp.id AS schoolingProgramId
             FROM schooling_program sp WHERE sp.name = '${name}' AND sp.schooling_category_id = ${schoolingCategoryId}`;
+            if(id != '')
+            {
+                sql = sql + ` AND sp.id != ${id}`;
+            }
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -678,6 +682,30 @@ db.insertSchoolingProgram = (schoolingProgram) =>
         {
             let sql = `INSERT INTO schooling_program (name, schooling_category_id, created_on, created_by_id)
             VALUES('${schoolingProgram.name}', ${schoolingProgram.schoolingCategoryId}, NOW(), ${schoolingProgram.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateSchoolingProgram = (schoolingProgram) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE schooling_program SET name = '${schoolingProgram.name}', schooling_category_id = ${schoolingProgram.schoolingCategoryId}, updated_on = NOW(), updated_by_id = ${schoolingProgram.createdById} WHERE id = ${schoolingProgram.id}`;
             
             dbConn.query(sql, (error, result) => 
             {
