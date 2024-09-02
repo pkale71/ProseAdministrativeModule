@@ -681,7 +681,7 @@ db.insertSchoolingProgram = (schoolingProgram) =>
         try
         {
             let sqlValues = '';
-            let nameArray = names.toString().split(",");
+            let nameArray = schoolingProgram.names.toString().split(",");
             for(let i = 0;i<nameArray.length;i++)
             {
                 if(sqlValues == '')
