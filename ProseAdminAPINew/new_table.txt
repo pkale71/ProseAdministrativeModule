@@ -147,6 +147,29 @@ CREATE TABLE `academic_session` (
   PRIMARY KEY (`id`)
 );
 
+ALTER TABLE `prose_administrative`.`subject` 
+CHANGE COLUMN `applicable_from_year` `applicable_from_year_id` INT(11) NOT NULL ,
+CHANGE COLUMN `effective_till_year` `effective_till_year_id` INT(11) NULL DEFAULT NULL ;
 
+CREATE TABLE `batch_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  `applicable_from_year_id` int(11) NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `updated_on` datetime NULL,
+  `updated_by_id` int(11) NULL,
+  PRIMARY KEY (`id`)
+);
 
-
+CREATE TABLE `school_sub_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+);

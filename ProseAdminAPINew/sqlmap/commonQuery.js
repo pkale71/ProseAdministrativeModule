@@ -2809,4 +2809,356 @@ db.deleteSchoolingCategory = (id) =>
     })
 };
 
+db.getSchoolSubGroups = (action) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT ssg.id, ssg.name, ssg.is_active AS isActive, 'school_sub_group' AS tableName, 
+            COUNT(s.id) AS isExist
+            FROM school_sub_group ssg 
+            LEFT JOIN school s ON s.school_sub_group_id = ssg.id`;
+            if(action == "Active")
+            {
+                sql = sql + ` WHERE ssg.is_active = 1`;
+            }
+            sql = sql + ` GROUP BY ssg.id 
+            ORDER BY ssg.name`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSchoolSubGroup = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT ssg.id            
+            FROM school_sub_group ssg WHERE ssg.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateSchoolSubGroup = (name) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT ssg.id, ssg.name
+            FROM school_sub_group ssg 
+            WHERE ssg.name = '${name}'`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertSchoolSubGroup = (schoolSubGroup) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO school_sub_group (name, created_on, created_by_id)
+            VALUES('${schoolSubGroup.name}', NOW(), ${schoolSubGroup.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkSchoolSubGroupExist = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT s.id AS schoolId
+            FROM school s WHERE s.school_sub_group_id = ${id}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteSchoolSubGroup = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM school_sub_group WHERE id = ${id}`;
+                        
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }            
+
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+
+db.getBatchTypes = (academicSessionId, action) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bt.id, bt.name, bt.start_time AS startTime, bt.end_time AS endTime, bt.is_active AS isActive, 'batch_type' AS tableName, 
+            acs.id AS academicSessionId, acs.year AS academicSessionYear, acs.batch_year AS batchYear,
+            COUNT(sspd.id) AS isExist
+            FROM batch_type bt 
+            JOIN academic_session acs ON acs.id = bt.applicable_from_year_id
+            LEFT JOIN school_schooling_program_detail sspd ON FIND_IN_SET(bt.id, sspd.batch_type_ids) > 0`;
+            if(academicSessionId != "")
+            {
+                sql = sql + ` WHERE bt.applicable_from_year_id = ${academicSessionId}`;
+                if(action == "Active")
+                {
+                    sql = sql + ` AND bt.is_active = 1`;
+                }
+            }
+            else if(action == "Active")
+            {
+                sql = sql + ` WHERE bt.is_active = 1`;
+            }
+            sql = sql + ` GROUP BY bt.id 
+            ORDER BY bt.name`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getBatchType = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bt.id            
+            FROM batch_type bt WHERE bt.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateBatchType = (name, academicSessionId, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bt.id, bt.name
+            FROM batch_type bt 
+            WHERE bt.name = '${name}' AND bt.applicable_from_year_id = ${academicSessionId}`;
+            if(id != "")
+            {
+                sql = sql + ` AND bt.id != ${id}`
+            }
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertBatchType = (batchType) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO batch_type (name, start_time, end_time, applicable_from_year_id, created_on, created_by_id)
+            VALUES('${batchType.name}', '${batchType.startTime}', '${batchType.endTime}', ${batchType.academicSessionId}, NOW(), ${batchType.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateBatchType = (batchType) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE batch_type SET name= '${batchType.name}', start_time = '${batchType.startTime}', end_time = '${batchType.endTime}', applicable_from_year_id = ${batchType.academicSessionId}, updated_on = NOW(), updated_by_id = ${batchType.createdById} WHERE id = ${batchType.id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.checkBatchTypeExist = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sspd.id AS schoolingProgramDetailId
+            FROM school_schooling_program_detail sspd WHERE FIND_IN_SET(${id}, sspd.batch_type_ids) > 0`;
+           
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteBatchType = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM batch_type WHERE id = ${id}`;
+                        
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }            
+
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 module.exports = db

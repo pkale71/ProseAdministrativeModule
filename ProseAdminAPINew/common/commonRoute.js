@@ -45,6 +45,13 @@ commonRoute.use('/getAcademicSessions', require('../util/validateToken.js'), req
 commonRoute.use('/saveAcademicSession', require('../util/validateToken.js'), require('./save-academic-session.js'));
 commonRoute.use('/updateAcademicSession', require('../util/validateToken.js'), require('./update-academic-session.js'));
 commonRoute.use('/deleteAcademicSession', require('../util/validateToken.js'), require('./delete-academic-session.js'));
+commonRoute.use('/getSchoolSubGroups', require('../util/validateToken.js'), require('./school-sub-groups.js'));
+commonRoute.use('/saveSchoolSubGroup', require('../util/validateToken.js'), require('./save-school-sub-group.js'));
+commonRoute.use('/deleteSchoolSubGroup', require('../util/validateToken.js'), require('./delete-school-sub-group.js'));
+commonRoute.use('/getBatchTypes', require('../util/validateToken.js'), require('./batch-types.js'));
+commonRoute.use('/saveBatchType', require('../util/validateToken.js'), require('./save-batch-type.js'));
+commonRoute.use('/updateBatchType', require('../util/validateToken.js'), require('./update-batch-type.js'));
+commonRoute.use('/deleteBatchType', require('../util/validateToken.js'), require('./delete-batch-type.js'));
 
 
 commonRoute.use('/getGradeWiseSyllabuses', require('../util/validateToken.js'), require('./grade-wise-syllabuses.js'));

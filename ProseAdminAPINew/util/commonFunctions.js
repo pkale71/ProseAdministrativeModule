@@ -50,6 +50,11 @@ commonFunction.isValidDate = function(dateString, format)
     return moment(dateString, format, true).isValid();
 }
 
+commonFunction.isValidTime = function(timeString) 
+{
+    return moment(timeString, ["HH:mm", "HH:mm:ss"], true).isValid();
+}
+
 commonFunction.validateNumber = function(data, zeroRequired = 'No')
 {
     let val = '';
