@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="gradeAddModal"><i class="fa fa-plus"></i>&nbsp;Add Schooling Program</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addProgramForm" id="addProgram" (ngSubmit)="saveSchoolingProgram()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-3">
+                <form [formGroup]="schoolingCategoryForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="schoolingCategory">Schooling Category&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="schoolingCategory" formControlName="schoolingCategory"
+                        [ngClass]="{'is-invalid': !schoolingCategoryForm.controls['schoolingCategory'].valid && !isValidForm}">
+                        <option value="{{schoolingCategory.id}}" *ngFor="let schoolingCategory of schoolingCategories">{{schoolingCategory?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="schoolingCategoryForm.controls['schoolingCategory'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please Select Schooling Category.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-9">
+                <div class="form-group">
+                    <label class="form-control-label" for="names">Names&nbsp;<span style="color: red;">*</span></label>
+                    <tag-input class="tag-chips" [(ngModel)]="names" formControlName="name" [modelAsStrings]="true" (keyup.enter)="onEnterKey($event)"></tag-input>
+                    <label style="color: red;"
+                    *ngIf="addProgramForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please Enter Schooling Program Name.</label>                    
+                </div>
+            </div> 
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="container-fluid">
+        <div class="m-4">
+            <img src="./assets/images/logo/logo.png" style="width: 180px; margin-left: 0px; margin-top: -7px;">
+        </div>
+        <div class="m-3">
+            <div class="row justify-content-md-center" style="text-align: center;">
+                <div class="col-md-12">
+                    <h3 class="wow fadeInUp" data-wow-delay="0s"><i class="fa fa-layer-group" ></i>&nbsp; Select Module</h3>
+                </div>
+            </div>            
+        </div> 
+        <div class="card" *ngIf="loginUser?.userModules?.length > 0">     
+            <div class="row">
+                <div class="ng-trigger ng-trigger-collapsedCard col-md-4" style="text-align: center;" *ngFor="let module of loginUser.userModules; let i=index">
+                    <div class="card-block theme-bg2" (click)="getUserModulesData(i)" style="cursor: pointer;">
+                        <div class="d-flex">
+                            <div class="flex-grow-1 me-3">
+                                <h4 class="text-white">{{module?.module?.name}}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-auto flex-grow-1">
+                                <p class="text-white text-sm text-opacity-50 mb-1">Category</p>
+                                <h6 class="text-white mb-0">{{loginUser?.userCategory?.name}}</h6>
+                            </div>
+                            <div class="col-auto flex-grow-1">
+                                <p class="text-white text-sm text-opacity-50 mb-1">User Type</p>
+                                <h6 class="text-white mb-0">{{module?.userType?.name}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <!---->
+                </div>
+            </div>      
+        </div>
+        <div class="card" *ngIf="loginUser?.userModules?.length == 0 ">
+            <p class="mt-2" style="font-size: 20px;text-align: center;">No Module(s) Assigned.</p>
+        </div>
+    </div>
+</div>

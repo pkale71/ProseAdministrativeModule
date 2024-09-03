@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header" style="padding: 10px 25px;">
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-school"></i>&nbsp; Schooling Groups&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+                <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                (click)="addSchoolingGroup()">Add Schooling Group</button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table datatable id="tblSchoolingGroup" class="table table-striped row-border table-hover pt-10">
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Schooling Group</th>
+                                <th>Active</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let schoolingGroup of schoolingGroups let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{schoolingGroup.name|titlecase}}</td>
+                                <td>
+                                    <span [ngClass]="schoolingGroup.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(schoolingGroup)" 
+                                    style="cursor: pointer;" title="Update Status">
+                                    {{schoolingGroup.isActive? 'Yes' : 'No' }}
+                                    </span>
+                                </td>   
+                                <td style="width:40px;text-align: right;">
+                                    <!-- <i class="fa fa-edit" (click)="editSchoolingGroup(schoolingGroup)" title="Edit" style="cursor: pointer;"></i>&nbsp; -->
+                                    <i class="fa fa-trash-alt" (click)="deleteSchoolingGroup(schoolingGroup)" 
+                                    title="Delete" style="cursor: pointer;"></i>&nbsp;
+                                </td>
+                            </tr>
+                            <tr *ngIf="schoolingGroups.length == 0">
+                                <td></td>
+                                <td></td>
+                                <td>No record(s) found</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
