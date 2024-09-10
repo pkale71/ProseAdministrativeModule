@@ -43,10 +43,10 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         if(syllabus.length == 1)
                         {
                              ////check Grade Wise Syllabus Exist
-                            gradeWiseSyllabus = await dbCommon.getGradeWiseSyllabus(academicSessionId, gradeId, syllabusId);
-                            if(gradeWiseSyllabus.length == 1)
-                            {
-                                ////Check duplicate Syllabus Wise Subject
+                            // gradeWiseSyllabus = await dbCommon.getGradeWiseSyllabus(academicSessionId, gradeId, syllabusId);
+                            // if(gradeWiseSyllabus.length == 1)
+                            // {
+                                //Check duplicate Syllabus Wise Subject
                                 syllabusWiseSubject = await dbCommon.duplicateSyllabusWiseSubject(academicSessionId, gradeId, syllabusId, name, "");
                                 if(syllabusWiseSubject.length == 0)
                                 {                    
@@ -90,17 +90,17 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                         "error" : errorCode.getStatus(500)
                                     })
                                 }
-                            }
-                            else
-                            {
-                                res.status(500)
-                                return res.json({
-                                    "status_code" : 500,
-                                    "message" : "Grade Wise Syllabus Not Exist",
-                                    "success" : false,
-                                    "error" : errorCode.getStatus(500)
-                                })
-                            }
+                            // }
+                            // else
+                            // {
+                            //     res.status(500)
+                            //     return res.json({
+                            //         "status_code" : 500,
+                            //         "message" : "Grade Wise Syllabus Not Exist",
+                            //         "success" : false,
+                            //         "error" : errorCode.getStatus(500)
+                            //     })
+                            // }
                         }
                         else
                         {

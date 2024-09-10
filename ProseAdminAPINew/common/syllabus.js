@@ -3,9 +3,9 @@ const commonFunction = require('../util/commonFunctions.js');
 let dbCommon = require('../sqlmap/commonQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
-////////Variables 
+//Variables 
 let id;
-//////
+//
 let syllabus;
 
 module.exports = require('express').Router().get('/:id', async(req,res) =>
@@ -32,7 +32,7 @@ module.exports = require('express').Router().get('/:id', async(req,res) =>
             "status_code" : 500,
             "message" : "Something Went Wrong",
             "success" : false,
-            "error" : e,
+            "error" : e
         });
     }
 })

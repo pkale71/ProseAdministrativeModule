@@ -1,5 +1,7 @@
 let dbConn = require('../util/dbConnection');
 const commonFunction = require('../util/commonFunctions');
+const { resolve } = require('path');
+const { error } = require('console');
 let db = {};
 
 db.checkDatabaseExist = () =>
@@ -71,6 +73,41 @@ db.updateIsActive = (id, tableName) =>
             else
             {
                 sql = sql + ` WHERE id = ${id}`;
+            }
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });          
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateSubChapTopIsActive = (updateJSON) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE ${updateJSON.tableName} SET is_active = IF(is_active = 1, 0, 1), 
+            effective_till_year_id = IF(is_active = 1, NULL, ${updateJSON.academicYearId}), 
+            updated_on = NOW(), updated_by_id = ${updateJSON.createdById}`;
+            
+            if(isNaN(updateJSON.id))
+            {
+                sql = sql + ` WHERE uuid = '${updateJSON.id}'`;
+            }
+            else
+            {
+                sql = sql + ` WHERE id = ${updateJSON.id}`;
             }
             
             dbConn.query(sql, (error, result) => 
@@ -803,7 +840,8 @@ db.getSyllabus = (id) =>
             GROUP_CONCAT(gc.id ORDER BY gc.id) AS gradeCategoryIds, GROUP_CONCAT(gc.name ORDER BY gc.id) AS gradeCategoryNames
             FROM syllabus s
             JOIN grade_category gc ON FIND_IN_SET(gc.id, s.grade_category_ids) > 0
-            WHERE s.id = ${id}`;
+            WHERE FIND_IN_SET(s.id, '${id}') > 0
+            GROUP BY s.id, s.name, s.is_active`;
            
             dbConn.query(sql, (error, result) => 
             {
@@ -1000,7 +1038,7 @@ db.getAcademicSessions = () =>
         {
             let sql = `SELECT acs.id, acs.year, acs.batch_year AS batchYear, acs.is_current_session AS isCurrentSession, COUNT(sub.id) AS isExist
             FROM academic_session acs 
-            LEFT JOIN subject sub ON (sub.applicable_from_year = acs.id OR sub.effective_till_year = acs.id)
+            LEFT JOIN subject sub ON (sub.applicable_from_year_id = acs.id OR sub.effective_till_year_id = acs.id)
             GROUP BY acs.id
             ORDER BY acs.id`;
             dbConn.query(sql, (error, result) => 
@@ -1068,6 +1106,32 @@ db.duplicateAcademicSession = (year) =>
     })
 };
 
+// db.insertAcademicSession = (academicSession) => 
+// {
+//     return new Promise((resolve, reject) => 
+//     {
+//         try
+//         {
+//             let batchYearArray = academicSession.year.toString().split("-");
+//             let sql = `INSERT INTO academic_session (year, batch_year, is_current_session, created_on, created_by_id)
+//             VALUES('${academicSession.year}', '${batchYearArray[0].toString().trim()}', ${academicSession.isCurrentSession}, NOW(), ${academicSession.createdById})`;
+            
+//             dbConn.query(sql, (error, result) => 
+//             {
+//                 if(error)
+//                 {
+//                     return reject(error);
+//                 }
+//                 return resolve(result);
+//             });
+//         }
+//         catch(e)
+//         {
+//             throw e;
+//         }
+//     })
+// };
+
 db.insertAcademicSession = (academicSession) => 
 {
     return new Promise((resolve, reject) => 
@@ -1075,17 +1139,30 @@ db.insertAcademicSession = (academicSession) =>
         try
         {
             let batchYearArray = academicSession.year.toString().split("-");
+            // insert new academic session
             let sql = `INSERT INTO academic_session (year, batch_year, is_current_session, created_on, created_by_id)
             VALUES('${academicSession.year}', '${batchYearArray[0].toString().trim()}', ${academicSession.isCurrentSession}, NOW(), ${academicSession.createdById})`;
-            
-            dbConn.query(sql, (error, result) => 
+            dbConn.query(sql, (error,result) => 
             {
                 if(error)
                 {
                     return reject(error);
+                }    
+        //check any other academic session is_current_session = 1 or not            
+                if(parseInt(academicSession.isCurrentSession) == 1)
+                {
+                    let sql1 = `UPDATE academic_session SET is_current_session = 0 WHERE is_current_session = 1 AND id != ${result.insertId}`;
+                    dbConn.query(sql1, (error1, result1) => 
+                    {
+                        if(error1)
+                        {
+                            return reject(error1);
+                        }
+                        return resolve(result);
+                    });
                 }
                 return resolve(result);
-            });
+            });             
         }
         catch(e)
         {
@@ -1109,7 +1186,20 @@ db.updateAcademicSession = (academicSession) =>
                 {
                     return reject(error);
                 }
-                return resolve(result);
+                //check any other academic session is_current_session = 1 or not            
+                if(parseInt(academicSession.isCurrentSession) == 1)
+                {
+                    let sql1 = `UPDATE academic_session SET is_current_session = 0 WHERE is_current_session = 1 AND id != ${academicSession.id}`;
+                    dbConn.query(sql1, (error1, result1) => 
+                    {
+                        if(error1)
+                        {
+                            return reject(error1);
+                        }
+                        return resolve(result);
+                    });
+                }
+               return resolve(result);
             });
         }
         catch(e)
@@ -1167,6 +1257,32 @@ db.deleteAcademicSession = (id) =>
         }
     })
 };
+
+db.getCurrentAcademicSession = () => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT acs.id, acs.year, acs.batch_year AS batchYear, 
+            acs.is_current_session AS isCurrentSession FROM academic_session acs 
+            WHERE acs.is_current_session = 1`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+}; 
 
 db.getGradeCategories = (action) => 
 {
@@ -1502,6 +1618,278 @@ db.deleteGrade = (id, action) =>
     })
 };
 
+db.getSubjects = (gradeCategoryId, gradeId, syllabusId, action) => 
+    {
+        return new Promise((resolve, reject) => 
+        {
+            try
+            {
+                let filters = "";
+                let sql = `SELECT sub.id, sub.name, sub.is_active AS isActive, 'subject' AS tableName,
+                gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
+                g.id AS gradeId, g.name AS gradeName,
+                s.id AS syllabusId, s.name AS syllabusName,
+                afy.id AS applicableFromYearId, afy.year AS applicableFromYear,
+                ety.id AS effectiveTillYearId, ety.year AS effectiveTillYear,
+                COUNT(c.id) AS isExist
+                FROM subject sub
+                JOIN syllabus s ON s.id = sub.syllabus_id
+                JOIN grade g ON g.id = sub.grade_id
+                JOIN grade_category gc ON gc.id = sub.grade_category_id
+                JOIN academic_session afy ON afy.id = sub.applicable_from_year_id
+                LEFT JOIN academic_session ety ON ety.id = sub.effective_till_year_id
+                LEFT JOIN chapter c ON c.subject_id = sub.id`; 
+
+                // GROUP BY sub.id, sub.name, sub.is_active, gc.id, gc.name, g.id, g.name, s.id, s.name, acs.id, acs.year
+    
+                if(action == 'Active')
+                {
+                    if(filters == "")
+                    {
+                        filters = filters + ` WHERE sub.is_active = 1`;
+                    }
+                    else
+                    {
+                        filters = filters + ` AND sub.is_active = 1`;
+                    }
+                }       
+                if(parseInt(gradeCategoryId) > 0)
+                {
+                    if(filters == "")
+                    {
+                        filters = filters + ` WHERE gc.id = ${gradeCategoryId}`;
+                    }
+                    else
+                    {
+                        filters = filters + ` AND gc.id = ${gradeCategoryId}`;
+                    }
+                }
+                if(parseInt(gradeId) > 0)
+                {
+                    if(filters == "")
+                    {
+                        filters = filters + ` WHERE g.id = ${gradeId}`;
+                    }
+                    else
+                    {
+                        filters = filters + ` AND g.id = ${gradeId}`;
+                    }
+                }
+                if(parseInt(syllabusId) > 0)
+                {
+                    if(filters == "")
+                    {
+                        filters = filters + ` WHERE s.id = ${syllabusId}`;
+                    }
+                    else
+                    {
+                        filters = filters + ` AND s.id = ${syllabusId}`;
+                    }
+                }     
+                sql = sql + filters + ` GROUP BY sub.id ORDER BY sub.name`;
+    
+                dbConn.query(sql, (error, result) => 
+                {
+                    if(error)
+                    {
+                        return reject(error);
+                    }
+                    return resolve(result);
+                });
+            }
+            catch(e)
+            {
+                throw e;
+            }
+        })
+    }; 
+    
+db.getSubject = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sub.id, sub.name, sub.is_active AS isActive, 'subject' AS tableName,
+            gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
+            g.id AS gradeId, g.name AS gradeName,
+            s.id AS syllabusId, s.name AS syllabusName,
+            afy.id AS applicableFromYearId, afy.year AS applicableFromYear,
+            ety.id AS effectiveTillYearId, ety.year AS effectiveTillYear
+            FROM subject sub
+            JOIN syllabus s ON s.id = sub.syllabus_id
+            JOIN grade g ON g.id = sub.grade_id
+            JOIN grade_category gc ON gc.id = sub.grade_category_id
+            JOIN academic_session afy ON afy.id = sub.applicable_from_year_id
+            LEFT JOIN academic_session ety ON ety.id = sub.effective_till_year_id
+            WHERE sub.id = '${id}'`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateSubject = (gradeCategoryId, gradeId, syllabusId, applicableFromYearId, name, id) =>
+{
+    return new Promise((resolve,reject) => 
+    {
+        try
+        {
+            let sql = "";
+            sql = `SELECT sub.id FROM subject sub JOIN syllabus s ON s.id = sub.syllabus_id
+            WHERE sub.grade_category_id = ${gradeCategoryId} AND sub.grade_id = ${gradeId} AND
+            FIND_IN_SET(sub.syllabus_id, '${syllabusId}') > 0 AND sub.applicable_from_year_id = ${applicableFromYearId} AND sub.name = '${name}'`;
+
+            if(id != "")
+            {
+                sql = sql + ` AND sub.id != ${id}`;
+            }
+            if(sql != "")
+            {
+                dbConn.query(sql, (error, result) => 
+                {
+                    if(error)
+                    {
+                        return reject(error);
+                    }
+                    return resolve(result);
+                });
+            }
+        }
+        catch(e)
+        {
+            throw e;
+        }        
+    });
+}
+
+db.checkInUseSubjectExist = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT c.id
+            FROM chapter c WHERE c.subject_id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+    
+db.insertSubject = (subject) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let syllabusArray = (subject.syllabusIds).toString().split(",");
+            let sqlValues = "";
+            for(let i=0; i<syllabusArray.length; i++)
+            {
+                if(sqlValues == '')
+                {
+                    sqlValues = `('${subject.name}', '${syllabusArray[i].toString().trim()}', ${subject.gradeCategoryId}, ${subject.gradeId}, ${subject.applicableFromYearId}, 
+                    NOW(), ${subject.createdById})`;
+                }
+                else
+                {
+                    sqlValues = sqlValues + `,('${subject.name}', '${syllabusArray[i].toString().trim()}', 
+                    ${subject.gradeCategoryId}, ${subject.gradeId}, ${subject.applicableFromYearId},  NOW(), ${subject.createdById})`;
+                }
+            }
+            let sql = `INSERT INTO subject (name, syllabus_id, grade_category_id, grade_id, applicable_from_year_id, created_on, created_by_id)
+            VALUES ${sqlValues}`;
+                        
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};  
+
+db.updateSubject = (subject) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE subject SET applicable_From_year_id = ${subject.applicableFromYearId},
+            grade_category_id = ${subject.gradeCategoryId}, grade_id = ${subject.gradeId}, syllabus_id = ${subject.syllabusId}, name = '${subject.name}', updated_on = NOW(), updated_by_id = ${subject.createdById} WHERE id = ${subject.id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteSubject = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM subject WHERE id = ${id}`;            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }            
+
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+    
+
+
 db.getGradeWiseSyllabuses = (academicSessionId, gradeCategoryId, gradeId, action) => 
 {
     return new Promise((resolve, reject) => 
@@ -1724,260 +2112,6 @@ db.deleteGradeWiseSyllabus = (id) =>
         try
         {
             let sql = `DELETE FROM grade_wise_syllabus WHERE id = ${id}`;            
-            dbConn.query(sql, (error, result) => 
-            {
-                if(error)
-                {
-                    return reject(error);
-                }
-                return resolve(result);
-            });
-        }            
-
-        catch(e)
-        {
-            throw e;
-        }
-    })
-};
-
-db.getSyllabusWiseSubjects = (academicSessionId, syllabusId, gradeCategoryId, gradeId, action) => 
-{
-    return new Promise((resolve, reject) => 
-    {
-        try
-        {
-            let filters = "";
-            let sql = `SELECT sws.id, sws.name, sws.is_active AS isActive, 'syllabus_wise_subject' AS tableName,
-            acs.id AS academicSessionId, acs.name AS academicSessionName, 
-            gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
-            g.id AS gradeId, g.name AS gradeName,
-            s.id AS syllabusId, s.name AS syllabusName, 
-            sp.id AS schoolingProgramId, sp.name AS schoolingProgramName,
-            COUNT(swc.id) AS isExist
-            FROM syllabus_wise_subject sws
-            JOIN grade_wise_syllabus gws ON gws.id = sws.grade_wise_syllabus_id 
-            JOIN academic_session acs ON acs.id = sws.academic_session_id 
-            JOIN grade g ON g.id = gws.grade_id
-            JOIN grade_category gc ON gc.id = g.grade_category_id
-            JOIN syllabus s ON s.id = gws.syllabus_id  
-            JOIN schooling_program sp ON sp.id = s.schooling_program_id
-            LEFT JOIN subject_wise_chapter swc ON swc.syllabus_wise_subject_id = sws.id`;
-            if(action == 'Active')
-            {
-                if(filters == "")
-                {
-                    filters =filters + ` WHERE sws.is_active = 1`;
-                }
-                else
-                {
-                    filters =filters + ` AND sws.is_active = 1`;
-                }
-            }
-            if(parseInt(academicSessionId) > 0)
-            {
-                if(filters == "")
-                {
-                    filters =filters + ` WHERE acs.id = ${academicSessionId}`;
-                }
-                else
-                {
-                    filters =filters + ` AND acs.id = ${academicSessionId}`;
-                }
-            }
-            if(parseInt(syllabusId) > 0)
-            {
-                if(filters == "")
-                {
-                    filters =filters + ` WHERE s.id = ${syllabusId}`;
-                }
-                else
-                {
-                    filters =filters + ` AND s.id = ${syllabusId}`;
-                }
-            }            
-            if(parseInt(gradeCategoryId) > 0)
-            {
-                if(filters == "")
-                {
-                    filters =filters + ` WHERE gc.id = ${gradeCategoryId}`;
-                }
-                else
-                {
-                    filters =filters + ` AND gc.id = ${gradeCategoryId}`;
-                }
-            }
-            if(parseInt(gradeId) > 0)
-            {
-                if(filters == "")
-                {
-                    filters =filters + ` WHERE g.id = ${gradeId}`;
-                }
-                else
-                {
-                    filters =filters + ` AND g.id = ${gradeId}`;
-                }
-            }
-            sql = sql + filters + ` GROUP BY sws.id ORDER BY sws.name`;
-
-            dbConn.query(sql, (error, result) => 
-            {
-                if(error)
-                {
-                    return reject(error);
-                }
-                return resolve(result);
-            });
-        }
-        catch(e)
-        {
-            throw e;
-        }
-    })
-}; 
-
-db.duplicateSyllabusWiseSubject = (academicSessionId, gradeId, syllabusId, name, id) => 
-{
-    return new Promise((resolve, reject) => 
-    {
-        try
-        {
-            let sql = "";
-            sql = `SELECT sws.id
-            FROM syllabus_wise_subject sws 
-            JOIN grade_wise_syllabus gws ON gws.id = sws.grade_wise_syllabus_id
-            WHERE gws.academic_session_id = ${academicSessionId}
-                AND gws.grade_id = ${gradeId} AND gws.syllabus_id = ${syllabusId} 
-                AND sws.name = '${name}'`;
-            if(id != "")
-            {
-                sql = sql + ` AND sws.id != ${id}`;
-            }
-            if(sql != "")
-            {
-                dbConn.query(sql, (error, result) => 
-                {
-                    if(error)
-                    {
-                        return reject(error);
-                    }
-                    return resolve(result);
-                });
-            }
-        }
-        catch(e)
-        {
-            throw e;
-        }
-    })
-};
-
-db.checkSyllabusWiseSubjectExist = (id) => 
-{
-    return new Promise((resolve, reject) => 
-    {
-        try
-        {
-            let sql = `SELECT sws.id
-            FROM syllabus_wise_subject sws WHERE sws.id = ${id}`;
-            
-            dbConn.query(sql, (error, result) => 
-            {
-                if(error)
-                {
-                    return reject(error);
-                }
-                return resolve(result);
-            });
-        }
-        catch(e)
-        {
-            throw e;
-        }
-    })
-};
-
-db.checkInUseSyllabusWiseSubjectExist = (id) => 
-{
-    return new Promise((resolve, reject) => 
-    {
-        try
-        {
-            let sql = `SELECT swc.id
-            FROM subject_wise_chapter swc WHERE swc.syllabus_wise_subject_id = ${id}`;
-            
-            dbConn.query(sql, (error, result) => 
-            {
-                if(error)
-                {
-                    return reject(error);
-                }
-                return resolve(result);
-            });
-        }
-        catch(e)
-        {
-            throw e;
-        }
-    })
-};
-
-db.insertSyllabusWiseSubject = (syllabusWiseSubject) => 
-{
-    return new Promise((resolve, reject) => 
-    {
-        try
-        {
-            let sql = `INSERT INTO syllabus_wise_subject (academic_session_id, grade_wise_syllabus_id, name, created_on, created_by_id)
-            VALUES(${syllabusWiseSubject.academicSessionId}, ${syllabusWiseSubject.gradeWiseSyllabusId}, '${syllabusWiseSubject.name}', NOW(), ${syllabusWiseSubject.createdById})`;
-            
-            dbConn.query(sql, (error, result) => 
-            {
-                if(error)
-                {
-                    return reject(error);
-                }
-                return resolve(result);
-            });
-        }
-        catch(e)
-        {
-            throw e;
-        }
-    })
-};
-
-db.updateSyllabusWiseSubject = (syllabusWiseSubject) => 
-{
-    return new Promise((resolve, reject) => 
-    {
-        try
-        {
-            let sql = `UPDATE syllabus_wise_subject SET academic_session_id = ${syllabusWiseSubject.academicSessionId}, grade_wise_syllabus_id = ${syllabusWiseSubject.gradeWiseSyllabusId}, name = '${syllabusWiseSubject.name}', updated_on = NOW(), updated_by_id = ${syllabusWiseSubject.createdById} WHERE id = ${syllabusWiseSubject.id}`;
-            
-            dbConn.query(sql, (error, result) => 
-            {
-                if(error)
-                {
-                    return reject(error);
-                }
-                return resolve(result);
-            });
-        }
-        catch(e)
-        {
-            throw e;
-        }
-    })
-};
-
-db.deleteSyllabusWiseSubject = (id) => 
-{
-    return new Promise((resolve, reject) => 
-    {
-        try
-        {
-            let sql = `DELETE FROM syllabus_wise_subject WHERE id = ${id}`;            
             dbConn.query(sql, (error, result) => 
             {
                 if(error)

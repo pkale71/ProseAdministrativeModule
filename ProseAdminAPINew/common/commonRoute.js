@@ -52,16 +52,20 @@ commonRoute.use('/getBatchTypes', require('../util/validateToken.js'), require('
 commonRoute.use('/saveBatchType', require('../util/validateToken.js'), require('./save-batch-type.js'));
 commonRoute.use('/updateBatchType', require('../util/validateToken.js'), require('./update-batch-type.js'));
 commonRoute.use('/deleteBatchType', require('../util/validateToken.js'), require('./delete-batch-type.js'));
+commonRoute.use('/saveSubject', require('../util/validateToken.js'), require('./save-subject.js'));
+commonRoute.use('/getSubjects', require('../util/validateToken.js'), require('./subjects.js'));
+commonRoute.use('/getSubject', require('../util/validateToken.js'), require('./subject.js'));
+commonRoute.use('/updateSubject', require('../util/validateToken.js'), require('./update-subject.js'));
+commonRoute.use('/deleteSubject', require('../util/validateToken.js'), require('./delete-subject.js'));
+commonRoute.use('/changeSubChapTopStatus', require('../util/validateToken.js'), require('./change-sub-chap-top-status.js'));
+commonRoute.use('/getCurrentAcademicSession', require('../util/validateToken.js'), require('./current-academic-session.js'));
 
 
 commonRoute.use('/getGradeWiseSyllabuses', require('../util/validateToken.js'), require('./grade-wise-syllabuses.js'));
 commonRoute.use('/saveGradeWiseSyllabus', require('../util/validateToken.js'), require('./save-grade-wise-syllabus.js'));
 commonRoute.use('/updateGradeWiseSyllabus', require('../util/validateToken.js'), require('./update-grade-wise-syllabus.js'));
 commonRoute.use('/deleteGradeWiseSyllabus', require('../util/validateToken.js'), require('./delete-grade-wise-syllabus.js'));
-commonRoute.use('/getSyllabusWiseSubjects', require('../util/validateToken.js'), require('./syllabus-wise-subjects.js'));
-commonRoute.use('/saveSyllabusWiseSubject', require('../util/validateToken.js'), require('./save-syllabus-wise-subject.js'));
-commonRoute.use('/updateSyllabusWiseSubject', require('../util/validateToken.js'), require('./update-syllabus-wise-subject.js'));
-commonRoute.use('/deleteSyllabusWiseSubject', require('../util/validateToken.js'), require('./delete-syllabus-wise-subject.js'));
+
 commonRoute.use('/getSubjectWiseChapters', require('../util/validateToken.js'), require('./subject-wise-chapters.js'));
 commonRoute.use('/saveSubjectWiseChapter', require('../util/validateToken.js'), require('./save-subject-wise-chapter.js'));
 commonRoute.use('/updateSubjectWiseChapter', require('../util/validateToken.js'), require('./update-subject-wise-chapter.js'));

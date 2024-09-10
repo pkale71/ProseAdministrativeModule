@@ -1,30 +1,31 @@
 CREATE TABLE `syllabus` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(30) NOT NULL,
-  `grade_category_ids` text NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_on` datetime DEFAULT NULL,
-  `updated_by_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(30) NOT NULL,
+    `grade_category_ids` text NOT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    `updated_on` datetime DEFAULT NULL,
+    `updated_by_id` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `subject` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `syllabus_id` int(11) NOT NULL,
-  `grade_id` int(11) NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8 NOT NULL,
-  `applicable_from_year` int(11) NOT NULL,
-  `effective_till_year` int(11) DEFAULT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_on` datetime DEFAULT NULL,
-  `updated_by_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `syllabus_id` int(11) NOT NULL,
+    `grade_id` int(11) NOT NULL,
+    `name` varchar(50) CHARACTER SET utf8 NOT NULL,
+    `applicable_from_year` int(11) NOT NULL,
+    `effective_till_year` int(11) DEFAULT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    `updated_on` datetime DEFAULT NULL,
+    `updated_by_id` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 );
 
+# this fun is use to delete comma separated data (like 1,2,3) and manage that like after delete merg data...
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` FUNCTION `remove_comma_separated_string`(input_string TEXT,
     remove_string text) RETURNS text CHARSET latin1
@@ -43,108 +44,132 @@ DECLARE result TEXT;
 END$$
 DELIMITER;
 
+or  /////
+
+DELIMITER $$
+
+CREATE FUNCTION `remove_comma_separated_string`(
+    input_string TEXT,
+    remove_string TEXT
+) RETURNS TEXT CHARSET latin1
+BEGIN
+    DECLARE result TEXT;
+
+    -- Remove the string from the start, middle, and end of the comma-separated string
+    SET result = TRIM(BOTH ',' FROM REPLACE(CONCAT(',', input_string, ','), CONCAT(',', remove_string, ','), ','));
+
+    -- Handle case where the result might become empty or just commas
+    IF result = ',' OR result = '' THEN
+        SET result = '';
+    END IF;
+
+    RETURN result;
+END$$
+
+DELIMITER ;
+
 
 CREATE TABLE `schooling_group` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(50) NOT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `schooling_category` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(50) NOT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `schooling_program` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `schooling_category_id` int(11) NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_on` datetime DEFAULT NULL,
-  `updated_by_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` text NOT NULL,
+    `schooling_category_id` int(11) NOT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    `updated_on` datetime DEFAULT NULL,
+    `updated_by_id` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `school` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `schooling_group_id` int(11) NOT NULL,
-  `school_sub_group_id` int(11) NOT NULL,
-  `schooling_category_id` int(11) NOT NULL,
-  `email` varchar(150) NOT NULL,
-  `mobile1` varchar(15) NOT NULL,
-  `mobile2` varchar(15) DEFAULT NULL,
-  `landline1` varchar(15) DEFAULT NULL,
-  `landline2` varchar(15) DEFAULT NULL,
-  `website` text NOT NULL,
-  `address` text NOT NULL,
-  `logo_file_name` text,
-  `country_id` int(11) NOT NULL,
-  `state_region_id` int(11) NOT NULL,
-  `district_id` int(11) NOT NULL,
-  `city_id` int(11) NOT NULL,
-  `pincode` varchar(9) NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `uuid` varchar(36) NOT NULL,
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_on` datetime DEFAULT NULL,
-  `updated_by_id` int(11) DEFAULT NULL,
-  `deleted_on` datetime DEFAULT NULL,
-  `deleted_by_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` text NOT NULL,
+    `schooling_group_id` int(11) NOT NULL,
+    `school_sub_group_id` int(11) NOT NULL,
+    `schooling_category_id` int(11) NOT NULL,
+    `email` varchar(150) NOT NULL,
+    `mobile1` varchar(15) NOT NULL,
+    `mobile2` varchar(15) DEFAULT NULL,
+    `landline1` varchar(15) DEFAULT NULL,
+    `landline2` varchar(15) DEFAULT NULL,
+    `website` text NOT NULL,
+    `address` text NOT NULL,
+    `logo_file_name` text,
+    `country_id` int(11) NOT NULL,
+    `state_region_id` int(11) NOT NULL,
+    `district_id` int(11) NOT NULL,
+    `city_id` int(11) NOT NULL,
+    `pincode` varchar(9) NOT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `uuid` varchar(36) NOT NULL,
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    `updated_on` datetime DEFAULT NULL,
+    `updated_by_id` int(11) DEFAULT NULL,
+    `deleted_on` datetime DEFAULT NULL,
+    `deleted_by_id` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `school_schooling_program_detail` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `school_id` int(11) NOT NULL,
-  `academic_session_id` int(11) NOT NULL,
-  `schooling_program_id` int(11) NOT NULL,
-  `admission_start_date` date NOT NULL,
-  `admission_end_date` date NOT NULL,
-  `schooling_program_start_date` date NOT NULL,
-  `schooling_program_end_date` date NOT NULL,
-  `batch_type_ids` text NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `uuid` varchar(36) NOT NULL,
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_on` datetime DEFAULT NULL,
-  `updated_by_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `school_id` int(11) NOT NULL,
+    `academic_session_id` int(11) NOT NULL,
+    `schooling_program_id` int(11) NOT NULL,
+    `admission_start_date` date NOT NULL,
+    `admission_end_date` date NOT NULL,
+    `schooling_program_start_date` date NOT NULL,
+    `schooling_program_end_date` date NOT NULL,
+    `batch_type_ids` text NOT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `uuid` varchar(36) NOT NULL,
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    `updated_on` datetime DEFAULT NULL,
+    `updated_by_id` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `schooling_program` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `schooling_category_id` int(11) NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_on` datetime DEFAULT NULL,
-  `updated_by_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` text NOT NULL,
+    `schooling_category_id` int(11) NOT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    `updated_on` datetime DEFAULT NULL,
+    `updated_by_id` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `academic_session` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `year` varchar(30) NOT NULL,
-  `batch_year` varchar(10) NOT NULL,
-  `is_current_session` int(11) NOT NULL,
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `modify_on` datetime DEFAULT NULL,
-  `modify_by_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `year` varchar(30) NOT NULL,
+    `batch_year` varchar(10) NOT NULL,
+    `is_current_session` int(11) NOT NULL,
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    `modify_on` datetime DEFAULT NULL,
+    `modify_by_id` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 );
 
 ALTER TABLE `prose_administrative`.`subject` 
@@ -152,24 +177,39 @@ CHANGE COLUMN `applicable_from_year` `applicable_from_year_id` INT(11) NOT NULL 
 CHANGE COLUMN `effective_till_year` `effective_till_year_id` INT(11) NULL DEFAULT NULL ;
 
 CREATE TABLE `batch_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `start_time` time NOT NULL,
-  `end_time` time NOT NULL,
-  `applicable_from_year_id` int(11) NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  `updated_on` datetime NULL,
-  `updated_by_id` int(11) NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(50) NOT NULL,
+    `start_time` time NOT NULL,
+    `end_time` time NOT NULL,
+    `applicable_from_year_id` int(11) NOT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    `updated_on` datetime NULL,
+    `updated_by_id` int(11) NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `school_sub_group` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1',
-  `created_on` datetime NOT NULL,
-  `created_by_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(50) NOT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `chapter` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `subject_id` int(11) NOT NULL,
+    `name` varchar(50) CHARACTER SET utf8 NOT NULL,
+    `applicable_from_year_id` int(11) NOT NULL,
+    `effective_till_year_id` int(11) DEFAULT NULL,
+    `is_active` int(11) NOT NULL DEFAULT '1',
+    `created_on` datetime NOT NULL,
+    `created_by_id` int(11) NOT NULL,
+    `updated_on` datetime DEFAULT NULL,
+    `updated_by_id` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+);
+

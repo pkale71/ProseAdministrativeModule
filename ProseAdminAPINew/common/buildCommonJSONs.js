@@ -158,7 +158,7 @@ buildCommonJSON.syllabuses = function(datas, action = 1)
                 "name" : gradeCategoryNames[i]
             });
         }
-/////Final JSON
+        //Final JSON
         let finalJSON = {
             "id" : data.syllabusId,
             "name" : data.syllabusName,
@@ -177,11 +177,10 @@ buildCommonJSON.syllabuses = function(datas, action = 1)
             resultJSON = finalJSON;
         }
     });
-
     return resultJSON;
 }
 
-buildCommonJSON.academicSessions = function(datas)
+buildCommonJSON.academicSessions = function(datas, action = 1)
 {
     let resultJSON = [];
 
@@ -195,9 +194,16 @@ buildCommonJSON.academicSessions = function(datas)
             "isCurrentSession" : data.isCurrentSession,
             "isExist" : data.isExist
         }
-        resultJSON.push(finalJSON);
+        //If action == 1 for mupltiple rows
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
-
     return resultJSON;
 }
 
@@ -364,6 +370,74 @@ buildCommonJSON.syllabusWiseSubjects = function(datas)
         resultJSON.push(finalJSON);
     });
 
+    return resultJSON;
+}
+
+buildCommonJSON.subjects = function(datas, action = 1)
+{  
+    let gradeCategoryJSON;
+    let gradeJSON;
+    let syllabusJSON;
+    let applicableFromYearJSON;
+    let effectiveTillYearJSON;
+    let resultJSON = [];
+    datas.forEach((data) => 
+    { 
+        gradeCategoryJSON = [];
+        gradeJSON = [];
+        syllabusJSON = [];
+        applicableFromYearJSON = [];
+        effectiveTillYearJSON = [];
+        
+        gradeCategoryJSON = {
+            "id" : data.gradeCategoryId,
+            "name" : data.gradeCategoryName,
+        }
+
+        gradeJSON = {
+            "id" : data.gradeId,
+            "name" : data.gradeName,
+        }
+
+        syllabusJSON = {
+            "id" : data.syllabusId,
+            "name" : data.syllabusName,
+        } 
+
+        applicableFromYearJSON = {
+            "id" : data.applicableFromYearId,
+            "year" : data.applicableFromYear,
+        }
+
+        effectiveTillYearJSON = {
+            "id" : data.effectiveTillYearId,
+            "year" : data.effectiveTillYear
+        }
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName ? data.tableName : '' ? data.tableName : '',
+            "gradeCategory" : gradeCategoryJSON,
+            "grade" : gradeJSON,
+            "syllabus" : syllabusJSON,
+            "applicableFromYear" : applicableFromYearJSON,
+            "effectiveTillYear" : effectiveTillYearJSON,
+            "isExist" : data.isExist
+        }
+        // console.log(finalJSON)
+        //If action == 1 for mupltiple rows
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+        // resultJSON.push(finalJSON);
+    });
     return resultJSON;
 }
 

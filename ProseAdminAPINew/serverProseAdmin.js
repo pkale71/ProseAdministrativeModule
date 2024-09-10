@@ -44,6 +44,14 @@ if(dbConn)
                 console.log("Database Connection Failed, Failed On : " + failedOn);
                 return;
             }  
+            else
+            {
+                let sql = `SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'`
+                dbConn.query(sql,(error, result) => 
+                {
+                    console.log("Sql Mode : NO_ENGINE_SUBSTITUTION");
+                });
+            }
     ///////Start Server        
             app.listen(port, host, () => {
                 commonFunction.createRequiredDir(process.cwd());
