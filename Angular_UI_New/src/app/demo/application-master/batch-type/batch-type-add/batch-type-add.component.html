@@ -1,0 +1,74 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="batchtypeAddModal"><i class="fa fa-plus"></i>&nbsp;Batch Type</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+</div>
+<form [formGroup]="addBatchTypeForm" id="addBatchTypeForm" (ngSubmit)="saveBatchType()" autocomplete="off">
+    <div class="modal-body">
+        <div class="row">
+            <!-- Year field -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="40"
+                    [ngClass]="{'is-invalid': !addBatchTypeForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addBatchTypeForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please Enter Batch Time(Morning / Evening).</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <form [formGroup]="academicSessionForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="academicSession">Applicable From&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="academicSession" formControlName="academicSession"
+                        [ngClass]="{'is-invalid': !academicSessionForm.controls['academicSession'].valid && !isValidForm}">
+                        <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession?.batchYear}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="academicSessionForm.controls['academicSession'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please Select Year.</label>
+                    </div>
+                </form>                
+            </div> 
+            <!-- Start time -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-control-label" for="startTime">Start Time&nbsp;<span
+                    style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="startTime" type="time" required formControlName="startTime"
+                    [ngClass]="{'is-invalid': !addBatchTypeForm.controls['startTime'].valid && !isValidForm}" />
+                    <label style="color: red;"
+                    *ngIf="addBatchTypeForm.controls['startTime'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text">Please Enter Your Start Time.</label>
+                </div>
+            </div>
+            <!-- end time -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-control-label" for="endTime">End Time&nbsp;<span
+                    style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="endTime" type="time" required formControlName="endTime"
+                    [ngClass]="{'is-invalid': !addBatchTypeForm.controls['endTime'].valid && !isValidForm}" 
+                    min="12:00" />
+                    <label style="color: red;" 
+                    *ngIf="addBatchTypeForm.controls['endTime'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text">Please Enter Your End Time.</label>
+                    <!-- <span style="color: red;" *ngIf="addBatchTypeForm.errors?.timeRangeInvalid">End time must be later than start time.</span> -->
+                    
+                        <div *ngIf="addBatchTypeForm.get('endTime')?.errors?.timeRangeInvalid">
+                            End time must be later than start time.
+                          </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save</button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

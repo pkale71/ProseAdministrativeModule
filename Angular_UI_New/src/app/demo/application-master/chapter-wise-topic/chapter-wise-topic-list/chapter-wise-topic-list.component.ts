@@ -271,7 +271,7 @@ export class ChapterWiseTopicListComponent {
             let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
             if(academicSessionId != undefined && academicSessionId != "" && syllabusId != undefined && syllabusId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "")
             {
-                let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeCategoryId, gradeId, 'All').toPromise();
+                let response = await this.commonService.getSubjects(syllabusId, gradeCategoryId, gradeId, 'All').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.syllabusWiseSubjects = response.syllabusWiseSubjects;

@@ -20,6 +20,11 @@ export class CommonService {
         return this.apiService.post('/common/updateStatus', tempJSON);
     }
 
+    changeSubChapTopStatus(tempJSON: any)
+    {
+        return this.apiService.post('/common/changeSubChapTopStatus', tempJSON);
+    }
+
     duplicateEmailMobile(data : any)
     {
         return this.apiService.post('/common/duplicateEmailMobile', data);
@@ -148,28 +153,6 @@ export class CommonService {
         return this.apiService.post('/common/deleteSyllabusGradeCategory', gradeCategory);
     }
 
-
-    //academic sesssion
-    saveAcademicSession(academicSession: any) 
-    {
-        return this.apiService.post('/common/saveAcademicSession', academicSession);
-    }
-
-    getAcademicSessions() 
-    {
-        return this.apiService.get('/common/getAcademicSessions');
-    }
-
-    updateAcademicSession(academicSession: any) 
-    {
-        return this.apiService.post('/common/updateAcademicSession', academicSession)
-    }
-
-    deleteAcademicSession(academicSession: any) 
-    {
-        return this.apiService.post('/common/deleteAcademicSession', academicSession);
-    }
-
     //schooling group
     saveSchoolingGroup(schoolingGroup: any) 
     {
@@ -223,6 +206,93 @@ export class CommonService {
         return this.apiService.post('/common/deleteSchoolingProgram', schoolingProgram);
     }
 
+    //academic sesssion
+    saveAcademicSession(academicSession: any) 
+    {
+        return this.apiService.post('/common/saveAcademicSession', academicSession);
+    }
+
+    getAcademicSessions() 
+    {
+        return this.apiService.get('/common/getAcademicSessions');
+    }
+
+    updateAcademicSession(academicSession: any) 
+    {
+        return this.apiService.post('/common/updateAcademicSession', academicSession)
+    }
+
+    deleteAcademicSession(academicSession: any) 
+    {
+        return this.apiService.post('/common/deleteAcademicSession', academicSession);
+    }
+
+    //school sub group
+    saveSchoolSubGroup(schoolSubGroup: any) 
+    {
+        return this.apiService.post('/common/saveSchoolSubGroup', schoolSubGroup);
+    }
+
+    getSchoolSubGroups(action : string) 
+    {
+        return this.apiService.get('/common/getSchoolSubGroups/' + action);
+    }
+
+    deleteSchoolSubGroup(schoolSubGroup: any) 
+    {
+        return this.apiService.post('/common/deleteSchoolSubGroup', schoolSubGroup);
+    }
+
+    //academic sesssion
+    saveBatchType(batchType: any) 
+    {
+        return this.apiService.post('/common/saveBatchType', batchType);
+    }
+
+    getBatchTypes(academicSessionId : number, action : string) 
+    {
+        return this.apiService.get('/common/getBatchTypes/' + academicSessionId + '/' + action);
+    }
+
+    updateBatchType(batchType: any) 
+    {
+        return this.apiService.post('/common/updateBatchType', batchType)
+    }
+
+    deleteBatchType(batchType: any) 
+    {
+        return this.apiService.post('/common/deleteBatchType', batchType);
+    }
+
+    //subjects
+    saveSubject(subject: any) 
+    {
+        return this.apiService.post('/common/saveSubject', subject);
+    }
+
+    getSubjects(gradeCategoryId : number, gradeId : number, syllabusId : number, action : string) 
+    {
+        return this.apiService.get("/common/getSubjects/" + gradeCategoryId + '/' + gradeId + '/' + syllabusId + '/' + action);
+    }
+
+    getSubject(id : number)
+    {
+        return this.apiService.get('/common/getSubject/' + id);
+    }
+
+    updateSubject(subject: any) 
+    {
+        return this.apiService.post('/common/updateSubject', subject);
+    }
+
+    deleteSubject(subject : any) 
+    {
+        return this.apiService.post("/common/deleteSubject", subject);
+    }  
+
+
+
+
     //grade Wise Syllabus
     saveGradeWiseSyllabus(gradeWiseSyllabuse: any) 
     {
@@ -243,27 +313,6 @@ export class CommonService {
     {
         return this.apiService.post('/common/deleteGradeWiseSyllabus', gradeWiseSyllabus); 
     }
-
-    //syllabus wise subjects
-    saveSyllabusWiseSubject(syllabusWiseSubject: any) 
-    {
-        return this.apiService.post('/common/saveSyllabusWiseSubject', syllabusWiseSubject);
-    }
-
-    getSyllabusWiseSubjects(academicSessionId : number, syllabusId : number, gradeCategoryId : number, gradeId : number, action : string) 
-    {
-        return this.apiService.get("/common/getSyllabusWiseSubjects/" + academicSessionId + '/' + syllabusId + '/' + gradeCategoryId + '/' + gradeId + '/' + action);
-    }
-
-    updateSyllabusWiseSubject(syllabusWiseSubject: any) 
-    {
-        return this.apiService.post('/common/updateSyllabusWiseSubject', syllabusWiseSubject);
-    }
-
-    deleteSyllabusWiseSubject(syllabusWiseSubject : any) 
-    {
-        return this.apiService.post("/common/deleteSyllabusWiseSubject", syllabusWiseSubject);
-    }  
 
     //subject wise chapters
     saveSubjectWiseChapter(subjectWiseChapter : any) 

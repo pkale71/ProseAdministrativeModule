@@ -34,12 +34,14 @@ export class CommonSharedService
     public businessVerticalTypeListObject = new Subject<any>();
     public coachListObject = new Subject<any>();
     public gradeWiseSyllabusListObject = new Subject<any>();
-    public syllabusWiseSubjectListObject = new Subject<any>();
+    public subjectListObject = new Subject<any>();
     public subjectWiseChapterListObject = new Subject<any>();
     public gradeCategoryListObject = new Subject<any>();  
+    public schoolSubGroupListObject = new Subject<any>();
     public schoolingGroupListObject = new Subject<any>();   
     public schoolingCategoryListObject = new Subject<any>();
     public academicSessionListObject = new Subject<any>(); 
+    public batchTypeListObject = new Subject<any>();
     public schoolingProgramListObject = new Subject<any>();
     public schoolGradeSectionListObject = new Subject<any>();
     public onBoardingLinkListObject = new Subject<any>();

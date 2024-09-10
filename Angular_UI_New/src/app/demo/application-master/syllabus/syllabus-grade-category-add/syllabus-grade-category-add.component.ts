@@ -48,7 +48,7 @@ export class SyllabusGradeCategoryAddComponent {
 
         this.addGradeCategoryForm = this.formbuilder.group({
             id: [''], 
-            gradeCategoryIds: [[this.syllabusGradeCategories], [Validators.required]],
+            gradeCategoryIds: ['', [Validators.required]],
         });
         this.getSyllabus(this.id);
         this.getGradeCategories();

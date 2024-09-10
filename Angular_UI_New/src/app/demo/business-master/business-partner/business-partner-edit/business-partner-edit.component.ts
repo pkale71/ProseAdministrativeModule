@@ -66,9 +66,10 @@ export class BusinessPartnerEditComponent {
         public commonSharedService : CommonSharedService,
     ) 
     {
-        this.isRewardApplicables = [{
-            "id": 1,
-            "name": "Yes"
+        this.isRewardApplicables = [
+            {
+                "id": 1,
+                "name": "Yes"
             },
             {
                 "id": 0,

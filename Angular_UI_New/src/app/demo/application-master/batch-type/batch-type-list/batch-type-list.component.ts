@@ -7,24 +7,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
-import { AcademicSessionAddComponent } from '../academic-session-add/academic-session-add.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 declare var $;
 
 // third party
 import Swal from 'sweetalert2';
-import { AcademicSessionEditComponent } from '../academic-session-edit/academic-session-edit.component';
+import { BatchTypeAddComponent } from '../batch-type-add/batch-type-add.component';
+import { BatchTypeEditComponent } from '../batch-type-edit/batch-type-edit.component';
 
 @Component({
-    selector: 'app-academic-sessionForm-list',
+    selector: 'app-batch-type-list',
     standalone: true,
     imports: [CommonModule, SharedModule, DataTablesModule],
-    templateUrl: './academic-session-list.component.html',
-    styleUrls: ['./academic-session-list.component.scss']
+    templateUrl: './batch-type-list.component.html',
+    styleUrls: ['./batch-type-list.component.scss']
 })
-export class AcademicSessionListComponent {
+export class BatchTypeListComponent {
     academicSessions : any[];
     searchClicked : boolean;
+    batchTypes : any[];
     
     constructor(private notifier: NotifierService, 
         private activatedRoute: ActivatedRoute,
@@ -40,13 +41,14 @@ export class AcademicSessionListComponent {
     {
         this.searchClicked = false;
         this.academicSessions = [];
-        this.getAcademicSessions();
+        this.batchTypes = [];
+        this.getBatchTypes(0, 'All');
     }
 
-    public AcademicSessionAddResult:any = this.commonSharedService.academicSessionListObject.subscribe(res =>{
+    public BatchTypeAddResult:any = this.commonSharedService.batchTypeListObject.subscribe(res =>{
         if(res.result == "success")
         {
-            this.getAcademicSessions();
+            this.getBatchTypes(res.academicSessionId, 'All');
         }
     })
 
@@ -56,25 +58,25 @@ export class AcademicSessionListComponent {
         this.notifier.notify(type, message);
     }
 
-    async getAcademicSessions() 
+    async getBatchTypes(academicSessionId : number, action : string) 
     {
-        try
+    try
         {
             this.searchClicked = true;
-            let response = await this.commonService.getAcademicSessions().toPromise();
+            let response = await this.commonService.getBatchTypes(academicSessionId, 'All').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
-                $('#tblAcademicSession').DataTable().destroy();
-                this.academicSessions = response.academicSessions;
+                $('#tblBatchType').DataTable().destroy();
+                this.batchTypes = response.batchTypes;
                 setTimeout(function(){
-                    $('#tblAcademicSession').DataTable();
+                    $('#tblBatchType').DataTable();
                 },800);
                 this.searchClicked = false;
                 this.modalService.dismissAll();
             }
             else
             {
-                this.academicSessions = [];
+                this.batchTypes = [];
                 this.searchClicked = false;
                 this.modalService.dismissAll();
             }
@@ -85,32 +87,32 @@ export class AcademicSessionListComponent {
         }
     }
     
-    addAcademiSession()
+    addBatchType()
     {
-        const dialogRef = this.modalService.open(AcademicSessionAddComponent, 
+        const dialogRef = this.modalService.open(BatchTypeAddComponent, 
         { 
-            size: 'md', backdrop: 'static' 
+            size: 'lg', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = {};
     }
 
-    editAcademicSession(academicSession : any)
+    editBatchType(batchType : any)
     {
-        const dialogRef = this.modalService.open(AcademicSessionEditComponent, 
+        const dialogRef = this.modalService.open(BatchTypeEditComponent, 
         { 
-            size: 'md', backdrop: 'static' 
+            size: 'lg', backdrop: 'static' 
         });
-        dialogRef.componentInstance.modalParams = academicSession;
+        dialogRef.componentInstance.modalParams = batchType;
     }
 
-    updateStatus(academicSession : any)
+    updateStatus(batchType : any)
     {
         Swal.fire({
         customClass: {
             container: 'my-swal'
         },
         title: 'Confirmation',
-        text: 'Are you sure to ' + (academicSession.isActive == 0 ? 'de-active' : 'active') + ' the academic session?',
+        text: 'Are you sure to ' + (batchType.isActive == 1 ? 'de-active' : 'active') + ' the batch-type?',
         icon: 'warning',
         allowOutsideClick: false,
         showCloseButton: true,
@@ -124,15 +126,15 @@ export class AcademicSessionListComponent {
             try
             {
                 let tempJson = {
-                    id : academicSession.id,
-                    tableName : academicSession.tableName
+                    id : batchType.id,
+                    tableName : batchType.tableName
                 }
                 this.showNotification("info", "Please wait...");
                 let response = await this.commonService.updateStatus(tempJson).toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
-                    this.showNotification("success", "Academic Session " + (academicSession.isActive == 0 ? 'De-activated' : 'Activated'));
-                    this.commonSharedService.academicSessionListObject.next({
+                    this.showNotification("success", "Batch-Type " + (batchType.isActive == 1 ? 'De-activated' : 'Activated'));
+                    this.commonSharedService.batchTypeListObject.next({
                         result : "success"
                     });
                 }
@@ -145,14 +147,14 @@ export class AcademicSessionListComponent {
         });   
     }
     
-    deleteAcademicSession(academicSession:any)
+    deleteBatchType(batchType:any)
     {
         Swal.fire({
         customClass: {
             container: 'my-swal'
         },
         title: 'Confirmation',
-        text: 'Are you sure to delete academic session?',
+        text: 'Are you sure to delete batch-type?',
         icon: 'warning',
         showCloseButton: true,
         showCancelButton: true
@@ -164,14 +166,14 @@ export class AcademicSessionListComponent {
         else 
         {
             this.showNotification("info", "Please wait...");
-            let tempJSON = { "id" : academicSession.id };
+            let tempJSON = { "id" : batchType.id };
             try
             {
-                let response = await this.commonService.deleteAcademicSession(tempJSON).toPromise();
+                let response = await this.commonService.deleteBatchType(tempJSON).toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
-                    this.showNotification("success", "Academic Session Deleted.");
-                    this.commonSharedService.academicSessionListObject.next({
+                    this.showNotification("success", "Batch-Type Deleted.");
+                    this.commonSharedService.batchTypeListObject.next({
                         result : "success"
                     });
                 }

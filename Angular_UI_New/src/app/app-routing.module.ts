@@ -20,7 +20,7 @@ import { GradeCategoryListComponent } from './demo/application-master/grade-cate
 import { GradeWiseSyllabusListComponent } from './demo/application-master/grade-wise-syllabus/grade-wise-syllabus-list/grade-wise-syllabus-list.component';
 import { SchoolingProgramListComponent } from './demo/application-master/schooling-program/schooling-program-list/schooling-program-list.component';
 import { AcademicSessionListComponent } from './demo/application-master/academic-session/academic-session-list/academic-session-list.component';
-import { SyllabusWiseSubjectListComponent } from './demo/application-master/syllabus-wise-subject/syllabus-wise-subject-list/syllabus-wise-subject-list.component';
+import { SubjectListComponent } from './demo/application-master/subject/subject-list/subject-list.component';
 import { SubjectWiseChapterListComponent } from './demo/application-master/subject-wise-chapter/subject-wise-chapter-list/subject-wise-chapter-list.component';
 import { ChapterWiseTopicListComponent } from './demo/application-master/chapter-wise-topic/chapter-wise-topic-list/chapter-wise-topic-list.component';
 import { OnBoardingLinkListComponent } from './demo/application-master/on-boarding-link/on-boarding-link-list/on-boarding-link-list.component';
@@ -44,6 +44,8 @@ import { StudyCenterDetailComponent } from './demo/business-master/study-center/
 import { SchoolingGroupListComponent } from './demo/application-master/schooling-group/schooling-group-list/schooling-group-list.component';
 import { SchoolingCategoryListComponent } from './demo/application-master/schooling-category/schooling-category-list/schooling-category-list.component';
 import { SyllabusDetailComponent } from './demo/application-master/syllabus/syllabus-detail/syllabus-detail.component';
+import { SchoolSubGroupListComponent } from './demo/application-master/school-sub-group/school-sub-group-list/school-sub-group-list.component';
+import { BatchTypeListComponent } from './demo/application-master/batch-type/batch-type-list/batch-type-list.component';
 
 const routes: Routes = [
     {
@@ -159,13 +161,23 @@ const routes: Routes = [
                 canActivate: [AuthGuardService]
             },
             {
-                path: 'applicationMaster/grade-wise-syllabus',
-                loadComponent: () => GradeWiseSyllabusListComponent,
-                canActivate: [AuthGuardService],
-            },      
+                path: 'applicationMaster/schoolSubGroups',
+                loadComponent: () => SchoolSubGroupListComponent,
+                canActivate: [AuthGuardService]
+            },
             {
-                path: 'applicationMaster/SyllabusWiseSubjects',
-                loadComponent : () => SyllabusWiseSubjectListComponent,
+                path: 'applicationMaster/batchTypes',
+                loadComponent: () => BatchTypeListComponent,
+                canActivate: [AuthGuardService]
+            },
+            // {
+            //     path: 'applicationMaster/grade-wise-syllabus',
+            //     loadComponent: () => GradeWiseSyllabusListComponent,
+            //     canActivate: [AuthGuardService],
+            // },      
+            {
+                path: 'applicationMaster/subjects',
+                loadComponent : () => SubjectListComponent,
                 canActivate: [AuthGuardService],
             },
             {

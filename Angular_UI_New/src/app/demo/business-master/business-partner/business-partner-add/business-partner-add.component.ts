@@ -387,9 +387,9 @@ export class BusinessPartnerAddComponent {
                     for(let i = 0; i < businessVerticalTypes.length; i++)
                     {
                         tempBusinessVerticalTypes.push({
-                        'value' : businessVerticalTypes[i].id.toString(),
-                        'label' : businessVerticalTypes[i].name
-                        })
+                            'value' : businessVerticalTypes[i].id.toString(),
+                            'label' : businessVerticalTypes[i].name
+                        });
                     }
                     this.businessVerticalTypes = this.commonSharedService.prepareSelectOptions(tempBusinessVerticalTypes);
                     this.searchClickedBusinessVerticalType = false;

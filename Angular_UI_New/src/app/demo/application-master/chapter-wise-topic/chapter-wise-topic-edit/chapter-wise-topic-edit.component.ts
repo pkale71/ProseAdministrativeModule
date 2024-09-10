@@ -286,7 +286,7 @@ export class ChapterWiseTopicEditComponent {
             if(academicSessionId != undefined && academicSessionId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "" && syllabusId != undefined && syllabusId != "")
             {
                 this.subjectClicked = true;
-                let response = await this.commonService.getSyllabusWiseSubjects(academicSessionId, syllabusId, gradeCategoryId, gradeId, 'Active').toPromise();
+                let response = await this.commonService.getSubjects(syllabusId, gradeCategoryId, gradeId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.syllabusWiseSubjects = response.syllabusWiseSubjects;

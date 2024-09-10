@@ -7,23 +7,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
-import { AcademicSessionAddComponent } from '../academic-session-add/academic-session-add.component';
+import { SchoolSubGroupAddComponent } from '../school-sub-group-add/school-sub-group-add.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 declare var $;
 
 // third party
 import Swal from 'sweetalert2';
-import { AcademicSessionEditComponent } from '../academic-session-edit/academic-session-edit.component';
 
 @Component({
-    selector: 'app-academic-sessionForm-list',
+    selector: 'app-school-sub-group-list',
     standalone: true,
     imports: [CommonModule, SharedModule, DataTablesModule],
-    templateUrl: './academic-session-list.component.html',
-    styleUrls: ['./academic-session-list.component.scss']
+    templateUrl: './school-sub-group-list.component.html',
+    styleUrls: ['./school-sub-group-list.component.scss']
 })
-export class AcademicSessionListComponent {
-    academicSessions : any[];
+export class SchoolSubGroupListComponent {
+    schoolSubGroups : any[];
     searchClicked : boolean;
     
     constructor(private notifier: NotifierService, 
@@ -39,14 +38,14 @@ export class AcademicSessionListComponent {
     ngOnInit() 
     {
         this.searchClicked = false;
-        this.academicSessions = [];
-        this.getAcademicSessions();
+        this.schoolSubGroups = [];
+        this.getSchoolSubGroups('All');
     }
 
-    public AcademicSessionAddResult:any = this.commonSharedService.academicSessionListObject.subscribe(res =>{
+    public gradeAddResult:any = this.commonSharedService.schoolSubGroupListObject.subscribe(res =>{
         if(res.result == "success")
         {
-            this.getAcademicSessions();
+            this.getSchoolSubGroups('All');
         }
     })
 
@@ -56,61 +55,54 @@ export class AcademicSessionListComponent {
         this.notifier.notify(type, message);
     }
 
-    async getAcademicSessions() 
+    async getSchoolSubGroups(action : string) 
     {
-        try
+        try 
         {
             this.searchClicked = true;
-            let response = await this.commonService.getAcademicSessions().toPromise();
+            let response = await this.commonService.getSchoolSubGroups('All').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
-                $('#tblAcademicSession').DataTable().destroy();
-                this.academicSessions = response.academicSessions;
+                $('#tblSchoolSubGroup').DataTable().destroy();
+                this.schoolSubGroups = response.schoolSubGroups;
                 setTimeout(function(){
-                    $('#tblAcademicSession').DataTable();
+                    $('#tblSchoolSubGroup').DataTable();
                 },800);
                 this.searchClicked = false;
                 this.modalService.dismissAll();
             }
             else
             {
-                this.academicSessions = [];
+                this.schoolSubGroups = [];
                 this.searchClicked = false;
                 this.modalService.dismissAll();
             }
-        }
-        catch(e)
+        } 
+        catch (error) 
         {
-            this.showNotification("error", e);
+            this.showNotification("error", error);
+            this.searchClicked = false;
+            this.modalService.dismissAll();
         }
     }
-    
-    addAcademiSession()
+
+    addSchoolSubGroup()
     {
-        const dialogRef = this.modalService.open(AcademicSessionAddComponent, 
+        const dialogRef = this.modalService.open(SchoolSubGroupAddComponent, 
         { 
             size: 'md', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = {};
     }
 
-    editAcademicSession(academicSession : any)
-    {
-        const dialogRef = this.modalService.open(AcademicSessionEditComponent, 
-        { 
-            size: 'md', backdrop: 'static' 
-        });
-        dialogRef.componentInstance.modalParams = academicSession;
-    }
-
-    updateStatus(academicSession : any)
+    updateStatus(schoolSubGroup : any)
     {
         Swal.fire({
         customClass: {
             container: 'my-swal'
         },
         title: 'Confirmation',
-        text: 'Are you sure to ' + (academicSession.isActive == 0 ? 'de-active' : 'active') + ' the academic session?',
+        text: 'Are you sure to ' + (schoolSubGroup.isActive == 1 ? 'de-active' : 'active') + ' the school sub-group?',
         icon: 'warning',
         allowOutsideClick: false,
         showCloseButton: true,
@@ -124,15 +116,15 @@ export class AcademicSessionListComponent {
             try
             {
                 let tempJson = {
-                    id : academicSession.id,
-                    tableName : academicSession.tableName
+                    id : schoolSubGroup.id,
+                    tableName : schoolSubGroup.tableName
                 }
                 this.showNotification("info", "Please wait...");
                 let response = await this.commonService.updateStatus(tempJson).toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
-                    this.showNotification("success", "Academic Session " + (academicSession.isActive == 0 ? 'De-activated' : 'Activated'));
-                    this.commonSharedService.academicSessionListObject.next({
+                    this.showNotification("success", "School Sub-Group " + (schoolSubGroup.isActive == 1 ? 'De-activated' : 'Activated'));
+                    this.commonSharedService.schoolSubGroupListObject.next({
                         result : "success"
                     });
                 }
@@ -145,14 +137,14 @@ export class AcademicSessionListComponent {
         });   
     }
     
-    deleteAcademicSession(academicSession:any)
+    deleteSchoolSubGroup(schoolSubGroup : any)
     {
         Swal.fire({
         customClass: {
             container: 'my-swal'
         },
         title: 'Confirmation',
-        text: 'Are you sure to delete academic session?',
+        text: 'Are you sure to delete school sub-group?',
         icon: 'warning',
         showCloseButton: true,
         showCancelButton: true
@@ -164,16 +156,14 @@ export class AcademicSessionListComponent {
         else 
         {
             this.showNotification("info", "Please wait...");
-            let tempJSON = { "id" : academicSession.id };
+            let tempJSON = { "id" : schoolSubGroup.id };
             try
             {
-                let response = await this.commonService.deleteAcademicSession(tempJSON).toPromise();
+                let response = await this.commonService.deleteSchoolSubGroup(tempJSON).toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
-                    this.showNotification("success", "Academic Session Deleted.");
-                    this.commonSharedService.academicSessionListObject.next({
-                        result : "success"
-                    });
+                    this.showNotification("success", "School Sub-Group Deleted.");
+                    this.commonSharedService.schoolSubGroupListObject.next({result : "success"});
                 }
             }
             catch(e)

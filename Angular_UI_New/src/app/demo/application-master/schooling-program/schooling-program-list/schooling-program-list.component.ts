@@ -132,7 +132,7 @@ export class SchoolingProgramListComponent {
         }
     }
 
-    addSchoolProgram()
+    addSchoolingProgram()
     {
         const dialogRef = this.modalService.open(SchoolingProgramAddComponent, 
         { 
