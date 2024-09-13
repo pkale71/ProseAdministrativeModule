@@ -1448,10 +1448,10 @@ db.getGrades = (gradeCategoryId, action) =>
         try
         {
             let sql = `SELECT g.id, g.name, g.is_active AS isActive, 'grade' AS tableName,
-            gc.id AS gradeCategoryId, gc.name AS gradeCategoryName, COUNT(gws.id) AS isExist
+            gc.id AS gradeCategoryId, gc.name AS gradeCategoryName, COUNT(sub.id) AS isExist
             FROM grade g 
             JOIN grade_category gc ON gc.id = g.grade_category_id 
-            LEFT JOIN grade_wise_syllabus gws ON gws.grade_id = g.id`;
+            LEFT JOIN subject sub ON sub.grade_id = g.id`;
             if(gradeCategoryId != "")
             {
                 sql = sql + ` WHERE g.grade_category_id = ${gradeCategoryId}`;
@@ -1576,8 +1576,8 @@ db.checkGradeExist = (id) =>
     {
         try
         {
-            let sql = `SELECT gws.id AS gradeWiseSyllabusId
-            FROM grade_wise_syllabus gws WHERE gws.grade_id = ${id}`;
+            let sql = `SELECT sub.id AS subjectId
+            FROM subject sub WHERE sub.grade_id = ${id}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
