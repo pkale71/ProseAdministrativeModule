@@ -56,7 +56,7 @@ module.exports = require('express').Router().post('/', async(req, res) =>
                                 if(applicableFromYear.length == 1)
                                 {
                                     // check duplicate subject
-                                    subject = await dbCommon.duplicateSubject(gradeCategoryId, gradeId, syllabusId, applicableFromYearId, name, subjectId);
+                                    subject = await dbCommon.duplicateSubject(gradeCategoryId, gradeId, syllabusId, name, subjectId);
                                     if(subject.length == 0)
                                     {
                                         //insert subject

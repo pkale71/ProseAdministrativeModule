@@ -313,65 +313,65 @@ buildCommonJSON.gradeWiseSyllabuses = function(datas)
     return resultJSON;
 }
 
-buildCommonJSON.syllabusWiseSubjects = function(datas)
-{
-    let academicSessionJSON;
-    let gradeCategoryJSON;
-    let gradeJSON;
-    let syllabusJSON;
-    let schoolingProgramJSON;
-    let resultJSON = [];
+// buildCommonJSON.syllabusWiseSubjects = function(datas)
+// {
+//     let academicSessionJSON;
+//     let gradeCategoryJSON;
+//     let gradeJSON;
+//     let syllabusJSON;
+//     let schoolingProgramJSON;
+//     let resultJSON = [];
 
-    datas.forEach((data) => 
-    { 
-        gradeCategoryJSON = [];
-        academicSessionJSON = [];
-        syllabusJSON = [];
-        gradeJSON = [];
-        schoolingProgramJSON = [];
+//     datas.forEach((data) => 
+//     { 
+//         gradeCategoryJSON = [];
+//         academicSessionJSON = [];
+//         syllabusJSON = [];
+//         gradeJSON = [];
+//         schoolingProgramJSON = [];
         
-        gradeCategoryJSON = {
-            "id" : data.gradeCategoryId,
-            "name" : data.gradeCategoryName,
-        }
+//         gradeCategoryJSON = {
+//             "id" : data.gradeCategoryId,
+//             "name" : data.gradeCategoryName,
+//         }
 
-        gradeJSON = {
-            "id" : data.gradeId,
-            "name" : data.gradeName,
-        }
+//         gradeJSON = {
+//             "id" : data.gradeId,
+//             "name" : data.gradeName,
+//         }
 
-        schoolingProgramJSON = {
-            "id" : data.schoolingProgramId,
-            "name" : data.schoolingProgramName,
-        } 
+//         schoolingProgramJSON = {
+//             "id" : data.schoolingProgramId,
+//             "name" : data.schoolingProgramName,
+//         } 
         
-        academicSessionJSON = {
-            "id" : data.academicSessionId,
-            "name" : data.academicSessionName,
-        } 
+//         academicSessionJSON = {
+//             "id" : data.academicSessionId,
+//             "name" : data.academicSessionName,
+//         } 
 
-        syllabusJSON = {
-            "id" : data.syllabusId,
-            "name" : data.syllabusName,
-        } 
-/////Final JSON
-        let finalJSON = {
-            "id" : data.id,
-            "name" : data.name,
-            "isActive" : data.isActive,
-            "tableName" : data.tableName ? data.tableName : '' ? data.tableName : '',
-            "academicSession" : academicSessionJSON,
-            "gradeCategory" : gradeCategoryJSON,
-            "grade" : gradeJSON,
-            "schoolingProgram" : schoolingProgramJSON,
-            "syllabus" : syllabusJSON,
-            "isExist" : data.isExist
-        }
-        resultJSON.push(finalJSON);
-    });
+//         syllabusJSON = {
+//             "id" : data.syllabusId,
+//             "name" : data.syllabusName,
+//         } 
+// /////Final JSON
+//         let finalJSON = {
+//             "id" : data.id,
+//             "name" : data.name,
+//             "isActive" : data.isActive,
+//             "tableName" : data.tableName ? data.tableName : '' ? data.tableName : '',
+//             "academicSession" : academicSessionJSON,
+//             "gradeCategory" : gradeCategoryJSON,
+//             "grade" : gradeJSON,
+//             "schoolingProgram" : schoolingProgramJSON,
+//             "syllabus" : syllabusJSON,
+//             "isExist" : data.isExist
+//         }
+//         resultJSON.push(finalJSON);
+//     });
 
-    return resultJSON;
-}
+//     return resultJSON;
+// }
 
 buildCommonJSON.subjects = function(datas, action = 1)
 {  
@@ -441,24 +441,24 @@ buildCommonJSON.subjects = function(datas, action = 1)
     return resultJSON;
 }
 
-buildCommonJSON.subjectWiseChapters = function(datas)
+buildCommonJSON.chapters = function(datas)
 {
-    let academicSessionJSON;
     let gradeCategoryJSON;
     let gradeJSON;
     let syllabusJSON;
     let subjectJSON;
-    let schoolingProgramJSON;
+    let applicableFromYearJSON;
+    let effectiveTillYearJSON;
     let resultJSON = [];
 
     datas.forEach((data) => 
     { 
-        academicSessionJSON = [];
         gradeCategoryJSON = [];
         syllabusJSON = [];
         gradeJSON = [];
         subjectJSON = [];
-        schoolingProgramJSON = [];
+        applicableFromYearJSON = [];
+        effectiveTillYearJSON = [];
         
         gradeCategoryJSON = {
             "id" : data.gradeCategoryId,
@@ -470,37 +470,37 @@ buildCommonJSON.subjectWiseChapters = function(datas)
             "name" : data.gradeName,
         }
 
-        schoolingProgramJSON = {
-            "id" : data.schoolingProgramId,
-            "name" : data.schoolingProgramName,
-        }
-        
-        academicSessionJSON = {
-            "id" : data.academicSessionId,
-            "name" : data.academicSessionName,
-        } 
-
         syllabusJSON = {
             "id" : data.syllabusId,
             "name" : data.syllabusName,
         } 
 
         subjectJSON = {
-            "id" : data.syllabusWiseSubjectId,
-            "name" : data.syllabusWiseSubjectName,
+            "id" : data.subjectId,
+            "name" : data.subjectName,
         } 
-/////Final JSON
+
+        applicableFromYearJSON = {
+            "id" : data.applicableFromYearId,
+            "year" : data.applicableFromYear,
+        }
+
+        effectiveTillYearJSON = {
+            "id" : data.effectiveTillYearId,
+            "year" : data.effectiveTillYear
+        }
+        //Final JSON
         let finalJSON = {
             "id" : data.id,
             "name" : data.name,
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '' ? data.tableName : '',
-            "academicSession" : academicSessionJSON,
             "gradeCategory" : gradeCategoryJSON,
             "grade" : gradeJSON,
-            "schoolingProgram" : schoolingProgramJSON,
             "syllabus" : syllabusJSON,
             "subject" : subjectJSON,
+            "applicableFromYear" : applicableFromYearJSON,
+            "effectiveTillYear" : effectiveTillYearJSON,
             "isExist" : data.isExist
         }
         resultJSON.push(finalJSON);

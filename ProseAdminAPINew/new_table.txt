@@ -213,3 +213,17 @@ CREATE TABLE `chapter` (
     PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `topic` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`name` varchar(50) CHARACTER SET utf8 NOT NULL,
+	`chapter_id` int(11) NOT NULL,
+	`applicable_from_year_id` int(11) NOT NULL,
+	`effective_till_year_id` int(11) DEFAULT NULL,
+	`is_active` int(11) NOT NULL DEFAULT '1',
+	`created_on` datetime NOT NULL,
+	`created_by_id` int(11) NOT NULL,
+	`updated_on` datetime DEFAULT NULL,
+	`updated_by_id` int(11) DEFAULT NULL,
+	PRIMARY KEY (`id`)
+); 		
+

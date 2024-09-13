@@ -32,7 +32,13 @@ let excelFormatColumns = {
         {
             "names": "City Name"
         }
+    ],
+    "5": [
+        {
+            "names": "Chapter Name"
+        }
     ]
+
 };
 
 module.exports = require('express').Router().get('/:formatFor', async(req,res) =>
@@ -44,7 +50,8 @@ module.exports = require('express').Router().get('/:formatFor', async(req,res) =
             'Country',
             'State-Region',
             'District',
-            'City'
+            'City',
+            "Chapter"
         ];
         formatFor = req.params.formatFor;
         if (validExcelFormatNames.includes(formatFor)) 
