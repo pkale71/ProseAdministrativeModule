@@ -64,7 +64,7 @@ commonRoute.use('/saveChapter', require('../util/validateToken.js'), require('./
 commonRoute.use('/updateChapter', require('../util/validateToken.js'), require('./update-chapter.js'));
 commonRoute.use('/deleteChapter', require('../util/validateToken.js'), require('./delete-chapter.js'));
 
-commonRoute.use('/getChapterWiseTopics', require('../util/validateToken.js'), require('./chapter-wise-topics.js'));
+commonRoute.use('/getChapterWiseTopics', require('../util/validateToken.js'), require('./topics.js'));
 commonRoute.use('/saveTopic', require('../util/validateToken.js'), require('./save-topic.js'));
 commonRoute.use('/updateTopic', require('../util/validateToken.js'), require('./update-chapter-wise-topic.js'));
 commonRoute.use('/deleteTopic', require('../util/validateToken.js'), require('./delete-chapter-wise-topic.js'));

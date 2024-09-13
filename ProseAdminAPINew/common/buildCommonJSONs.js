@@ -659,7 +659,7 @@ buildCommonJSON.batchTypes = function(datas)
             "batchYear" : data.batchYear
         } 
 
-/////Final JSON
+///Final JSON
         let finalJSON = {
             "id" : data.id,
             "name" : data.name,
