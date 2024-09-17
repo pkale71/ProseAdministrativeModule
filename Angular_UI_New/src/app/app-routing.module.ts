@@ -17,12 +17,11 @@ import { UserRoleListComponent } from './demo/application-master/user-role/user-
 import { UserTypeAddComponent } from './demo/application-master/user-type/user-type-add/user-type-add.component';
 import { UserTypeListComponent } from './demo/application-master/user-type/user-type-list/user-type-list.component';
 import { GradeCategoryListComponent } from './demo/application-master/grade-category/grade-category-list/grade-category-list.component';
-import { GradeWiseSyllabusListComponent } from './demo/application-master/grade-wise-syllabus/grade-wise-syllabus-list/grade-wise-syllabus-list.component';
 import { SchoolingProgramListComponent } from './demo/application-master/schooling-program/schooling-program-list/schooling-program-list.component';
 import { AcademicSessionListComponent } from './demo/application-master/academic-session/academic-session-list/academic-session-list.component';
 import { SubjectListComponent } from './demo/application-master/subject/subject-list/subject-list.component';
-import { SubjectWiseChapterListComponent } from './demo/application-master/subject-wise-chapter/subject-wise-chapter-list/subject-wise-chapter-list.component';
-import { ChapterWiseTopicListComponent } from './demo/application-master/chapter-wise-topic/chapter-wise-topic-list/chapter-wise-topic-list.component';
+import { ChapterListComponent } from './demo/application-master/chapter/chapter-list/chapter-list.component';
+import { TopicListComponent } from './demo/application-master/topic/topic-list/topic-list.component';
 import { OnBoardingLinkListComponent } from './demo/application-master/on-boarding-link/on-boarding-link-list/on-boarding-link-list.component';
 import { AcademyEnclosureDocumentListComponent } from './demo/application-master/academy-enclosure-document/academy-enclosure-document-list/academy-enclosure-document-list.component';
 import { BusinessVerticalListComponent } from './demo/business-master/business-vertical/business-vertical-list/business-vertical-list.component';
@@ -169,25 +168,20 @@ const routes: Routes = [
                 path: 'applicationMaster/batchTypes',
                 loadComponent: () => BatchTypeListComponent,
                 canActivate: [AuthGuardService]
-            },
-            // {
-            //     path: 'applicationMaster/grade-wise-syllabus',
-            //     loadComponent: () => GradeWiseSyllabusListComponent,
-            //     canActivate: [AuthGuardService],
-            // },      
+            },      
             {
                 path: 'applicationMaster/subjects',
                 loadComponent : () => SubjectListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/SubjectWiseChapters',
-                loadComponent : () => SubjectWiseChapterListComponent,
+                path: 'applicationMaster/chapters',
+                loadComponent : () => ChapterListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/ChapterWiseTopics',
-                loadComponent : () => ChapterWiseTopicListComponent,
+                path: 'applicationMaster/topics',
+                loadComponent : () => TopicListComponent,
                 canActivate: [AuthGuardService],
             },
             {

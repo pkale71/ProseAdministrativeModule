@@ -28,11 +28,9 @@ export class SubjectListComponent {
     searchClickedGrade : boolean;
     searchClickedSyllabus : boolean;
     academicSessionForm : FormGroup;
-    gradeCategoryForm : FormGroup;
     gradeForm : FormGroup;
     syllabusForm : FormGroup;
     academicSessions : any[];
-    gradeCategories : any[];
     grades : any[];
     syllabuses : any[];
 
@@ -54,16 +52,12 @@ export class SubjectListComponent {
         this.searchClickedSyllabus = false;
         this.subjects = [];
         this.academicSessions = [];
-        this.gradeCategories = [];
         this.grades = [];
         this.syllabuses = [];
         this.getSubjects(0, 0, 0, 'All');
 
         this.academicSessionForm = this.formbuilder.group({
             "academicSession" : ['0']
-        });
-        this.gradeCategoryForm = this.formbuilder.group({
-            "gradeCategory" : ['0']
         });
         this.gradeForm = this.formbuilder.group({
             "grade" : ['0']
@@ -73,7 +67,7 @@ export class SubjectListComponent {
         });
         
         this.getAcademicSessions();
-        this.getGradeCategories('All');
+        this.getGrades();
     }
 
     public gradeAddResult:any = this.commonSharedService.subjectListObject.subscribe(res =>{
@@ -113,30 +107,30 @@ export class SubjectListComponent {
     }
 
     //gradeCategory
-    async getGradeCategories(action : string) 
-    {
-        try
-        {
-            this.searchClicked = true;
-            let response = await this.commonService.getGradeCategories('All').toPromise();
-            if (response.status_code == 200 && response.message == 'success') 
-            {
-                this.gradeCategories = response.gradeCategories;
-                this.gradeCategories.unshift({ id : "0", name : "All"});
-                this.grades.unshift({ id : "0", name : "All"}); 
-                this.getGrades();
-            }
-            else
-            {
-                this.gradeCategories = [];
-                this.gradeCategories.unshift({ id : "0", name : "All"});
-            }
-        }
-        catch(e)
-        {
-            this.showNotification("error",e);
-        }
-    }
+    // async getGradeCategories(action : string) 
+    // {
+    //     try
+    //     {
+    //         this.searchClicked = true;
+    //         let response = await this.commonService.getGradeCategories('All').toPromise();
+    //         if (response.status_code == 200 && response.message == 'success') 
+    //         {
+    //             this.gradeCategories = response.gradeCategories;
+    //             this.gradeCategories.unshift({ id : "0", name : "All"});
+    //             this.grades.unshift({ id : "0", name : "All"}); 
+    //             this.getGrades();
+    //         }
+    //         else
+    //         {
+    //             this.gradeCategories = [];
+    //             this.gradeCategories.unshift({ id : "0", name : "All"});
+    //         }
+    //     }
+    //     catch(e)
+    //     {
+    //         this.showNotification("error",e);
+    //     }
+    // }
     
     // get grades
     async getGrades() 
@@ -144,20 +138,20 @@ export class SubjectListComponent {
         try 
         {
             this.searchClickedGrade = true;
-            let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
-            if(gradeCategoryId != undefined && gradeCategoryId != "")
-            {
-                let response = await this.commonService.getGrades(gradeCategoryId, 'All').toPromise();
+            // let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
+            // if(gradeCategoryId != undefined && gradeCategoryId != "")
+            // {
+                let response = await this.commonService.getGrades(0, 'All').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.grades = response.grades;
                     this.searchClickedGrade = false;
                     this.grades.unshift({ id : "0", name : "All"});
-                    this.syllabuses.unshift({ id : "0", syllabus : {
-                        id : "0",
-                        name : "All"
-                        }
-                    });
+                    // this.syllabuses.unshift({ id : "0", syllabus : {
+                    //     id : "0",
+                    //     name : "All"
+                    //     }
+                    // });
                     this.getSyllabuses();
                 }
                 else
@@ -166,13 +160,13 @@ export class SubjectListComponent {
                     this.grades.unshift({ id : "0", name : "All"});
                     this.searchClickedGrade = false;
                 }
-            }
-            else
-            {
-                this.grades = [];
-                this.grades.unshift({ id : "0", name : "All"});
-                this.searchClickedGrade = false;
-            }    
+            // }
+            // else
+            // {
+            //     this.grades = [];
+            //     this.grades.unshift({ id : "0", name : "All"});
+            //     this.searchClickedGrade = false;
+            // }    
         }
         catch(e)
         {
@@ -250,11 +244,9 @@ export class SubjectListComponent {
 
     filterData()
     {
-        let syllabusId : number = this.syllabusForm.get("syllabus").value;
-        let gradeCategoryId : number = this.gradeCategoryForm.get("gradeCategory").value;
         let gradeId : number = this.gradeForm.get("grade").value;
-
-        this.getSubjects(gradeCategoryId, gradeId, syllabusId, 'All');
+        let syllabusId : number = this.syllabusForm.get("syllabus").value;
+        this.getSubjects(0, gradeId, syllabusId, 'All');
     }
 
     async getSubjects(gradeCategoryId : number, gradeId : number, syllabusId : number, action : string) 

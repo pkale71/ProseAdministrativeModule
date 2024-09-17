@@ -290,6 +290,59 @@ export class CommonService {
         return this.apiService.post("/common/deleteSubject", subject);
     }  
 
+    // chapters
+    saveChapter(chapter : any) 
+    {
+        return this.apiService.post("/common/saveChapter", chapter);
+    }
+
+    getChapters(gradeCategoryId : number, gradeId : number, syllabusId : number, subjectId : number, action : string) 
+    {
+        return this.apiService.get("/common/getChapters/" + gradeCategoryId + '/' + gradeId + '/' + syllabusId + '/' + subjectId + '/' + action);
+    }
+
+    uploadChapters(chapter : any)
+    {
+        return this.apiService.post("/common/uploadChapters", chapter);
+    }
+
+    updateChapter(chapter : any) 
+    {
+        return this.apiService.post('/common/updateChapter', chapter);   
+    }
+
+    deleteChapter(chapter : any) 
+    {
+        return this.apiService.post('/common/deleteChapter', chapter);   
+    }
+
+    // topics
+    saveTopic(topic : any) 
+    {
+        return this.apiService.post('/common/saveTopic', topic);
+    }
+
+    uploadTopics(topic : any)
+    {
+        return this.apiService.post('/common/uploadTopics', topic);
+    }
+
+    getTopics(gradeCategoryId : number, gradeId : number, syllabusId : number, subjectId : number, chapterId : number, action : string) 
+    {
+        return this.apiService.get('/common/getTopics/' + gradeCategoryId + '/' + gradeId + '/' + syllabusId + '/' + subjectId + '/' + chapterId + '/' + action);  
+    }
+
+    updateTopic(topic : any) 
+    {
+        return this.apiService.post('/common/updateTopic', topic);
+    }
+
+    deleteTopic(topic: any) 
+    {
+        return this.apiService.post('/common/deleteTopic', topic);
+    }
+
+
 
 
 
@@ -314,52 +367,8 @@ export class CommonService {
         return this.apiService.post('/common/deleteGradeWiseSyllabus', gradeWiseSyllabus); 
     }
 
-    //subject wise chapters
-    saveSubjectWiseChapter(subjectWiseChapter : any) 
-    {
-        return this.apiService.post("/common/saveSubjectWiseChapter", subjectWiseChapter);
-    }
-
-    getSubjectWiseChapters(academicSessionId : number, syllabusId : number, gradeCategoryId : number, gradeId : number, subjectId : number, action : string) 
-    {
-        return this.apiService.get("/common/getSubjectWiseChapters/" + academicSessionId + '/' + syllabusId + '/' + gradeCategoryId + '/' + gradeId + '/' + subjectId + '/' + action);
-    }
-
-    updateSubjectWiseChapter(subjectWiseChapter : any) 
-    {
-        return this.apiService.post('/common/updateSubjectWiseChapter', subjectWiseChapter);   
-    }
-
-    deleteSubjectWiseChapter(subjectWiseChapter : any) 
-    {
-        return this.apiService.post('/common/deleteSubjectWiseChapter', subjectWiseChapter);   
-    }
-
-    //chapter wise topics
-    saveChapterWiseTopic(chapterWiseTopic : any) 
-    {
-        return this.apiService.post('/common/saveChapterWiseTopic', chapterWiseTopic);
-    }
-
-    uploadChapterWiseTopics(chapterWiseTopic : any)
-    {
-        return this.apiService.post('/common/uploadChapterWiseTopics', chapterWiseTopic);
-    }
-
-    getChapterWiseTopics(academicSessionId : number, syllabusId : number, gradeCategoryId : number, gradeId : number, subjectId : number, chapterId : number, action : string) 
-    {
-        return this.apiService.get('/common/getChapterWiseTopics/' + academicSessionId + '/' + syllabusId + '/' + gradeCategoryId + '/' + gradeId + '/' + subjectId + '/' + chapterId + '/' + action);  
-    }
-
-    updateChapterWiseTopic(chapterWiseTopic : any) 
-    {
-        return this.apiService.post('/common/updateChapterWiseTopic', chapterWiseTopic);
-    }
-
-    deleteChapterWiseTopic(chapterWiseTopic: any) 
-    {
-        return this.apiService.post('/common/deleteChapterWiseTopic', chapterWiseTopic);
-    }
+    
+    
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     //Grade Subject
     getGradeSubjects(syllabusId: number, gradeId: number) {

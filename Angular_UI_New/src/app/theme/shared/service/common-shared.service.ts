@@ -35,7 +35,7 @@ export class CommonSharedService
     public coachListObject = new Subject<any>();
     public gradeWiseSyllabusListObject = new Subject<any>();
     public subjectListObject = new Subject<any>();
-    public subjectWiseChapterListObject = new Subject<any>();
+    public chapterListObject = new Subject<any>();
     public gradeCategoryListObject = new Subject<any>();  
     public schoolSubGroupListObject = new Subject<any>();
     public schoolingGroupListObject = new Subject<any>();   
@@ -45,7 +45,7 @@ export class CommonSharedService
     public schoolingProgramListObject = new Subject<any>();
     public schoolGradeSectionListObject = new Subject<any>();
     public onBoardingLinkListObject = new Subject<any>();
-    public chapterWiseTopicListObject = new Subject<any>();
+    public topicListObject = new Subject<any>();
     public userProfileObject = new Subject<any>();
     public userAssignedGradeListObject = new Subject<any>();
     public userModulesListObject = new Subject<any>();

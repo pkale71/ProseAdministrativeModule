@@ -1,0 +1,114 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header" style="padding: 10px 25px;">
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-book"></i>&nbsp; Topics&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+                <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                (click)="addTopic()">Add Topic</button>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <form [formGroup]="gradeForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="grade">Grade &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="gradeClicked"></i></label>
+                                <select class="form-control" required id="grade" formControlName="grade" (change) = "getSyllabuses()">
+                                    <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-2">
+                        <form [formGroup]="syllabusForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="syllabus">Syllabus &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="syllabusClicked"></i></label>
+                                <select class="form-control" required id="syllabus" formControlName="syllabus"  (change) = "getSubjects()">
+                                    <option value="{{syllabus?.id}}" *ngFor="let syllabus of syllabuses">{{syllabus?.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-2">
+                        <form [formGroup]="subjectForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="subject">Subject &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="subjectClicked"></i></label>
+                                <select class="form-control" required id="subject" formControlName="subject" (change) ="getChapters()">
+                                <option value="{{subject?.id}}" *ngFor="let subject of subjects">{{subject?.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <form [formGroup]="chapterForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="chapter">Chapter &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="chapterClicked"></i></label>
+                                <select class="form-control" required id="chapter" formControlName="chapter" >
+                                <option value="{{chapter?.id}}" *ngFor="let chapter of chapters">{{chapter?.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <br/>
+                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
+                        (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
+                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                        <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table datatable id="tblTopic" class="table table-striped row-border table-hover pt-10">
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Grade</th>
+                                <th>Syllabus</th>
+                                <th>Subject</th>
+                                <th>Chapter</th>
+                                <th>Topic</th>
+                                <th>Applicable From Year</th>
+                                <th>Effective Till Year</th>
+                                <th>Active</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let topic of topics let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{topic.grade?.name}}</td>
+                                <td>{{topic.syllabus?.name}}</td>
+                                <td>{{topic.subject?.name}}</td>
+                                <td>{{ (topic.chapter?.name.length > 10) ? (topic.chapter?.name | slice:0:10) + '...' : (topic.chapter?.name) }}</td>
+                                <td>{{(topic.name.length > 10) ? (topic.name | slice:0:10) + '...' : (topic.name)}}</td>
+                                <td>{{topic.applicableFromYear?.year}}</td>
+                                <td>{{topic.effectiveTillYear?.year}}</td>
+                                <td>
+                                    <span [ngClass]="topic.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(topic)" 
+                                    style="cursor: pointer;" title="Update Status">
+                                    {{topic.isActive? 'Yes' : 'No' }}
+                                    </span>
+                                </td>
+                                <td style="width:40px;text-align: right;">
+                                    <i class="fa fa-edit" (click)="editTopic(topic)" title="Edit" style="cursor: pointer;"></i>&nbsp;
+                                    <i class="fa fa-trash-alt" (click)="deleteTopic(topic)" title="Delete" style="cursor: pointer;"></i>&nbsp;
+                                </td>
+                            </tr>                            
+                            <tr *ngIf="topics.length == 0">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>No record(s) found</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

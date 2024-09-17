@@ -144,17 +144,6 @@ const NavigationItems = [
                 hidden: false,
                 target: false
             },
-
-            // {
-            //     id: 'grade-wise-syllabus',
-            //     title: 'Grade Wise Syllabuses',
-            //     type: 'item',
-            //     url: '/applicationMaster/grade-wise-syllabus',
-            //     param: "",
-            //     userGradeCode: ['ACADM'],
-            //     hidden: false,
-            //     target: false
-            // },
             {
                 id: 'Subjects',
                 title: 'Subjects',
@@ -165,23 +154,21 @@ const NavigationItems = [
                 hidden: false,
                 target: false
             },
-
             {
-                id: 'SubjectWiseChapters',
-                title: 'Subject Wise Chapters',
+                id: 'Chapters',
+                title: 'Chapters',
                 type: 'item',
-                url: '/applicationMaster/SubjectWiseChapters',
+                url: '/applicationMaster/chapters',
                 param: "",
                 userGradeCode: ['ACADM'],
                 hidden: false,
                 target: false
             },
-
             {
-                id: 'ChapterWiseTopics',
-                title: 'Chapter Wise Topics',
+                id: 'Topics',
+                title: 'Topics',
                 type: 'item',
-                url: '/applicationMaster/ChapterWiseTopics',
+                url: '/applicationMaster/topics',
                 param: "",
                 userGradeCode: ['ACADM'],
                 hidden: false,

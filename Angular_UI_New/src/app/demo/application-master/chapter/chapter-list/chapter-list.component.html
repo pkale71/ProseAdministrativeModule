@@ -2,13 +2,13 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header" style="padding: 10px 25px;">
-                <h5 style="margin-top: 0.8rem;"><i class="fa fa-book-open"></i>&nbsp;Subjects&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-book"></i>&nbsp;Chapters&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
                 <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
-                (click)="addSubject()">Add Subject</button>
+                (click)="addChapter()">Add Chapter</button>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <form [formGroup]="gradeForm">
                             <div class="form-group">
                                 <label class="form-control-label" for="grade">Grade &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i></label>
@@ -18,41 +18,43 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <form [formGroup]="syllabusForm">
                             <div class="form-group">
                                 <label class="form-control-label" for="syllabus">Syllabus &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSyllabus"></i></label>
-                                <select class="form-control" required id="syllabus" formControlName="syllabus" >
+                                <select class="form-control" required id="syllabus" formControlName="syllabus"  (change) = "getSubjects()">
                                     <option value="{{syllabus?.id}}" *ngFor="let syllabus of syllabuses">{{syllabus?.name}}</option>
                                 </select>
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-3" style="margin-top: 12px;">
-                        <button type="button" class="btn btn-rounded btn-primary mt-2" *ngIf="!searchClicked" 
-                        (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
-                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
-                        <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                    <div class="col-md-3">
+                        <form [formGroup]="subjectForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="subject">Subject &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSubject"></i></label>
+                                <select class="form-control" required id="subject" formControlName="subject" >
+                                    <option value="{{subject?.id}}" *ngFor="let subject of subjects">{{subject?.name}}</option>
+                                </select>
+                            </div>
+                        </form>
                     </div>
-                </div>
-                <!-- <div class="row text-end">
-                    <div class="col-md-12" style="margin-top: -25px;">
+                    <div class="col-md-3">
                         <br/>
                         <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
                         (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
                         <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
                         <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
                     </div>
-                </div> -->
-
+                </div>
                 <div class="table-responsive">
-                    <table datatable id="tblSubject" class="table table-striped row-border table-hover pt-10">
+                    <table datatable id="tblChapter" class="table table-striped row-border table-hover pt-10">
                         <thead>
                             <tr>
                                 <th>Sno</th>
                                 <th>Grade</th>
                                 <th>Syllabus</th>
                                 <th>Subject</th>
+                                <th>Chapter</th>
                                 <th>Applicable From Year</th>
                                 <th>Effective Till Year</th>
                                 <th>Active</th>
@@ -60,26 +62,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let subject of subjects let i=index">
+                            <tr *ngFor="let chapter of chapters let i=index">
                                 <td>{{i+1}}</td>
-                                <td>{{subject.grade?.name}}</td>
-                                <td>{{subject.syllabus?.name}}</td>
-                                <td>{{subject.name}}</td>                                
-                                <td>{{subject.applicableFromYear?.year}}</td>
-                                <td>{{subject?.effectiveTillYear?.year}}</td>
+                                <td>{{chapter.grade?.name}}</td>
+                                <td>{{chapter.syllabus?.name}}</td>
+                                <td>{{chapter.subject?.name}}</td>
+                                <td>{{ (chapter.name.length > 7) ? (chapter.name | slice:0:7) + '...' : (chapter.name) }}</td>
+                                <td>{{chapter.applicableFromYear?.year}}</td>
+                                <td>{{chapter.effectiveTillYear?.year}}</td>
                                 <td>
-                                    <span [ngClass]="subject.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(subject)" 
+                                    <span [ngClass]="chapter.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(chapter)" 
                                     style="cursor: pointer;" title="Update Status">
-                                    {{subject.isActive? 'Yes' : 'No' }}
+                                    {{chapter.isActive? 'Yes' : 'No' }}
                                     </span>
-                                </td>  
+                                </td>
                                 <td style="width:40px;text-align: right;">
-                                    <i class="fa fa-edit" (click)="editSubject(subject)" *ngIf = "subject.isExist == 0" title="Edit" style="cursor: pointer;"></i>&nbsp;
-                                    <i class="fa fa-trash-alt" (click)="deleteSubject(subject)" *ngIf = "subject.isExist == 0"
+                                    <i class="fa fa-edit" (click)="editChapter(chapter)"  *ngIf = "chapter.isExist == 0" title="Edit" style="cursor: pointer;"></i>&nbsp;
+                                    <i class="fa fa-trash-alt" (click)="deleteChapter(chapter)"  *ngIf = "chapter.isExist == 0"
                                     title="Delete" style="cursor: pointer;"></i>&nbsp;
                                 </td>
                             </tr>                            
-                            <tr *ngIf="subjects.length == 0">
+                            <tr *ngIf="chapters.length == 0">
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

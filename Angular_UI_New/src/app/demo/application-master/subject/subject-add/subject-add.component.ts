@@ -212,10 +212,9 @@ export class SubjectAddComponent
             {
                 this.isValidForm = true;
                 this.saveClicked = true;        
-                this.addSubjectForm.controls["applicableFromYear"].get("id").setValue(this.academicSessionForm.get("applicableFromYear").value);
-                this.addSubjectForm.controls['gradeCategory'].get("id").setValue(this.gradeCategoryForm.get("gradeCategory").value);
-                this.addSubjectForm.controls['grade'].get("id").setValue(this.gradeForm.get("grade").value);
-                this.addSubjectForm.controls["syllabusIds"].get("id").setValue(this.syllabusForm.get("syllabusIds").value.toString());
+                // this.addSubjectForm.controls["applicableFromYear"].get("id").setValue(this.academicSessionForm.get("applicableFromYear").value);
+                // this.addSubjectForm.controls['gradeCategory'].get("id").setValue(this.gradeCategoryForm.get("gradeCategory").value);
+                // this.addSubjectForm.controls['grade'].get("id").setValue(this.gradeForm.get("grade").value);
                 try
                 {
                     let tempJSON = {
@@ -229,7 +228,6 @@ export class SubjectAddComponent
                     if (response.status_code == 200 && response.message == 'success') 
                     {
                         this.showNotification("success", "Subject Saved");
-                        alert("1")
                         this.commonSharedService.subjectListObject.next({
                             result : "success",
                             response : {
