@@ -3,12 +3,11 @@ let dbCommon = require('../sqlmap/commonQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 //Variables 
-let chapterId;
+let topicId;
 let name;
 let applicableFromYearId;
-let subjectId;
+let chapterId;
 //
-let subject;
 let chapter;
 let topic;
 let applicableFromYear;
@@ -19,42 +18,43 @@ module.exports = require('express').Router().post('/',async(req,res) =>
     {
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
-        
-        if(reqData.id != undefined && reqData.name != undefined && reqData.applicableFromYear != undefined && reqData.subject != undefined)
+
+        if(reqData.id != undefined && reqData.name != undefined && reqData.applicableFromYear != undefined && reqData.chapter != undefined)
         {
-            if(reqData.id != "" && reqData.name != "" && reqData.applicableFromYear.id != "" && reqData.subject.id != "")
+            if(reqData.id != "" && reqData.name != "" && reqData.applicableFromYear.id != "" && reqData.chapter.id != "")
             {
-                chapterId = commonFunction.validateNumber(reqData.id);
+                topicId = commonFunction.validateNumber(reqData.id);
                 name = reqData.name;
                 applicableFromYearId = commonFunction.validateNumber(reqData.applicableFromYear.id);
-                subjectId = commonFunction.validateNumber(reqData.subject.id);
+                chapterId = commonFunction.validateNumber(reqData.chapter.id);
 
-                //check chapter exist
-                topic = await dbCommon.checkInUseChapterExist(chapterId);
-                if(topic.length == 0)
-                {
-                    //check applicable from year exist
+                // check topic exist
+                // topic = await dbCommon.checkInUseChapterExist(chapterId);
+                // if(topic.length == 0)
+                // {
+                    // check applicable from year exist
                     applicableFromYear = await dbCommon.getAcademicSession(applicableFromYearId);
                     if(applicableFromYear.length == 1)
                     {
-                        //check subject exist
-                        subject = await dbCommon.checkSubjectExist(subjectId);
-                        if(subject.length == 1)
+                        // check chapter exist
+                        chapter = await dbCommon.checkChapterExist(chapterId);
+                        if(chapter.length == 1)
                         {                       
-                            // check duplicate chapter
-                            chapter = await dbCommon.duplicateChapter(subjectId, name, chapterId);
-                            if(chapter.length == 0)
+                            // check duplicate topic
+                            topic = await dbCommon.duplicateTopic(chapterId, name, topicId);
+                            if(topic.length == 0)
                             {                    
-                                //insert chapter
+                                // update topic
                                 let updateJSON = {
-                                    "id" : chapterId,
+                                    "id" : topicId,
                                     "applicableFromYearId" : applicableFromYearId,
-                                    "subjectId" : subjectId,
+                                    "chapterId" : chapterId,
                                     "name" : name,
                                     "createdById" : authData.id
                                 }
-                                let updateChapterResult = await dbCommon.updateChapter(updateJSON);
-                                if(updateChapterResult.affectedRows > 0)
+                                let updateTopicResult = await dbCommon.updateTopic(updateJSON);
+                                
+                                if(updateTopicResult.affectedRows > 0)
                                 {
                                     res.status(200)
                                     return res.json({
@@ -68,7 +68,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                     res.status(500)
                                     return res.json({
                                         "status_code" : 500,
-                                        "message" : "Chapter Not Saved",
+                                        "message" : "Topic Not Saved",
                                         "success" : false,
                                         "error" : errorCode.getStatus(500)
                                     });
@@ -79,7 +79,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                 res.status(500)
                                 return res.json({
                                     "status_code" : 500,
-                                    "message" : "Chapter Already Exist",
+                                    "message" : "Topic Already Exist",
                                     "success" : false,
                                     "error" : errorCode.getStatus(500)
                                 });
@@ -90,7 +90,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             res.status(500)
                             return res.json({
                                 "status_code" : 500,
-                                "message" : "Subject Not Exist",
+                                "message" : "Chapter Not Exist",
                                 "success" : false,
                                 "error" : errorCode.getStatus(500)
                             });
@@ -106,17 +106,17 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             "error" : errorCode.getStatus(500)
                         });
                     }
-                }
-                else
-                {
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Chapter Currently In Use",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500)
-                    });
-                }
+                // }
+                // else
+                // {
+                //     res.status(500)
+                //     return res.json({
+                //         "status_code" : 500,
+                //         "message" : "Topic Currently In Use",
+                //         "success" : false,
+                //         "error" : errorCode.getStatus(500)
+                //     })
+                // }
             }
             else
             {
@@ -126,7 +126,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     "message" : "Some Values Are Not Filled",
                     "success" : false,
                     "error" : errorCode.getStatus(500)
-                });
+                })
             }
         }
         else
@@ -137,7 +137,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 "message" : "JSON Error",
                 "success" : false,
                 "error" : errorCode.getStatus(500)
-            });
+            })
         }
     } 
     catch(e)
@@ -150,4 +150,4 @@ module.exports = require('express').Router().post('/',async(req,res) =>
             "error" : e?.stack
         });
     }
-});
+})

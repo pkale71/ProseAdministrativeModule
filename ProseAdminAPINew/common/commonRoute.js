@@ -61,13 +61,14 @@ commonRoute.use('/changeSubChapTopStatus', require('../util/validateToken.js'), 
 commonRoute.use('/getCurrentAcademicSession', require('../util/validateToken.js'), require('./current-academic-session.js'));
 commonRoute.use('/getChapters', require('../util/validateToken.js'), require('./chapters.js'));
 commonRoute.use('/saveChapter', require('../util/validateToken.js'), require('./save-chapter.js'));
+commonRoute.use('/uploadChapters', uploads, require('../util/validateToken.js'), require('./upload-chapters.js'));
 commonRoute.use('/updateChapter', require('../util/validateToken.js'), require('./update-chapter.js'));
 commonRoute.use('/deleteChapter', require('../util/validateToken.js'), require('./delete-chapter.js'));
-
-commonRoute.use('/getChapterWiseTopics', require('../util/validateToken.js'), require('./topics.js'));
+commonRoute.use('/getTopics', require('../util/validateToken.js'), require('./topics.js'));
 commonRoute.use('/saveTopic', require('../util/validateToken.js'), require('./save-topic.js'));
-commonRoute.use('/updateTopic', require('../util/validateToken.js'), require('./update-chapter-wise-topic.js'));
-commonRoute.use('/deleteTopic', require('../util/validateToken.js'), require('./delete-chapter-wise-topic.js'));
+commonRoute.use('/uploadTopics', uploads, require('../util/validateToken.js'), require('./upload-topics.js'));
+commonRoute.use('/updateTopic', require('../util/validateToken.js'), require('./update-topic.js'));
+commonRoute.use('/deleteTopic', require('../util/validateToken.js'), require('./delete-topic.js'));
 
 commonRoute.use('/',(req,res,next) => 
 {

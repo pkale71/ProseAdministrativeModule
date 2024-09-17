@@ -2181,10 +2181,144 @@ db.deleteChapter = (id) =>
     })
 };
 
+db.insertMultipleChapter = (chapterData, applicableFromYearId, subjectId, createdById) => 
+{
+    let sqlValues = '';
+    for(let i=0; i<chapterData.length; i++)
+    {
+        sqlValues = sqlValues == '' ? `(${applicableFromYearId}, ${subjectId}, '${chapterData[i].name}', NOW(), ${createdById})` : `${sqlValues}, (${applicableFromYearId}, ${subjectId}, '${chapterData[i].name}', NOW(), ${createdById})`;
+    }
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO chapter (applicable_from_year_id, subject_id, name, created_on, created_by_id)
+            VALUES ${sqlValues}`;
 
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
 
+db.getTopics = (gradeCategoryId, gradeId, syllabusId, subjectId, chapterId, action) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let filters = "";
+            let sql = `SELECT t.id, t.name, t.is_active AS isActive, 'topic' AS tableName,
+            gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
+            g.id AS gradeId, g.name AS gradeName,
+            s.id AS syllabusId, s.name AS syllabusName,
+            sub.id AS subjectId, sub.name AS subjectName, 
+            c.id AS chapterId, c.name AS chapterName,
+            afy.id AS applicableFromYearId, afy.year AS applicableFromYear,
+            ety.id AS effectiveTillYearId, ety.year AS effectiveTillYear
+            FROM topic t
+            JOIN chapter c ON c.id = t.chapter_id
+            JOIN subject sub ON sub.id = c.subject_id
+            JOIN grade_category gc ON gc.id = sub.grade_category_id
+            JOIN grade g ON g.id = sub.grade_id
+            JOIN syllabus s ON s.id = sub.syllabus_id
+            JOIN academic_session afy ON afy.id = t.applicable_from_year_id
+            LEFT JOIN academic_session ety ON ety.id = t.effective_till_year_id`;
+            
+            if(action == 'Active')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE t.is_active = 1`;
+                }
+                else
+                {
+                    filters = filters + ` AND t.is_active = 1`;
+                }
+            }
+            if(parseInt(gradeCategoryId) > 0)
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE gc.id = ${gradeCategoryId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND gc.id = ${gradeCategoryId}`;
+                }
+            }
+            if(parseInt(gradeId) > 0)
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE g.id = ${gradeId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND g.id = ${gradeId}`;
+                }
+            }            
+            if(parseInt(syllabusId) > 0)
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE s.id = ${syllabusId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND s.id = ${syllabusId}`;
+                }
+            }
+            if(parseInt(subjectId) > 0)
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE sub.id = ${subjectId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND sub.id = ${subjectId}`;
+                }
+            }
+            else  if(parseInt(chapterId) > 0)
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE c.id = ${chapterId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND c.id = ${chapterId}`;
+                }
+            }
+            sql = sql + filters + ` GROUP BY t.id ORDER BY t.name`;
 
-
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+}; 
+    
 db.checkChapterExist = (id) => 
 {
     return new Promise((resolve, reject) => 
@@ -2304,6 +2438,78 @@ db.insertTopic = (topic) =>
         }
     })
 }; 
+
+db.updateTopic = (topic) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE topic SET applicable_from_year_id = ${topic.applicableFromYearId}, chapter_id = ${topic.chapterId}, name = '${topic.name}', updated_on = NOW(), updated_by_id = ${topic.createdById} WHERE id = ${topic.id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+    
+db.checkInUseTopicExist = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = ``;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+    
+db.deleteTopic = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM topic WHERE id = ${id}`;            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }            
+
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
     
 
 
@@ -2487,18 +2693,18 @@ db.insertChapterWiseTopic = (ChapterWiseTopic) =>
     })
 };
 
-db.insertMultipleTopic = (topicData, academicSessionId, chapterId, createdById) => 
+db.insertMultipleTopic = (topicData, applicableFromYearId, chapterId, createdById) => 
 {
     let sqlValues = '';
     for(let i=0;i<topicData.length;i++)
     {
-        sqlValues = sqlValues == '' ? `(${academicSessionId}, ${chapterId}, '${topicData[i].name}', NOW(), ${createdById})` : `${sqlValues}, (${academicSessionId}, ${chapterId}, '${topicData[i].name}', NOW(), ${createdById})`;
+        sqlValues = sqlValues == '' ? `(${applicableFromYearId}, ${chapterId}, '${topicData[i].name}', NOW(), ${createdById})` : `${sqlValues}, (${applicableFromYearId}, ${chapterId}, '${topicData[i].name}', NOW(), ${createdById})`;
     }
     return new Promise((resolve, reject) => 
     {
         try
         {
-            let sql = `INSERT INTO chapter_wise_topic (academic_session_id, subject_wise_chapter_id, name, created_on, created_by_id)
+            let sql = `INSERT INTO topic (applicable_from_year_id, chapter_id, name, created_on, created_by_id)
             VALUES ${sqlValues}`;
 
             dbConn.query(sql, (error, result) => 

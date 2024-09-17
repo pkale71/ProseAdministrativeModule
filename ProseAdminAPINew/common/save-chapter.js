@@ -30,7 +30,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 applicableFromYear = await dbCommon.getAcademicSession(applicableFromYearId);
                 if(applicableFromYear.length == 1)
                 {
-                    //check 
+                    //check subject exist
                     subject = await dbCommon.checkSubjectExist(subjectId);
                     if(subject.length == 1)
                     {       
@@ -73,7 +73,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             res.status(500)
                             return res.json({
                                 "status_code" : 500,
-                                "message" : "Some Chapters Already Exist",
+                                "message" : "Chapters Already Exist",
                                 "success" : false,
                                 "error" : errorCode.getStatus(500)
                             });

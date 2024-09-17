@@ -254,125 +254,6 @@ buildCommonJSON.grades = function(datas)
     return resultJSON;
 }
 
-buildCommonJSON.gradeWiseSyllabuses = function(datas)
-{
-    let academicSessionJSON;
-    let gradeCategoryJSON;
-    let gradeJSON;
-    let syllabusJSON;
-    let schoolingProgramJSON = [];
-    let resultJSON = [];
-
-    datas.forEach((data) => 
-    { 
-        academicSessionJSON = [];
-        gradeCategoryJSON = [];
-        gradeJSON = [];
-        schoolingProgramJSON = [];
-        
-        gradeCategoryJSON = {
-            "id" : data.gradeCategoryId,
-            "name" : data.gradeCategoryName,
-        }
-
-        gradeJSON = {
-            "id" : data.gradeId,
-            "name" : data.gradeName,
-        }
-        
-        academicSessionJSON = {
-            "id" : data.academicSessionId,
-            "name" : data.academicSessionName,
-        } 
-
-        schoolingProgramJSON = {
-            "id" : data.schoolingProgramId,
-            "name" : data.schoolingProgramName,
-        } 
-
-        syllabusJSON = {
-            "id" : data.syllabusId,
-            "name" : data.syllabusName,
-        } 
-/////Final JSON
-        let finalJSON = {
-            "id" : data.id,
-            "name" : data.name,
-            "isActive" : data.isActive,
-            "tableName" : data.tableName ? data.tableName : '' ? data.tableName : '',
-            "academicSession" : academicSessionJSON,
-            "schoolingProgram" : schoolingProgramJSON,
-            "gradeCategory" : gradeCategoryJSON,
-            "grade" : gradeJSON,
-            "syllabus" : syllabusJSON,
-            "isExist" : data.isExist
-        }
-        resultJSON.push(finalJSON);
-    });
-
-    return resultJSON;
-}
-
-// buildCommonJSON.syllabusWiseSubjects = function(datas)
-// {
-//     let academicSessionJSON;
-//     let gradeCategoryJSON;
-//     let gradeJSON;
-//     let syllabusJSON;
-//     let schoolingProgramJSON;
-//     let resultJSON = [];
-
-//     datas.forEach((data) => 
-//     { 
-//         gradeCategoryJSON = [];
-//         academicSessionJSON = [];
-//         syllabusJSON = [];
-//         gradeJSON = [];
-//         schoolingProgramJSON = [];
-        
-//         gradeCategoryJSON = {
-//             "id" : data.gradeCategoryId,
-//             "name" : data.gradeCategoryName,
-//         }
-
-//         gradeJSON = {
-//             "id" : data.gradeId,
-//             "name" : data.gradeName,
-//         }
-
-//         schoolingProgramJSON = {
-//             "id" : data.schoolingProgramId,
-//             "name" : data.schoolingProgramName,
-//         } 
-        
-//         academicSessionJSON = {
-//             "id" : data.academicSessionId,
-//             "name" : data.academicSessionName,
-//         } 
-
-//         syllabusJSON = {
-//             "id" : data.syllabusId,
-//             "name" : data.syllabusName,
-//         } 
-// /////Final JSON
-//         let finalJSON = {
-//             "id" : data.id,
-//             "name" : data.name,
-//             "isActive" : data.isActive,
-//             "tableName" : data.tableName ? data.tableName : '' ? data.tableName : '',
-//             "academicSession" : academicSessionJSON,
-//             "gradeCategory" : gradeCategoryJSON,
-//             "grade" : gradeJSON,
-//             "schoolingProgram" : schoolingProgramJSON,
-//             "syllabus" : syllabusJSON,
-//             "isExist" : data.isExist
-//         }
-//         resultJSON.push(finalJSON);
-//     });
-
-//     return resultJSON;
-// }
-
 buildCommonJSON.subjects = function(datas, action = 1)
 {  
     let gradeCategoryJSON;
@@ -509,27 +390,27 @@ buildCommonJSON.chapters = function(datas)
     return resultJSON;
 }
 
-buildCommonJSON.chapterWiseTopics = function(datas)
+buildCommonJSON.topics = function(datas)
 {
-    let academicSessionJSON;
     let gradeCategoryJSON;
     let gradeJSON;
     let syllabusJSON;
     let subjectJSON;
     let chapterJSON;
-    let schoolingProgramJSON;
+    let applicableFromYearJSON;
+    let effectiveTillYearJSON;
     let resultJSON = [];
 
     datas.forEach((data) => 
     { 
-        academicSessionJSON = [];
-        syllabusJSON = [];
         gradeCategoryJSON = [];
+        syllabusJSON = [];
         gradeJSON = [];
         subjectJSON = [];
         chapterJSON = [];
-        schoolingProgramJSON = [];
-
+        applicableFromYearJSON = [];
+        effectiveTillYearJSON = [];
+        
         gradeCategoryJSON = {
             "id" : data.gradeCategoryId,
             "name" : data.gradeCategoryName,
@@ -539,16 +420,6 @@ buildCommonJSON.chapterWiseTopics = function(datas)
             "id" : data.gradeId,
             "name" : data.gradeName,
         }
-        
-        academicSessionJSON = {
-            "id" : data.academicSessionId,
-            "name" : data.academicSessionName,
-        } 
-
-        schoolingProgramJSON = {
-            "id" : data.schoolingProgramId,
-            "name" : data.schoolingProgramName,
-        }
 
         syllabusJSON = {
             "id" : data.syllabusId,
@@ -556,27 +427,38 @@ buildCommonJSON.chapterWiseTopics = function(datas)
         } 
 
         subjectJSON = {
-            "id" : data.syllabusWiseSubjectId,
-            "name" : data.syllabusWiseSubjectName,
+            "id" : data.subjectId,
+            "name" : data.subjectName,
         } 
 
         chapterJSON = {
-            "id" : data.subjectWiseChapterId,
-            "name" : data.subjectWiseChapterName,
-        } 
-/////Final JSON
+            "id" : data.chapterId,
+            "name" : data.chapterName
+        }
+
+        applicableFromYearJSON = {
+            "id" : data.applicableFromYearId,
+            "year" : data.applicableFromYear,
+        }
+
+        effectiveTillYearJSON = {
+            "id" : data.effectiveTillYearId,
+            "year" : data.effectiveTillYear
+        }
+        //Final JSON
         let finalJSON = {
             "id" : data.id,
             "name" : data.name,
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '' ? data.tableName : '',
-            "academicSession" : academicSessionJSON,
             "gradeCategory" : gradeCategoryJSON,
             "grade" : gradeJSON,
             "syllabus" : syllabusJSON,
-            "schoolingProgram" : schoolingProgramJSON,
             "subject" : subjectJSON,
-            "chapter" : chapterJSON
+            "chapter" : chapterJSON,
+            "applicableFromYear" : applicableFromYearJSON,
+            "effectiveTillYear" : effectiveTillYearJSON,
+            "isExist" : data.isExist
         }
         resultJSON.push(finalJSON);
     });

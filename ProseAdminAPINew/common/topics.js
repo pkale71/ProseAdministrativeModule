@@ -65,12 +65,12 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
             action = tempParams[5];
         }
 
-        topics = await dbCommon.getChapterWiseTopics(academicSessionId, syllabusId, gradeCategoryId, gradeId, subjectId, chapterId, action);
-        if(chapterWiseTopics.length >= 0)
+        topics = await dbCommon.getTopics(gradeCategoryId, gradeId, syllabusId, subjectId, chapterId, action);
+        if(topics.length >= 0)
         {
             res.status(200)
             return res.json({
-                "chapterWiseTopics" : buildJSON.chapterWiseTopics(chapterWiseTopics),
+                "topics" : buildJSON.topics(topics),
                 "status_code" : 200,
                 "success" : true,                            
                 "message" : errorCode.getStatus(200)
@@ -84,7 +84,7 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
             "status_code" : 500,
             "message" : "Something Went Wrong",
             "success" : false,
-            "error" : e,
+            "error" : e?.stack
         });
     }
 })
