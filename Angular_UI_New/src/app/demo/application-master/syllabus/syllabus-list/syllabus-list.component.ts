@@ -120,7 +120,7 @@ export class SyllabusListComponent
 
     detailSyllabus(id : number)
     {
-        this.router.navigateByUrl("/applicationMaster/syllabus/detail/" + id);
+        this.router.navigateByUrl("/academicMaster/syllabus/detail/" + id);
     }
         
     updateStatus(syllabus : any)

@@ -46,19 +46,21 @@ const NavigationItems = [
             },
             ]
         },
+
+        // academic master for academic admin
         {
-            id: 'applicationMaster',
-            title: 'Application Master',
+            id: 'academicMaster',
+            title: 'Academic Master',
             type: 'collapse',
-            icon: 'feather icon-settings',
-            userGradeCode: ['HRADM','ACADM','BUADM'],
+            icon: 'feather icon-list',
+            userGradeCode: ['ACADM'],
             hidden: false,
             children: [
             {
                 id: 'gradeCategories',
                 title: 'Grade Categories',
                 type: 'item',
-                url: '/applicationMaster/gradeCategories',
+                url: '/academicMaster/gradeCategories',
                 param: "",
                 userGradeCode: ['ACADM'],
                 hidden: false,
@@ -68,7 +70,7 @@ const NavigationItems = [
             id: 'grades',
             title: 'Grades',
             type: 'item',
-            url: '/applicationMaster/grades',
+            url: '/academicMaster/grades',
             param: "",
             userGradeCode: ['ACADM'],
             hidden: false,
@@ -78,37 +80,7 @@ const NavigationItems = [
                 id: 'syllabuses',
                 title: 'Syllabuses',
                 type: 'item',
-                url: '/applicationMaster/syllabuses',
-                param: "",
-                userGradeCode: ['ACADM'],
-                hidden: false,
-                target: false
-            },
-            {
-                id: 'schoolingGroups',
-                title: 'Schooling Groups',
-                type: 'item',
-                url: '/applicationMaster/schoolingGroups',
-                param: "",
-                userGradeCode: ['ACADM'],
-                hidden: false,
-                target: false
-            },
-            {
-                id: 'schoolingCategories',
-                title: 'Schooling Categories',
-                type: 'item',
-                url: '/applicationMaster/schoolingCategories',
-                param: "",
-                userGradeCode: ['ACADM'],
-                hidden: false,
-                target: false 
-            },            
-            {
-                id: 'schoolingPrograms',
-                title: 'Schooling Programs',
-                type: 'item',
-                url: '/applicationMaster/schoolingPrograms',
+                url: '/academicMaster/syllabuses',
                 param: "",
                 userGradeCode: ['ACADM'],
                 hidden: false,
@@ -118,28 +90,8 @@ const NavigationItems = [
                 id: 'academicSession',
                 title: 'Academic Sessions',
                 type: 'item',
-                url: '/applicationMaster/academicSessions',
+                url: '/academicMaster/academicSessions',
                 param: "",
-                userGradeCode: ['ACADM'],
-                hidden: false,
-                target: false
-            },
-            {
-                id: 'school-sub-group',
-                title: 'School Sub-Groups',
-                type: 'item',
-                url: '/applicationMaster/schoolSubGroups',
-                param: '',
-                userGradeCode: ['ACADM'],
-                hidden: false,
-                target: false
-            },
-            {
-                id: 'batch-type',
-                title: 'Batch Types',
-                type: 'item',
-                url: '/applicationMaster/batchTypes',
-                param: '',
                 userGradeCode: ['ACADM'],
                 hidden: false,
                 target: false
@@ -148,7 +100,7 @@ const NavigationItems = [
                 id: 'Subjects',
                 title: 'Subjects',
                 type: 'item',
-                url: '/applicationMaster/subjects',
+                url: '/academicMaster/subjects',
                 param: "",
                 userGradeCode: ['ACADM'],
                 hidden: false,
@@ -158,7 +110,7 @@ const NavigationItems = [
                 id: 'Chapters',
                 title: 'Chapters',
                 type: 'item',
-                url: '/applicationMaster/chapters',
+                url: '/academicMaster/chapters',
                 param: "",
                 userGradeCode: ['ACADM'],
                 hidden: false,
@@ -168,91 +120,77 @@ const NavigationItems = [
                 id: 'Topics',
                 title: 'Topics',
                 type: 'item',
-                url: '/applicationMaster/topics',
+                url: '/academicMaster/topics',
                 param: "",
                 userGradeCode: ['ACADM'],
                 hidden: false,
                 target: false
-            },
-
-            {
-                id: 'userRoles',
-                title: 'User Roles',
-                type: 'item',
-                url: '/applicationMaster/userRoles',
-                param: "",
-                userGradeCode: ['HRADM'],
-                hidden: false,
-                target: false
-            },
-
-            {
-                id: 'userTypes',
-                title: 'User Types',
-                type: 'item',
-                url: '/applicationMaster/userTypes',
-                param: "",
-                userGradeCode: ['HRADM'],
-                hidden: false,
-                target: false
-            },
-
-            {
-                id: 'academyEnclosureDocument',
-                title: 'Academy Enclosure Docs',
-                type: 'item',
-                url: '/applicationMaster/academyEnclosureDocument',
-                param: "",
-                userGradeCode: ['BUADM'],
-                hidden: false,
-                target: false
-            },
-
-            {
-                id: 'country',
-                title: 'Countries',
-                type: 'item',
-                url: '/applicationMaster/countries',
-                param: "",
-                userGradeCode: ['BUADM'],
-                hidden: false,
-                target: false
-            },
-
-            {
-                id: 'stateRegion',
-                title: 'State/Regions',
-                type: 'item',
-                url: '/applicationMaster/stateRegions',
-                param: "",
-                userGradeCode: ['BUADM'],
-                hidden: false,
-                target: false
-            },
-
-            {
-                id: 'district',
-                title: 'Districts',
-                type: 'item',
-                url: '/applicationMaster/districts',
-                param: "",
-                userGradeCode: ['BUADM'],
-                hidden: false,
-                target: false
-            },
-
-            {
-                id: 'city',
-                title: 'Cities',
-                type: 'item',
-                url: '/applicationMaster/cities',
-                param: "",
-                userGradeCode: ['BUADM'],
-                hidden: false,
-                target: false
-            },                
+            },            
             ]
         },
+
+        // schooling for academic admin
+        {
+            id: 'schoolingMaster',
+            title: 'Schooling Master',
+            type: 'collapse',
+            icon: 'feather icon-layout',
+            userGradeCode: ['ACADM'],
+            hidden: false,
+            children: [
+                {
+                    id: 'schoolingGroups',
+                    title: 'Schooling Groups',
+                    type: 'item',
+                    url: '/schoolingMaster/schoolingGroups',
+                    param: "",
+                    userGradeCode: ['ACADM'],
+                    hidden: false,
+                    target: false
+                },
+                {
+                    id: 'schoolingCategories',
+                    title: 'Schooling Categories',
+                    type: 'item',
+                    url: '/schoolingMaster/schoolingCategories',
+                    param: "",
+                    userGradeCode: ['ACADM'],
+                    hidden: false,
+                    target: false 
+                },            
+                {
+                    id: 'schoolingPrograms',
+                    title: 'Schooling Programs',
+                    type: 'item',
+                    url: '/schoolingMaster/schoolingPrograms',
+                    param: "",
+                    userGradeCode: ['ACADM'],
+                    hidden: false,
+                    target: false
+                },
+                
+                {
+                    id: 'school-sub-group',
+                    title: 'School Sub-Groups',
+                    type: 'item',
+                    url: '/schoolingMaster/schoolSubGroups',
+                    param: '',
+                    userGradeCode: ['ACADM'],
+                    hidden: false,
+                    target: false
+                },
+                {
+                    id: 'batch-type',
+                    title: 'Batch Types',
+                    type: 'item',
+                    url: '/schoolingMaster/batchTypes',
+                    param: '',
+                    userGradeCode: ['ACADM'],
+                    hidden: false,
+                    target: false
+                },
+            ]
+        },        
 
         //for users
         {
@@ -263,6 +201,26 @@ const NavigationItems = [
             userGradeCode: ['HRADM'],
             hidden: false,
             children: [
+            {
+                id: 'userRoles',
+                title: 'User Roles',
+                type: 'item',
+                url: '/user/userRoles',
+                param: "",
+                userGradeCode: ['HRADM'],
+                hidden: false,
+                target: false
+            },
+            {
+                id: 'userTypes',
+                title: 'User Types',
+                type: 'item',
+                url: '/user/userTypes',
+                param: "",
+                userGradeCode: ['HRADM'],
+                hidden: false,
+                target: false
+            },
             {
                 id: 'onBoardingLinks',
                 title: 'On Boarding Links',
@@ -286,6 +244,28 @@ const NavigationItems = [
             ]
         },
 
+        //for business academic document
+        {
+            id: 'academicDocument',
+            title: 'Academic Document',
+            type: 'collapse',
+            icon: 'feather icon-file',
+            userGradeCode: ['BUADM'],
+            hidden: false,
+            children: [
+                {
+                    id: 'academyEnclosureDocument',
+                    title: 'Academy Enclosure Docs',
+                    type: 'item',
+                    url: '/academicDocument/academyEnclosureDocument',
+                    param: "",
+                    userGradeCode: ['BUADM'],
+                    hidden: false,
+                    target: false
+                },
+            ]
+        },
+
         //for business
         {
             id: 'business',
@@ -295,6 +275,46 @@ const NavigationItems = [
             userGradeCode: ['BUADM'],
             hidden: false,
             children: [
+            {
+                id: 'country',
+                title: 'Countries',
+                type: 'item',
+                url: '/business/countries',
+                param: "",
+                userGradeCode: ['BUADM'],
+                hidden: false,
+                target: false
+            },
+            {
+                id: 'stateRegion',
+                title: 'State/Regions',
+                type: 'item',
+                url: '/business/stateRegions',
+                param: "",
+                userGradeCode: ['BUADM'],
+                hidden: false,
+                target: false
+            },
+            {
+                id: 'district',
+                title: 'Districts',
+                type: 'item',
+                url: '/business/districts',
+                param: "",
+                userGradeCode: ['BUADM'],
+                hidden: false,
+                target: false
+            },
+            {
+                id: 'city',
+                title: 'Cities',
+                type: 'item',
+                url: '/business/cities',
+                param: "",
+                userGradeCode: ['BUADM'],
+                hidden: false,
+                target: false
+            },                
             {
                 id: 'businessVertical',
                 title: 'Business Verticals',

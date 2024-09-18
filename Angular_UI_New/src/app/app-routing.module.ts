@@ -86,7 +86,7 @@ const routes: Routes = [
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/grades',
+                path: 'academicMaster/grades',
                 loadComponent: () => GradeListComponent,
                 canActivate: [AuthGuardService],
                 resolve: 
@@ -95,7 +95,7 @@ const routes: Routes = [
                 },
             },
             {
-                path: 'applicationMaster/userRoles',
+                path: 'user/userRoles',
                 loadComponent: () => UserRoleListComponent,
                 canActivate: [AuthGuardService],
                 resolve: 
@@ -103,7 +103,7 @@ const routes: Routes = [
                 },
             },
             {
-                path: 'applicationMaster/userTypes',
+                path: 'user/userTypes',
                 loadComponent: () => UserTypeListComponent,
                 canActivate: [AuthGuardService],
                 resolve: 
@@ -111,7 +111,7 @@ const routes: Routes = [
                 },
             },  
             {
-                path: 'applicationMaster/gradeCategories',
+                path: 'academicMaster/gradeCategories',
                 loadComponent: () => GradeCategoryListComponent,
                 canActivate: [AuthGuardService],
                 resolve: 
@@ -120,33 +120,33 @@ const routes: Routes = [
             },
             //routing
             {
-                path: 'applicationMaster/grade',
+                path: 'academicMaster/grade',
                 loadComponent: () => GradeListComponent,
                 canActivate: [AuthGuardService],
             },
 
             {
-                path: 'applicationMaster/academicSessions',
+                path: 'academicMaster/academicSessions',
                 loadComponent: () => AcademicSessionListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/schoolingGroups',
+                path: 'schoolingMaster/schoolingGroups',
                 loadComponent: () => SchoolingGroupListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/schoolingCategories',
+                path: 'schoolingMaster/schoolingCategories',
                 loadComponent: () => SchoolingCategoryListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/schoolingPrograms',
+                path: 'schoolingMaster/schoolingPrograms',
                 loadComponent : () => SchoolingProgramListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/syllabuses',
+                path: 'academicMaster/syllabuses',
                 loadComponent: () => SyllabusListComponent,
                 canActivate: [AuthGuardService],
                 // resolve: 
@@ -155,37 +155,37 @@ const routes: Routes = [
                 // },
             },
             {
-                path: 'applicationMaster/syllabus/detail/:id',
+                path: 'academicMaster/syllabus/detail/:id',
                 loadComponent: () => SyllabusDetailComponent,
                 canActivate: [AuthGuardService]
             },
             {
-                path: 'applicationMaster/schoolSubGroups',
+                path: 'schoolingMaster/schoolSubGroups',
                 loadComponent: () => SchoolSubGroupListComponent,
                 canActivate: [AuthGuardService]
             },
             {
-                path: 'applicationMaster/batchTypes',
+                path: 'schoolingMaster/batchTypes',
                 loadComponent: () => BatchTypeListComponent,
                 canActivate: [AuthGuardService]
             },      
             {
-                path: 'applicationMaster/subjects',
+                path: 'academicMaster/subjects',
                 loadComponent : () => SubjectListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/chapters',
+                path: 'academicMaster/chapters',
                 loadComponent : () => ChapterListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/topics',
+                path: 'academicMaster/topics',
                 loadComponent : () => TopicListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/academyEnclosureDocument',
+                path: 'academicDocument/academyEnclosureDocument',
                 loadComponent : () => AcademyEnclosureDocumentListComponent,
                 canActivate: [AuthGuardService],
             },
@@ -210,22 +210,22 @@ const routes: Routes = [
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/countries',
+                path: 'business/countries',
                 loadComponent : () => CountryListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/stateRegions',
+                path: 'business/stateRegions',
                 loadComponent : () => StateRegionListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/districts',
+                path: 'business/districts',
                 loadComponent : () => DistrictListComponent,
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'applicationMaster/cities',
+                path: 'business/cities',
                 loadComponent : () => CityListComponent,
                 canActivate: [AuthGuardService],
             },

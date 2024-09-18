@@ -120,7 +120,7 @@ export class SyllabusAddComponent {
                         this.closeModal();
                         this.isValidForm = false;
                         this.saveClicked = false;
-                        this.router.navigateByUrl("/applicationMaster/syllabus/detail/" +  response.id);
+                        this.router.navigateByUrl("/academicMaster/syllabus/detail/" +  response.id);
                     }
                 }
                 catch(e)
