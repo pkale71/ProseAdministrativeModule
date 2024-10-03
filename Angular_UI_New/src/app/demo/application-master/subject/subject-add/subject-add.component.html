@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="gradeClicked"></i></label>
                         <select class="form-control"  required id="grade" formControlName="grade"
-                        [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}" (change) = "getSyllabuses()"
+                        [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}" (change) = "getSyllabuses(gradeCategoryForm.controls['gradeCategory'].value)"
                           >
                         <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade?.name}}</option>
                         </select>
@@ -58,8 +58,10 @@
                         >Please select syllabus.</label>
                     </div>
                 </form>                
-            </div>             
-            <div class="col-md-4">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
                     <input class="form-control input-md" id="name" type="text" required 
@@ -71,7 +73,86 @@
                     >Please enter subject name.</label>
                 </div>
             </div> 
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <form [formGroup]="subjectTypeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="subjectType">Subject Type &nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="subjectType" formControlName="subjectType"
+                        [ngClass]="{'is-invalid': !subjectTypeForm.controls['subjectType'].valid && !isValidForm}">
+                        <option value="{{subjectType.id}}" *ngFor="let subjectType of subjectTypes">{{subjectType?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="subjectTypeForm.controls['subjectType'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select subject type.</label>
+                    </div>
+                </form>                
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="totalSession">Total Session&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="totalSession" type="text" required 
+                    formControlName="totalSession" maxlength="3"
+                    [ngClass]="{'is-invalid': !addSubjectForm.controls['totalSession'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addSubjectForm.controls['totalSession'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter subject total session.</label>
+                    <label style="color: red;"
+                    *ngIf="addSubjectForm.controls['totalSession'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter only digits</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="sessionDuration">Session Duration&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="sessionDuration" type="text" required 
+                    formControlName="sessionDuration" maxlength="3"
+                    [ngClass]="{'is-invalid': !addSubjectForm.controls['sessionDuration'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addSubjectForm.controls['sessionDuration'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter subject session duration.</label>
+                    <label style="color: red;"
+                    *ngIf="addSubjectForm.controls['sessionDuration'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter only digits</label>
+                </div>
+            </div>
+            <div class="col-md-2">                
+                <div class="form-group">
+                    <label class="form-control-label" for="hasPractical">Has Practical &nbsp;<span style="color: red;">*</span></label>
+                    <select class="form-control"  required id="hasPractical" formControlName="hasPractical"
+                    [ngClass]="{'is-invalid': !addSubjectForm.controls['hasPractical'].valid && !isValidForm}">
+                    <option value="">Select Has Practical</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                    </select>
+                    <label style="color: red;"
+                    *ngIf="addSubjectForm.controls['hasPractical'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please select has practical.</label>
+                </div>              
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">                
+                <div class="form-group">
+                    <label class="form-control-label" for="isMandatory">Mandatory/Optional &nbsp;<span style="color: red;">*</span></label>
+                    <select class="form-control"  required id="isMandatory" formControlName="isMandatory"
+                    [ngClass]="{'is-invalid': !addSubjectForm.controls['isMandatory'].valid && !isValidForm}">
+                    <option value="">Select Mandatory/Optional</option>
+                    <option value="1">Mandatory</option>
+                    <option value="0">Optional</option>
+                    </select>
+                    <label style="color: red;"
+                    *ngIf="addSubjectForm.controls['isMandatory'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please select mandatory/optional.</label>
+                </div>              
+            </div>
+            <div class="col-md-3">
                 <form [formGroup]="academicSessionForm">
                     <div class="form-group">
                         <label class="form-control-label" for="applicableFromYear">Applicable From Year &nbsp;<span style="color: red;">*</span></label>

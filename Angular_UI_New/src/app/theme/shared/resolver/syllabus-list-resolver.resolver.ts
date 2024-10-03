@@ -9,6 +9,6 @@ export class SyllabusListResolver implements Resolve<any> {
   constructor(private commonService: CommonService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.commonService.getSyllabuses(0,0);
+    return this.commonService.getSyllabuses(0,'All');
   }
 }

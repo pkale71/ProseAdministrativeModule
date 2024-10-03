@@ -45,6 +45,8 @@ import { SchoolingCategoryListComponent } from './demo/application-master/school
 import { SyllabusDetailComponent } from './demo/application-master/syllabus/syllabus-detail/syllabus-detail.component';
 import { SchoolSubGroupListComponent } from './demo/application-master/school-sub-group/school-sub-group-list/school-sub-group-list.component';
 import { BatchTypeListComponent } from './demo/application-master/batch-type/batch-type-list/batch-type-list.component';
+import { SchoolListComponent } from './demo/business-master/school/school-list/school-list.component';
+import { SchoolDetailComponent } from './demo/business-master/school/school-detail/school-detail.component';
 
 const routes: Routes = [
     {
@@ -267,6 +269,16 @@ const routes: Routes = [
             {
                 path: 'business/studyCenter/detail/:uuid',
                 loadComponent: () => StudyCenterDetailComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/schools',
+                loadComponent: () => SchoolListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'business/school/detail/:uuid',
+                loadComponent: () => SchoolDetailComponent,
                 canActivate: [AuthGuardService],
             },
         ]

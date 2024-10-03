@@ -59,6 +59,8 @@ export class CommonSharedService
     public lessonPlanListObject = new Subject<any>();
     public generatedWeeklyTimeTableObject = new Subject<any>();
     public currentAcademicYearListObject = new Subject<any>();
+    public schoolListObject = new Subject<any>();
+    public schoolSchoolingProgramListObject = new Subject<any>();
     public loginUser : any;
   
     constructor() 

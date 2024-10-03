@@ -101,7 +101,7 @@ export class TopicAddComponent
         this.addTopicForm.controls['name'].addValidators(Validators.required);
         this.addTopicForm.updateValueAndValidity();
         this.getAcademicSessions();
-        this.getGradeCategories();    
+        this.getSyllabuses(0);    
     }
 
     showNotification(type: string, message: string): void 
@@ -127,20 +127,24 @@ export class TopicAddComponent
     }
 
     //gradeCategory
-    async getGradeCategories() 
+    async getGradeCategories(syllabusId : number) 
     {
         try
         {
-            let response = await this.commonService.getGradeCategories('Active').toPromise();
-            if (response.status_code == 200 && response.message == 'success') 
+            this.gradeCategories = [];
+            this.grades = [];
+            this.subjects = [];
+            this.chapters = [];
+            let filterGradeCategories = this.syllabuses.filter(syllabus => syllabus.id == syllabusId);
+            if(filterGradeCategories.length > 0)
             {
-                this.gradeCategories = response.gradeCategories;
-                this.gradeCategories.unshift({ id : "", name : "Select Grade Category"});
+                this.gradeCategories = filterGradeCategories[0].gradeCategories;
+                this.gradeCategories.unshift({ id: "", name: "Select Grade Category" });
             }
             else
             {
                 this.gradeCategories = [];
-                this.gradeCategories.unshift({ id : "", name : "Select Grade Category"});
+                this.gradeCategories.unshift({ id: "", name: "Select Grade Category" });
             }
         }
         catch(e)
@@ -187,12 +191,12 @@ export class TopicAddComponent
     }
 
     //get syllabus
-    async getSyllabuses() 
+    async getSyllabuses(gradeCategoryId : number) 
     {
         try
         {
             this.syllabusClicked = true;
-            let response = await this.commonService.getSyllabuses('Active').toPromise();
+            let response = await this.commonService.getSyllabuses(gradeCategoryId, 'Active').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.syllabuses = response.syllabuses;
@@ -218,6 +222,7 @@ export class TopicAddComponent
     {
         try
         {
+            this.chapters = [];
             let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
             let gradeId = this.gradeForm.get("grade").value;
             let syllabusId = this.syllabusForm.get("syllabus").value;
@@ -230,7 +235,6 @@ export class TopicAddComponent
                     this.subjects = response.subjects;
                     this.subjectClicked = false;
                     this.subjects.unshift({ id : "", name : "Select Subject"});
-                    this.chapters.unshift({ id : "", name : "Select Chapter"});
                 }
                 else
                 {
@@ -304,6 +308,7 @@ export class TopicAddComponent
         this.isChecked = event.target.checked;
         if(this.isChecked)
         {
+            this.names = [];
             this.addTopicForm.controls['name'].clearValidators();
             this.addTopicForm.controls['uploadFile'].addValidators(Validators.required);
             this.addTopicForm.controls['name'].updateValueAndValidity();
@@ -311,6 +316,7 @@ export class TopicAddComponent
         }
         else
         {
+            this.names = [];
             this.addTopicForm.controls['uploadFile'].clearValidators();
             this.addTopicForm.controls['name'].addValidators(Validators.required);
             this.addTopicForm.controls['uploadFile'].updateValueAndValidity();

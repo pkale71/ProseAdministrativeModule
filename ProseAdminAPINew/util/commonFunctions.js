@@ -146,6 +146,10 @@ commonFunction.createRequiredDir = function(basePath)
     {
         fs.mkdirSync(basePath + "/uploads/study-center-docs");
     }
+    if(!fs.existsSync(basePath + "/uploads/school-docs"))
+    {
+        fs.mkdirSync(basePath + "/uploads/school-docs");
+    }
     /////////////
     if(!fs.existsSync(basePath + "/uploads/uploadedFiles")) // For Multer Files
     {
@@ -173,6 +177,10 @@ commonFunction.getUploadFolder = function(uploadIn)
     else if(uploadIn == 'StudyCenterDoc')
     {       
         folderPath = baseDir + "/uploads/study-center-docs/";
+    }
+    else if(uploadIn == 'SchoolDoc')
+    {       
+        folderPath = baseDir + "/uploads/school-docs/";
     }
 
     return folderPath;
@@ -256,6 +264,25 @@ commonFunction.getSecretKey = function()
     //CONVERT(AES_DECRYPT(UNHEX(password), 'prose@admin~2024'), CHAR)
     /////ENCRYPT
     //HEX(AES_ENCRYPT(password, 'prose@admin~2024'))
+}
+
+commonFunction.removeCommaSeparatedString = function(inputString, removeString) 
+{
+    // Convert the input string into an array by splitting at commas
+    let items = inputString.toString().split(',');
+
+    // Remove all instances of the removeString from the array
+    items = items.filter(item => item.trim() !== removeString.trim());
+
+    // Join the array back into a string with commas and trim any extra spaces
+    let result = items.join(',').trim();
+
+    // If the result is empty or only contains commas, return an empty string
+    if (result === '' || result === ',') {
+        result = '';
+    }
+
+    return result;
 }
 
 commonFunction.getFormattedDate = function(myDate, dateFormat)

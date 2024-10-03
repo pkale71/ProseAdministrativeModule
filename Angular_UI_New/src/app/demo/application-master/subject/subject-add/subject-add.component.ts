@@ -24,9 +24,11 @@ export class SubjectAddComponent
     gradeCategoryForm : FormGroup;
     gradeForm : FormGroup;
     syllabusForm: FormGroup;
+    subjectTypeForm : FormGroup;
     academicSessions : any[];
     gradeCategories : any[];
     grades: any[];
+    subjectTypes : any[];
     syllabuses : Array<IOption>;
     isValidForm: boolean;
     saveClicked : boolean;
@@ -40,6 +42,7 @@ export class SubjectAddComponent
         public commonSharedService : CommonSharedService,
         )
     {
+        this.subjectTypes =[];
         this.academicSessions =[];
         this.gradeCategories = [];
         this.grades = [];
@@ -56,10 +59,15 @@ export class SubjectAddComponent
         this.addSubjectForm = this.formbuilder.group({
             id:[''],
             name: ['', [Validators.required]],
+            subjectType : this.formbuilder.group({ 'id': [''] }),
             applicableFromYear : this.formbuilder.group({ 'id': [''] }),
             gradeCategory : this.formbuilder.group({ 'id': [''] }),
             grade : this.formbuilder.group({ 'id' : [''] }),
-            syllabusIds : this.formbuilder.group({ 'id' : [''] })
+            syllabusIds : [''],
+            totalSession: ['', [Validators.required, Validators.pattern('^[0-9]{1,3}')]],
+            sessionDuration: ['', [Validators.required, Validators.pattern('^[0-9]{1,3}')]],
+            hasPractical: ['', [Validators.required]],
+            isMandatory: ['', [Validators.required]]
         });
 
         this.academicSessionForm = this.formbuilder.group({
@@ -74,10 +82,13 @@ export class SubjectAddComponent
         this.syllabusForm = this.formbuilder.group({
             'syllabusIds' : ['', Validators.required]
         });
+        this.subjectTypeForm = this.formbuilder.group({
+            'subjectType' : ['', Validators.required]
+        });
 
+        this.getSubjectTypes();
         this.getAcademicSessions();
         this.getGradeCategories(); 
-        this.getSyllabuses(); 
     }
 
     showNotification(type: string, message: string): void 
@@ -86,6 +97,22 @@ export class SubjectAddComponent
         this.notifier.notify(type, message);
     }
     
+    //get subject type
+    async getSubjectTypes() 
+    {
+        let response = await this.commonService.getSubjectTypes().toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+            this.subjectTypes = response.subjectTypes;
+            this.subjectTypes.unshift({ id: "", name: "Select Subject Type" });
+        }
+        else
+        {
+            this.subjectTypes = [];
+            this.subjectTypes.unshift({ id: "", name: "Select Subject Type" });
+        }
+    }
+
     //get academic session
     async getAcademicSessions() 
     {
@@ -130,9 +157,6 @@ export class SubjectAddComponent
     {  
         try 
         {
-            // this.gradeForm.get("grade").setValue("");
-            // this.syllabusForm.get("syllabusIds").setValue("");
-            // this.syllabuses = [];
             let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
             if(gradeCategoryId != undefined && gradeCategoryId != "")
             {
@@ -164,38 +188,32 @@ export class SubjectAddComponent
     }
 
     //get syllabus
-    async getSyllabuses() 
+    async getSyllabuses(gradeCategoryId : number) 
     {
         try
         {
-            // this.syllabusForm.get("syllabusIds").setValue("");
-            // let academicSessionId = this.academicSessionForm.get("academicSession").value;
-            // let gradeId = this.gradeForm.get("grade").value;
-            // let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
-            // if(academicSessionId != undefined && academicSessionId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "")
-            // {
-                this.syllabusClicked = true;
-                let tempSyllabuses : Array<IOption> = [];
-                let response = await this.commonService.getSyllabuses('Active').toPromise();
-                if (response.status_code == 200 && response.message == 'success') 
+            
+            this.syllabusClicked = true;
+            let tempSyllabuses : Array<IOption> = [];
+            let response = await this.commonService.getSyllabuses(gradeCategoryId, 'Active').toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                let syllabuses : any[] = response.syllabuses;
+                for(let i = 0; i < syllabuses.length; i++)
                 {
-                    let syllabuses : any[] = response.syllabuses;
-                    for(let i = 0; i < syllabuses.length; i++)
-                    {
-                        tempSyllabuses.push({
-                            'value' : syllabuses[i].id.toString(),
-                            'label' : syllabuses[i].name
-                        });
-                    }
-                    this.syllabuses = this.commonSharedService.prepareSelectOptions(tempSyllabuses);
-                    this.syllabusClicked = false;
+                    tempSyllabuses.push({
+                        'value' : syllabuses[i].id.toString(),
+                        'label' : syllabuses[i].name
+                    });
                 }
-                else
-                {
-                    this.syllabuses = [];
-                    this.syllabusClicked = false;
-                }
-            // }
+                this.syllabuses = this.commonSharedService.prepareSelectOptions(tempSyllabuses);
+                this.syllabusClicked = false;
+            }
+            else
+            {
+                this.syllabuses = [];
+                this.syllabusClicked = false;
+            }
         }
         catch(e)
         {
@@ -208,23 +226,20 @@ export class SubjectAddComponent
     {
         if(!this.saveClicked)
         {
-            if(this.addSubjectForm.valid && this.academicSessionForm.valid && this.gradeCategoryForm.valid && this.gradeForm.valid && this.syllabusForm.valid)
+            if(this.addSubjectForm.valid && this.academicSessionForm.valid && this.gradeCategoryForm.valid && this.gradeForm.valid && this.syllabusForm.valid && this.subjectTypeForm.valid)
             {
                 this.isValidForm = true;
-                this.saveClicked = true;        
-                // this.addSubjectForm.controls["applicableFromYear"].get("id").setValue(this.academicSessionForm.get("applicableFromYear").value);
-                // this.addSubjectForm.controls['gradeCategory'].get("id").setValue(this.gradeCategoryForm.get("gradeCategory").value);
-                // this.addSubjectForm.controls['grade'].get("id").setValue(this.gradeForm.get("grade").value);
+                this.saveClicked = true;
                 try
                 {
-                    let tempJSON = {
-                        "name" : this.addSubjectForm.get("name").value,
-                        "gradeCategory" : { "id" : this.gradeCategoryForm.get('gradeCategory').value },
-                        "grade" : { "id" : this.gradeForm.get('grade').value },
-                        "applicableFromYear" : { "id" : this.academicSessionForm.get('applicableFromYear').value },
-                        "syllabusIds" : this.syllabusForm.get('syllabusIds').value.toString()
-                    }
-                    let response = await this.commonService.saveSubject(tempJSON).toPromise();
+                    this.addSubjectForm.controls["gradeCategory"].get("id").setValue(this.gradeCategoryForm.get('gradeCategory').value);
+                    this.addSubjectForm.controls["grade"].get("id").setValue(this.gradeForm.get('grade').value);
+                    this.addSubjectForm.controls["applicableFromYear"].get("id").setValue(this.academicSessionForm.get('applicableFromYear').value);
+                    this.addSubjectForm.get("syllabusIds").setValue(this.syllabusForm.get('syllabusIds').value.toString());
+                    this.addSubjectForm.controls["subjectType"].get("id").setValue(this.subjectTypeForm.get('subjectType').value);
+                   
+                    console.log(this.addSubjectForm.value);
+                    let response = await this.commonService.saveSubject(this.addSubjectForm.value).toPromise();
                     if (response.status_code == 200 && response.message == 'success') 
                     {
                         this.showNotification("success", "Subject Saved");

@@ -201,26 +201,26 @@ const NavigationItems = [
             userGradeCode: ['HRADM'],
             hidden: false,
             children: [
-            {
-                id: 'userRoles',
-                title: 'User Roles',
-                type: 'item',
-                url: '/user/userRoles',
-                param: "",
-                userGradeCode: ['HRADM'],
-                hidden: false,
-                target: false
-            },
-            {
-                id: 'userTypes',
-                title: 'User Types',
-                type: 'item',
-                url: '/user/userTypes',
-                param: "",
-                userGradeCode: ['HRADM'],
-                hidden: false,
-                target: false
-            },
+            // {
+            //     id: 'userRoles',
+            //     title: 'Roles',
+            //     type: 'item',
+            //     url: '/user/userRoles',
+            //     param: "",
+            //     userGradeCode: ['HRADM'],
+            //     hidden: false,
+            //     target: false
+            // },
+            // {
+            //     id: 'userTypes',
+            //     title: 'Types',
+            //     type: 'item',
+            //     url: '/user/userTypes',
+            //     param: "",
+            //     userGradeCode: ['HRADM'],
+            //     hidden: false,
+            //     target: false
+            // },
             {
                 id: 'onBoardingLinks',
                 title: 'On Boarding Links',
@@ -247,7 +247,7 @@ const NavigationItems = [
         //for business academic document
         {
             id: 'academicDocument',
-            title: 'Academic Document',
+            title: 'Document Master',
             type: 'collapse',
             icon: 'feather icon-file',
             userGradeCode: ['BUADM'],
@@ -255,7 +255,7 @@ const NavigationItems = [
             children: [
                 {
                     id: 'academyEnclosureDocument',
-                    title: 'Academy Enclosure Docs',
+                    title: 'Partner Documents',
                     type: 'item',
                     url: '/academicDocument/academyEnclosureDocument',
                     param: "",
@@ -386,6 +386,16 @@ const NavigationItems = [
                 title: 'Study Centers',
                 type: 'item',
                 url: '/business/studyCenters',
+                param: '',
+                userGradeCode: ['BUADM'],
+                hidden: false,
+                target: false,
+            },
+            {
+                id: 'schools',
+                title: 'Schools',
+                type: 'item',
+                url: '/business/schools',
                 param: '',
                 userGradeCode: ['BUADM'],
                 hidden: false,

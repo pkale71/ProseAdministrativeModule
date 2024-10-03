@@ -130,13 +130,13 @@ export class OnBoardingLinkAddComponent {
             {
                 this.masterUserCategories = response.userCategories;
                 this.userCategories = this.masterUserCategories;
-                this.userCategories.unshift({ id : "", name : "Select User Category."});
+                this.userCategories.unshift({ id : "", name : "Select User Category"});
                 this.searchClickedGrade = false;
             }
             else
             {
                 this.userCategories = [];
-                this.userCategories.unshift({ id : "", name : "Select User Category."});
+                this.userCategories.unshift({ id : "", name : "Select User Category"});
                 this.searchClickedGrade = false;
             }
         } 
@@ -166,7 +166,7 @@ export class OnBoardingLinkAddComponent {
             else if(userGrades[0].code == "MOUSR")
             {
                 this.isRequired = true;
-                this.userCategories = this.masterUserCategories.filter(userCategory => userCategory.code != "STFUSR");
+                this.userCategories = this.masterUserCategories;
                 // this.userCategories.unshift({ id : "", name : "Select User Category"});
                 this.onBoardingLinkForm.get("userCategory.id").enable();
                 this.onBoardingLinkForm.get("userCategory.id").addValidators(Validators.required);

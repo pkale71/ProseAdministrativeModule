@@ -1174,7 +1174,7 @@ db.getAcademyEnclosureDocuments = (action) =>
     {
         try
         {
-            let sql = `SELECT aed.id, aed.name, aed.is_compulsory AS isCompulsory, aed.is_active AS isActive, 'academy_enclosure_document' AS tableName, COUNT(bpdu.id) AS isExist
+            let sql = `SELECT aed.id, aed.name, aed.is_active AS isActive, 'academy_enclosure_document' AS tableName, COUNT(bpdu.id) AS isExist
             FROM academy_enclosure_document aed 
             LEFT JOIN business_partner_doc_upload bpdu ON bpdu.academy_enclosure_document_id = aed.id`;
             if(action == "Active")
@@ -1260,8 +1260,8 @@ db.insertAcademyEnclosureDocument = (academyEnclosureDocument) =>
     {
         try
         {
-            let sql = `INSERT INTO academy_enclosure_document (name, is_compulsory, created_on, created_by_id)
-            VALUES('${academyEnclosureDocument.name}', ${academyEnclosureDocument.isCompulsory}, NOW(), ${academyEnclosureDocument.createdById})`;
+            let sql = `INSERT INTO academy_enclosure_document (name, created_on, created_by_id)
+            VALUES('${academyEnclosureDocument.name}', NOW(), ${academyEnclosureDocument.createdById})`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -4114,6 +4114,471 @@ db.deleteStudyCenterAgreementHistory = (studyCenterAgreementHistory) =>
                         return resolve(result);
                     }
                 });
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSchools = (action) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sch.id, sch.uuid, sch.name, sch.code, sch.email, sch.mobile1, sch.mobile2, sch.landline1, sch.landline2, sch.website, sch.address, sch.pincode, 
+            c.id AS countryId, c.name AS countryName, sr.id AS stateRegionId, sr.name AS stateRegionName, d.id AS districtId, d.name AS districtName,
+            ct.id AS cityId, ct.name AS cityName, sg.id AS schoolingGroupId, sg.name AS schoolingGroupName, ssg.id AS schoolSubGroupId, ssg.name AS schoolSubGroupName,
+            sc.id AS schoolingCategoryId, sc.name AS schoolingCategoryName, sch.is_active AS isActive, 'school' AS tableName, 
+            COUNT(sspd.id) AS isExistDetail
+            FROM school sch
+            JOIN country c ON c.id = sch.country_id
+            JOIN state_region sr ON sr.id = sch.state_region_id
+            JOIN district d ON d.id = sch.district_id
+            JOIN city ct ON ct.id = sch.city_id
+            JOIN schooling_group sg ON sg.id = sch.schooling_group_id
+            JOIN school_sub_group ssg ON ssg.id = sch.school_sub_group_id
+            JOIN schooling_category sc ON sc.id = sch.schooling_category_id 
+            LEFT JOIN school_schooling_program_detail sspd ON sspd.school_id = sch.id
+            WHERE sch.deleted_on IS NULL AND sch.deleted_by_id IS NULL`;
+            if(action == 'Active')
+            {
+                sql = sql + ` AND sch.is_active = 1`;
+            } 
+            sql = sql + ` GROUP BY sch.id ORDER BY sch.name`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSchool = (uuid) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sch.id, sch.uuid, sch.name, sch.code, sch.email, sch.mobile1, sch.mobile2, sch.landline1, sch.landline2, sch.website, sch.address, sch.pincode, sch.logo_file_name AS logoFileName, dm.id AS deliveryModeId, dm.name AS deliveryModeName, sch.contract_from AS contractFrom, sch.contract_to AS contractTo,
+            c.id AS countryId, c.name AS countryName, sr.id AS stateRegionId, sr.name AS stateRegionName, d.id AS districtId, d.name AS districtName,
+            ct.id AS cityId, ct.name AS cityName, sg.id AS schoolingGroupId, sg.name AS schoolingGroupName, ssg.id AS schoolSubGroupId, ssg.name AS schoolSubGroupName,
+            sc.id AS schoolingCategoryId, sc.name AS schoolingCategoryName, sch.is_active AS isActive
+            FROM school sch
+            JOIN delivery_mode dm ON dm.id = sch.delivery_mode_id
+            JOIN country c ON c.id = sch.country_id
+            JOIN state_region sr ON sr.id = sch.state_region_id
+            JOIN district d ON d.id = sch.district_id
+            JOIN city ct ON ct.id = sch.city_id
+            JOIN schooling_group sg ON sg.id = sch.schooling_group_id
+            JOIN school_sub_group ssg ON ssg.id = sch.school_sub_group_id
+            JOIN schooling_category sc ON sc.id = sch.schooling_category_id 
+            WHERE sch.uuid = '${uuid}'`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateSchool = (name, uuid) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sch.uuid, sch.name
+            FROM school sch
+            WHERE sch.name = '${name}'`;
+            if(uuid != "")
+            {
+                sql =sql + ` AND sch.uuid != '${uuid}'`
+            }
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertSchool = (school) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO school (uuid, name, code, email, mobile1, mobile2, landline1, landline2, website, address, pincode, country_id, state_region_id, district_id, city_id, schooling_group_id, school_sub_group_id, schooling_category_id, delivery_mode_id, contract_from, contract_to, created_on, created_by_id)
+            VALUES('${school.uuid}', '${school.name}', '${school.code}', '${school.email}', '${school.mobile1}', NULLIF('${school.mobile2}', ''), NULLIF('${school.landline1}', ''), NULLIF('${school.landline2}', ''), NULLIF('${school.website}', ''), '${school.address}', '${school.pincode}', ${school.countryId}, ${school.stateRegionId}, ${school.districtId}, ${school.cityId}, ${school.schoolingGroupId}, ${school.schoolSubGroupId}, ${school.schoolingCategoryId}, ${school.deliveryModeId}, NULLIF('${school.contractFrom}', ''), NULLIF('${school.contractTo}', ''), NOW(), ${school.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateSchoolCode = (code, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE school SET code = '${code}' WHERE id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateSchool = (school) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE school SET name = '${school.name}', email = '${school.email}', mobile1 = '${school.mobile1}', mobile2 = NULLIF('${school.mobile2}', ''), landline1 = NULLIF('${school.landline1}', ''), landline2 = NULLIF('${school.landline2}', ''), website = NULLIF('${school.website}', ''), address = '${school.address}', pincode = '${school.pincode}', country_id = ${school.countryId}, state_region_id = ${school.stateRegionId}, district_id = ${school.districtId}, city_id = ${school.cityId}, schooling_group_id = ${school.schoolingGroupId}, school_sub_group_id = ${school.schoolSubGroupId}, schooling_category_id = ${school.schoolingCategoryId}, delivery_mode_id = ${school.deliveryModeId}, contract_from = NULLIF('${school.contractFrom}', ''), contract_to = NULLIF('${school.contractTo}', ''), updated_on = NOW(), updated_by_id = ${school.updatedById} WHERE uuid = '${school.uuid}'`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateSchoolLogoFileName = (fileName, id, updatedById = '') => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE school SET logo_file_name = '${fileName}'`;
+            if(updatedById != '')
+            {
+                sql =sql + `, updated_on = NOW(), updated_by_id = ${updatedById}`
+            }
+            sql =sql + ` WHERE id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteSchool = (id, deletedById) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE school SET is_active = 0, deleted_on = NOW(), deleted_by_id = ${deletedById} WHERE id = ${id} AND deleted_on IS NULL AND deleted_by_id IS NULL`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSchoolSchoolingPrograms = (schoolId, action) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sspd.id, sspd.uuid, sspd.admission_start_date AS admissionStartDate, sspd.admission_end_date AS admissionEndDate, 
+            sspd.start_date AS startDate, sspd.end_date AS endDate, sspd.is_active AS isActive, 'school_schooling_program_detail' AS tableName,
+            acs.id AS academicSessionId, acs.year AS academicSessionYear, acs.batch_year AS batchYear,
+            sch.uuid AS schoolUUID, sch.name AS schoolName,
+            sp.id AS schoolingProgramId, sp.name AS schoolingProgramName,
+            GROUP_CONCAT(bt.id ORDER BY bt.id) AS batchTypeIds, GROUP_CONCAT(bt.name ORDER BY bt.id) AS batchTypeNames, GROUP_CONCAT(bt.start_time ORDER BY bt.id) AS batchTypeStartTimes, GROUP_CONCAT(bt.end_time ORDER BY bt.id) AS batchTypeEndTimes
+            FROM school_schooling_program_detail sspd 
+            JOIN academic_session acs ON acs.id = sspd.academic_session_id 
+            JOIN school sch ON sch.id = sspd.school_id 
+            JOIN schooling_program sp ON sp.id = sspd.schooling_program_id 
+            JOIN batch_type bt ON FIND_IN_SET(bt.id, sspd.batch_type_ids) > 0 
+            WHERE sspd.school_id = ${schoolId}`;
+            if(action == 'Active')
+            {
+                sql = sql + ` AND sspd.is_active = 1`;
+            } 
+            sql = sql + ` GROUP BY sspd.id ORDER BY sspd.id`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSchoolSchoolingProgram = (uuid) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sspd.id, sspd.uuid, sspd.admission_start_date AS admissionStartDate, sspd.admission_end_date AS admissionEndDate, 
+            sspd.start_date AS startDate, sspd.end_date AS endDate, sspd.is_active AS isActive,
+            acs.id AS academicSessionId, acs.year AS academicSessionYear, acs.batch_year AS batchYear,
+            sch.uuid AS schoolUUID, sch.name AS schoolName,
+            sp.id AS schoolingProgramId, sp.name AS schoolingProgramName,
+            GROUP_CONCAT(bt.id) AS batchTypeIds, GROUP_CONCAT(bt.name) AS batchTypeNames
+            FROM school_schooling_program_detail sspd 
+            JOIN academic_session acs ON acs.id = sspd.academic_session_id 
+            JOIN school sch ON sch.id = sspd.school_id 
+            JOIN schooling_program sp ON sp.id = sspd.schooling_program_id 
+            JOIN batch_type bt ON FIND_IN_SET(bt.id, sspd.batch_type_ids) > 0 
+            WHERE sspd.uuid = '${uuid}'`;            
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateSchoolSchoolingProgram = (schoolId, academicSessionId, schoolingProgramId, uuid) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sspd.id, sspd.uuid, sspd.admission_start_date AS admissionStartDate, sspd.admission_end_date AS admissionEndDate, sspd.start_date AS startDate, sspd.end_date AS endDate
+            FROM school_schooling_program_detail sspd 
+            WHERE sspd.school_id = ${schoolId} AND sspd.academic_session_id = ${academicSessionId} AND sspd.schooling_program_id = ${schoolingProgramId}`;
+            if(uuid != "")
+            {
+                sql = sql + ` AND sspd.uuid != '${uuid}'`
+            }
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertSchoolSchoolingProgram = (schoolSchoolingProgram) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO school_schooling_program_detail (uuid, school_id, academic_session_id, schooling_program_id, admission_start_date, admission_end_date, start_date, end_date, batch_type_ids, created_on, created_by_id)
+            VALUES('${schoolSchoolingProgram.uuid}', ${schoolSchoolingProgram.schoolId}, ${schoolSchoolingProgram.academicSessionId}, ${schoolSchoolingProgram.schoolingProgramId}, '${schoolSchoolingProgram.admissionStartDate}', '${schoolSchoolingProgram.admissionEndDate}', '${schoolSchoolingProgram.startDate}', '${schoolSchoolingProgram.endDate}', '${schoolSchoolingProgram.batchTypeIds}', NOW(), ${schoolSchoolingProgram.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateSchoolSchoolingProgram = (schoolSchoolingProgram) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE school_schooling_program_detail SET academic_session_id = ${schoolSchoolingProgram.academicSessionId}, schooling_program_id = ${schoolSchoolingProgram.schoolingProgramId}, admission_start_date = '${schoolSchoolingProgram.admissionStartDate}', admission_end_date = '${schoolSchoolingProgram.admissionEndDate}', start_date = '${schoolSchoolingProgram.startDate}', end_date = '${schoolSchoolingProgram.endDate}', batch_type_ids = '${schoolSchoolingProgram.batchTypeIds}', updated_on = NOW(), updated_by_id = ${schoolSchoolingProgram.createdById} WHERE uuid = '${schoolSchoolingProgram.uuid}'`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteSchoolSchoolingProgram = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM school_schooling_program_detail WHERE id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getDeliveryModes = () => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT dm.id, dm.name
+            FROM delivery_mode dm 
+            ORDER BY id`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getDeliveryMode = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT dm.id, dm.name
+            FROM delivery_mode dm 
+            WHERE dm.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
             });
         }
         catch(e)

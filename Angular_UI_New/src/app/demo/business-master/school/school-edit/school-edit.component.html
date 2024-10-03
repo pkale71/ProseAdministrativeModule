@@ -1,0 +1,319 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card" >
+            <div class="card-header" style="padding: 10px 25px;">
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-edit"></i>&nbsp;Edit School&nbsp;
+                <span class="badge bg-info">{{school.code}}</span>
+                </h5>
+            </div>
+            <form [formGroup]="editSchoolForm" id="editSchoolForm" (ngSubmit)="saveSchool()" autocomplete="off">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="name" type="text" required
+                                formControlName="name" 
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['name'].valid && !isValidForm}"/>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['name'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter name.</label>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['name'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid name.</label>  
+                            </div>                 
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="email">Email&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="email" type="text" required 
+                                formControlName="email" maxlength="100"
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['email'].valid && !isValidForm}"/>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['email'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter email.</label>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['email'].hasError('email') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid email.</label>   
+                            </div>                 
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="schoolingGroupForm">
+                                <div class="form-group">
+                                    <label class="form-control-label col-md-12" for="schoolingGroup">Schooling Group &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked1"></i></label>
+                                    <select class="form-control"  required id="schoolingGroup" formControlName="schoolingGroup" 
+                                    [ngClass]="{'is-invalid': !schoolingGroupForm.controls['schoolingGroup'].valid && !isValidForm}">
+                                    <option value="{{schoolingGroup.id}}" *ngFor="let schoolingGroup of schoolingGroups">{{schoolingGroup?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="schoolingGroupForm.controls['schoolingGroup'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select schooling group.</label>
+                                </div>
+                            </form>                
+                        </div> 
+                        <div class="col-md-3">
+                            <form [formGroup]="schoolSubGroupForm">
+                                <div class="form-group">
+                                    <label class="form-control-label col-md-12" for="schoolSubGroup">School Sub-Group &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked1"></i></label>
+                                    <select class="form-control"  required id="schoolSubGroup" formControlName="schoolSubGroup" 
+                                    [ngClass]="{'is-invalid': !schoolSubGroupForm.controls['schoolSubGroup'].valid && !isValidForm}">
+                                    <option value="{{schoolSubGroup.id}}" *ngFor="let schoolSubGroup of schoolSubGroups">{{schoolSubGroup?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="schoolSubGroupForm.controls['schoolSubGroup'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select school sub-group.</label>
+                                </div>
+                            </form>                
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form [formGroup]="schoolingCategoryForm">
+                                <div class="form-group">
+                                    <label class="form-control-label col-md-12" for="schoolingCategory">Schooling Category &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked1"></i></label>
+                                    <select class="form-control"  required id="schoolingCategory" formControlName="schoolingCategory" 
+                                    [ngClass]="{'is-invalid': !schoolingCategoryForm.controls['schoolingCategory'].valid && !isValidForm}">
+                                    <option value="{{schoolingCategory.id}}" *ngFor="let schoolingCategory of schoolingCategories">{{schoolingCategory?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="schoolingCategoryForm.controls['schoolingCategory'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select schooling category.</label>
+                                </div>
+                            </form>                
+                        </div> 
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="address">Address&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="address" type="text" required 
+                                formControlName="address" maxlength="200"
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['address'].valid && !isValidForm}"/>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['address'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter address.</label>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['address'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid address.</label>   
+                            </div>                 
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="pincode">Pincode&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="pincode" type="text" required 
+                                formControlName="pincode" maxlength="6"
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['pincode'].valid && !isValidForm}"/>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['pincode'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter pincode.</label>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['pincode'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid pincode.</label>   
+                            </div>                 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="mobile1">Mobile1&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="mobile1" type="text" required  
+                                formControlName="mobile1" maxlength="15" minlength="10"
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['mobile1'].valid && !isValidForm}"
+                                />
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['mobile1'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter mobile number.</label>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['mobile1'].hasError('minlength') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Mobile number should be 10 to 15 digits long</label>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['mobile1'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid mobile number</label>
+                            </div>    
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="mobile2">Mobile2</label>
+                                <input class="form-control input-md" id="mobile2" type="text"
+                                formControlName="mobile2" maxlength="15" minlength="10"
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['mobile2'].valid && !isValidForm}"
+                                />
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['mobile2'].hasError('minlength') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Mobile number should be 10 to 15 digits long</label>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['mobile2'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid mobile number</label>
+                            </div>    
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="landline1">Landline1</label>
+                                <input class="form-control input-md" id="landline1" type="text"
+                                formControlName="landline1" maxlength="15" minlength="10"
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['landline1'].valid && !isValidForm}"
+                                />
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['landline1'].hasError('minlength') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Landline number should be 10 to 15 digits long</label>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['landline1'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid landline number</label>
+                            </div>    
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="landline2">Landline2</label>
+                                <input class="form-control input-md" id="landline2" type="text"
+                                formControlName="landline2" maxlength="15" minlength="10"
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['landline2'].valid && !isValidForm}"
+                                />
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['landline2'].hasError('minlength') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Landline number should be 10 to 15 digits long</label>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['landline2'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid landline number</label>
+                            </div>    
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="website">Website</label>
+                                <input class="form-control input-md" id="website" type="text"
+                                formControlName="website" 
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['website'].valid && !isValidForm}"/>
+                                <label style="color: red;"
+                                *ngIf="editSchoolForm.controls['website'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid website.</label>  
+                            </div>                        
+                        </div> 
+                        <div class="col-md-3">
+                            <form [formGroup]="countryForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="country">Country&nbsp;<span style="color: red;">*</span></label>
+                                    <select class="form-control"  required id="country" formControlName="country" (change)="getStateRegions('Active', '')"
+                                    [ngClass]="{'is-invalid': !countryForm.controls['country'].valid && !isValidForm}">
+                                    <option value="{{country.id}}" *ngFor="let country of countries">{{country?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="countryForm.controls['country'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select country.</label>
+                                </div>
+                            </form>                
+                        </div> 
+                        <div class="col-md-3">
+                            <form [formGroup]="stateRegionForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="stateRegion">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                                    <select class="form-control"  required id="stateRegion" formControlName="stateRegion" (change)="getDistricts('Active', '')"
+                                    [ngClass]="{'is-invalid': !stateRegionForm.controls['stateRegion'].valid && !isValidForm}">
+                                    <option value="{{stateRegion.id}}" *ngFor="let stateRegion of stateRegions">{{stateRegion?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="stateRegionForm.controls['stateRegion'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select state/region.</label>
+                                </div>
+                            </form>                
+                        </div> 
+                        <div class="col-md-3">
+                            <form [formGroup]="districtForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="district">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                                    <select class="form-control"  required id="district" formControlName="district" (change)="getCities('Active', '')"
+                                    [ngClass]="{'is-invalid': !districtForm.controls['district'].valid && !isValidForm}">
+                                    <option value="{{district.id}}" *ngFor="let district of districts">{{district?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="districtForm.controls['district'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select district.</label>
+                                </div>
+                            </form>                
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form [formGroup]="cityForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="city">City&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                                    <select class="form-control"  required id="city" formControlName="city"
+                                    [ngClass]="{'is-invalid': !cityForm.controls['city'].valid && !isValidForm}">
+                                    <option value="{{city.id}}" *ngFor="let city of cities">{{city?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="cityForm.controls['city'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select city.</label>
+                                </div>
+                            </form>                
+                        </div> 
+                        <div class="col-md-3">
+                            <form [formGroup]="deliveryModeForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="deliveryMode">Delivery Mode&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></label>
+                                    <select class="form-control"  required id="deliveryMode" formControlName="deliveryMode"
+                                    [ngClass]="{'is-invalid': !deliveryModeForm.controls['deliveryMode'].valid && !isValidForm}">
+                                    <option value="{{deliveryMode.id}}" *ngFor="let deliveryMode of deliveryModes">{{deliveryMode?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="deliveryModeForm.controls['deliveryMode'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select delivery mode.</label>
+                                </div>
+                            </form>                
+                        </div> 
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="contractFrom">Contract From</label>
+                                <input class="form-control input-md" id="contractFrom" type="date" required formControlName="contractFrom"
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['contractFrom'].valid && !isValidForm}" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="contractTo">Contract To</label>
+                                <input class="form-control input-md" id="contractTo" type="date"  formControlName="contractTo" min="{{editSchoolForm.controls['contractFrom'].value}}"
+                                [ngClass]="{'is-invalid': !editSchoolForm.controls['contractTo'].valid && !isValidForm}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="mb-1" for="logoFile">Select Logo (JPG, PNG)</label>
+                            <input  _ngcontent-ng-c896720819="" type="file" id="logoFile" formControlName="logoFile" [multiple]="false" [accept]="'image/png, image/jpeg'" (change)="fileChange($event)" [ngClass]="{'is-invalid': !editSchoolForm.controls['logoFile'].valid && !isValidForm}" class="form-control">          
+                        </div>
+                    </div>                    
+                </div>
+                <div class="card-footer float-end">
+                <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+                <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+                <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+                    <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

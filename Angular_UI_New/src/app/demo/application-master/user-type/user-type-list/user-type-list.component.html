@@ -2,9 +2,9 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header" style="padding: 10px 25px;">
-                <h5 style="margin-top: 0.8rem;"><i class="fa fa-user"></i>&nbsp;User Types&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-user"></i>&nbsp;Types&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
                 <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
-                (click)="addUserType()">Add User Type</button>
+                (click)="addUserType()">Add Type</button>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -21,7 +21,7 @@
                     <div class="col-md-3">
                         <form [formGroup]="userRoleForm">
                             <div class="form-group">
-                                <label class="form-control-label" for="userRole">User Role&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="userRoleClicked"></i></label>
+                                <label class="form-control-label" for="userRole">Role&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="userRoleClicked"></i></label>
                                 <select class="form-control" required id="userRole" formControlName="userRole">
                                     <option value="{{userRole.id}}" *ngFor="let userRole of userRoles">{{userRole.name}}</option>
                                 </select>
@@ -42,8 +42,8 @@
                             <tr>
                                 <th>Sno</th>
                                 <th>Module</th>
-                                <th>User Role</th>
-                                <th>User Type</th>
+                                <th>Role</th>
+                                <th>Type</th>
                                 <th>Active</th>
                                 <th></th>
                             </tr>
@@ -53,7 +53,7 @@
                                 <td>{{i+1}}</td>
                                 <td>{{userType.module.name}}</td>
                                 <td>{{userType.userRole.name}}</td>
-                                <td>{{userType.name|titlecase}}</td>
+                                <td>{{userType.name}}</td>
                                 <td>
                                     <span [ngClass]="userType.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(userType)" 
                                     style="cursor: pointer;" title="Update Status">

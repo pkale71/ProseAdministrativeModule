@@ -146,36 +146,6 @@ export class BusinessPartnerDetailComponent {
         }
     }
 
-    //get business partner coache
-    // async getBusinessPartnerCoach(id : number)
-    // {  
-    //   try
-    //   {
-    //     this.searchClicked = true;  
-    //     let response = await this.businessService.getBusinessPartnerCoach(id).toPromise();
-    //     if (response.status_code == 200 && response.message == 'success') 
-    //     {
-    //       $('#tblBusinessPartnerCoach').DataTable().destroy();
-    //       this.businessPartnerCoach = response.businessPartnerCoach;
-    //       console.log(this.businessPartnerCoach)
-    //       setTimeout(function(){
-    //         $('#tblBusinessPartnerCoach').DataTable();
-    //       },800);
-    //       this.searchClicked = false;
-    //     }
-    //     else
-    //     {
-    //       this.businessPartnerCoaches = [];
-    //       this.searchClicked = false;
-    //     }
-    //   }
-    //   catch(e)
-    //   {
-    //     this.showNotification("error", e);
-    //     this.searchClicked = false;
-    //   }
-    // }
-
     back()
     {
         this.location.back();

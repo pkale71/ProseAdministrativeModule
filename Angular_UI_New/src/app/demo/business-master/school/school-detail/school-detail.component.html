@@ -1,0 +1,166 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="mb-3 text-uppercase"> School :&nbsp;
+                    <span class="{{school?.isActive == 1 ? 'badge bg-success' :  'badge bg-danger'}}">
+                        Status : {{school?.isActive == 1 ? 'Yes' : 'No'}}
+                    </span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i>&nbsp;
+                    <img [src]="logoBase64" alt="Logo" width="200vw" height="40vh" *ngIf="logoBase64 != ''"/>
+                    <button type="button" class="btn btn-rounded btn-black float-end" style="margin-top: 0rem;"
+                    (click)="back()">Back</button>
+                </h5>
+                <ul class="nav nav-tabs" ngbNav #nav="ngbNav">
+                    <li class="nav-item" [ngbNavItem]="1">
+                        <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                        School Info
+                        </a>
+                        <ng-template ngbNavContent>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="name">Name</label>
+                                    <label class="form-control input-md">{{school?.name}}</label>                 
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="form-control-label" for="name">Code</label>
+                                    <label class="form-control input-md">{{school?.code}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="email">Email</label>
+                                    <label class="form-control input-md">{{school?.email}}</label>                  
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="schoolingGroup">Schooling Group</label>
+                                    <label class="form-control input-md">{{school?.schoolingGroup?.name}}</label>                  
+                                </div>
+                            </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="schoolSubGroup">School Sub-Group</label>
+                                <label class="form-control input-md">{{school?.schoolSubGroup?.name}}</label>                  
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="schoolingCategory">Schooling Category</label>
+                                <label class="form-control input-md">{{school?.schoolingCategory?.name}}</label>                  
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-control-label" for="address">Address</label>
+                                <label class="form-control input-md">{{school?.address}}</label>                
+                            </div>
+                        </div>  
+                        <div class="row mt-2">
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="pincode">Pincode</label>
+                                <label class="form-control input-md">{{school?.pincode}}</label>                
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="country">Country</label>
+                                <label class="form-control input-md">{{school?.country?.name}}</label>                
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="stateRegion">State/Region</label>
+                                <label class="form-control input-md">{{school?.stateRegion?.name}}</label>                
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="district">District</label>
+                                <label class="form-control input-md">{{school?.district?.name}}</label>                
+                            </div>
+                        </div>
+                        <div class="row mt-2">      
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="city">City</label>
+                                <label class="form-control input-md">{{school?.city?.name}}</label>                
+                            </div>            
+                            <div class="col-sm-6">
+                                <label class="form-control-label" for="website">Website</label>
+                                <label class="form-control input-md">{{school?.website != null ? school?.website : '----'}}</label>                
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="mobile1">Mobile1</label>
+                                <label class="form-control input-md">{{school?.mobile1}}</label>                
+                            </div>
+                        </div> 
+                        <div class="row mt-2">    
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="mobile2">Mobile2</label>
+                                <label class="form-control input-md">{{school?.mobile2 != null ? school?.mobile2 : '----'}}</label>                
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="landline1">Landline1</label>
+                                <label class="form-control input-md">{{school?.landline1 != null ? school?.landline1 : '----'}}</label>                
+                            </div>                                       
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="landline2">landline2</label>
+                                <label class="form-control input-md">{{school?.landline2 != null ? school?.landline2 : '----'}}</label>                
+                            </div> 
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="deliveryMode">Delivery Mode</label>
+                                <label class="form-control input-md">{{school?.deliveryMode?.name}}</label>                
+                            </div> 
+                        </div>  
+                        <div class="row mt-2"> 
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="contractFrom">Contract From</label>
+                                <label class="form-control input-md">{{school?.contractFrom != null ? (school?.contractFrom | date : "dd/MM/yyyy") : '----'}}</label>                
+                            </div>                                       
+                            <div class="col-sm-3">
+                                <label class="form-control-label" for="contractTo">Contract To</label>
+                                <label class="form-control input-md">{{school?.contractTo != null ? (school?.contractTo | date : "dd/MM/yyyy") : '----'}}</label>                
+                            </div> 
+                        </div>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="2">
+                        <a class="nav-link text-uppercase" aria-controls="contacts" aria-selected="true" ngbNavLink>Schooling Programs</a>
+                        <ng-template ngbNavContent>
+                            <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                            (click)="addSchollingProgram(school.uuid, school.schoolingCategory?.id)">Add Schooling Program</button>  
+                            <table class="table table-striped row-border table-hover pt-10">
+                                <thead>
+                                    <tr>
+                                        <th>Sno</th>
+                                        <th>Academic Session</th>
+                                        <th>Schooling Program</th>
+                                        <th>Adm.Start Date</th>
+                                        <th>Adm.End Date</th>
+                                        <th>Active</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let schoolSchoolingProgram of schoolSchoolingPrograms; let i = index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{schoolSchoolingProgram?.academicSession?.year}}</td>
+                                        <td>{{schoolSchoolingProgram?.schoolingProgram?.name}}</td>
+                                        <td>{{schoolSchoolingProgram?.admissionStartDate  | date : "dd/MM/yyyy"}}</td>
+                                        <td>{{schoolSchoolingProgram?.admissionEndDate  | date : "dd/MM/yyyy"}}</td>
+                                        <td>
+                                        <span [ngClass]="schoolSchoolingProgram.isActive ? 'badge bg-success' : ' badge bg-danger'" style="cursor: pointer;" title="Change Status" (click)="updateStatus(schoolSchoolingProgram)">{{schoolSchoolingProgram.isActive? 'Yes' : 'No'}}</span>
+                                        </td>
+                                        <td>
+                                        <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteSchoolingProgram(schoolSchoolingProgram.uuid)"></i>
+                                        &nbsp;
+                                        <i class="fa fa-edit" (click)="editSchoolSchoolingProgram(schoolSchoolingProgram, school.schoolingCategory?.id)" title="Edit" style="cursor: pointer;"></i>
+                                        &nbsp;
+                                        <i class="fa fa-list" (click)="detailSchoolSchoolingProgram(schoolSchoolingProgram)" title="Detail" style="cursor: pointer;"></i>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="schoolSchoolingPrograms.length == 0">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>No record(s) found</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-template>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="nav"></div>
+            </div>
+        </div>
+    </div>
+</div>

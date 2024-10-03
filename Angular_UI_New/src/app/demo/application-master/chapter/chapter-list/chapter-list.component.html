@@ -12,7 +12,7 @@
                         <form [formGroup]="gradeForm">
                             <div class="form-group">
                                 <label class="form-control-label" for="grade">Grade &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i></label>
-                                <select class="form-control" required id="grade" formControlName="grade" (change) = "getSyllabuses()">
+                                <select class="form-control" required id="grade" formControlName="grade" (change) = "getSyllabuses(gradeForm.controls['grade'].value)">
                                     <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
                                 </select>
                             </div>

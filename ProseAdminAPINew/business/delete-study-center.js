@@ -19,7 +19,7 @@ module.exports = require('express').Router().post('/', async(req,res) =>
         studyCenter = await dbBusiness.getStudyCenter(uuid);
         if(studyCenter.length == 1)
         {
-            ///delete TieUp School
+            ///delete Study Center
             let deleteStudyCenterResult = await dbBusiness.deleteStudyCenter(studyCenter[0].id, authData.id);
             ///////
             if(deleteStudyCenterResult.affectedRows > 0)

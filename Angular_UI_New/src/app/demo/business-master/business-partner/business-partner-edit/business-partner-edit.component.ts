@@ -12,6 +12,7 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 import Swal from 'sweetalert2';
 import { IOption, SelectModule } from 'ng-select';
 import { BusinessService } from 'src/app/theme/shared/service/business.service';
+import { id } from 'date-fns/locale';
 
 @Component({
     selector: 'app-business-partner-edit',
@@ -411,6 +412,10 @@ export class BusinessPartnerEditComponent {
     {  
         try
         {
+            if(selBusinessVerticalTypes.length == 0)
+            {
+                this.businessVerticalTypeForm.reset();
+            }
             let businessVerticalId = this.businessVerticalForm.get("businessVertical").value;
             if(businessVerticalId != undefined && businessVerticalId != "")
             {

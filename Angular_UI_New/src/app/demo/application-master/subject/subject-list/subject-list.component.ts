@@ -13,6 +13,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 // third party
 import Swal from 'sweetalert2';
 import { SubjectEditComponent } from '../subject-edit/subject-edit.component';
+import { SubjectDetailComponent } from '../subject-detail/subject-detail.component';
 
 @Component({
     selector: 'app-subject-list',
@@ -105,32 +106,6 @@ export class SubjectListComponent {
             this.showNotification("error", e);
         }
     }
-
-    //gradeCategory
-    // async getGradeCategories(action : string) 
-    // {
-    //     try
-    //     {
-    //         this.searchClicked = true;
-    //         let response = await this.commonService.getGradeCategories('All').toPromise();
-    //         if (response.status_code == 200 && response.message == 'success') 
-    //         {
-    //             this.gradeCategories = response.gradeCategories;
-    //             this.gradeCategories.unshift({ id : "0", name : "All"});
-    //             this.grades.unshift({ id : "0", name : "All"}); 
-    //             this.getGrades();
-    //         }
-    //         else
-    //         {
-    //             this.gradeCategories = [];
-    //             this.gradeCategories.unshift({ id : "0", name : "All"});
-    //         }
-    //     }
-    //     catch(e)
-    //     {
-    //         this.showNotification("error",e);
-    //     }
-    // }
     
     // get grades
     async getGrades() 
@@ -138,35 +113,20 @@ export class SubjectListComponent {
         try 
         {
             this.searchClickedGrade = true;
-            // let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
-            // if(gradeCategoryId != undefined && gradeCategoryId != "")
-            // {
-                let response = await this.commonService.getGrades(0, 'All').toPromise();
-                if (response.status_code == 200 && response.message == 'success') 
-                {
-                    this.grades = response.grades;
-                    this.searchClickedGrade = false;
-                    this.grades.unshift({ id : "0", name : "All"});
-                    // this.syllabuses.unshift({ id : "0", syllabus : {
-                    //     id : "0",
-                    //     name : "All"
-                    //     }
-                    // });
-                    this.getSyllabuses();
-                }
-                else
-                {
-                    this.grades = [];
-                    this.grades.unshift({ id : "0", name : "All"});
-                    this.searchClickedGrade = false;
-                }
-            // }
-            // else
-            // {
-            //     this.grades = [];
-            //     this.grades.unshift({ id : "0", name : "All"});
-            //     this.searchClickedGrade = false;
-            // }    
+            let response = await this.commonService.getGrades(0, 'All').toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                this.grades = response.grades;
+                this.searchClickedGrade = false;
+                this.grades.unshift({ id : "0", name : "All"});
+                this.getSyllabuses(0);
+            }
+            else
+            {
+                this.grades = [];
+                this.grades.unshift({ id : "0", name : "All"});
+                this.searchClickedGrade = false;
+            } 
         }
         catch(e)
         {
@@ -176,12 +136,20 @@ export class SubjectListComponent {
     }
 
     // get syllabus 
-    async getSyllabuses() 
+    async getSyllabuses(gradeCategoryId : number) 
     {
         try
         {
+            if(gradeCategoryId > 0)
+            {
+                let filterGrades = this.grades.filter(grade => grade.id == gradeCategoryId);
+                if(filterGrades.length > 0)
+                {
+                    gradeCategoryId = filterGrades[0].gradeCategory.id;
+                }
+            }
             this.searchClickedSyllabus = true;
-            let response = await this.commonService.getSyllabuses('All').toPromise();
+            let response = await this.commonService.getSyllabuses(gradeCategoryId, 'All').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.syllabuses = response.syllabuses;
@@ -201,46 +169,6 @@ export class SubjectListComponent {
             this.searchClickedSyllabus = false;
         }
     }
-
-    // async getSyllabuses() 
-    // {
-    //     try
-    //     {
-    //         this.searchClickedSyllabus = true;
-    //         let academicSessionId = this.academicSessionForm.get("academicSession").value;
-    //         let gradeId = this.gradeForm.get("grade").value;
-    //         let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
-    //         if(academicSessionId != undefined && academicSessionId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "")
-    //         {
-    //             let response = await this.commonService.getSyllabuses('All').toPromise();
-    //             if (response.status_code == 200 && response.message == 'success') 
-    //             {
-    //                 this.syllabuses = response.syllabuses;
-    //                 this.searchClickedSyllabus = false;
-    //                 this.syllabuses.unshift({ id : "0", name : "All" });
-    //                 this.syllabusForm.get("syllabus").setValue(this.syllabuses[0].id);
-    //                 this.searchClickedSyllabus = false;
-    //             }
-    //             else
-    //             {
-    //                 this.syllabuses = [];
-    //                 this.syllabuses.unshift({ id : "0", name : "All" });
-    //                 this.searchClickedSyllabus = false;
-    //             }
-    //         } 
-    //         else
-    //         {
-    //             this.syllabuses = [];
-    //             this.syllabuses.unshift({ id : "0", name : "All" });
-    //             this.searchClickedSyllabus = false;
-    //         }
-    //     }
-    //     catch(e)
-    //     {
-    //         this.showNotification("error", e);
-    //         this.searchClickedSyllabus = false;
-    //     }
-    // }
 
     filterData()
     {
@@ -291,7 +219,16 @@ export class SubjectListComponent {
     {
         const dialogRef = this.modalService.open(SubjectEditComponent, 
         { 
-            size: 'lg', backdrop: 'static' 
+            size: 'xl', backdrop: 'static' 
+        });
+        dialogRef.componentInstance.modalParams = subject;
+    }
+
+    detailSubject(subject : any)
+    {
+        const dialogRef = this.modalService.open(SubjectDetailComponent, 
+        { 
+            size: 'xl', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = subject;
     }

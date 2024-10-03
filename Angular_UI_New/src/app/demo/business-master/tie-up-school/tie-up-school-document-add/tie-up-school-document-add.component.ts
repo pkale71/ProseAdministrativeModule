@@ -113,7 +113,6 @@ export class TieUpSchoolDocumentAddComponent {
 
     fileChange(event : any)
     {
-        // console.log(event.target.files[0])
         const file = event.target.files[0];
         let fSize : number = parseFloat((file.size / 1024).toFixed(2));
         if(file.type == 'image/png' || file.type == 'image/jpeg' || file.type == 'application/pdf')

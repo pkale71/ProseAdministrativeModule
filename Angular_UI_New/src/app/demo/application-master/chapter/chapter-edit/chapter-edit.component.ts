@@ -93,12 +93,12 @@ export class ChapterEditComponent {
         this.editChapterForm.patchValue(this.chapters);
         this.applicableFromYearForm.get("applicableFromYear").setValue(this.chapters.applicableFromYear.id);
         this.getAcademicSessions();
-        this.gradeCategoryForm.get("gradeCategory").setValue(this.chapters.gradeCategory.id);
-        this.getGradeCategories(this.chapters.gradeCategory);
-        this.gradeForm.get("grade").setValue(this.chapters.grade.id);
-        this.getGrades(this.chapters.grade); 
         this.syllabusForm.get("syllabus").setValue(this.chapters.syllabus.id);
-        this.getSyllabuses(this.chapters.syllabus); 
+        this.getSyllabuses(0, this.chapters.syllabus); 
+        this.gradeCategoryForm.get("gradeCategory").setValue(this.chapters.gradeCategory.id);
+        //this.getGradeCategories(this.chapters.syllabus.id, this.chapters.gradeCategory);
+        this.gradeForm.get("grade").setValue(this.chapters.grade.id);
+        this.getGrades(this.chapters.grade);         
         this.subjectForm.get('subject').setValue(this.chapters.subject.id);
         this.getSubjects(this.chapters.subject);
     }
@@ -133,15 +133,18 @@ export class ChapterEditComponent {
     }
 
     //gradeCategory
-    async getGradeCategories(gradeCategory : any) 
+    async getGradeCategories(syllabusId : number, gradeCategory : any) 
     {
         try
         {
-            let response = await this.commonService.getGradeCategories('Active').toPromise();
-            if (response.status_code == 200 && response.message == 'success') 
+            this.gradeCategories = [];
+            this.grades = [];
+            this.subjects = [];
+            let filterGradeCategories = this.syllabuses.filter(syllabus => syllabus.id == syllabusId);
+            if(filterGradeCategories.length > 0)
             {
-                this.gradeCategories = response.gradeCategories;
-                this.gradeCategories.unshift({ id : "", name : "Select Grade Category"});
+                this.gradeCategories = filterGradeCategories[0].gradeCategories;
+                this.gradeCategories.unshift({ id: "", name: "Select Grade Category" });
                 // here access deactive data
                 if(gradeCategory != '')
                 {
@@ -154,8 +157,8 @@ export class ChapterEditComponent {
             }
             else
             {
-                this.gradeCategories = [];
-                this.gradeCategories.unshift({ id : "", name : "Select Grade Category"});
+                this.gradeCategories.push({ id : gradeCategory.id, name : gradeCategory.name });
+                this.gradeCategories.unshift({ id: "", name: "Select Grade Category" });
             }
         }
         catch(e)
@@ -211,12 +214,12 @@ export class ChapterEditComponent {
     }
 
     // syllabus
-    async getSyllabuses(syllabus : any) 
+    async getSyllabuses(gradeCategoryId : number, syllabus : any) 
     {
         try
         {
             this.syllabusClicked = true;
-            let response = await this.commonService.getSyllabuses('Active').toPromise();
+            let response = await this.commonService.getSyllabuses(gradeCategoryId, 'Active').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.syllabuses = response.syllabuses;
@@ -225,6 +228,8 @@ export class ChapterEditComponent {
                 //here access deactivate data
                 if(syllabus != '')
                 { 
+                    this.getGradeCategories(this.chapters.syllabus.id, this.chapters.gradeCategory);
+                    
                     let filterSyllabus = this.syllabuses.filter(tempSyllabus => parseInt(tempSyllabus.id) == parseInt(syllabus.id));
                     if(filterSyllabus.length == 0)
                     {                            

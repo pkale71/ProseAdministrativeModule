@@ -26,12 +26,14 @@ export class SubjectEditComponent {
     gradeCategoryForm : FormGroup;
     gradeForm : FormGroup;
     syllabusForm : FormGroup;
+    subjectTypeForm : FormGroup;
     isValidForm: boolean;
     gradeClicked : boolean;
     syllabusClicked : boolean;
     saveClicked: boolean;
     subject: any;
     syllabuses : any[];
+    subjectTypes : any[];
     gradeCategories : any[];
     grades : any[];
     academicSessions : any[];
@@ -44,6 +46,7 @@ export class SubjectEditComponent {
         private router: Router
     ) 
     {
+        this.subjectTypes =[];
         this.academicSessions = [],
         this.gradeCategories = [],
         this.grades = [],
@@ -61,10 +64,15 @@ export class SubjectEditComponent {
         this.editSubjectForm = this.formbuilder.group({
             id: [''],
             name: ['', Validators.required],
+            subjectType : this.formbuilder.group({ 'id': [''] }),
             applicableFromYear: this.formbuilder.group({ 'id' : ['']}),
             gradeCategory: this.formbuilder.group({ 'id' : ['']}),
             grade: this.formbuilder.group({ 'id' : ['']}),
             syllabus: this.formbuilder.group({ 'id' : ['']}),
+            totalSession: ['', [Validators.required, Validators.pattern('^[0-9]{1,3}')]],
+            sessionDuration: ['', [Validators.required, Validators.pattern('^[0-9]{1,3}')]],
+            hasPractical: ['', [Validators.required]],
+            isMandatory: ['', [Validators.required]]
         });
 
         this.academicSessionForm = this.formbuilder.group({
@@ -79,9 +87,14 @@ export class SubjectEditComponent {
         this.syllabusForm = this.formbuilder.group({
             "syllabus" : ['', Validators.required]
         });
+        this.subjectTypeForm = this.formbuilder.group({
+            'subjectType' : ['', Validators.required]
+        });
         
         ///Assign Form Data
         this.editSubjectForm.patchValue(this.subject);
+        this.getSubjectTypes();
+        this.subjectTypeForm.get("subjectType").setValue(this.subject.subjectType.id);
         this.getAcademicSessions();
         this.academicSessionForm.get("applicableFromYear").setValue(this.subject.applicableFromYear.id);
         this.gradeCategoryForm.get("gradeCategory").setValue(this.subject.gradeCategory.id);
@@ -89,13 +102,29 @@ export class SubjectEditComponent {
         this.gradeForm.get("grade").setValue(this.subject.grade.id);
         this.getGrades(this.subject.grade);
         this.syllabusForm.get("syllabus").setValue(this.subject.syllabus.id);
-        this.getSyllabuses(this.subject.syllabus);
+        this.getSyllabuses(this.subject.gradeCategory.id, this.subject.syllabus);
     }
 
     showNotification(type: string, message: string): void 
     {
         //type : default, info, success, warning, error
         this.notifier.notify(type, message);
+    }
+
+    //get subject type
+    async getSubjectTypes() 
+    {
+        let response = await this.commonService.getSubjectTypes().toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+            this.subjectTypes = response.subjectTypes;
+            this.subjectTypes.unshift({ id: "", name: "Select Subject Type" });
+        }
+        else
+        {
+            this.subjectTypes = [];
+            this.subjectTypes.unshift({ id: "", name: "Select Subject Type" });
+        }
     }
 
     //get academic session
@@ -203,40 +232,33 @@ export class SubjectEditComponent {
     }
 
     // get syllabus
-    async getSyllabuses(syllabus : any) 
+    async getSyllabuses(gradeCategoryid : number, syllabus : any) 
     {
         try
         {
-            // this.syllabusForm.get("syllabus").setValue("");
-            // let academicSessionId = this.academicSessionForm.get("academicSession").value;
-            // let gradeId = this.gradeForm.get("grade").value;
-            // let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
-            // if(academicSessionId != undefined && academicSessionId != "" && gradeCategoryId != undefined && gradeCategoryId != "" && gradeId != undefined && gradeId != "")
-            // {
-                this.syllabusClicked = true;
-                let response = await this.commonService.getSyllabuses('Active').toPromise();
-                if (response.status_code == 200 && response.message == 'success') 
+            this.syllabusClicked = true;
+            let response = await this.commonService.getSyllabuses(gradeCategoryid, 'Active').toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                this.syllabuses = response.syllabuses;
+                this.syllabuses.unshift({ id : "",  name : "Select Syllabus" });
+                this.syllabusForm.get("syllabus").setValue(this.subject.syllabus.id);
+                this.syllabusClicked = false;
+                // here access deactivate data
+                if(syllabus != '')
                 {
-                    this.syllabuses = response.syllabuses;
-                    this.syllabuses.unshift({ id : "",  name : "Select Syllabus" });
-                    this.syllabusForm.get("syllabus").setValue(this.subject.syllabus.id);
-                    this.syllabusClicked = false;
-                    // here access deactivate data
-                    if(syllabus != '')
+                    let filterSyllabus = this.syllabuses.filter(tempSyllabus => parseInt(tempSyllabus.id) == parseInt(syllabus.id));
+                    if(filterSyllabus.length == 0)
                     {
-                        let filterSyllabus = this.syllabuses.filter(tempSyllabus => parseInt(tempSyllabus.id) == parseInt(syllabus.id));
-                        if(filterSyllabus.length == 0)
-                        {
-                            this.syllabuses.push({ id : syllabus.id, name : syllabus.name });
-                        }
+                        this.syllabuses.push({ id : syllabus.id, name : syllabus.name });
                     }
                 }
-                else
-                {
-                    this.syllabuses = [];
-                    this.syllabusClicked = false;
-                }
-            // }
+            }
+            else
+            {
+                this.syllabuses = [];
+                this.syllabusClicked = false;
+            }
         }
         catch(e)
         {
@@ -249,14 +271,15 @@ export class SubjectEditComponent {
     {
         if (!this.saveClicked) 
         {
-            if (this.editSubjectForm.valid && this.academicSessionForm.valid && this.gradeCategoryForm.valid && this.gradeForm.valid && this.syllabusForm.valid )
+            if (this.editSubjectForm.valid && this.academicSessionForm.valid && this.gradeCategoryForm.valid && this.gradeForm.valid && this.syllabusForm.valid && this.subjectTypeForm.valid)
             { 
                 this.isValidForm = true;
                 this.saveClicked = true;
                 this.editSubjectForm.controls["applicableFromYear"].get("id").setValue(this.academicSessionForm.get("applicableFromYear").value);
                 this.editSubjectForm.controls["gradeCategory"].get("id").setValue(this.gradeCategoryForm.get("gradeCategory").value);
                 this.editSubjectForm.controls["grade"].get("id").setValue(this.gradeForm.get("grade").value);
-                this.editSubjectForm.controls["syllabus"].get("id").setValue(this.syllabusForm.get("syllabus").value);            
+                this.editSubjectForm.controls["syllabus"].get("id").setValue(this.syllabusForm.get("syllabus").value);
+                this.editSubjectForm.controls["subjectType"].get("id").setValue(this.subjectTypeForm.get('subjectType').value);     
                 try 
                 {
                     let response = await this.commonService.updateSubject(this.editSubjectForm.value).toPromise();

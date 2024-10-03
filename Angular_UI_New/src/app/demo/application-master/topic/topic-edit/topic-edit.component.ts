@@ -100,12 +100,12 @@ export class TopicEditComponent {
         this.editTopicForm.patchValue(this.topics);
         this.academicSessionForm.get("applicableFromYear").setValue(this.topics.applicableFromYear.id);
         this.getAcademicSessions();
-        this.gradeCategoryForm.get("gradeCategory").setValue(this.topics.gradeCategory.id);
-        this.getGradeCategories(this.topics.gradeCategory);
-        this.gradeForm.get("grade").setValue(this.topics.grade.id);
-        this.getGrades(this.topics.grade);
         this.syllabusForm.get("syllabus").setValue(this.topics.syllabus.id);
-        this.getSyllabuses(this.topics.syllabus);
+        this.getSyllabuses(0, this.topics.syllabus);
+        this.gradeCategoryForm.get("gradeCategory").setValue(this.topics.gradeCategory.id);
+        //this.getGradeCategories(this.topics.syllabus.id, this.topics.gradeCategory);
+        this.gradeForm.get("grade").setValue(this.topics.grade.id);
+        this.getGrades(this.topics.grade);        
         this.subjectForm.get('subject').setValue(this.topics.subject.id);
         this.getSubjects(this.topics.subject);
         this.chapterForm.get('chapter').setValue(this.topics.chapter.id);
@@ -135,15 +135,19 @@ export class TopicEditComponent {
     }
 
     //gradeCategory
-    async getGradeCategories(gradeCategory : any) 
+    async getGradeCategories(syllabusId : number, gradeCategory : any) 
     {
         try
         {
-            let response = await this.commonService.getGradeCategories('Active').toPromise();
-            if (response.status_code == 200 && response.message == 'success') 
+            this.gradeCategories = [];
+            this.grades = [];
+            this.subjects = [];
+            this.chapters = [];
+            let filterGradeCategories = this.syllabuses.filter(syllabus => syllabus.id == syllabusId);
+            if(filterGradeCategories.length > 0)
             {
-                this.gradeCategories = response.gradeCategories;
-                this.gradeCategories.unshift({ id : "", name : "Select Grade Category"});
+                this.gradeCategories = filterGradeCategories[0].gradeCategories;
+                this.gradeCategories.unshift({ id: "", name: "Select Grade Category" });
                 // here access deactive data
                 if(gradeCategory != '')
                 {
@@ -215,18 +219,12 @@ export class TopicEditComponent {
     }
 
     //get syllabus 
-    async getSyllabuses(syllabus : any) 
+    async getSyllabuses(gradeCategoryId : number, syllabus : any) 
     {
         try
         {
-            // this.syllabusForm.get("syllabus").setValue("");
-            // this.subjectForm.get("syllabusWiseSubject").setValue("");
-            // this.chapterForm.get("subjectWiseChapter").setValue("");
-            // this.gradeWiseSyllabuses = [];
-            // this.syllabusWiseSubjects = [];
-            // this.subjectWiseChapters = [];
             this.syllabusClicked = true;
-            let response = await this.commonService.getSyllabuses('Active').toPromise();
+            let response = await this.commonService.getSyllabuses(gradeCategoryId, 'Active').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.syllabuses = response.syllabuses;
@@ -235,6 +233,8 @@ export class TopicEditComponent {
                 // here access dactive data
                 if(syllabus != '')
                 {
+                    this.getGradeCategories(this.topics.syllabus.id, this.topics.gradeCategory);
+
                     let filterSyllabus = this.syllabuses.filter(tempSyllabus => parseInt(tempSyllabus.id) == parseInt(syllabus.id));
                     if(filterSyllabus.length == 0)
                     {
@@ -261,10 +261,7 @@ export class TopicEditComponent {
     {
         try
         {
-            // this.subjectForm.get("syllabusWiseSubject").setValue("");
-            // this.chapterForm.get("subjectWiseChapter").setValue("");
-            // this.syllabusWiseSubjects = [];
-            // this.subjectWiseChapters = [];
+            this.chapters = [];
             let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
             let gradeId = this.gradeForm.get("grade").value;
             let syllabusId = this.syllabusForm.get("syllabus").value;
@@ -314,8 +311,6 @@ export class TopicEditComponent {
     {
         try
         { 
-            // this.chapterForm.get("subjectWiseChapter").setValue("");
-            // this.subjectWiseChapters = [];
             let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
             let gradeId = this.gradeForm.get("grade").value;
             let syllabusId = this.syllabusForm.get("syllabus").value

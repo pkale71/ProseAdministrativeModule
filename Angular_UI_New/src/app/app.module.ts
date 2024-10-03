@@ -98,7 +98,7 @@ const customNotifierOptions: NotifierOptions = {
     ChatMsgComponent,
     ChatUserListComponent,
     FriendComponent,
-    ToggleFullScreenDirective
+    ToggleFullScreenDirective,
   ],
   imports: [
     BrowserModule,

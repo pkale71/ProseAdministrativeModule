@@ -490,7 +490,7 @@ async function saveStudyCenterDocs(files, documentIds, studyCenterId, code, crea
             "message" : "Something Went Wrong",
             "success" : false,
             "error" : e,
-        });
+            });
         }
     }
 

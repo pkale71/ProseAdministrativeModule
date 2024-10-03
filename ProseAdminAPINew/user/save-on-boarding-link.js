@@ -23,8 +23,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
             {
                 email = reqData.email;
                 mobile = reqData.mobile;
-                userGradeId = commonFunction.validateNumber(JSON.parse(reqData.userGrade).id);
-                userCategoryId = commonFunction.validateNumber(JSON.parse(reqData.userCategory)?.id);
+                userGradeId = commonFunction.validateNumber(reqData.userGrade.id);
+                userCategoryId = commonFunction.validateNumber(reqData.userCategory?.id);
                 code = commonFunction.ramdomString(6);
                 
             ///Check User OnBoarding Exist

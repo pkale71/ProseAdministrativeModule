@@ -72,7 +72,7 @@ export class UserDetailComponent {
         }
         const dialogRef = this.modalService.open(UserModuleComponent, 
         { 
-            size: 'xl', backdrop: 'static' 
+            size: 'sm', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = params;
     }

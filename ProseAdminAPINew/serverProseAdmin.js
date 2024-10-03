@@ -50,6 +50,12 @@ if(dbConn)
                 dbConn.query(sql,(error, result) => 
                 {
                     console.log("Sql Mode : NO_ENGINE_SUBSTITUTION");
+                    
+                    let sql1 = `SET SESSION group_concat_max_len = 1000000`;
+                    dbConn.query(sql1,(error1, result1) => 
+                    {
+                        console.log("group_concat_max_len = 1000000");
+                    });
                 });
             }
     ///////Start Server        

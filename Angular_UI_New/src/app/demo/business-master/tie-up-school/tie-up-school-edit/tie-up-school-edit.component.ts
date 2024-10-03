@@ -275,7 +275,7 @@ export class TieUpSchoolEditComponent {
                     this.cities.unshift({ id : '', name : "Select City"});
                     this.searchClicked = false;
                     // here check deactive city
-                    if( city != '')
+                    if(city != '')
                     {
                         let filterCity = this.cities.filter(tempCity => parseInt(tempCity.id) == parseInt(city.id));
                         if(filterCity.length == 0)

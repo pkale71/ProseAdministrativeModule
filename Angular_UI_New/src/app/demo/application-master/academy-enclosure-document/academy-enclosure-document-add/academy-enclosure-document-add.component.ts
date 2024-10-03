@@ -23,7 +23,6 @@ export class AcademyEnclosureDocumentAddComponent
   addAcademyForm: FormGroup;
   isValidForm: boolean;
   saveClicked : boolean;
-  isCompulsories : any[];
 
   constructor(private businessService: BusinessService, 
     private activeModal: NgbActiveModal,
@@ -32,14 +31,6 @@ export class AcademyEnclosureDocumentAddComponent
     public commonSharedService : CommonSharedService,
     )
   {
-    this.isCompulsories = [{
-      "id": 1,
-      "name": "Yes"
-    },
-    {
-      "id": 0,
-      "name": "No"
-    }]
   }
 
   ngOnInit() 
@@ -49,12 +40,8 @@ export class AcademyEnclosureDocumentAddComponent
 
     this.addAcademyForm = this.formbuilder.group({
       id:[''],
-      name: ['',[Validators.required]],
-      isCompulsory : ['', Validators.required]
-    });
-
-    this.addAcademyForm.get('isCompulsory').setValue('0');
-  
+      name: ['',[Validators.required]]
+    });  
   }
 
   showNotification(type: string, message: string): void 
@@ -76,7 +63,7 @@ export class AcademyEnclosureDocumentAddComponent
           let response = await this.businessService.saveAcademyEnclosureDocument(this.addAcademyForm.value).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Academy Enclosure Document Saved");
+              this.showNotification("success", "Partner Document Saved");
               this.commonSharedService.academyEnclosureDocumentListObject.next({result : "success"});
               this.closeModal();
           }

@@ -1,0 +1,81 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="subjectAddModal"><i class="fa fa-list"></i>&nbsp;Subject Detail</h5>
+    <!-- <div> {{addSubjectForm.value|json}}</div> -->
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+
+<div class="modal-body">    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="gradeCategory">Grade Category</label>
+                <label class="form-control" for="gradeCategory">{{subject.gradeCategory?.name}}</label>
+            </div>           
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="grade">Grade</label>
+                <label class="form-control" for="grade">{{subject.grade?.name}}</label>
+            </div>           
+        </div>            
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="syllabus">Syllabus</label>
+                <label class="form-control" for="syllabus">{{subject.syllabus?.name}}</label>
+            </div>           
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="name">Name</label>
+                <label class="form-control" for="name">{{subject.name}}</label>
+            </div>           
+        </div>   
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="form-control-label" for="subjectType">Subject Type</label>
+                <label class="form-control" for="subjectType">{{subject.subjectType?.name}}</label>
+            </div>           
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="form-control-label" for="totalSession">Total Session</label>
+                <label class="form-control" for="totalSession">{{subject.totalSession}}</label>
+            </div>           
+        </div>            
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="form-control-label" for="sessionDuration">Session Duration</label>
+                <label class="form-control" for="sessionDurartion">{{subject.sessionDuration}}</label>
+            </div>           
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="form-control-label" for="name">Has Practical</label>
+                <label class="form-control" for="name">{{subject.hasPractical == 1 ? 'Yes' : 'No'}}</label>
+            </div>           
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="form-control-label" for="name">Mandatory/Optional</label>
+                <label class="form-control" for="name">{{subject.isMandatory == 1 ? 'Mandatory' : 'Optional'}}</label>
+            </div>           
+        </div> 
+        <div class="col-md-2">
+            <div class="form-group">
+                <label class="form-control-label" for="name">Applicable From Year</label>
+                <label class="form-control" for="name">{{subject.applicableFromYear.year}}</label>
+            </div>           
+        </div>   
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+</div>

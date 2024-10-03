@@ -21,16 +21,10 @@ export class UserModuleComponent {
     @Input() public modalParams;
     addUserModuleForm: FormGroup;
     moduleForm : FormGroup;
-    roleForm : FormGroup;
-    userTypeForm : FormGroup;
     isValidForm: boolean;
     saveClicked : boolean;
     userUUID : string;
     modules: any[];
-    userRoles : any[];
-    masterUserRoles : any[];
-    userTypes : any[];
-    masterUserTypes : any[];
     searchClicked : boolean;
 
     constructor(private commonService: CommonService, 
@@ -43,8 +37,6 @@ export class UserModuleComponent {
         private router : Router)
     {
         this.modules= []
-        this.userRoles = []
-        this.userTypes = []
     }
 
     ngOnInit() 
@@ -59,19 +51,11 @@ export class UserModuleComponent {
         this.addUserModuleForm = this.formbuilder.group({
             uuid: this.userUUID,
             user: this.formbuilder.group({ 'uuid': [this.userUUID, Validators.required] }),
-            module: this.formbuilder.group({ 'id': [''] }),
-            userRole: this.formbuilder.group({ 'id': [''] }),
-            userType: this.formbuilder.group({ 'id': [''] }),
+            module: this.formbuilder.group({ 'id': [''] })
         });
 
         this.moduleForm = this.formbuilder.group({
             'module': ['', [Validators.required]]
-        });
-        this.roleForm = this.formbuilder.group({
-            'userRole': ['', [Validators.required]]
-        });
-        this.userTypeForm = this.formbuilder.group({
-            'userType': ['', [Validators.required]]
         });
     }
 
@@ -94,90 +78,15 @@ export class UserModuleComponent {
         }
     }
 
-    //get user Role
-    async getUserRoles() 
-    {
-        try
-        {
-            let moduleId = this.moduleForm.get("module").value;
-            if(moduleId != undefined && moduleId != "")
-            {
-                this.searchClicked = true;
-                let response = await this.commonService.getUserRoles(moduleId, 'All').toPromise();
-                if (response.status_code == 200 && response.message == 'success') 
-                {
-                    this.masterUserRoles = response.userRoles;
-                    this.userRoles = this.masterUserRoles
-                    this.searchClicked = false;
-                    this.userRoles.unshift({id:"", name : "Select User Role"});
-                    // this.roleForm.controls["userRole"].setValue("");
-                }
-                else
-                {
-                    this.userRoles = [];
-                    this.searchClicked = false;
-                } 
-            }
-            else
-            {
-                this.userRoles = [];
-                this.searchClicked = false;
-            }
-        }
-        catch(e)
-        {
-            this.showNotification("error", e);
-        }
-    }
-
-   // get user type
-    async getUserTypes() 
-    {   
-        try
-        {
-            let moduleId = this.moduleForm.get("module").value;
-            let userRoleId = this.roleForm.get("userRole").value;
-            if(moduleId != undefined && moduleId != '' && userRoleId != undefined && userRoleId != '')
-            {
-                this.searchClicked = true;
-                let response = await this.commonService.getUserTypes(moduleId, userRoleId, 'All').toPromise();
-                if (response.status_code == 200 && response.message == 'success') 
-                {
-                    this.masterUserTypes = response.userTypes;
-                    this.userTypes = this.masterUserTypes;
-                    this.searchClicked = false;
-                    this.userTypes.unshift({ id : "", name : "Select User Type"});
-                    this.searchClicked = false;
-                }
-                else
-                {
-                    this.userTypes = [];
-                    this.searchClicked = false;
-                }
-            }
-            else
-            {
-                this.userTypes = [];
-                this.searchClicked = false;
-            }  
-        }
-        catch(e)
-        {
-            this.showNotification("error",e);
-        }
-    }
-
     async saveUserModule()
     {
         if(!this.saveClicked)
         {
-            if(this.addUserModuleForm.valid && this.moduleForm.valid && this.roleForm.valid && this.userTypeForm.valid)
+            if(this.addUserModuleForm.valid && this.moduleForm.valid)
             {
                 this.isValidForm = true;
                 this.saveClicked = true;
                 this.addUserModuleForm.controls['module'].get("id").setValue(this.moduleForm.get("module").value);
-                this.addUserModuleForm.controls['userRole'].get('id').setValue(this.roleForm.get('userRole').value);
-                this.addUserModuleForm.controls['userType'].get('id').setValue(this.userTypeForm.get('userType').value);
 
                 try
                 {
@@ -186,7 +95,7 @@ export class UserModuleComponent {
                     {
                         this.showNotification("success", "User Module Saved Successfully");
                         this.saveClicked = false;
-                        this.closeModal();
+                        // this.closeModal();
                         this.commonSharedService.userModulesListObject.next({
                             userUUID : this.userUUID,
                             result : "success"

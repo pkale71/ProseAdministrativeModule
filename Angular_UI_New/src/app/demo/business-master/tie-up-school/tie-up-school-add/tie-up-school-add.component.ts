@@ -93,8 +93,8 @@ export class TieUpSchoolAddComponent {
             country : this.formbuilder.group({ 'id' : ['']}),
             stateRegion : this.formbuilder.group({ 'id' : ['']}),
             district : this.formbuilder.group({ 'id' : ['']}),
+            city : this.formbuilder.group({ 'id' : ['']}),
             syllabus : this.formbuilder.group({ 'id' : ['']}),
-            businessVerticalTypes : this.formbuilder.group({ 'id' : ['']}),
             contactPerson : ['', Validators.required],contractFrom : ['', Validators.required],
             contractTo : ['', Validators.required],
             panNumber : ['', [Validators.pattern("^[a-zA-Z]{5}[0-9]{4}[A-Za-z]{1}$"), Validators.minLength(10)]],  
@@ -132,7 +132,7 @@ export class TieUpSchoolAddComponent {
     {  
         try
         {
-            let response = await this.businessService.getCountries('Active').toPromise();
+            let response = await this.businessService.getCountries(action).toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.countries = response.countries;
@@ -159,7 +159,7 @@ export class TieUpSchoolAddComponent {
             if(countryId != undefined && countryId != "")
             {
                 this.searchClicked = true;  
-                let response = await this.businessService.getStateRegions(countryId, 'Active').toPromise();
+                let response = await this.businessService.getStateRegions(countryId, action).toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 { 
                     this.stateRegions = response.stateRegions;
@@ -196,7 +196,7 @@ export class TieUpSchoolAddComponent {
             if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '')
             {
                 this.searchClicked = true;  
-                let response = await this.businessService.getDistricts(countryId, stateRegionId, 'Active').toPromise();
+                let response = await this.businessService.getDistricts(countryId, stateRegionId, action).toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.districts = response.districts;
@@ -235,7 +235,7 @@ export class TieUpSchoolAddComponent {
             if(countryId != undefined && countryId != '' && stateRegionId != undefined && stateRegionId != '' && districtId != undefined && districtId != '')
             {
                 this.searchClicked = true;  
-                let response = await this.businessService.getCities(countryId, stateRegionId, districtId, 'Active').toPromise();
+                let response = await this.businessService.getCities(countryId, stateRegionId, districtId, action).toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.cities = response.cities;
@@ -481,29 +481,7 @@ export class TieUpSchoolAddComponent {
     {
         this.activeModal.close(); 
     }
-
-    // tie-up school syllabus with id
-    // async getTieUpSchoolSyllabus(id : number)
-    // {
-    //   try
-    //   {
-    //     let response = await this.businessService.getTieUpSchoolSyllabus(id).toPromise();
-    //     if(response.status_code == 200 && response.message == 'success')
-    //     {
-    //       this.tieUpSchoolSyllabus = response.tieUpSchoolSyllabus;
-    //       console.log(this.tieUpSchoolSyllabus)
-    //     }  
-    //     else
-    //     {
-    //       this.tieUpSchoolSyllabus = [];
-    //     }
-    //   } 
-    //   catch(e)
-    //   {
-    //     this.showNotification("error", e);
-    //   }
-    // }
-
+    
     // delete tie-up school syllabus
     deleteTieUpSchoolSyllabus()
     {

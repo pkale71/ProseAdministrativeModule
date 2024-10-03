@@ -4,7 +4,6 @@ let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables 
 let name;
-let isCompulsory;
 //////
 let academyEnclosureDocument;
 
@@ -15,12 +14,11 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.isCompulsory != undefined)
+        if(reqData.name != undefined)
         {
-            if(reqData.name != "" && commonFunction.validateNumber(reqData.isCompulsory, 'Yes') <= 1)
+            if(reqData.name != "")
             {
                 name = reqData.name;
-                isCompulsory = commonFunction.validateNumber(reqData.isCompulsory, 'Yes');
 
                 ////Check Duplicate Academy Enclosure Document
                 academyEnclosureDocument = await dbBusiness.duplicateAcademyEnclosureDocument(name, "");
@@ -29,7 +27,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 ///insert Academy Enclosure Document
                     let insertJSON = {
                         "name" : name,
-                        "isCompulsory" : isCompulsory,
                         "createdById" : authData.id
                     }
                     let insertAcademyEnclosureDocumentResult = await dbBusiness.insertAcademyEnclosureDocument(insertJSON);

@@ -522,8 +522,8 @@ db.getUserModules = (userUUID, action) =>
             ut.id AS userTypeId, ut.name AS userTypeName
             FROM user_module um
             JOIN module m ON m.id = um.module_id
-            JOIN user_role ur ON ur.id = um.user_role_id
-            JOIN user_type ut ON ut.id = um.user_type_id
+            LEFT JOIN user_role ur ON ur.id = um.user_role_id
+            LEFT JOIN user_type ut ON ut.id = um.user_type_id
             WHERE um.user_id = (SELECT id 
             FROM user WHERE uuid = '${userUUID}')`;
             if(action == "Approved")
@@ -585,8 +585,16 @@ db.duplicateUserModule = (userUUID, moduleId, userRoleId, userTypeId) =>
             let sql = `SELECT id
             FROM user_module
             WHERE user_id = (SELECT id FROM user WHERE uuid = '${userUUID}') AND
-            module_id = ${moduleId} AND user_role_id = ${userRoleId} AND user_type_id = '${userTypeId}'`;
-            
+            module_id = ${moduleId}`;
+            if(userRoleId != '')
+            {
+                sql = sql + ` AND user_role_id = ${userRoleId}`;
+            }
+            if(userRoleId != '')
+            {
+                sql = sql + ` AND user_type_id = ${userTypeId}`;
+            }
+
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -609,8 +617,8 @@ db.insertUserModule = (userModule) =>
     {
         try
         {
-            let sql = `INSERT INTO user_module (user_id, module_id, user_role_id, user_type_id, created_on, created_by_id) 
-            VALUES (${userModule.userId}, ${userModule.moduleId}, ${userModule.userRoleId}, ${userModule.userTypeId}, NOW(), ${userModule.createdById})`
+            let sql = `INSERT INTO user_module (user_id, module_id, created_on, created_by_id) 
+            VALUES (${userModule.userId}, ${userModule.moduleId}, NOW(), ${userModule.createdById})`
         
             dbConn.query(sql, (error, result) => 
             {
@@ -701,7 +709,7 @@ db.insertUserModuleHistory = (userModuleHistory) =>
         try
         {
             let sql = `INSERT INTO user_module_history (user_id, module_id, user_role_id, user_type_id, assigned_on, assigned_by_id, remark) 
-            VALUES (${userModuleHistory.userId}, ${userModuleHistory.moduleId}, ${userModuleHistory.userRoleId}, ${userModuleHistory.userTypeId}, NOW(), ${userModuleHistory.createdById}, '${userModuleHistory.remark}')`
+            VALUES (${userModuleHistory.userId}, ${userModuleHistory.moduleId}, NULLIF('${userModuleHistory.userRoleId}', ''), NULLIF('${userModuleHistory.userTypeId}',''), NOW(), ${userModuleHistory.createdById}, '${userModuleHistory.remark}')`
         
             dbConn.query(sql, (error, result) => 
             {

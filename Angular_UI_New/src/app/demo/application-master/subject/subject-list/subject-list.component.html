@@ -12,7 +12,7 @@
                         <form [formGroup]="gradeForm">
                             <div class="form-group">
                                 <label class="form-control-label" for="grade">Grade &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i></label>
-                                <select class="form-control" required id="grade" formControlName="grade" (change) = "getSyllabuses()">
+                                <select class="form-control" required id="grade" formControlName="grade" (change) = "getSyllabuses(gradeForm.controls['grade'].value)">
                                     <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
                                 </select>
                             </div>
@@ -35,16 +35,7 @@
                         <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
                     </div>
                 </div>
-                <!-- <div class="row text-end">
-                    <div class="col-md-12" style="margin-top: -25px;">
-                        <br/>
-                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
-                        (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
-                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
-                        <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
-                    </div>
-                </div> -->
-
+                
                 <div class="table-responsive">
                     <table datatable id="tblSubject" class="table table-striped row-border table-hover pt-10">
                         <thead>
@@ -53,8 +44,8 @@
                                 <th>Grade</th>
                                 <th>Syllabus</th>
                                 <th>Subject</th>
+                                <th>Type</th>
                                 <th>Applicable From Year</th>
-                                <th>Effective Till Year</th>
                                 <th>Active</th>
                                 <th></th>
                             </tr>
@@ -65,8 +56,8 @@
                                 <td>{{subject.grade?.name}}</td>
                                 <td>{{subject.syllabus?.name}}</td>
                                 <td>{{subject.name}}</td>                                
+                                <td>{{subject?.subjectType?.name}}</td>
                                 <td>{{subject.applicableFromYear?.year}}</td>
-                                <td>{{subject?.effectiveTillYear?.year}}</td>
                                 <td>
                                     <span [ngClass]="subject.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(subject)" 
                                     style="cursor: pointer;" title="Update Status">
@@ -77,6 +68,7 @@
                                     <i class="fa fa-edit" (click)="editSubject(subject)" *ngIf = "subject.isExist == 0" title="Edit" style="cursor: pointer;"></i>&nbsp;
                                     <i class="fa fa-trash-alt" (click)="deleteSubject(subject)" *ngIf = "subject.isExist == 0"
                                     title="Delete" style="cursor: pointer;"></i>&nbsp;
+                                    <i class="fa fa-list" (click)="detailSubject(subject)" title="Detail" style="cursor: pointer;"></i>&nbsp;
                                 </td>
                             </tr>                            
                             <tr *ngIf="subjects.length == 0">

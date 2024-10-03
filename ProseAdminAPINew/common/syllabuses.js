@@ -4,6 +4,7 @@ let dbCommon = require('../sqlmap/commonQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables 
+let gradeCategoryId;
 let action;
 //////
 let syllabuses;
@@ -12,13 +13,19 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
 {
     try
     {
+        gradeCategoryId = '';
         action = '';
         let tempParams = req.params[0].split("/");
         if(tempParams.length == 1)
         {
-            action = tempParams[0];
+            gradeCategoryId = commonFunction.validateNumber(tempParams[0]);
         }
-        syllabuses = await dbCommon.getSyllabuses(action);
+        else if(tempParams.length == 2)
+        {
+            gradeCategoryId = commonFunction.validateNumber(tempParams[0]);
+            action = tempParams[1];
+        }
+        syllabuses = await dbCommon.getSyllabuses(gradeCategoryId, action);
         if(syllabuses.length >= 0)
         {
             res.status(200)

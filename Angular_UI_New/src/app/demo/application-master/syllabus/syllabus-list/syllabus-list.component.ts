@@ -43,13 +43,13 @@ export class SyllabusListComponent
     {
         this.searchClicked = false;
         this.syllabuses = [];
-        this.getSyllabuses('All');
+        this.getSyllabuses(0, 'All');
     }
 
     public syllabusAddResult:any = this.commonSharedService.syllabusListObject.subscribe(res =>{
         if(res.result == "success")
         {
-            this.getSyllabuses('All');
+            this.getSyllabuses(0, 'All');
         }
     })
 
@@ -59,12 +59,12 @@ export class SyllabusListComponent
         this.notifier.notify(type, message);
     }
 
-    async getSyllabuses(action : string) 
+    async getSyllabuses(gradeCategoryId : number, action : string) 
     {
         try
         {
             this.searchClicked = true;
-            let response = await this.commonService.getSyllabuses('All').toPromise();
+            let response = await this.commonService.getSyllabuses(gradeCategoryId, 'All').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 $('#tblSyllabus').DataTable().destroy();

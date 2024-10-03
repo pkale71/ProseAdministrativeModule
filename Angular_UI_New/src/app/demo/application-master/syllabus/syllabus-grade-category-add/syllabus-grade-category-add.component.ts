@@ -7,10 +7,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotifierService } from 'angular-notifier';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
 import { Router } from '@angular/router';
-import { id } from 'date-fns/locale';
 import { IOption, SelectModule } from 'ng-select';
-import { closestIndexTo } from 'date-fns';
-import { filter } from 'rxjs';
 
 @Component({
     selector: 'app-syllabus-grade-category-add',
@@ -146,7 +143,7 @@ export class SyllabusGradeCategoryAddComponent {
                     if (response.status_code == 200 && response.message == 'success') 
                     {
                         this.showNotification("success", "Grade Category Saved.");
-                        this.commonSharedService.gradeCategoryListObject.next({ result: "success" });
+                        this.commonSharedService.syllabusGradeCategoryListObject.next({ result: "success" });
                         this.closeModal();
                     }
                 }

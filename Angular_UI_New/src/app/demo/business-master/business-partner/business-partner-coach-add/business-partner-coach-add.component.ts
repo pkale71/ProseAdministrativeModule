@@ -165,6 +165,7 @@ export class BusinessPartnerCoachAddComponent {
     { 
         try
         {
+            this.coachForm.get('coaches').reset();
             let businessVerticalTypeId = this.businessVerticalTypeForm.get('businessVerticalType').value;
             if(businessVerticalTypeId != undefined && businessVerticalTypeId != '')
             {

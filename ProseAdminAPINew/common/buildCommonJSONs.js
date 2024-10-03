@@ -261,6 +261,7 @@ buildCommonJSON.subjects = function(datas, action = 1)
     let syllabusJSON;
     let applicableFromYearJSON;
     let effectiveTillYearJSON;
+    let subjectTypeJSON;
     let resultJSON = [];
     datas.forEach((data) => 
     { 
@@ -269,6 +270,7 @@ buildCommonJSON.subjects = function(datas, action = 1)
         syllabusJSON = [];
         applicableFromYearJSON = [];
         effectiveTillYearJSON = [];
+        subjectTypeJSON = [];
         
         gradeCategoryJSON = {
             "id" : data.gradeCategoryId,
@@ -294,6 +296,11 @@ buildCommonJSON.subjects = function(datas, action = 1)
             "id" : data.effectiveTillYearId,
             "year" : data.effectiveTillYear
         }
+
+        subjectTypeJSON = {
+            "id" : data.subjectTypeId,
+            "name" : data.subjectTypeName,
+        } 
         //Final JSON
         let finalJSON = {
             "id" : data.id,
@@ -305,9 +312,13 @@ buildCommonJSON.subjects = function(datas, action = 1)
             "syllabus" : syllabusJSON,
             "applicableFromYear" : applicableFromYearJSON,
             "effectiveTillYear" : effectiveTillYearJSON,
+            "subjectType" : subjectTypeJSON,
+            "totalSession" : data.totalSession,
+            "sessionDuration" : data.sessionDuration,
+            "hasPractical" : data.hasPractical,
+            "isMandatory" : data.isMandatory,
             "isExist" : data.isExist
         }
-        // console.log(finalJSON)
         //If action == 1 for mupltiple rows
         if(action == 1)
         {
@@ -551,6 +562,23 @@ buildCommonJSON.batchTypes = function(datas)
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '',
             "isExist" : data.isExist
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
+buildCommonJSON.subjectTypes = function(datas)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name
         }
         resultJSON.push(finalJSON);
     });

@@ -798,20 +798,31 @@ db.deleteSchoolingProgram = (id, action) =>
     })
 };
 
-db.getSyllabuses = (action) => 
+db.getSyllabuses = (gradeCategoryId, action) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
             let sql = `SELECT s.id AS syllabusId, s.name AS syllabusName, s.is_active AS isActive, 'syllabus' AS tableName,
-            GROUP_CONCAT(gc.id ORDER BY gc.id) AS gradeCategoryIds, GROUP_CONCAT(gc.name ORDER BY gc.id) AS gradeCategoryNames, COUNT(sub.id) AS isExist
+            GROUP_CONCAT(DISTINCT gc.id ORDER BY gc.id) AS gradeCategoryIds, GROUP_CONCAT(DISTINCT gc.name ORDER BY gc.id) AS gradeCategoryNames, COUNT(DISTINCT sub.id) AS isExist
             FROM syllabus s
             JOIN grade_category gc ON FIND_IN_SET(gc.id, s.grade_category_ids) > 0
             LEFT JOIN subject sub ON sub.syllabus_id = s.id`;
-            if(action == "Active")
+            if(gradeCategoryId != '')
             {
-                sql =sql + ` WHERE s.is_active = 1`;
+                sql =sql + ` WHERE FIND_IN_SET(${gradeCategoryId}, s.grade_category_ids) > 0`;
+                if(action == "Active")
+                {
+                    sql =sql + ` AND s.is_active = 1`;
+                }
+            }
+            else
+            {
+                if(action == "Active")
+                {
+                    sql =sql + ` WHERE s.is_active = 1`;
+                }
             }
             sql =sql + ` GROUP BY s.id ORDER BY s.id`;
 
@@ -866,7 +877,7 @@ db.getSyllabusGradeCategory = (id, gradeCategoryId) =>
     {
         try
         {
-            let sql = `SELECT s.id AS syllabusId, s.name AS syllabusName
+            let sql = `SELECT s.id AS syllabusId, s.name AS syllabusName, s.grade_category_ids AS gradeCategoryIds
             FROM syllabus s
             WHERE s.id = ${id} AND FIND_IN_SET(${gradeCategoryId}, s.grade_category_ids) > 0`;
             
@@ -1008,13 +1019,15 @@ db.deleteSyllabus = (id) =>
     })
 };
 
-db.deleteSyllabusGradeCategory = (id, gradeCategoryId) => 
+db.deleteSyllabusGradeCategory = (id, gradeCategoryIds, gradeCategoryId) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
-            let sql = `UPDATE syllabus SET grade_category_ids = remove_comma_separated_string(grade_category_ids,'${gradeCategoryId}') WHERE id = ${id}`;
+            let newGradeCategoryIds = commonFunction.removeCommaSeparatedString(gradeCategoryIds,gradeCategoryId);
+        
+            let sql = `UPDATE syllabus SET grade_category_ids = '${newGradeCategoryIds}' WHERE id = ${id}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1626,7 +1639,10 @@ db.getSubjects = (gradeCategoryId, gradeId, syllabusId, action) =>
             try
             {
                 let filters = "";
-                let sql = `SELECT sub.id, sub.name, sub.is_active AS isActive, 'subject' AS tableName,
+                let sql = `SELECT sub.id, sub.name, sub.total_session AS totalSession, 
+                sub.session_duration AS sessionDuration, sub.has_practical AS hasPractical, 
+                sub.is_mandatory AS isMandatory, sub.is_active AS isActive, 'subject' AS tableName,
+                st.id AS subjectTypeId, st.name AS subjectTypeName,
                 gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
                 g.id AS gradeId, g.name AS gradeName,
                 s.id AS syllabusId, s.name AS syllabusName,
@@ -1634,6 +1650,7 @@ db.getSubjects = (gradeCategoryId, gradeId, syllabusId, action) =>
                 ety.id AS effectiveTillYearId, ety.year AS effectiveTillYear,
                 COUNT(c.id) AS isExist
                 FROM subject sub
+                JOIN subject_type st ON st.id = sub.subject_type_id
                 JOIN syllabus s ON s.id = sub.syllabus_id
                 JOIN grade g ON g.id = sub.grade_id
                 JOIN grade_category gc ON gc.id = sub.grade_category_id
@@ -1711,19 +1728,23 @@ db.getSubject = (id) =>
     {
         try
         {
-            let sql = `SELECT sub.id, sub.name, sub.is_active AS isActive, 'subject' AS tableName,
+            let sql = `SELECT sub.id, sub.name, sub.total_session AS totalSession, 
+            sub.session_duration AS sessionDuration, sub.has_practical AS hasPractical, 
+            sub.is_mandatory AS isMandatory, sub.is_active AS isActive, 'subject' AS tableName,
+            st.id AS subjectTypeId, st.name AS subjectTypeName,
             gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
             g.id AS gradeId, g.name AS gradeName,
             s.id AS syllabusId, s.name AS syllabusName,
             afy.id AS applicableFromYearId, afy.year AS applicableFromYear,
             ety.id AS effectiveTillYearId, ety.year AS effectiveTillYear
             FROM subject sub
+            JOIN subject_type st ON st.id = sub.subject_type_id
             JOIN syllabus s ON s.id = sub.syllabus_id
             JOIN grade g ON g.id = sub.grade_id
             JOIN grade_category gc ON gc.id = sub.grade_category_id
             JOIN academic_session afy ON afy.id = sub.applicable_from_year_id
             LEFT JOIN academic_session ety ON ety.id = sub.effective_till_year_id
-            WHERE sub.id = '${id}'`;
+            WHERE sub.id = ${id}`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -1812,16 +1833,15 @@ db.insertSubject = (subject) =>
             {
                 if(sqlValues == '')
                 {
-                    sqlValues = `('${subject.name}', '${syllabusArray[i].toString().trim()}', ${subject.gradeCategoryId}, ${subject.gradeId}, ${subject.applicableFromYearId}, 
-                    NOW(), ${subject.createdById})`;
+                    sqlValues = `('${subject.name}', '${syllabusArray[i].toString().trim()}', ${subject.gradeCategoryId}, ${subject.gradeId}, ${subject.applicableFromYearId}, ${subject.subjectTypeId}, ${subject.totalSession}, ${subject.sessionDuration}, ${subject.hasPractical}, ${subject.isMandatory}, NOW(), ${subject.createdById})`;
                 }
                 else
                 {
                     sqlValues = sqlValues + `,('${subject.name}', '${syllabusArray[i].toString().trim()}', 
-                    ${subject.gradeCategoryId}, ${subject.gradeId}, ${subject.applicableFromYearId},  NOW(), ${subject.createdById})`;
+                    ${subject.gradeCategoryId}, ${subject.gradeId}, ${subject.applicableFromYearId}, ${subject.subjectTypeId}, ${subject.totalSession}, ${subject.sessionDuration}, ${subject.hasPractical}, ${subject.isMandatory}, NOW(), ${subject.createdById})`;
                 }
             }
-            let sql = `INSERT INTO subject (name, syllabus_id, grade_category_id, grade_id, applicable_from_year_id, created_on, created_by_id)
+            let sql = `INSERT INTO subject (name, syllabus_id, grade_category_id, grade_id,  applicable_from_year_id, subject_type_id, total_session, session_duration, has_practical, is_mandatory, created_on, created_by_id)
             VALUES ${sqlValues}`;
                         
             dbConn.query(sql, (error, result) => 
@@ -1847,7 +1867,7 @@ db.updateSubject = (subject) =>
         try
         {
             let sql = `UPDATE subject SET applicable_From_year_id = ${subject.applicableFromYearId},
-            grade_category_id = ${subject.gradeCategoryId}, grade_id = ${subject.gradeId}, syllabus_id = ${subject.syllabusId}, name = '${subject.name}', updated_on = NOW(), updated_by_id = ${subject.createdById} WHERE id = ${subject.id}`;
+            grade_category_id = ${subject.gradeCategoryId}, grade_id = ${subject.gradeId}, syllabus_id = ${subject.syllabusId}, name = '${subject.name}', subject_type_id = '${subject.subjectTypeId}', total_session = '${subject.totalSession}', session_duration = '${subject.sessionDuration}', has_practical = '${subject.hasPractical}', is_mandatory = '${subject.isMandatory}', updated_on = NOW(), updated_by_id = ${subject.createdById} WHERE id = ${subject.id}`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -2017,8 +2037,6 @@ db.duplicateChapter = (subjectId, names, id) =>
         try
         {
             let sqlValues = '';
-            // let nameArray = (names[0].name).trim().split(',');
-            // console.log(nameArray)
             if(commonFunction.isJsonArray(names))
             {
                 let nameArray = (names[0].name).trim().split(',');
@@ -2803,6 +2821,32 @@ db.getSchoolingGroups = (action) =>
     })
 };
 
+db.getSchoolingGroup = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sg.id, sg.name, sg.is_active AS isActive
+            FROM schooling_group sg 
+            WHERE sg.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.duplicateSchoolingGroup = (name) => 
 {
     return new Promise((resolve, reject) => 
@@ -3256,13 +3300,38 @@ db.getBatchTypes = (academicSessionId, action) =>
     })
 };
 
+db.getBatchTypeIds = (ids) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT bt.id, bt.name            
+            FROM batch_type bt WHERE FIND_IN_SET(bt.id, '${ids}') > 0`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.getBatchType = (id) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
-            let sql = `SELECT bt.id            
+            let sql = `SELECT bt.id, bt.name            
             FROM batch_type bt WHERE bt.id = ${id}`;
             
             dbConn.query(sql, (error, result) => 
@@ -3402,6 +3471,56 @@ db.deleteBatchType = (id) =>
             });
         }            
 
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSubjectTypes = () => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT st.id, st.name 
+            FROM subject_type st ORDER BY st.name`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSubjectType = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT st.id, st.name 
+            FROM subject_type st WHERE st.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
         catch(e)
         {
             throw e;

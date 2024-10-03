@@ -91,6 +91,6 @@ export class BreadcrumbComponent {
       }
     });
     this.navigationList = result;
-    this.titleService.setTitle(title + ' | PROSE EDU :: Curriculum Portal');
+    this.titleService.setTitle(title + ' | PROSE EDU :: Administrative Portal');
   }
 }

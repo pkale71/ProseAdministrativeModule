@@ -14,7 +14,7 @@
             <div class="col-md-12">
                 <form [formGroup]="academyEnclosureDocumentForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="academyEnclosureDocument">AcademyEnclosure Document&nbsp;<span
+                        <label class="form-control-label" for="academyEnclosureDocument">Partner Document&nbsp;<span
                         style="color: red;">*</span></label>
                         <select class="form-select"  required id="academyEnclosureDocument" formControlName="academyEnclosureDocument" 
                         [ngClass]="{'is-invalid': !academyEnclosureDocumentForm.controls['academyEnclosureDocument'].valid && !isValidForm}">
@@ -23,7 +23,7 @@
                         <label style="color: red;"
                         *ngIf="academyEnclosureDocumentForm.controls['academyEnclosureDocument'].hasError('required') && !isValidForm"
                         class="error jquery-validation-error small form-text"
-                        >Please select academy enclosure document.</label>
+                        >Please select partner document.</label>
                     </div>
                 </form>
             </div>

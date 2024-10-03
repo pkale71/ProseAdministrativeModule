@@ -96,7 +96,7 @@ export class ChapterListComponent {
                 this.grades.unshift({ id : "0", name : "All"});
                 this.syllabuses.unshift({ id : "0", name : "All" });
                 this.gradeForm.get("grade").setValue(this.grades[0].id);
-                this.getSyllabuses();
+                this.getSyllabuses(0);
                 this.searchClickedGrade = false;
             }
             else
@@ -114,13 +114,20 @@ export class ChapterListComponent {
     }
 
     // get syllabus using grade wise syllabus
-    async getSyllabuses() 
+    async getSyllabuses(gradeCategoryId : number) 
     {
         try
         {
-            
+            if(gradeCategoryId > 0)
+            {
+                let filterGrades = this.grades.filter(grade => grade.id == gradeCategoryId);
+                if(filterGrades.length > 0)
+                {
+                    gradeCategoryId = filterGrades[0].gradeCategory.id;
+                }
+            }
             this.searchClickedSyllabus = true;
-            let response = await this.commonService.getSyllabuses('All').toPromise();
+            let response = await this.commonService.getSyllabuses(gradeCategoryId, 'All').toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.syllabuses = response.syllabuses;

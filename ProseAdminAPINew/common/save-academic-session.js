@@ -36,7 +36,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     let insertAcademicSessionId = insertAcademicSessionResult.insertId;
         ///////      
                     if(parseInt(insertAcademicSessionId) > 0)
-                    {console.log(insertAcademicSessionId)
+                    {
                         res.status(200)
                         return res.json({
                             "status_code" : 200,

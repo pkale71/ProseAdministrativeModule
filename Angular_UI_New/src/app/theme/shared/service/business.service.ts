@@ -7,6 +7,11 @@ import { ApiService } from './api.service';
 export class BusinessService {
 
     constructor(private apiService: ApiService) { }
+    //Delivery Modes
+    getDeliveryModes() 
+    {
+        return this.apiService.get('/business/getDeliveryModes');
+    }
 
     // Business Partner Types
     getBusinessPartnerTypes()
@@ -490,5 +495,56 @@ export class BusinessService {
     {
         return this.apiService.post('/business/deleteTieUpSchoolSyllabus', tieUpSchoolSyllabus);
     }
+
+// school
+    getSchools(action : string)
+    {
+        return this.apiService.get('/business/getSchools/' + action);
+    }
+
+    getSchool(uuid : string)
+    {
+        return this.apiService.get('/business/getSchool/' + uuid);
+    }
+
+    getSchoolLogo(uuid : string)
+    {
+        return this.apiService.get('/business/getSchoolLogo/' + uuid);
+    }
+
+    saveSchool(school : any)
+    {
+        return this.apiService.post('/business/saveSchool', school);
+    }  
     
+    updateSchool(school : any)
+    {
+        return this.apiService.post('/business/updateSchool', school);
+    }  
+    
+    deleteSchool(school : any)
+    {
+        return this.apiService.post('/business/deleteSchool', school);
+    }  
+
+// school schooling program
+    getSchoolSchoolingPrograms(schoolUUID : string, action : string)
+    {
+        return this.apiService.get('/business/getSchoolSchoolingPrograms/' + schoolUUID + '/' + action);
+    }
+
+    saveSchoolSchoolingProgram(schoolSchoolingProgram : any)
+    {
+        return this.apiService.post('/business/saveSchoolSchoolingProgram', schoolSchoolingProgram);
+    }
+
+    updateSchoolSchoolingProgram(schoolSchoolingProgram : any)
+    {
+        return this.apiService.post('/business/updateSchoolSchoolingProgram', schoolSchoolingProgram);
+    }
+
+    deleteSchoolSchoolingProgram(schoolSchoolingProgram : any)
+    {
+        return this.apiService.post('/business/deleteSchoolSchoolingProgram', schoolSchoolingProgram);
+    }
 }

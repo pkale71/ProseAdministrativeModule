@@ -1,0 +1,84 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="studyCenterEditModal"><i class="fa fa-list"></i>&nbsp;Schooling Program Detail</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<div class="modal-body">    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="name">Academic Session</label>
+                <label class="form-control input-md">{{schoolSchoolingProgram?.academicSession.year}}</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="name">Schooling Program</label>
+                <label class="form-control input-md">{{schoolSchoolingProgram?.schoolingProgram.name}}</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="name">Start Date</label>
+                <label class="form-control input-md">{{schoolSchoolingProgram?.startDate | date : "dd/MM/yyyy"}}</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="name">End Date</label>
+                <label class="form-control input-md">{{schoolSchoolingProgram?.endDate | date : "dd/MM/yyyy"}}</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="name">Adm. Start Date</label>
+                <label class="form-control input-md">{{schoolSchoolingProgram?.admissionStartDate | date : "dd/MM/yyyy"}}</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="form-control-label" for="name">Adm. End Date</label>
+                <label class="form-control input-md">{{schoolSchoolingProgram?.admissionEndDate | date : "dd/MM/yyyy"}}</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <h4 style="margin-top: 0.8rem;">&nbsp;Batches</h4>
+            <table class="table table-striped row-border table-hover pt-1">
+                <thead>
+                    <tr>
+                        <th>Sno</th>
+                        <th>Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let batchType of schoolSchoolingProgram.batchTypes let i=index" >
+                        <td>{{i+1}}</td>
+                        <td>{{batchType?.name}}</td>
+                        <td>{{batchType?.startTime}}</td>
+                        <td>{{batchType?.endTime}}</td>
+                    </tr>
+                    <tr *ngIf="schoolSchoolingProgram.batchTypes.length == 0">
+                        <td></td>
+                        <td></td>
+                        <td>No record(s) found</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+</div>

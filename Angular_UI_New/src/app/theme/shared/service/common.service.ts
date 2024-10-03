@@ -36,6 +36,11 @@ export class CommonService {
         return this.apiService.get('/common/getModules');
     }
 
+    getSubjectTypes() 
+    {
+        return this.apiService.get('/common/getSubjectTypes');
+    }
+
     //get user grades
     getUserGrades()
     {
@@ -123,9 +128,9 @@ export class CommonService {
     }
 
     //Syllabus
-    getSyllabuses(action : string) 
+    getSyllabuses(gradeCategoryId : number, action : string) 
     {
-        return this.apiService.get('/common/getSyllabuses/' + action);  
+        return this.apiService.get('/common/getSyllabuses/' + gradeCategoryId + '/' + action);  
     }
 
     getSyllabus(id : number) 

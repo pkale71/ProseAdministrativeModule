@@ -27,6 +27,30 @@ buildBusinessJSON.businessPartnerTypes = function(datas, action = 1)
     return resultJSON;
 }
 
+buildBusinessJSON.deliveryModes = function(datas, action = 1)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
 buildBusinessJSON.studyCenterTypes = function(datas, action = 1)
 {
     let resultJSON = [];
@@ -240,7 +264,6 @@ buildBusinessJSON.academyEnclosureDocuments = function(datas)
         let finalJSON = {
             "id" : data.id,
             "name" : data.name,
-            "isCompulsory" : data.isCompulsory,
             "isActive" : data.isActive,
             "tableName" : data.tableName,
             "isExist" : data.isExist
@@ -926,6 +949,170 @@ buildBusinessJSON.studyCenterAgreementHistories = function(datas)
             "tableName" : data.tableName
         }
         resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.schools = function(datas, action = 1)
+{
+    let resultJSON = [];
+    let schoolingGroupJSON = [];
+    let schoolSubGroupJSON = [];
+    let schoolingCategoryJSON = [];
+    let countryJSON = [];
+    let stateRegionJSON = [];
+    let districtJSON = [];
+    let cityJSON = [];
+    let deliveryModeJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        schoolingGroupJSON = [];
+        schoolSubGroupJSON = [];
+        schoolingCategoryJSON = [];
+        countryJSON = [];
+        stateRegionJSON = [];
+        districtJSON = [];
+        cityJSON = [];
+        deliveryModeJSON = [];
+
+        schoolingGroupJSON = {
+            "id" : data.schoolingGroupId,
+            "name" : data.schoolingGroupName
+        }
+        schoolSubGroupJSON = {
+            "id" : data.schoolSubGroupId,
+            "name" : data.schoolSubGroupName
+        }
+        schoolingCategoryJSON = {
+            "id" : data.schoolingCategoryId,
+            "name" : data.schoolingCategoryName
+        }
+        countryJSON = {
+            "id" : data.countryId,
+            "name" : data.countryName
+        }
+        stateRegionJSON = {
+            "id" : data.stateRegionId,
+            "name" : data.stateRegionName
+        }
+        districtJSON = {
+            "id" : data.districtId,
+            "name" : data.districtName
+        }
+        cityJSON = {
+            "id" : data.cityId,
+            "name" : data.cityName
+        }
+        deliveryModeJSON = {
+            "id" : data.deliveryModeId,
+            "name" : data.deliveryModeName
+        }
+/////Final JSON
+        let finalJSON = {
+            "uuid" : data.uuid,
+            "name" : data.name,
+            "code" : data.code,
+            "email" : data.email,
+            "website" : data.website,
+            "mobile1" : data.mobile1,
+            "mobile2" : data.mobile2,
+            "landline1" : data.landline1,
+            "landline2" : data.landline2,
+            "address" : data.address,
+            "pincode" : data.pincode,
+            "schoolingGroup" : schoolingGroupJSON,
+            "schoolSubGroup" : schoolSubGroupJSON,
+            "schoolingCategory" : schoolingCategoryJSON,
+            "country" : countryJSON,
+            "stateRegion" : stateRegionJSON,
+            "district" : districtJSON,
+            "city" : cityJSON,
+            "deliveryMode" : deliveryModeJSON,
+            "contractFrom" : commonFunction.getFormattedDate(data.contractFrom, "yyyy-mm-dd"),
+            "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd"),
+            "isActive" : data.isActive,
+            "tableName" : data.tableName ? data.tableName : '',
+            "isExistDetail" : data.isExistDetail
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.schoolSchoolingPrograms = function(datas, action = 1)
+{
+    let resultJSON = [];
+    let academicSessionJSON = [];
+    let schoolingProgramJSON = [];
+    let batchTypeJSON = [];
+    let schoolJSON = [];
+    
+    datas.forEach((data) => 
+    { 
+        academicSessionJSON = [];
+        schoolingProgramJSON = [];
+        batchTypeJSON = [];
+        schoolJSON = [];
+
+        let batchTypeIds = data.batchTypeIds.toString().split(",");
+        let batchTypeNames = data.batchTypeNames.toString().split(",");
+        let batchTypeStartTimes = data.batchTypeStartTimes.toString().split(",");
+        let batchTypeEndTimes = data.batchTypeEndTimes.toString().split(",");
+        for(let i=0;i<batchTypeIds.length;i++)
+        {
+            batchTypeJSON.push({
+                "id" : batchTypeIds[i],
+                "name" : batchTypeNames[i],
+                "startTime" : batchTypeStartTimes[i],
+                "endTime" : batchTypeEndTimes[i]
+            });
+        }
+        academicSessionJSON = {
+            "id" : data.academicSessionId,
+            "year" : data.academicSessionYear,
+            "batchYear" : data.batchYear
+        } 
+        schoolJSON = {
+            "uuid" : data.schoolUUID,
+            "name" : data.schoolName
+        }
+        schoolingProgramJSON = {
+            "id" : data.schoolingProgramId,
+            "name" : data.schoolingProgramName
+        }
+        
+/////Final JSON
+        let finalJSON = {
+            "uuid" : data.uuid,
+            "academicSession" : academicSessionJSON,
+            "school" : schoolJSON,
+            "schoolingProgram" : schoolingProgramJSON,
+            "admissionStartDate" : commonFunction.getFormattedDate(data.admissionStartDate, "yyyy-mm-dd"),
+            "admissionEndDate" : commonFunction.getFormattedDate(data.admissionEndDate, "yyyy-mm-dd"),
+            "startDate" : commonFunction.getFormattedDate(data.startDate, "yyyy-mm-dd"),
+            "endDate" : commonFunction.getFormattedDate(data.endDate, "yyyy-mm-dd"),
+            "batchTypes" : batchTypeJSON,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName ? data.tableName : '',
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
 
     return resultJSON;

@@ -38,7 +38,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 {
                     if(syllabus[0].syllabusId != null)
                     {
-                        let updateResult = await dbCommon.deleteSyllabusGradeCategory(id, gradeCategoryId);
+                        let gradeCategoryIds = syllabusGradeCategory[0].gradeCategoryIds;
+                        let updateResult = await dbCommon.deleteSyllabusGradeCategory(id, gradeCategoryIds, gradeCategoryId);
                         if(updateResult.affectedRows > 0)
                         {
                             res.status(200)

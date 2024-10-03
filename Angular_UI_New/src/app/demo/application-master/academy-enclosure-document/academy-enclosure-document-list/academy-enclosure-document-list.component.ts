@@ -102,7 +102,7 @@ export class AcademyEnclosureDocumentListComponent {
         container: 'my-swal'
       },
       title: 'Confirmation',
-      text: 'Are you sure to ' + (academyEnclosureDocument.isActive == 1 ? 'de-active' : 'active') + ' the academy enclosure document?',
+      text: 'Are you sure to ' + (academyEnclosureDocument.isActive == 1 ? 'de-active' : 'active') + ' the partner document?',
       icon: 'warning',
       allowOutsideClick: false,
       showCloseButton: true,
@@ -123,7 +123,7 @@ export class AcademyEnclosureDocumentListComponent {
           let response = await this.commonService.updateStatus(tempJson).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-              this.showNotification("success", "Academy Enclosure Document " + (academyEnclosureDocument.isActive == 1 ? 'De-activated' : 'Activated'));
+              this.showNotification("success", "Partner Document " + (academyEnclosureDocument.isActive == 1 ? 'De-activated' : 'Activated'));
               this.commonSharedService.academyEnclosureDocumentListObject.next({
                 result : "success"
               });
@@ -144,7 +144,7 @@ export class AcademyEnclosureDocumentListComponent {
         container: 'my-swal'
       },
       title: 'Confirmation',
-      text: 'Are you sure to delete academy enclosure document?',
+      text: 'Are you sure to delete partner document?',
       icon: 'warning',
       showCloseButton: true,
       showCancelButton: true
@@ -162,7 +162,7 @@ export class AcademyEnclosureDocumentListComponent {
           let response = await this.businessService.deleteAcademyEnclosureDocument(tempJSON).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "Academy Enclosure Document Deleted.");
+            this.showNotification("success", "Partner Document Deleted.");
             this.commonSharedService.academyEnclosureDocumentListObject.next({result : "success"});
           }
         }

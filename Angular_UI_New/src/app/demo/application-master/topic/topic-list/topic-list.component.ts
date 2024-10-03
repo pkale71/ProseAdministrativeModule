@@ -109,7 +109,7 @@ export class TopicListComponent {
                 this.grades = response.grades;
                 this.grades.unshift({ id : "0", name : "All"});
                 this.gradeForm.get("grade").setValue(this.grades[0].id);
-                this.getSyllabuses();
+                this.getSyllabuses(0);
                 this.gradeClicked = false;
             }
             else
@@ -127,15 +127,23 @@ export class TopicListComponent {
     }
     
     // get syllabus
-    async getSyllabuses() 
+    async getSyllabuses(gradeCategoryId : number) 
     {
         try
         {
+            if(gradeCategoryId > 0)
+            {
+                let filterGrades = this.grades.filter(grade => grade.id == gradeCategoryId);
+                if(filterGrades.length > 0)
+                {
+                    gradeCategoryId = filterGrades[0].gradeCategory.id;
+                }
+            }
             this.syllabusClicked = true;
             let gradeId = this.gradeForm.get("grade").value;
             if(gradeId != undefined && gradeId != "")
             {
-                let response = await this.commonService.getSyllabuses('All').toPromise();
+                let response = await this.commonService.getSyllabuses(gradeCategoryId, 'All').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     this.syllabuses = response.syllabuses;

@@ -241,20 +241,6 @@ export class UserEditComponent {
         }
     }
     
-    // async getUsers() 
-    // {
-    //   let response = await this.userService.getUsers().toPromise();
-    //   if (response.status_code == 200 && response.message == 'success') 
-    //   {
-    //     this.masterUser = response.user;
-    //     this.user = this.masterUser;
-    //   }
-    //   else
-    //   {
-    //     this.user = [];
-    //   }
-    // }
-
     async saveUser()
     {
         if(!this.saveClicked)

@@ -1,52 +1,22 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="assignGradeSectionAddModal"><i class="fa fa-plus"></i>&nbsp;Assign Module/Role</h5>
+    <h5 class="modal-title" id="assignGradeSectionAddModal"><i class="fa fa-plus"></i>&nbsp;Assign Module</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
 </div>
 <form [formGroup]="addUserModuleForm" id="addUserModuleForm" (ngSubmit)="saveUserModule()" autocomplete="off">
     <div class="modal-body">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <form [formGroup]="moduleForm">
                     <div class="form-group">
                         <label class="form-control-label" for="module">Module&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf = "searchClicked"></i>
                         </label>
-                        <select class="form-control" required id="module" formControlName="module" (change) = "getUserRoles()"
+                        <select class="form-control" required id="module" formControlName="module"
                         [ngClass]="{'is-invalid': !moduleForm.controls['module'].valid && !isValidForm}">
                             <option value="{{module.id}}" *ngFor="let module of modules">{{module.name}}</option>
                         </select>
                         <label style="color: red;"
                         *ngIf="moduleForm.controls['module'].hasError('required') && !isValidForm"
                         class="error jquery-validation-error small form-text">Please select module.</label>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-4">
-                <form [formGroup]="roleForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="userRole">User Role&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf = "searchClicked"></i>
-                        </label>
-                        <select class="form-control" required id="userRole" formControlName="userRole"  (change) = "getUserTypes()"
-                        [ngClass]="{'is-invalid': !roleForm.controls['userRole'].valid && !isValidForm}">
-                            <option value="{{userRole.id}}" *ngFor="let userRole of userRoles">{{userRole.name}}</option>
-                        </select>
-                        <label style="color: red;"
-                        *ngIf="roleForm.controls['userRole'].hasError('required') && !isValidForm"
-                        class="error jquery-validation-error small form-text">Please select user role.</label>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-4">
-                <form [formGroup]="userTypeForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="userType">User Type&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf = "searchClicked"></i>
-                        </label>
-                        <select class="form-control" required id="userType" formControlName="userType" 
-                        [ngClass]="{'is-invalid': !userTypeForm.controls['userType'].valid && !isValidForm}">
-                            <option value="{{userType.id}}" *ngFor="let userType of userTypes">{{userType.name}}</option>
-                        </select>
-                        <label style="color: red;"
-                        *ngIf="userTypeForm.controls['userType'].hasError('required') && !isValidForm"
-                        class="error jquery-validation-error small form-text">Please select userType.</label>
                     </div>
                 </form>
             </div>

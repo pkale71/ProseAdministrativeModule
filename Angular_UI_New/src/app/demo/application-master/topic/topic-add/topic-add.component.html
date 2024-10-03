@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="topicAddModal"><i class="fa fa-plus"></i>&nbsp;Add Chapter Wise Topic</h5>
+    <h5 class="modal-title" id="topicAddModal"><i class="fa fa-plus"></i>&nbsp;Add Topic</h5>
      <!-- <div>{{addTopicForm.value | json}}</div> -->
     <button
     type="button"
@@ -12,6 +12,22 @@
 <form [formGroup]="addTopicForm" id="addTopicForm" (ngSubmit)="saveTopic()" autocomplete="off">
     <div class="modal-body">    
         <div class="row">
+            <div class="col-md-2">
+                <form [formGroup]="syllabusForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="syllabusClicked"></i></label>
+                        <select class="form-control"  required id="syllabus" formControlName="syllabus" (change) = "getGradeCategories(syllabusForm.controls['syllabus'].value)"
+                        [ngClass]="{'is-invalid': !syllabusForm.controls['syllabus'].valid && !isValidForm}"
+                          >
+                        <option value="{{syllabus?.id}}" *ngFor="let syllabus of syllabuses">{{syllabus?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select syllabus.</label>
+                    </div>
+                </form>                
+            </div> 
             <div class="col-md-3">
                 <form [formGroup]="gradeCategoryForm">
                     <div class="form-group">
@@ -32,7 +48,7 @@
                 <form [formGroup]="gradeForm">
                     <div class="form-group">
                         <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="gradeClicked"></i></label>
-                        <select class="form-control"  required id="grade" formControlName="grade" (change) = "getSyllabuses()"
+                        <select class="form-control"  required id="grade" formControlName="grade" (change) = "getSubjects()"
                         [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}" 
                         >
                         <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade?.name}}</option>
@@ -44,22 +60,6 @@
                     </div>
                 </form>                
             </div>             
-            <div class="col-md-2">
-                <form [formGroup]="syllabusForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="syllabusClicked"></i></label>
-                        <select class="form-control"  required id="syllabus" formControlName="syllabus" (change) = "getSubjects()"
-                        [ngClass]="{'is-invalid': !syllabusForm.controls['syllabus'].valid && !isValidForm}"
-                          >
-                        <option value="{{syllabus?.id}}" *ngFor="let syllabus of syllabuses">{{syllabus?.name}}</option>
-                        </select>
-                        <label style="color: red;"
-                        *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
-                        class="error jquery-validation-error small form-text"
-                        >Please select syllabus.</label>
-                    </div>
-                </form>                
-            </div> 
             <div class="col-md-2">
                 <form [formGroup]="subjectForm">
                     <div class="form-group">

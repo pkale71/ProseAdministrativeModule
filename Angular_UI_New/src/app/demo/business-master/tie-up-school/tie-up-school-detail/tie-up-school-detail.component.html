@@ -5,7 +5,7 @@
                 <h5 class="mb-3 text-uppercase"> {{tieUpSchool?.name}} :&nbsp;
                     <span class="{{tieUpSchool?.isActive == 1 ? 'badge bg-success' :  'badge bg-danger'}}">
                         Status : {{tieUpSchool?.isActive == 1 ? 'Yes' : 'No'}}
-                    </span>
+                    </span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i>
                     <button type="button" class="btn btn-rounded btn-black float-end" style="margin-top: 0rem;"
                     (click)="back()">Back</button>
                 </h5>
@@ -74,7 +74,7 @@
                         </ng-template>
                     </li>
                     <li class="nav-item" [ngbNavItem]="2">
-                        <a class="nav-link text-uppercase" aria-controls="documents" aria-selected="true" ngbNavLink>Enclosure Documents</a>
+                        <a class="nav-link text-uppercase" aria-controls="documents" aria-selected="true" ngbNavLink>Partner Documents</a>
                         <ng-template ngbNavContent>
                             <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
                             (click)="addDocument(tieUpSchool.uuid)">Add Document</button>  
@@ -82,7 +82,7 @@
                                 <thead>
                                     <tr>
                                         <th>Sno</th>
-                                        <th>Enclosure Document</th>
+                                        <th>Document</th>
                                         <th>File Name</th>
                                         <th>Uploaded On</th>
                                         <th></th>
