@@ -206,7 +206,7 @@ db.getModules = () =>
     {
         try
         {
-            let sql = `SELECT m.id AS moduleId, m.name AS moduleName
+            let sql = `SELECT m.id AS moduleId, m.name AS moduleName, m.redirect_url AS redirectUrl
             FROM module m ORDER BY m.name`;
             dbConn.query(sql, (error, result) => 
             {
@@ -1355,7 +1355,7 @@ db.getGradeCategory = (id) =>
     })
 };
 
-db.duplicateGradeCategory = (name) => 
+db.duplicateGradeCategory = (name, id = '') => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -1364,6 +1364,10 @@ db.duplicateGradeCategory = (name) =>
             let sql = `SELECT gc.id, gc.name
             FROM grade_category gc 
             WHERE gc.name = '${name}'`;
+            if(id != '')
+            {
+                sql = sql + ` AND gc.id != ${id}`;
+            }
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1388,6 +1392,30 @@ db.insertGradeCategory = (gradeCategory) =>
         {
             let sql = `INSERT INTO grade_category (name, created_on, created_by_id)
             VALUES('${gradeCategory.name}', NOW(), ${gradeCategory.createdById})`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateGradeCategory = (gradeCategory) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE grade_category SET name = '${gradeCategory.name}', updated_on = NOW(), updated_by_id = ${gradeCategory.createdById} WHERE id = ${gradeCategory.id}`;
             
             dbConn.query(sql, (error, result) => 
             {

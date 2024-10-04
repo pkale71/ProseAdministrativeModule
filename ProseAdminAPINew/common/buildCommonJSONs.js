@@ -10,7 +10,8 @@ buildCommonJSON.modules = function(datas)
 /////Final JSON
         let finalJSON = {
             "id" : data.moduleId,
-            "name" : data.moduleName
+            "name" : data.moduleName,
+            "redirectUrl" : data.redirectUrl
         }
         resultJSON.push(finalJSON);
     });

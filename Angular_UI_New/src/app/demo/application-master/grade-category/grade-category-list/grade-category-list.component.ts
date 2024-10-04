@@ -13,6 +13,7 @@ declare var $;
 
 // third party
 import Swal from 'sweetalert2';
+import { GradeCategoryEditComponent } from '../grade-category-edit/grade-category-edit.component';
 
 @Component({
     selector: 'app-grade-category-list',
@@ -93,6 +94,17 @@ export class GradeCategoryListComponent {
             size: 'md', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = {};
+    }
+
+    editGradeCategory(gradeCategory : any)
+    {
+        const dialogRef = this.modalService.open(GradeCategoryEditComponent, 
+        { 
+            size: 'md', backdrop: 'static' 
+        });
+        dialogRef.componentInstance.modalParams = {
+            "gradeCategory" : gradeCategory
+        };
     }
 
     updateStatus(gradeCategory : any)

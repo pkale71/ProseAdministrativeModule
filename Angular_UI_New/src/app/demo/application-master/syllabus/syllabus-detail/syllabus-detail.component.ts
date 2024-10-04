@@ -106,41 +106,48 @@ export class SyllabusDetailComponent {
     // delete syllabus grade category
     deleteSyllabusGradeCategory(gradeCategory : any)
     {
-        Swal.fire({
-        customClass: {
-            container: 'my-swal'
-        },
-        title: 'Confirmation',
-        text: 'Are you sure to delete grade category?',
-        icon: 'warning',
-        showCloseButton: true,
-        showCancelButton: true
-        }).then(async (willDelete) => {
-        if (willDelete.dismiss) 
+        if(this.syllabus.gradeCategories.length > 1)
         {
-            
-        } 
-        else 
-        {
-            this.showNotification("info", "Please wait...");
-            let tempJson = {
-                id : this.id,
-                gradeCategory : { "id" : gradeCategory.id }
-            }
-            try
-            {
-                let response = await this.commonService.deleteSyllabusGradeCategory(tempJson).toPromise();
-                if (response.status_code == 200 && response.message == 'success') 
+            Swal.fire({
+            customClass: {
+                container: 'my-swal'
+            },
+            title: 'Confirmation',
+            text: 'Are you sure to delete grade category?',
+            icon: 'warning',
+            showCloseButton: true,
+            showCancelButton: true
+            }).then(async (willDelete) => {
+                if (willDelete.dismiss) 
                 {
-                    this.showNotification("success", "Grade Category Deleted.");
-                    this.commonSharedService.syllabusGradeCategoryListObject.next({result : "success"});
+                    
+                } 
+                else 
+                {
+                    this.showNotification("info", "Please wait...");
+                    let tempJson = {
+                        id : this.id,
+                        gradeCategory : { "id" : gradeCategory.id }
+                    }
+                    try
+                    {
+                        let response = await this.commonService.deleteSyllabusGradeCategory(tempJson).toPromise();
+                        if (response.status_code == 200 && response.message == 'success') 
+                        {
+                            this.showNotification("success", "Grade Category Deleted.");
+                            this.commonSharedService.syllabusGradeCategoryListObject.next({result : "success"});
+                        }
+                    }
+                    catch(e)
+                    {
+                        this.showNotification("error", e);
+                    }
                 }
-            }
-            catch(e)
-            {
-                this.showNotification("error", e);
-            }
+            });
         }
-        });
+        else
+        {
+            this.showNotification("info", "The Syllabus Must Specify Atleast One Grade Category");
+        }
     }
 }

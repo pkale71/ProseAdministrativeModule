@@ -22,6 +22,7 @@ commonRoute.use('/getSubjectTypes', require('../util/validateToken.js'), require
 ///Academic Admin
 commonRoute.use('/getGradeCategories', require('../util/validateToken.js'), require('./grade-categories.js'));
 commonRoute.use('/saveGradeCategory', require('../util/validateToken.js'), require('./save-grade-category.js'));
+commonRoute.use('/updateGradeCategory', require('../util/validateToken.js'), require('./update-grade-category.js'));
 commonRoute.use('/deleteGradeCategory', require('../util/validateToken.js'), require('./delete-grade-category.js'));
 commonRoute.use('/getGrades', require('../util/validateToken.js'), require('./grades.js'));
 commonRoute.use('/saveGrade', require('../util/validateToken.js'), require('./save-grade.js'));

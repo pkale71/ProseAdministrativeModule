@@ -54,7 +54,7 @@ export class GradeCategoryAddComponent {
                 this.saveClicked = true;
                 try 
                 {
-                    let response = await this.commonService.savegradeCategory(this.addGradeCategoryForm.value).toPromise();
+                    let response = await this.commonService.saveGradeCategory(this.addGradeCategoryForm.value).toPromise();
                     if (response.status_code == 200 && response.message == 'success') 
                     {
                         this.showNotification("success", "Grade Category Saved.");

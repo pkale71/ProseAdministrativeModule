@@ -20,7 +20,7 @@
                                 <label class="form-control input-md">{{user?.fullName}}</label>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="email">Email</label>
                                 <label class="form-control input-md">{{user?.email}}</label>
@@ -32,7 +32,7 @@
                                 <label class="form-control input-md">{{user?.mobile}}</label>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label class="form-control-label" for="gender">Gender</label>
                                 <label class="form-control input-md">{{user?.gender}}</label>
@@ -97,7 +97,7 @@
                                                 </span>
                                             </td>
                                             <td style="width:40px; text-align: right;">
-                                                <i class="fa fa-user-tag" (click)="approveUserModule(userModule)" title="Approve/Deny" style="cursor: pointer;" *ngIf="user.userGrade.code == 'MOADM'"></i>&nbsp;
+                                                <!-- <i class="fa fa-user-tag" (click)="approveUserModule(userModule)" title="Approve/Deny" style="cursor: pointer;" *ngIf="user.userGrade.code == 'MOADM'"></i>&nbsp; -->
                                                 <i class="fa fa-trash-alt" (click)="deleteUserModule(userModule)" title="Delete" style="cursor: pointer;"></i>&nbsp;
                                             </td>
                                         </tr>

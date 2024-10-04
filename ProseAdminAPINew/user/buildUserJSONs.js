@@ -16,7 +16,8 @@ buildUserJSON.userModules = function(datas)
         
         moduleJSON = {
             "id" : data.moduleId,
-            "name" : data.moduleName
+            "name" : data.moduleName,
+            "redirectUrl" : data.moduleRedirectUrl
         }
         userRoleJSON = {
             "id" : data.userRoleId,

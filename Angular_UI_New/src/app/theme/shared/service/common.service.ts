@@ -86,9 +86,14 @@ export class CommonService {
     }
 
     //grade Category
-    savegradeCategory(gradeCategory: any) 
+    saveGradeCategory(gradeCategory: any) 
     {
         return this.apiService.post('/common/saveGradeCategory', gradeCategory);
+    }
+
+    updateGradeCategory(gradeCategory: any) 
+    {
+        return this.apiService.post('/common/updateGradeCategory', gradeCategory);
     }
 
     getGradeCategories(action : string) 

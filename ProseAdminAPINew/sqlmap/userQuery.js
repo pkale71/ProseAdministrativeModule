@@ -516,7 +516,7 @@ db.getUserModules = (userUUID, action) =>
     {
         try
         {
-            let sql = `SELECT um.id AS userModuleId, m.id AS moduleId, m.name AS moduleName,
+            let sql = `SELECT um.id AS userModuleId, m.id AS moduleId, m.name AS moduleName, m.redirect_url AS moduleRedirectUrl,
             um.is_approved_by_module_admin AS isApproved, um.is_active AS isActive, 'user_module' AS tableName,
             ur.id AS userRoleId, ur.name AS userRoleName, 
             ut.id AS userTypeId, ut.name AS userTypeName

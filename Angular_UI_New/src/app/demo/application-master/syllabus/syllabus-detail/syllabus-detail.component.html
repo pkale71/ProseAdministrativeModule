@@ -33,7 +33,7 @@
                                             <td>{{i+1}}</td>
                                             <td>{{gradeCategory?.name}}</td>
                                             <td style="width:40px; text-align: right;">
-                                                <i class="fa fa-trash-alt" (click)="deleteSyllabusGradeCategory(gradeCategory)" title="Delete" style="cursor: pointer;" *ngIf="syllabus?.gradeCategories.length > 1"></i>&nbsp;
+                                                <i class="fa fa-trash-alt" (click)="deleteSyllabusGradeCategory(gradeCategory)" title="Delete" style="cursor: pointer;"></i>&nbsp;
                                             </td>
                                         </tr>
                                         <tr *ngIf="syllabus?.gradeCategories.length == 0">

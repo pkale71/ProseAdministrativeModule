@@ -8,7 +8,7 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { FileUploadValidators, FileUploadModule } from '@iplab/ngx-file-upload';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-select-module',
@@ -26,6 +26,7 @@ export class SelectModuleComponent {
         private commonSharedService: CommonSharedService,
         private commonService: CommonService,
         private userService : UserService,
+        private router: Router,
         private formBuilder : FormBuilder,
         private route: ActivatedRoute
     ) 
@@ -48,6 +49,29 @@ export class SelectModuleComponent {
         this.loginUser = this.commonSharedService.loginUser;
         this.selectedModule = this.loginUser;    
         this.selectedModule['userModule'] = this.loginUser?.userModules[index];
-        //delete this.selectedModule.userModules;   
+        if(this.selectedModule['userModule'].userRole?.id != null && this.selectedModule['userModule'].userType?.id != null)
+        {
+            alert(this.selectedModule['userModule'].module.id + " " + this.selectedModule['userModule'].module.redirectUrl);
+            alert(this.loginUser.uuid);
+            //delete this.selectedModule.userModules;   
+        }
+    }
+
+    async logout()
+    {
+        try
+        {
+        let response = await this.userService.logout().toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+            localStorage.clear();
+            this.showNotification("info", "Logout Successful");
+            this.router.navigate(['/auth/signin']);
+        }
+        }
+        catch(e)
+        {
+            this.showNotification("info", "Logout Unsuccessful");
+        }
     }
 }
