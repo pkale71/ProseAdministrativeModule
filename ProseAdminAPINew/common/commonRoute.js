@@ -21,10 +21,12 @@ commonRoute.use('/getSubjectTypes', require('../util/validateToken.js'), require
 
 ///Academic Admin
 commonRoute.use('/getGradeCategories', require('../util/validateToken.js'), require('./grade-categories.js'));
+commonRoute.use('/getGradeCategory', require('../util/validateToken.js'), require('./grade-category.js'));
 commonRoute.use('/saveGradeCategory', require('../util/validateToken.js'), require('./save-grade-category.js'));
 commonRoute.use('/updateGradeCategory', require('../util/validateToken.js'), require('./update-grade-category.js'));
 commonRoute.use('/deleteGradeCategory', require('../util/validateToken.js'), require('./delete-grade-category.js'));
 commonRoute.use('/getGrades', require('../util/validateToken.js'), require('./grades.js'));
+commonRoute.use('/getGrade', require('../util/validateToken.js'), require('./grade.js'));
 commonRoute.use('/saveGrade', require('../util/validateToken.js'), require('./save-grade.js'));
 commonRoute.use('/deleteGrade', require('../util/validateToken.js'), require('./delete-grade.js'));
 commonRoute.use('/getSyllabuses', require('../util/validateToken.js'), require('./syllabuses.js'));
@@ -44,6 +46,7 @@ commonRoute.use('/saveSchoolingProgram', require('../util/validateToken.js'), re
 commonRoute.use('/updateSchoolingProgram', require('../util/validateToken.js'), require('./update-schooling-program.js'));
 commonRoute.use('/deleteSchoolingProgram', require('../util/validateToken.js'), require('./delete-schooling-program.js'));
 commonRoute.use('/getAcademicSessions', require('../util/validateToken.js'), require('./academic-sessions.js'));
+commonRoute.use('/getAcademicSession', require('../util/validateToken.js'), require('./academic-session.js'));
 commonRoute.use('/saveAcademicSession', require('../util/validateToken.js'), require('./save-academic-session.js'));
 commonRoute.use('/updateAcademicSession', require('../util/validateToken.js'), require('./update-academic-session.js'));
 commonRoute.use('/deleteAcademicSession', require('../util/validateToken.js'), require('./delete-academic-session.js'));
@@ -51,6 +54,7 @@ commonRoute.use('/getSchoolSubGroups', require('../util/validateToken.js'), requ
 commonRoute.use('/saveSchoolSubGroup', require('../util/validateToken.js'), require('./save-school-sub-group.js'));
 commonRoute.use('/deleteSchoolSubGroup', require('../util/validateToken.js'), require('./delete-school-sub-group.js'));
 commonRoute.use('/getBatchTypes', require('../util/validateToken.js'), require('./batch-types.js'));
+commonRoute.use('/getBatchType', require('../util/validateToken.js'), require('./batch-type.js'));
 commonRoute.use('/saveBatchType', require('../util/validateToken.js'), require('./save-batch-type.js'));
 commonRoute.use('/updateBatchType', require('../util/validateToken.js'), require('./update-batch-type.js'));
 commonRoute.use('/deleteBatchType', require('../util/validateToken.js'), require('./delete-batch-type.js'));

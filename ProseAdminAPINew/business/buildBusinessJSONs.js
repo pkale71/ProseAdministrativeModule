@@ -1011,6 +1011,7 @@ buildBusinessJSON.schools = function(datas, action = 1)
         }
 /////Final JSON
         let finalJSON = {
+            "id" : data.id,
             "uuid" : data.uuid,
             "name" : data.name,
             "code" : data.code,

@@ -3,6 +3,7 @@ let dbCommon = require('../sqlmap/commonQuery.js');
 let errorCodes = require('../util/errorCodes');
 let getErrorCode = new errorCodes();
 let uploads = require('../util/multerConfig.js');
+const axios = require('axios');
 let accessToken;
 
 async function verifyToken (req, res, next)
@@ -34,10 +35,11 @@ async function verifyToken (req, res, next)
                 "status_code"   :  401
             })
         }
-//verify token
+        //verify token
         let tokenData = await dbCommon.validateToken(accessToken);
         if(tokenData.length == 1)
         {
+            global.bearerToken = accessToken;
             let userGradeJSON = {
                 "id" : tokenData[0].userGradeId,
                 "name" : tokenData[0].userGradeName,

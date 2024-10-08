@@ -208,7 +208,7 @@ buildCommonJSON.academicSessions = function(datas, action = 1)
     return resultJSON;
 }
 
-buildCommonJSON.gradeCategories = function(datas)
+buildCommonJSON.gradeCategories = function(datas, action = 1)
 {
     let resultJSON = [];
 
@@ -222,13 +222,20 @@ buildCommonJSON.gradeCategories = function(datas)
             "tableName" : data.tableName ? data.tableName : '',
             "isExist" : data.isExist
         }
-        resultJSON.push(finalJSON);
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
 
     return resultJSON;
 }
 
-buildCommonJSON.grades = function(datas)
+buildCommonJSON.grades = function(datas, action = 1)
 {
     let gradeCategoryJSON;
     let resultJSON = [];
@@ -249,7 +256,14 @@ buildCommonJSON.grades = function(datas)
             "gradeCategory" : gradeCategoryJSON,
             "isExist" : data.isExist
         }
-        resultJSON.push(finalJSON);
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
 
     return resultJSON;
@@ -538,7 +552,7 @@ buildCommonJSON.schoolSubGroups = function(datas)
     return resultJSON;
 }
 
-buildCommonJSON.batchTypes = function(datas)
+buildCommonJSON.batchTypes = function(datas, action = 1)
 {
     let resultJSON = [];
     let academicSessionJSON;
@@ -564,7 +578,14 @@ buildCommonJSON.batchTypes = function(datas)
             "tableName" : data.tableName ? data.tableName : '',
             "isExist" : data.isExist
         }
-        resultJSON.push(finalJSON);
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
 
     return resultJSON;

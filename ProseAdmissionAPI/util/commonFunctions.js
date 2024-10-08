@@ -126,30 +126,30 @@ commonFunction.copyFile = async function(sourcePath, destiPath)
 
 commonFunction.createRequiredDir = function(basePath)
 {
-    if(!fs.existsSync(basePath + "/uploads"))
-    {
-        fs.mkdirSync(basePath + "/uploads");
-    }
-    if(!fs.existsSync(basePath + "/uploads/user-docs"))
-    {
-        fs.mkdirSync(basePath + "/uploads/user-docs");
-    }
-    if(!fs.existsSync(basePath + "/uploads/business-partner-docs"))
-    {
-        fs.mkdirSync(basePath + "/uploads/business-partner-docs");
-    }
-    if(!fs.existsSync(basePath + "/uploads/tie-up-school-docs"))
-    {
-        fs.mkdirSync(basePath + "/uploads/tie-up-school-docs");
-    }
-    if(!fs.existsSync(basePath + "/uploads/study-center-docs"))
-    {
-        fs.mkdirSync(basePath + "/uploads/study-center-docs");
-    }
-    if(!fs.existsSync(basePath + "/uploads/school-docs"))
-    {
-        fs.mkdirSync(basePath + "/uploads/school-docs");
-    }
+    // if(!fs.existsSync(basePath + "/uploads"))
+    // {
+    //     fs.mkdirSync(basePath + "/uploads");
+    // }
+    // if(!fs.existsSync(basePath + "/uploads/user-docs"))
+    // {
+    //     fs.mkdirSync(basePath + "/uploads/user-docs");
+    // }
+    // if(!fs.existsSync(basePath + "/uploads/business-partner-docs"))
+    // {
+    //     fs.mkdirSync(basePath + "/uploads/business-partner-docs");
+    // }
+    // if(!fs.existsSync(basePath + "/uploads/tie-up-school-docs"))
+    // {
+    //     fs.mkdirSync(basePath + "/uploads/tie-up-school-docs");
+    // }
+    // if(!fs.existsSync(basePath + "/uploads/study-center-docs"))
+    // {
+    //     fs.mkdirSync(basePath + "/uploads/study-center-docs");
+    // }
+    // if(!fs.existsSync(basePath + "/uploads/school-docs"))
+    // {
+    //     fs.mkdirSync(basePath + "/uploads/school-docs");
+    // }
     /////////////
     if(!fs.existsSync(basePath + "/uploads/uploadedFiles")) // For Multer Files
     {
@@ -209,6 +209,62 @@ commonFunction.generateToken = function(length)
         resData[i] = keys[j];
     }
     return resData.join("");
+}
+
+commonFunction.handleDynamicData = function(data) 
+{
+    let resData = "";
+    if (typeof data === 'object' && data !== null && Object.keys(data).length > 0) 
+    {
+        // Handle object
+        for(let i=0;i<Object.keys(data).length;i++)
+        {
+            resData = data[Object.keys(data)[0]];
+            break;
+        }
+    }
+    return resData;
+}
+  
+
+commonFunction.getExternalAPI = function(url)
+{
+    try 
+    {
+        return new Promise((resolve, reject) => 
+        {
+            axios.get(url, {
+                headers: {
+                  Authorization: `Bearer ${global.bearerToken}`,
+                },
+            })
+            .then(async response1 => {
+                if (response1?.data?.status_code == 200) 
+                {
+                    let resultData = await commonFunction.handleDynamicData(response1.data);
+                    if(resultData != "")
+                    {
+                        resolve(resultData);
+                    }
+                    else
+                    {
+                        resolve(false);
+                    }
+                }
+                else 
+                {
+                    return resolve(false);
+                }
+            })
+            .catch(error => 
+            {
+                return resolve(false);
+            });
+        });
+    }
+    catch (e) {
+        return(false);
+    }
 }
 
 commonFunction.sendMail = function (toEmail, fullName, emailBody) 

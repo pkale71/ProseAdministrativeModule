@@ -4334,6 +4334,30 @@ db.updateSchoolLogoFileName = (fileName, id, updatedById = '') =>
     })
 };
 
+db.checkSchoolExist = (schoolId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT ags.id AS gradeSectionId FROM admission_grade_section ags WHERE ags.school_id = ${schoolId}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.deleteSchool = (id, deletedById) => 
 {
     return new Promise((resolve, reject) => 

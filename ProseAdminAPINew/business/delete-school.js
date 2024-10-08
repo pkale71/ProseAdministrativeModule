@@ -7,6 +7,7 @@ let errorCode = new errorCodes();
 let uuid; 
 //////
 let school;
+let gradeSection;
 
 module.exports = require('express').Router().post('/', async(req,res) =>
 {
@@ -19,24 +20,39 @@ module.exports = require('express').Router().post('/', async(req,res) =>
         school = await dbBusiness.getSchool(uuid);
         if(school.length == 1)
         {
-            ///delete School
-            let deleteSchoolResult = await dbBusiness.deleteSchool(school[0].id, authData.id);
-            ///////
-            if(deleteSchoolResult.affectedRows > 0)
+            ////Check School Exist
+            gradeSection = await dbBusiness.checkSchoolExist(school[0].id);
+            if(gradeSection.length == 0)
             {
-                res.status(200)
-                return res.json({
-                    "status_code" : 200,
-                    "success" : true,                            
-                    "message" : errorCode.getStatus(200)
-                })
+                ///delete School
+                let deleteSchoolResult = await dbBusiness.deleteSchool(school[0].id, authData.id);
+                ///////
+                if(deleteSchoolResult.affectedRows > 0)
+                {
+                    res.status(200)
+                    return res.json({
+                        "status_code" : 200,
+                        "success" : true,                            
+                        "message" : errorCode.getStatus(200)
+                    })
+                }
+                else
+                {
+                    res.status(500)
+                    return res.json({
+                        "status_code" : 500,
+                        "message" : "School Already Deleted",
+                        "success" : false,
+                        "error" : errorCode.getStatus(500)
+                    })
+                }
             }
             else
             {
                 res.status(500)
                 return res.json({
                     "status_code" : 500,
-                    "message" : "School Already Deleted",
+                    "message" : "School Currently In Use",
                     "success" : false,
                     "error" : errorCode.getStatus(500)
                 })

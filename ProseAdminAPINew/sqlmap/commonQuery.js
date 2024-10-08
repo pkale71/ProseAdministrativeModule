@@ -1077,6 +1077,32 @@ db.getAcademicSession = (id) =>
     {
         try
         {
+            let sql = `SELECT acs.id, acs.year, acs.batch_year AS batchYear, acs.is_current_session AS isCurrentSession
+            FROM academic_session acs 
+            WHERE acs.id = ${id}`;
+            console.log(sql)
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getAcademicSession = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
             let sql = `SELECT acs.id
             FROM academic_session acs WHERE acs.id = ${id}`;
             dbConn.query(sql, (error, result) => 
