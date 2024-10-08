@@ -268,4 +268,99 @@ buildCommonJSON.gradeSections = function(datas, action = 1)
     return resultJSON;
 }
 
+buildCommonJSON.subjectGroups = function(datas, action = 1)
+{
+    let syllabusJSON = [];
+    let gradeCategoryJSON = [];
+    let gradeJSON = [];
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        syllabusJSON = [];
+        gradeCategoryJSON = [];
+        gradeJSON = [];
+        
+        syllabusJSON = {
+            "id" : data.syllabusId,
+            "name" : data.syllabusName
+        }
+        gradeCategoryJSON = {
+            "id" : data.gradeCategoryId,
+            "name" : data.gradeCategoryName
+        }
+        gradeJSON = {
+            "id" : data.gradeId,
+            "name" : data.gradeName
+        }
+        
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "groupName" : data.groupName,
+            "minSubject" : data.minSubject,
+            "maxSubject" : data.maxSubject,
+            "syllabus" : syllabusJSON,
+            "gradeCategory" : gradeCategoryJSON,
+            "grade" : gradeJSON,
+            "tableName" : data.tableName,
+            "isActive" : data.isActive
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildCommonJSON.subjectGroupAllocations = function(datas, action = 1)
+{
+    let subjectGroupJSON = [];
+    let subjectJSON = [];
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        subjectGroupJSON = [];
+        subjectJSON = [];
+        
+        subjectGroupJSON = {
+            "id" : data.subjectGroupId,
+            "groupName" : data.subjectGroupName,
+            "minSubject" : data.minSubject,
+            "maxSubject" : data.maxSubject
+        }
+
+        subjectJSON = {
+            "id" : data.subjectId,
+            "name" : data.subjectName
+        }
+        
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "subjectGroup" : subjectGroupJSON,
+            "subject" : subjectJSON,
+            "tableName" : data.tableName,
+            "isActive" : data.isActive
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
 module.exports = buildCommonJSON;

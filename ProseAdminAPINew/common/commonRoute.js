@@ -61,6 +61,7 @@ commonRoute.use('/deleteBatchType', require('../util/validateToken.js'), require
 commonRoute.use('/saveSubject', require('../util/validateToken.js'), require('./save-subject.js'));
 commonRoute.use('/getSubjects', require('../util/validateToken.js'), require('./subjects.js'));
 commonRoute.use('/getSubject', require('../util/validateToken.js'), require('./subject.js'));
+commonRoute.use('/getSubjectByIds', require('../util/validateToken.js'), require('./subject-by-ids.js'));
 commonRoute.use('/updateSubject', require('../util/validateToken.js'), require('./update-subject.js'));
 commonRoute.use('/deleteSubject', require('../util/validateToken.js'), require('./delete-subject.js'));
 commonRoute.use('/changeSubChapTopStatus', require('../util/validateToken.js'), require('./change-sub-chap-top-status.js'));

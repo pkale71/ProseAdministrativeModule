@@ -3,21 +3,18 @@ let dbCommon = require('../sqlmap/commonQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 //Variables 
-let totalSection;
-let schoolUUID;
-let academicSessionId;
+let id;
+let groupName;
+let minSubject;
+let maxSubject;
 let syllabusId;
 let gradeCategoryId;
 let gradeId;
-let batchTypeId;
 //
-let lastSectionASCII = 65;
-let school;
-let academicSession;
 let syllabus;
 let gradeCategory;
 let grade;
-let batchType;
+let subjectGroup;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -26,39 +23,26 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.totalSection != undefined && reqData.school != undefined && reqData.academicSession != undefined && reqData.syllabus != undefined && reqData.gradeCategory != undefined && reqData.grade != undefined && reqData.batchType != undefined)
+        if(reqData.id != undefined && reqData.groupName != undefined && reqData.minSubject != undefined && reqData.maxSubject != undefined && reqData.syllabus != undefined && reqData.gradeCategory != undefined && reqData.grade != undefined)
         {
-            if(reqData.totalSection != "" && reqData.school.uuid != "" && reqData.academicSession.id != "" && reqData.syllabus.id != "" && reqData.gradeCategory.id != "" && reqData.grade.id != "" && reqData.batchType.id != "")
+            if(reqData.id != "" && reqData.groupName != "" && reqData.minSubject != "" && reqData.maxSubject != "" && reqData.syllabus.id != "" && reqData.gradeCategory.id != "" && reqData.grade.id != "")
             {
-                totalSection = commonFunction.validateNumber(reqData.totalSection);
-                schoolUUID = reqData.school.uuid;
-                academicSessionId = commonFunction.validateNumber(reqData.academicSession.id);
+                id = commonFunction.validateNumber(reqData.id);
+                groupName = reqData.groupName;
+                minSubject = commonFunction.validateNumber(reqData.minSubject);
+                maxSubject = commonFunction.validateNumber(reqData.maxSubject);
                 syllabusId = commonFunction.validateNumber(reqData.syllabus.id);
                 gradeCategoryId = commonFunction.validateNumber(reqData.gradeCategory.id);
                 gradeId = commonFunction.validateNumber(reqData.grade.id);
-                batchTypeId = commonFunction.validateNumber(reqData.batchType.id);
                 
-                let getSchoolUrl = global.adminPortalAPIUrl+"business/getSchool/"+schoolUUID;
-                school = await commonFunction.getExternalAPI(getSchoolUrl);                
-                if(!school)
+                //check duplicate subject group   
+                subjectGroup = await dbCommon.duplicateSubjectGroup(groupName, id);
+                if(subjectGroup.length > 0)
                 {
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
-                        "message" : "Invalid School",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500)
-                    });
-                }
-
-                let getAcademicSessionUrl = global.adminPortalAPIUrl+"common/getAcademicSession/"+academicSessionId;
-                academicSession = await commonFunction.getExternalAPI(getAcademicSessionUrl);                
-                if(!academicSession)
-                {
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Invalid Academic Session",
+                        "message" : "Subject Group Name Already Exist",
                         "success" : false,
                         "error" : errorCode.getStatus(500)
                     });
@@ -102,43 +86,21 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         "error" : errorCode.getStatus(500)
                     });
                 }
-
-                let getBatchTypeUrl = global.adminPortalAPIUrl+"common/getBatchType/"+batchTypeId;
-                batchType = await commonFunction.getExternalAPI(getBatchTypeUrl);                
-                if(!batchType)
-                {
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Invalid Grade",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500)
-                    });
-                }
-
-                //get last section for the combination   
-                let lastGradeSection = await dbCommon.getLastGradeSection(school.id, academicSessionId, syllabusId, gradeCategoryId, gradeId, batchTypeId);
-                if(lastGradeSection.length == 1)
-                {
-                    lastSectionASCII = parseInt(lastGradeSection[0].sectionAscii) + 1;                  
-                }
                 
-                //insert Sections Are
-                let insertJSON = {
-                    "schoolId" : school.id,
-                    "academicSessionId" : academicSessionId,
+                //update Subject Group
+                let updateJSON = {
+                    "id" : id,
+                    "groupName" : groupName,
                     "syllabusId" : syllabusId,
                     "gradeCategoryId" : gradeCategoryId,
                     "gradeId" : gradeId,
-                    "batchTypeId" : batchTypeId,
-                    "totalSection" : totalSection,
-                    "lastSectionASCII" : lastSectionASCII,
+                    "minSubject" : minSubject,
+                    "maxSubject" : maxSubject,
                     "createdById" : authData.id
                 }
-                let insertGradeSectionResult = await dbCommon.insertGradeSection(insertJSON);
-                let insertGradeSectionId = insertGradeSectionResult.insertId;
-    
-                if(parseInt(insertGradeSectionId) > 0)
+                let updateSubjectGroupResult = await dbCommon.updateSubjectGroup(updateJSON);
+                
+                if(updateSubjectGroupResult.affectedRows > 0)
                 {
                     res.status(200)
                     return res.json({
@@ -152,7 +114,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     res.status(500)
                     return res.json({
                         "status_code" : 500,
-                        "message" : "Sections Are Not Saved",
+                        "message" : "Subject Group Are Not Saved",
                         "success" : false,
                         "error" : errorCode.getStatus(500)
                     });

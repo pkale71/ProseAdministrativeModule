@@ -4,8 +4,9 @@ let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 //Variables 
 let id;
+let subjectGroupId;
 //
-let feeStructure;
+// let feeStructure;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -13,17 +14,18 @@ module.exports = require('express').Router().post('/',async(req,res) =>
     {
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
-        if(reqData.id != undefined )
+        if(reqData.id != undefined && reqData.subjectGroup != undefined)
         {
-            if(reqData.id != "")
+            if(reqData.id != "" && reqData.subjectGroup.id != "")
             {
                 id = commonFunction.validateNumber(reqData.id);
+                subjectGroupId = commonFunction.validateNumber(reqData.subjectGroup.id);
 
-                feeStructure = await dbCommon.checkFeeCategoryExist(id);
-                if(feeStructure.length == 0)
-                {
-                    let updateFeeCategoryResult = await dbCommon.deleteFeeCategory(id);
-                    if(updateFeeCategoryResult.affectedRows > 0)
+                // feeStructure = await dbCommon.checkFeeCategoryExist(id);
+                // if(feeStructure.length == 0)
+                // {
+                    let updateSubjectGroupAllocationResult = await dbCommon.deleteSubjectGroupAllocation(id, subjectGroupId);
+                    if(updateSubjectGroupAllocationResult.affectedRows > 0)
                     {
                         res.status(200)
                         return res.json({
@@ -37,22 +39,22 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Fee Category Already Deleted",
+                            "message" : "Subject Allocation Already Deleted",
                             "success" : false,
                             "error" : errorCode.getStatus(500),
                         });
                     }
-                }
-                else
-                {
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Fee Category Currently In Use",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500),
-                    });
-                }
+                // }
+                // else
+                // {
+                //     res.status(500)
+                //     return res.json({
+                //         "status_code" : 500,
+                //         "message" : "Subject Allocation Currently In Use",
+                //         "success" : false,
+                //         "error" : errorCode.getStatus(500),
+                //     });
+                // }
             }
             else
             {

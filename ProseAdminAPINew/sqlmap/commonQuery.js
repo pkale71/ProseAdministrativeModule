@@ -1080,7 +1080,7 @@ db.getAcademicSession = (id) =>
             let sql = `SELECT acs.id, acs.year, acs.batch_year AS batchYear, acs.is_current_session AS isCurrentSession
             FROM academic_session acs 
             WHERE acs.id = ${id}`;
-            console.log(sql)
+            
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1800,6 +1800,46 @@ db.getSubject = (id) =>
             LEFT JOIN academic_session ety ON ety.id = sub.effective_till_year_id
             WHERE sub.id = ${id}`;
             
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSubjectByIds = (ids) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT sub.id, sub.name, sub.total_session AS totalSession, 
+            sub.session_duration AS sessionDuration, sub.has_practical AS hasPractical, 
+            sub.is_mandatory AS isMandatory, sub.is_active AS isActive, 'subject' AS tableName,
+            st.id AS subjectTypeId, st.name AS subjectTypeName,
+            gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
+            g.id AS gradeId, g.name AS gradeName,
+            s.id AS syllabusId, s.name AS syllabusName,
+            afy.id AS applicableFromYearId, afy.year AS applicableFromYear,
+            ety.id AS effectiveTillYearId, ety.year AS effectiveTillYear
+            FROM subject sub
+            JOIN subject_type st ON st.id = sub.subject_type_id
+            JOIN syllabus s ON s.id = sub.syllabus_id
+            JOIN grade g ON g.id = sub.grade_id
+            JOIN grade_category gc ON gc.id = sub.grade_category_id
+            JOIN academic_session afy ON afy.id = sub.applicable_from_year_id
+            LEFT JOIN academic_session ety ON ety.id = sub.effective_till_year_id
+            WHERE FIND_IN_SET(sub.id, '${ids}') > 0`;
+       
             dbConn.query(sql, (error, result) => 
             {
                 if(error)

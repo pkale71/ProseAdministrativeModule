@@ -1788,4 +1788,391 @@ db.deleteGradeSection = (id) =>
     })
 };
 
+db.getSubjectGroups = (syllabusId, gradeCategoryId, gradeId, action) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let filters = "";
+            let sql = `SELECT asg.id, asg.group_name AS groupName, asg.min_subject AS minSubject, asg.max_subject AS maxSubject, asg.is_active AS isActive, 'admission_subject_group' AS tableName,
+            s.id AS syllabusId, s.name AS syllabusName,
+            gc.id AS gradeCategoryId, gc.name gradeCategoryName,
+            g.id AS gradeId, g.name gradeName
+            FROM admission_subject_group asg
+            JOIN syllabus s ON s.id = asg.syllabus_id
+            JOIN grade_category gc ON gc.id = asg.grade_category_id
+            JOIN grade g ON g.id = asg.grade_id`;
+            
+            if(syllabusId != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE asg.syllabus_id = ${syllabusId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND asg.syllabus_id = ${syllabusId}`;
+                }
+            }
+            if(gradeCategoryId != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE asg.grade_category_id = ${gradeCategoryId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND asg.grade_category_id = ${gradeCategoryId}`;
+                }
+            }
+            if(gradeId != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE asg.grade_id = ${gradeId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND asg.grade_id = ${gradeId}`;
+                }
+            }
+            if(action == 'Active')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE asg.is_active = 1`;
+                }
+                else
+                {
+                    filters = filters + ` AND asg.is_active = 1`;
+                }
+            }
+            
+            sql = sql + filters + ` GROUP BY asg.id ORDER BY asg.group_name`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.getSubjectGroup = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT asg.id, asg.group_name AS groupName FROM admission_subject_group asg 
+            WHERE asg.id = ${id}`;
+
+            if(sql != "")
+            {
+                dbConn.query(sql, (error, result) => 
+                {
+                    if(error)
+                    {
+                        return reject(error);
+                    }
+                    return resolve(result);
+                });
+            }
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.duplicateSubjectGroup = (name, id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT asg.id, asg.group_name, asg.is_active AS isActive
+            FROM admission_subject_group asg 
+            WHERE asg.group_name = '${name}'`;
+            if(id != "")
+            {
+                sql = sql + ` AND asg.id != ${id}`;
+            }
+            if(sql != "")
+            {
+                dbConn.query(sql, (error, result) => 
+                {
+                    if(error)
+                    {
+                        return reject(error);
+                    }
+                    return resolve(result);
+                });
+            }
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertSubjectGroup = (subjectGroup) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let tempSubjectIds = (subjectGroup.subjectIds).toString().split(",");
+            
+            let sql = `INSERT INTO admission_subject_group (syllabus_id, grade_category_id, grade_id, group_name, min_subject, max_subject, created_on, created_by_id)
+            VALUES (${subjectGroup.syllabusId}, ${subjectGroup.gradeCategoryId}, ${subjectGroup.gradeId}, '${subjectGroup.groupName}', ${subjectGroup.minSubject}, ${subjectGroup.maxSubject}, NOW(), ${subjectGroup.createdById})`;
+              
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                if(result.insertId > 0)
+                {
+                    let sqlValues = '';
+                    for(let k=0;k<tempSubjectIds.length;k++)
+                    {
+                        if(sqlValues == '')
+                        {
+                            sqlValues = `(${result.insertId}, ${tempSubjectIds[k]}, NOW(), ${subjectGroup.createdById})`;
+                        }
+                        else
+                        {
+                            sqlValues = sqlValues +`, (${result.insertId}, ${tempSubjectIds[k]}, NOW(), ${subjectGroup.createdById})`;
+                        }
+                    }
+                    let sql1 = `INSERT INTO admission_subject_group_allocation (subject_group_id, subject_id, created_on, created_by_id)
+                    VALUES ${sqlValues}`;
+                    dbConn.query(sql1, (error1, result1) => 
+                    {
+                        if(error1)
+                        {
+                            return reject(error1);
+                        }
+                        return resolve(result);
+                    })
+                }
+                
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateSubjectGroup = (subjectGroup) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE admission_subject_group SET syllabus_id = ${subjectGroup.syllabusId}, grade_category_id = ${subjectGroup.gradeCategoryId}, grade_id = ${subjectGroup.gradeId}, group_name = '${subjectGroup.groupName}', min_subject = ${subjectGroup.minSubject}, max_subject = ${subjectGroup.maxSubject}, updated_on = NOW(), updated_by_id = ${subjectGroup.createdById} 
+            WHERE id = ${subjectGroup.id}`;
+                
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteSubjectGroup = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM admission_subject_group WHERE id = ${id}`;            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+
+                let sql1 = `DELETE FROM admission_subject_group_allocation WHERE subject_group_id = ${id}`;            
+                dbConn.query(sql1, (error1, result1) => 
+                {
+                    if(error1)
+                    {
+                        return reject(error1);
+                    }
+                    return resolve(result);
+                });
+            });
+        }            
+
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getSubjectGroupAllocations = (subjectGroupId, action) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let filters = "";
+            let sql = `SELECT asga.id, asga.is_active AS isActive, 'admission_subject_group_allocation' AS tableName,
+            asg.id AS subjectGroupId, asg.group_name AS subjectGroupName, asg.min_subject AS minSubject, asg.max_subject AS maxSubject,
+            sub.id AS subjectId, sub.name AS subjectName
+            FROM admission_subject_group_allocation asga
+            JOIN admission_subject_group asg ON asg.id = asga.subject_group_id
+            JOIN subject sub ON sub.id = asga.subject_id 
+            WHERE asga.subject_group_id = ${subjectGroupId}`;
+            
+            if(action == 'Active')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE asga.is_active = 1`;
+                }
+                else
+                {
+                    filters = filters + ` AND asga.is_active = 1`;
+                }
+            }
+            
+            sql = sql + filters + ` GROUP BY asga.id ORDER BY asga.id`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.getSubjectGroupAllocationsBySubjectIds = (subjectGroupId, subjectIds) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let filters = "";
+            let sql = `SELECT GROUP_CONCAT(sub.id) AS subjectId, GROUP_CONCAT(sub.name) AS subjectName
+            FROM admission_subject_group_allocation asga
+            JOIN subject sub ON sub.id = asga.subject_id 
+            WHERE asga.subject_group_id = ${subjectGroupId} 
+            AND FIND_IN_SET(asga.subject_id, '${subjectIds}') > 0 
+            GROUP BY asga.subject_group_id`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.insertSubjectGroupAllocation = (subjectGroupAllocation) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let tempSubjectIds = (subjectGroupAllocation.subjectIds).toString().split(",");
+            let sqlValues = '';
+            for(let k=0;k<tempSubjectIds.length;k++)
+            {
+                if(sqlValues == '')
+                {
+                    sqlValues = `(${subjectGroupAllocation.subjectGroupId}, ${tempSubjectIds[k]}, NOW(), ${subjectGroupAllocation.createdById})`;
+                }
+                else
+                {
+                    sqlValues = sqlValues +`, (${subjectGroupAllocation.subjectGroupId}, ${tempSubjectIds[k]}, NOW(), ${subjectGroupAllocation.createdById})`;
+                }
+            }
+            let sql = `INSERT INTO admission_subject_group_allocation (subject_group_id, subject_id, created_on, created_by_id)
+            VALUES ${sqlValues}`;
+                
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteSubjectGroupAllocation = (id, subjectGroupId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM admission_subject_group_allocation WHERE id = ${id} AND subject_group_id=${subjectGroupId}`;            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+
+                return resolve(result);
+            });
+        }            
+
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 module.exports = db

@@ -48,6 +48,14 @@ commonRoute.use('/getGradeSections', require('../util/validateToken.js'), requir
 commonRoute.use('/saveGradeSection', require('../util/validateToken.js'), require('./save-grade-section.js'));
 commonRoute.use('/deleteGradeSection', require('../util/validateToken.js'), require('./delete-grade-section.js'));
 
+commonRoute.use('/getSubjectGroups', require('../util/validateToken.js'), require('./subject-groups.js'));
+commonRoute.use('/saveSubjectGroup', require('../util/validateToken.js'), require('./save-subject-group.js'));
+commonRoute.use('/updateSubjectGroup', require('../util/validateToken.js'), require('./update-subject-group.js'));
+commonRoute.use('/deleteSubjectGroup', require('../util/validateToken.js'), require('./delete-subject-group.js'));
+commonRoute.use('/getSubjectGroupAllocations', require('../util/validateToken.js'), require('./subject-group-allocations.js'));
+commonRoute.use('/updateSubjectGroupAllocation', require('../util/validateToken.js'), require('./update-subject-group-allocation.js'));
+commonRoute.use('/deleteSubjectGroupAllocation', require('../util/validateToken.js'), require('./delete-subject-group-allocation.js'));
+
 commonRoute.use('/',(req,res,next) => 
 {
     return res.status(400).json({

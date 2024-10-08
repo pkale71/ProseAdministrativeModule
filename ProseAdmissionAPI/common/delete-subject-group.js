@@ -5,7 +5,7 @@ let errorCode = new errorCodes();
 //Variables 
 let id;
 //
-let feeStructure;
+// let feeStructure;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -19,11 +19,11 @@ module.exports = require('express').Router().post('/',async(req,res) =>
             {
                 id = commonFunction.validateNumber(reqData.id);
 
-                feeStructure = await dbCommon.checkFeeCategoryExist(id);
-                if(feeStructure.length == 0)
-                {
-                    let updateFeeCategoryResult = await dbCommon.deleteFeeCategory(id);
-                    if(updateFeeCategoryResult.affectedRows > 0)
+                // feeStructure = await dbCommon.checkFeeCategoryExist(id);
+                // if(feeStructure.length == 0)
+                // {
+                    let updateSubjectGroupResult = await dbCommon.deleteSubjectGroup(id);
+                    if(updateSubjectGroupResult.affectedRows > 0)
                     {
                         res.status(200)
                         return res.json({
@@ -37,22 +37,22 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Fee Category Already Deleted",
+                            "message" : "Subject Group Already Deleted",
                             "success" : false,
                             "error" : errorCode.getStatus(500),
                         });
                     }
-                }
-                else
-                {
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Fee Category Currently In Use",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500),
-                    });
-                }
+                // }
+                // else
+                // {
+                //     res.status(500)
+                //     return res.json({
+                //         "status_code" : 500,
+                //         "message" : "Subject Group Currently In Use",
+                //         "success" : false,
+                //         "error" : errorCode.getStatus(500),
+                //     });
+                // }
             }
             else
             {
