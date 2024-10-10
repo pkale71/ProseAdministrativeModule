@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="discountTypeAddModal"><i class="fa fa-plus"></i>&nbsp;Add Discount Type</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addDiscountTypeForm" id="addDiscountTypeForm" (ngSubmit)="saveDiscountType()" autocomplete="off">
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="40"
+                    [ngClass]="{'is-invalid': !addDiscountTypeForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addDiscountTypeForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter name.</label>
+                </div>                
+            </div> 
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="code">Code&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="code" type="text" required 
+                    formControlName="code" maxlength="5"
+                    [ngClass]="{'is-invalid': !addDiscountTypeForm.controls['code'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addDiscountTypeForm.controls['code'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter code.</label>
+                </div>                
+            </div> 
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

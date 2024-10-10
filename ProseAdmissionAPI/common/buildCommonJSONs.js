@@ -1,6 +1,24 @@
 const buildCommonJSON = {};
 const commonFunction = require('../util/commonFunctions.js');
 
+buildCommonJSON.appBase = function(datas)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "apiUrl" : data.apiUrl,
+            "uiUrl" : data.uiUrl
+        }
+        resultJSON = finalJSON;
+    });
+
+    return resultJSON;
+}
+
 buildCommonJSON.exitReasonTypes = function(datas)
 {
     let resultJSON = [];
@@ -28,6 +46,7 @@ buildCommonJSON.taxTypes = function(datas)
         let finalJSON = {
             "id" : data.id,
             "name" : data.name,
+            "tableName" : data.tableName,
             "isActive" : data.isActive,
             "isExist" : data.isExist
         }
@@ -64,6 +83,7 @@ buildCommonJSON.taxRates = function(datas, action = 1)
             "academicSession" : academicSessionJSON,
             "taxType" : taxTypeJSON,
             "rate" : data.rate,
+            "tableName" : data.tableName,
             "isActive" : data.isActive,
             "isExist" : data.isExist
         }
@@ -91,7 +111,8 @@ buildCommonJSON.feeTypes = function(datas)
         let finalJSON = {
             "id" : data.id,
             "name" : data.name,
-            "code" : code,
+            "code" : data.code,
+            "tableName" : data.tableName,
             "isActive" : data.isActive,
             "isExist" : data.isExist
         }
@@ -112,6 +133,7 @@ buildCommonJSON.discountTypes = function(datas)
             "id" : data.id,
             "name" : data.name,
             "code" : data.code,
+            "tableName" : data.tableName,
             "isActive" : data.isActive,
             "isExist" : data.isExist
         }
@@ -132,6 +154,7 @@ buildCommonJSON.feeCategories = function(datas)
             "id" : data.id,
             "name" : data.name,
             "availingInstallment" : data.availingInstallment,
+            "tableName" : data.tableName,
             "isActive" : data.isActive,
             "isExist" : data.isExist
         }
@@ -152,6 +175,7 @@ buildCommonJSON.studentDocuments = function(datas)
             "id" : data.id,
             "name" : data.name,
             "isActive" : data.isActive,
+            "tableName" : data.tableName,
             "isExist" : data.isExist
         }
         resultJSON.push(finalJSON);
@@ -178,6 +202,7 @@ buildCommonJSON.courseExitReasons = function(datas)
             "id" : data.id,
             "name" : data.name,
             "exitReasonType" : exitReasonTypeJSON,
+            "tableName" : data.tableName,
             "isActive" : data.isActive,
             "isExist" : data.isExist
         }
@@ -241,7 +266,8 @@ buildCommonJSON.gradeSections = function(datas, action = 1)
             sectionsJSON.push({
                 "id" : sectionIds[i],
                 "name" : sectionNames[i],
-                "isActive" : isActives[i]
+                "isActive" : isActives[i],
+                "tableName" : data.tableName
             })
         }
 

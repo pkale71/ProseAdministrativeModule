@@ -71,8 +71,8 @@
           <img src="assets/images/user/avatar-2.jpg" class="img-radius" alt="User-Profile-Image" />
           <span>{{loginUser?.name}}</span><br>
           <span class="badge bg-warning" style="margin-left: 45px;">{{loginUser?.userGrade?.name}}</span>
-          <br><i class="feather icon-clock" style="margin-left: 45px;" *ngIf="loginUser?.lastLogin"></i>&nbsp;
-          <h6 class="d-inline-block m-b-0" style="color:white;">{{loginUser?.lastLogin | date : "dd/MM/yyyy HH:mm a"}}</h6>
+          <!-- <br><i class="feather icon-clock" style="margin-left: 45px;" *ngIf="loginUser?.lastLogin"></i>&nbsp;
+          <h6 class="d-inline-block m-b-0" style="color:white;">{{loginUser?.lastLogin | date : "dd/MM/yyyy HH:mm a"}}</h6> -->
           <a href="javascript:" class="dud-logout" title="Logout" (click)="logout()">
             <i class="feather icon-log-out"></i>
           </a>

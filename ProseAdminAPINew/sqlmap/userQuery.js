@@ -93,6 +93,38 @@ db.authenticateUser = (email, password) =>
     })
 };
 
+db.authenticateUserByUUID = (uuid) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `select u.id AS userId, u.uuid AS userUUID, u.first_name AS firstName, u.last_name AS lastName, TRIM(CONCAT(u.first_name, ' ', IFNULL(u.last_name, ''))) AS fullName, u.email AS userEmail, 
+            u.mobile AS userMobile, u.gender AS userGender, u.profile_pic_file_name AS profilePicFileName,
+            ug.id AS userGradeId, ug.name AS userGradeName, ug.code AS userGradeCode,
+            uc.id AS userCategoryId, uc.name AS userCategoryName, uc.code AS userCategoryCode
+            FROM user u 
+            JOIN user_grade ug ON ug.id = u.user_grade_id
+            LEFT JOIN user_category uc ON uc.id = u.user_category_id
+            WHERE u.uuid = '${uuid}'
+            AND u.is_active = 1 AND u.is_approved_by_admin = 1`
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }     
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 db.checkDuplicateEmailMobile = (email, mobile) => 
 {
     return new Promise((resolve, reject) => 
@@ -510,7 +542,7 @@ db.approveDenyUser = (uuid, action, userId) =>
     })
 };
 
-db.getUserModules = (userUUID, action) => 
+db.getUserModules = (userUUID, action, moduleId = '') => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -519,17 +551,21 @@ db.getUserModules = (userUUID, action) =>
             let sql = `SELECT um.id AS userModuleId, m.id AS moduleId, m.name AS moduleName, m.redirect_url AS moduleRedirectUrl,
             um.is_approved_by_module_admin AS isApproved, um.is_active AS isActive, 'user_module' AS tableName,
             ur.id AS userRoleId, ur.name AS userRoleName, 
-            ut.id AS userTypeId, ut.name AS userTypeName
+            ut.id AS userTypeId, ut.name AS userTypeName, ut.code AS userTypeCode
             FROM user_module um
             JOIN module m ON m.id = um.module_id
             LEFT JOIN user_role ur ON ur.id = um.user_role_id
             LEFT JOIN user_type ut ON ut.id = um.user_type_id
             WHERE um.user_id = (SELECT id 
             FROM user WHERE uuid = '${userUUID}')`;
+            if(moduleId != '')
+            {
+                sql =sql + ` AND m.id = ${moduleId}`;
+            }
             if(action == "Approved")
             {
                 sql =sql + ` AND um.is_approved_by_module_admin = 1`;
-            }
+            }            
             sql =sql + ` ORDER BY um.id`;
             
             dbConn.query(sql, (error, result) => 

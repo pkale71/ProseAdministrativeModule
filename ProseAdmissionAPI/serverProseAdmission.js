@@ -56,7 +56,7 @@ if(dbConn)
                     {
                         console.log("group_concat_max_len = 1000000");    
                         
-                        let sql2 = `SELECT api_url AS apiUrl FROM admission_app_base ab LIMIT 1`;
+                        let sql2 = `SELECT api_url AS apiUrl FROM app_base ab LIMIT 1`;
                         dbConn.query(sql2,(error2, result2) => 
                         {
                             global.adminPortalAPIUrl = result2[0].apiUrl;

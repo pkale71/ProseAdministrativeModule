@@ -51,8 +51,8 @@ export class SelectModuleComponent {
         this.selectedModule['userModule'] = this.loginUser?.userModules[index];
         if(this.selectedModule['userModule'].userRole?.id != null && this.selectedModule['userModule'].userType?.id != null)
         {
-            alert(this.selectedModule['userModule'].module.id + " " + this.selectedModule['userModule'].module.redirectUrl);
-            alert(this.loginUser.uuid);
+            let redirectPath = this.selectedModule['userModule'].module.redirectUrl + "#/auth/signin/" + this.loginUser.uuid + "/" + this.selectedModule['userModule'].module.id;
+            window.open(redirectPath);
             //delete this.selectedModule.userModules;   
         }
     }

@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="taxRateAddModal"><i class="fa fa-plus"></i>&nbsp;Add Tax Rate</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addTaxRateForm" id="addTaxRateForm" (ngSubmit)="saveTaxRate()" autocomplete="off">
+    <div class="modal-body"> 
+        <div class="row">
+            <div class="col-md-12">   
+                <form [formGroup]="academicSessionForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="academicSession">Academic Session &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedAcademicSession"></i></label>
+                        <select class="form-control" required id="academicSession" formControlName="academicSession">
+                            <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession.year}}</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form [formGroup]="taxTypeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="taxType">Tax Type &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedTaxType"></i></label>
+                        <select class="form-control" required id="taxType" formControlName="taxType">
+                            <option value="{{taxType?.id}}" *ngFor="let taxType of taxTypes">{{taxType?.name}}</option>
+                        </select>
+                    </div>
+                </form>                
+            </div> 
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="rate">Rate (%)&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="rate" type="text" required 
+                    formControlName="rate" maxlength="5"
+                    [ngClass]="{'is-invalid': !addTaxRateForm.controls['rate'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addTaxRateForm.controls['rate'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter rate.</label>
+                    <label style="color: red;"
+                    *ngIf="addTaxRateForm.controls['rate'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid rate.</label>
+                </div>                
+            </div> 
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

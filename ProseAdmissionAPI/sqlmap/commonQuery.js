@@ -5,13 +5,14 @@ const { error } = require('console');
 const { promises } = require('dns');
 let db = {};
 
-db.appBase = () =>
+db.getAppBase = (moduleId) =>
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
-            let sql = `SELECT api_url AS apiUrl FROM app_base ab LIMIT 1`;
+            let sql = `SELECT api_url AS apiUrl, ui_url AS uiUrl FROM app_base ab 
+            WHERE ab.module_id = ${moduleId}`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -356,11 +357,11 @@ db.getTaxRates = (academicSessionId, taxTypeId, action) =>
             let sql = `SELECT atr.id, atr.rate, atr.is_active AS isActive, 'admission_tax_rate' AS tableName,
             att.id AS taxTypeId, att.name AS taxTypeName,
             acs.id AS academicSessionId, acs.year AS academicSessionYear,
-            COUNT(afs.id) AS isExist
+            COUNT(afstr.id) AS isExist
             FROM admission_tax_rate atr
             JOIN admission_tax_type att ON att.id = atr.tax_type_id
             JOIN academic_session acs ON acs.id = atr.academic_session_id
-            LEFT JOIN admission_fee_structure afs ON afs.tax_rate_id = atr.id`;
+            LEFT JOIN admission_fee_structure_tax_rate afstr ON afstr.tax_rate_id = atr.id`;
             
             if(academicSessionId != '')
             {
@@ -373,7 +374,7 @@ db.getTaxRates = (academicSessionId, taxTypeId, action) =>
                     filters = filters + ` AND atr.academic_session_id = ${academicSessionId}`;
                 }
             }
-            if(academicSessionId != '')
+            if(taxTypeId != '')
             {
                 if(filters == "")
                 {
@@ -534,8 +535,8 @@ db.checkTaxRateExist = (id) =>
     {
         try
         {
-            let sql = `SELECT afs.id
-            FROM admission_fee_structure afs WHERE afs.tax_rate_id = ${id}`;
+            let sql = `SELECT afstr.id
+            FROM admission_fee_structure_tax_rate afstr WHERE afstr.tax_rate_id = ${id}`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -1582,7 +1583,7 @@ db.getGradeSections = (schoolUUID, academicSessionId, syllabusId, gradeCategoryI
         {
             let filters = "";
             let sql = `SELECT GROUP_CONCAT(ags.id ORDER BY ags.section) AS id, GROUP_CONCAT(ags.section ORDER BY ags.section) AS section, 
-            GROUP_CONCAT(ags.is_active ORDER BY ags.section) AS isActive, 
+            GROUP_CONCAT(ags.is_active ORDER BY ags.section) AS isActive, 'admission_grade_section' AS tableName,
             sch.uuid AS schoolUUID, sch.name AS schoolName,
             acs.id AS academicSessionId, acs.year AS academicSessionYear,
             s.id AS syllabusId, s.name AS syllabusName,

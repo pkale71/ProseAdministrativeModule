@@ -1,0 +1,11 @@
+span{
+    background-color: blue!important;
+}
+
+span::before{
+    background-color: blue!important;
+}
+
+span::after{
+    background-color: blue!important;
+}

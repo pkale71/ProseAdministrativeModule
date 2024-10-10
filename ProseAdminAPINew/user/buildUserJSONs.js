@@ -1,7 +1,7 @@
 const buildUserJSON = {};
 const commonFunction = require('../util/commonFunctions.js');
 
-buildUserJSON.userModules = function(datas)
+buildUserJSON.userModules = function(datas, action = 1)
 {
     let resultJSON = [];
     let moduleJSON = [];
@@ -25,7 +25,8 @@ buildUserJSON.userModules = function(datas)
         }
         userTypeJSON = {
             "id" : data.userTypeId,
-            "name" : data.userTypeName
+            "name" : data.userTypeName,
+            "code" : data.userTypeCode
         }
 
 /////Final JSON
@@ -39,7 +40,14 @@ buildUserJSON.userModules = function(datas)
             "isModuleAdminApproved" : data.isApproved
         }
 //If action == 1 for mupltiple rows
-        resultJSON.push(finalJSON);
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
 
     return resultJSON;

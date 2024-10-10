@@ -6,6 +6,7 @@ let uploads = require('../util/multerConfig.js');
 
 ///////Routes
 userRoute.use('/authenticate', require('./authenticate.js'));
+userRoute.use('/authenticateModuleUser', require('./authenticate-module-user.js'));
 userRoute.use('/changePassword', require('../util/validateToken.js'), require('./change-password.js'));
 userRoute.use('/signout', require('../util/validateToken.js'), require('./signout.js'));
 userRoute.use('/getUser', require('../util/validateToken.js'), require('./user.js'));

@@ -4,6 +4,7 @@ let errorCodes = require('../util/errorCodes');
 let errorCode = new errorCodes();
 let uploads = require('../util/multerConfig.js');
 
+commonRoute.use('/getAppBase', require('./app-base.js'));
 commonRoute.use('/updateStatus', require('../util/validateToken.js'), require('./update-status.js'));
 
 ///Masters

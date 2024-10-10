@@ -1,0 +1,27 @@
+<div class="auth-wrapper aut-bg-img-side cotainer-fiuid align-items-stretch">
+    <div class="row align-items-center w-100 align-items-stretch bg-white">
+        <div class="d-none d-lg-flex col-lg-8 aut-bg-img align-items-center d-flex justify-content-center">
+            <div class="col-md-8">
+                <!-- <h1 class="text-white mb-5">Login in Datta Able</h1>
+                <p class="text-white">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text
+                ever.
+                </p> -->
+            </div>
+        </div>
+        <div class="col-lg-4 align-items-stret h-100 align-items-center d-flex justify-content-center">
+            <div class="auth-content text-center">
+                <div class="mb-4">
+                    <img src="../../../../../assets/images/login/login-logo.png" style="width: 300px;"/>
+                </div>
+                <!-- <h3 class="mb-4">E-Resource Hub</h3> -->
+                <form [formGroup]="loginForm">
+                    <div class="alert alert-info mt-3 mb-0" *ngIf="signinClicked">
+                        <i class="fa fa-spin fa-spinner"></i>&nbsp;Verifying User & Redirecting To The Portal
+                    </div>
+                    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
