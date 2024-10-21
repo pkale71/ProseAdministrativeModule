@@ -1,0 +1,138 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="subjectGroupAddModal"><i class="fa fa-plus"></i>&nbsp;Add Subject Group Combination</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addSubjectGroupForm" id="addSubjectGroupForm" (ngSubmit)="saveSubjectGroup()" autocomplete="off">
+    <div class="modal-body"> 
+        <div class="row">
+            <div class="col-md-2">   
+                <form [formGroup]="syllabusForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSyllabus"></i></label>
+                        <select class="form-control" required id="syllabus" formControlName="syllabus" (change)="getGradeCategories(syllabusForm.controls['syllabus'].value)">
+                            <option value="{{syllabus.id}}" *ngFor="let syllabus of syllabuses">{{syllabus.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select syllabus.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">   
+                <form [formGroup]="gradeCategoryForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="gradeCategory">Grade Category &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGradeCategory"></i></label>
+                        <select class="form-control" required id="gradeCategory" formControlName="gradeCategory" (change)="getGrades(gradeCategoryForm.controls['gradeCategory'].value, 'Active')">
+                            <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select grade category.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">   
+                <form [formGroup]="gradeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i></label>
+                        <select class="form-control" required id="grade" formControlName="grade" (change)="getSubjects()">
+                            <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="gradeForm.controls['grade'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select grade.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="groupName">Group Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="groupName" type="text" required 
+                    formControlName="groupName" maxlength="50"
+                    [ngClass]="{'is-invalid': !addSubjectGroupForm.controls['groupName'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addSubjectGroupForm.controls['groupName'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter group name.</label>
+                </div>                
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="minSubject">Min Subjects&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="minSubject" type="text" required 
+                    formControlName="minSubject" maxlength="2"
+                    [ngClass]="{'is-invalid': !addSubjectGroupForm.controls['minSubject'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addSubjectGroupForm.controls['minSubject'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter min subject.</label>
+                    <label style="color: red;"
+                    *ngIf="addSubjectGroupForm.controls['minSubject'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid min subject.</label>
+                </div>                
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="maxSubject">Max Subjects&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="maxSubject" type="text" required 
+                    formControlName="maxSubject" maxlength="2"
+                    [ngClass]="{'is-invalid': !addSubjectGroupForm.controls['maxSubject'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addSubjectGroupForm.controls['maxSubject'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter min subject.</label>
+                    <label style="color: red;"
+                    *ngIf="addSubjectGroupForm.controls['maxSubject'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid max subject.</label>
+                </div>                
+            </div> 
+        </div>
+        <div class="row">
+            <h5>Allocate Subjects&nbsp;<span class="badge bg-info">{{subjects.length}}</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSubject"></i></h5>
+            <div class="table-responsive">
+                <table class="table table-striped row-border table-hover pt-10">
+                    <thead>
+                        <tr>
+                            <th style="padding : 1rem 0 1rem 1.2rem;">Sno</th>
+                            <th style="padding : 1rem 0 1rem 1.2rem;">Subject</th>
+                            <th style="padding : 1rem 0 1rem 1.2rem;">Assign Subjects</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let subject of subjects let i=index">
+                            <td style="padding : 0 0 0 1.5rem;align-content: center;">{{i+1}}</td>
+                            <td style="padding : 0 0 0 1.2rem;align-content: center;">{{subject?.name}}</td>
+                            <td style="padding : 0 0 0 2rem;align-content: center;">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="checkbox-{{subject.id}}" [value] = "subject.id" (change)="selSubjects($event)" name="checkbox-{{subject.id}}"><label class="cr" for="checkbox-{{subject.id}}">&nbsp;</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="subjects.length == 0">
+                            <td></td>
+                            <td>No record(s) found</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

@@ -115,6 +115,57 @@ db.validateToken = (token) =>
     })
 };
 
+db.getCurrencies = () =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT acu.id, acu.name
+            FROM admission_currency acu`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+}; 
+
+db.getCurrency = (id) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT acu.id, acu.name
+            FROM admission_currency acu 
+            WHERE acu.id = ${id}`;
+            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+}; 
+
 db.updateIsActive = (id, tableName) => 
 {
     return new Promise((resolve, reject) => 
@@ -197,7 +248,7 @@ db.getTaxType = (id) =>
         {
             let sql = `SELECT att.id, att.name, att.is_active AS isActive
             FROM admission_tax_type att 
-            WHERE att.id = ${id}`;
+            WHERE FIND_IN_SET(att.id, '${id}') > 0`;
     
             dbConn.query(sql, (error, result) => 
             {
@@ -427,7 +478,7 @@ db.getTaxRate = (id) =>
             FROM admission_tax_rate atr
             JOIN admission_tax_type att ON att.id = atr.tax_type_id
             JOIN academic_session acs ON acs.id = atr.academic_session_id 
-            WHERE atr.id = ${id}`;
+            WHERE FIND_IN_SET (atr.id, '${id}') > 0`;
 
             dbConn.query(sql, (error, result) => 
             {
@@ -628,7 +679,7 @@ db.getFeeType = (id) =>
         {
             let sql = `SELECT aft.id, aft.name, aft.code, aft.is_active AS isActive
             FROM admission_fee_type aft 
-            WHERE aft.id = ${id}`;
+            WHERE FIND_IN_SET(aft.id, '${id}') > 0`;
     
             dbConn.query(sql, (error, result) => 
             {
@@ -835,7 +886,7 @@ db.getDiscountType = (id) =>
         {
             let sql = `SELECT adt.id, adt.name, adt.code, adt.is_active AS isActive
             FROM admission_discount_type adt 
-            WHERE adt.id = ${id}`;
+            WHERE FIND_IN_SET(adt.id, '${id}') > 0`;
     
             dbConn.query(sql, (error, result) => 
             {
@@ -1747,8 +1798,7 @@ db.insertGradeSection = (gradeSection) =>
                 gradeSection.lastSectionASCII = parseInt(gradeSection.lastSectionASCII) + 1;
             }
             let sql = `INSERT INTO admission_grade_section (school_id, academic_session_id, syllabus_id, grade_category_id, grade_id, batch_type_id, section, created_on, created_by_id)
-            VALUES ${sqlValues}`;
-              
+            VALUES ${sqlValues}`;   
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1874,7 +1924,14 @@ db.getSubjectGroup = (id) =>
     {
         try
         {
-            let sql = `SELECT asg.id, asg.group_name AS groupName FROM admission_subject_group asg 
+            let sql = `SELECT asg.id, asg.group_name AS groupName, asg.min_subject AS minSubject, asg.max_subject AS maxSubject, asg.is_active AS isActive, 'admission_subject_group' AS tableName,
+            s.id AS syllabusId, s.name AS syllabusName,
+            gc.id AS gradeCategoryId, gc.name gradeCategoryName,
+            g.id AS gradeId, g.name gradeName
+            FROM admission_subject_group asg
+            JOIN syllabus s ON s.id = asg.syllabus_id
+            JOIN grade_category gc ON gc.id = asg.grade_category_id
+            JOIN grade g ON g.id = asg.grade_id
             WHERE asg.id = ${id}`;
 
             if(sql != "")
@@ -2165,6 +2222,495 @@ db.deleteSubjectGroupAllocation = (id, subjectGroupId) =>
                     return reject(error);
                 }
 
+                return resolve(result);
+            });
+        }            
+
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getFeeStructures = (schoolUUID, schoolingProgramId, academicSessionId, batchYearId, syllabusId, gradeCategoryId, action) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let filters = "";
+            let sql = `SELECT afs.id, afs.uuid, afs.total_installment AS totalInstallment, afs.validity_from AS validityFrom, afs.validity_to AS validityTo, 
+            afs.tax_applicable AS taxApplicable, afs.is_active AS isActive, 'admission_fee_structure' AS tableName, 
+            sch.uuid AS schoolUUID, sch.name AS schoolName,
+            sp.id AS schoolingProgramId, sp.name AS schoolingProgramName,
+            bas.id AS batchYearId, bas.batch_year AS batchYear,
+            acs.id AS academicSessionId, acs.year AS academicSessionYear,
+            s.id AS syllabusId, s.name AS syllabusName,
+            gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
+            afc.id AS feeCategoryId, afc.name feeCategoryName,
+            acur.id AS currencyId, acur.name currencyName
+            FROM admission_fee_structure afs
+            JOIN school sch ON sch.id = afs.school_id
+            JOIN schooling_program sp ON sp.id = afs.schooling_program_id
+            JOIN academic_session bas ON bas.id = afs.batch_year_id
+            JOIN academic_session acs ON acs.id = afs.academic_session_id
+            JOIN syllabus s ON s.id = afs.syllabus_id
+            JOIN grade_category gc ON gc.id = afs.grade_category_id
+            JOIN admission_fee_category afc ON afc.id = afs.fee_category_id
+            JOIN admission_currency acur ON acur.id = afs.currency_id`;
+            
+            if(schoolUUID != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE sch.uuid = '${schoolUUID}'`;
+                }
+                else
+                {
+                    filters = filters + ` AND sch.uuid = '${schoolUUID}'`;
+                }
+            }
+            if(schoolingProgramId != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE afs.schooling_program_id = ${schoolingProgramId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND afs.schooling_program_id = ${schoolingProgramId}`;
+                }
+            }
+            if(academicSessionId != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE afs.academic_session_id = ${academicSessionId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND afs.academic_session_id = ${academicSessionId}`;
+                }
+            }
+            if(batchYearId != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE afs.batch_year_id = ${batchYearId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND afs.batch_year_id = ${batchYearId}`;
+                }
+            }
+            if(syllabusId != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE afs.syllabus_id = ${syllabusId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND afs.syllabus_id = ${syllabusId}`;
+                }
+            }
+            if(gradeCategoryId != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE afs.grade_category_id = ${gradeCategoryId}`;
+                }
+                else
+                {
+                    filters = filters + ` AND afs.grade_category_id = ${gradeCategoryId}`;
+                }
+            }
+            if(action == 'Active')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE afs.is_active = 1`;
+                }
+                else
+                {
+                    filters = filters + ` AND afs.is_active = 1`;
+                }
+            }
+            
+            sql = sql + filters + ` GROUP BY afs.id
+            ORDER BY afc.name`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.getFeeStructure = (uuid) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT afs.id, afs.uuid, afs.total_installment AS totalInstallment, afs.validity_from AS validityFrom, afs.validity_to AS validityTo, 
+            afs.tax_applicable AS taxApplicable, afs.is_active AS isActive,
+            sch.uuid AS schoolUUID, sch.name AS schoolName,
+            sp.id AS schoolingProgramId, sp.name AS schoolingProgramName,
+            bas.id AS batchYearId, bas.batch_year AS batchYear,
+            acs.id AS academicSessionId, acs.year AS academicSessionYear,
+            s.id AS syllabusId, s.name AS syllabusName,
+            gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
+            afc.id AS feeCategoryId, afc.name feeCategoryName,
+            acur.id AS currencyId, acur.name currencyName
+            FROM admission_fee_structure afs
+            JOIN school sch ON sch.id = afs.school_id
+            JOIN schooling_program sp ON sp.id = afs.schooling_program_id
+            JOIN academic_session bas ON bas.id = afs.batch_year_id
+            JOIN academic_session acs ON acs.id = afs.academic_session_id
+            JOIN syllabus s ON s.id = afs.syllabus_id
+            JOIN grade_category gc ON gc.id = afs.grade_category_id
+            JOIN admission_fee_category afc ON afc.id = afs.fee_category_id
+            JOIN admission_currency acur ON acur.id = afs.currency_id
+            WHERE afs.uuid = '${uuid}'`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.getFeeStructureInstallments = (feeStructureId) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT afsi.id, afsi.name, afsi.installment_rate AS installmentRate, afsi.due_date AS dueDate, afsi.is_active AS isActive
+            FROM admission_fee_structure_installment afsi
+            WHERE afsi.fee_structure_id = ${feeStructureId}`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.getFeeStructureFeeTypes = (feeStructureId) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT afsft.id, afsft.amount, afsft.is_active AS isActive,
+            aft.id AS feeTypeId, aft.name AS feeTypeName
+            FROM admission_fee_structure_fee_type afsft
+            JOIN admission_fee_type aft ON aft.id = afsft.fee_type_id
+            WHERE afsft.fee_structure_id = ${feeStructureId}`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.getFeeStructureDiscountTypes = (feeStructureId) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT afsdt.id, afsdt.amount, afsdt.is_active AS isActive,
+            adt.id AS discountTypeId, adt.name AS discountTypeName
+            FROM admission_fee_structure_discount_type afsdt
+            JOIN admission_discount_type adt ON adt.id = afsdt.discount_type_id
+            WHERE afsdt.fee_structure_id = ${feeStructureId}`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.getFeeStructureTaxRates = (feeStructureId) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT afstr.id, afstr.is_active AS isActive,
+            att.id AS taxTypeId, att.name AS taxTypeName,
+            atr.id AS taxRateId, atr.rate AS taxRate
+            FROM admission_fee_structure_tax_rate afstr
+            JOIN admission_tax_type att ON att.id = afstr.tax_type_id
+            JOIN admission_tax_rate atr ON atr.id = afstr.tax_rate_id
+            WHERE afstr.fee_structure_id = ${feeStructureId}`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.getFeeStructureTotals = (feeStructureId) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT afst.id, afstr.id AS feeStructureTaxRateId,
+            afst.total_amount AS totalAmount, afst.total_discount AS totalDiscount,
+            afst.net_amount AS netAmount, afst.tax_amount AS taxAmount, afst.gross_amount AS grossAmount, 
+            att.id AS taxTypeId, att.name AS taxTypeName,
+            atr.id AS taxRateId, atr.rate AS taxRate
+            FROM admission_fee_structure_totals afst
+            LEFT JOIN admission_fee_structure_tax_rate afstr ON afstr.id = afst.fee_structure_tax_rate_id
+            LEFT JOIN admission_tax_type att ON att.id = afstr.tax_type_id
+            LEFT JOIN admission_tax_rate atr ON atr.id = afstr.tax_rate_id
+            WHERE afst.fee_structure_id = ${feeStructureId}`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.insertfeeStructure = (feeStructure) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `INSERT INTO admission_fee_structure (uuid, school_id, schooling_program_id, batch_year_id, academic_session_id, syllabus_id, grade_category_id, fee_category_id, currency_id, total_installment, validity_from, validity_to, tax_applicable, created_on, created_by_id)
+            VALUES ('${feeStructure.uuid}', ${feeStructure.schoolId}, ${feeStructure.schoolingProgramId}, ${feeStructure.batchYearId}, ${feeStructure.academicSessionId}, ${feeStructure.syllabusId}, ${feeStructure.gradeCategoryId}, ${feeStructure.feeCategoryId}, ${feeStructure.currencyId}, ${feeStructure.totalInstallment}, '${feeStructure.validityFrom}', '${feeStructure.validityTo}', ${feeStructure.taxApplicable}, NOW(), ${feeStructure.createdById})`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                let feeStructureId = result.insertId;
+    /////Fee Installments
+                let sqlValues1 = "";
+                for(let i=0;i<feeStructure.feeStructureInstallments.length;i++)
+                {
+                    let installment = feeStructure.feeStructureInstallments[i];
+                    if(sqlValues1 == "") 
+                    {
+                        sqlValues1 = `(${feeStructureId}, '${installment.name}', ${installment.installmentPercent}, '${installment.dueDate}', NOW(), ${feeStructure.createdById})`;
+                    }
+                    else
+                    {
+                        sqlValues1 = sqlValues1 + `, (${feeStructureId}, '${installment.name}', ${installment.installmentPercent}, '${installment.dueDate}', NOW(), ${feeStructure.createdById})`;
+                    }
+                }
+                if(sqlValues1 != "")
+                {
+                    let sql1 = `INSERT INTO admission_fee_structure_installment (fee_structure_id, name, installment_rate, due_date, created_on, created_by_id)
+                    VALUES ${sqlValues1}`;
+                    dbConn.query(sql1, (error1, result1) => 
+                    {
+                        if(error1)
+                        {
+                            return reject(error1);
+                        }
+                    });
+                }
+    /////Fee Types
+                let sqlValues2 = "";
+                for(let i=0;i<feeStructure.feeStructureFeeTypes.length;i++)
+                {
+                    let tempFeeType = feeStructure.feeStructureFeeTypes[i];
+                    if(sqlValues2 == "") 
+                    {
+                        sqlValues2 = `(${feeStructureId}, ${tempFeeType.feeType.id}, ${tempFeeType.amount}, NOW(), ${feeStructure.createdById})`;
+                    }
+                    else
+                    {
+                        sqlValues2 = sqlValues2 + `, (${feeStructureId}, ${tempFeeType.feeType.id}, ${tempFeeType.amount}, NOW(), ${feeStructure.createdById})`;
+                    }
+                }
+                if(sqlValues2 != "")
+                {
+                    let sql2 = `INSERT INTO admission_fee_structure_fee_type (fee_structure_id, fee_type_id, amount, created_on, created_by_id)
+                    VALUES ${sqlValues2}`;
+                    dbConn.query(sql2, (error2, result2) => 
+                    {
+                        if(error2)
+                        {
+                            return reject(error2);
+                        }
+                    });
+                }
+    /////Discount Types
+                let sqlValues3 = "";
+                for(let i=0;i<feeStructure.feeStructureDiscountTypes.length;i++)
+                {
+                    let tempDiscountType = feeStructure.feeStructureDiscountTypes[i];
+                    if(sqlValues3 == "")
+                    {
+                        sqlValues3 = `(${feeStructureId}, ${tempDiscountType.discountType.id}, ${tempDiscountType.amount}, NOW(), ${feeStructure.createdById})`;
+                    }
+                    else
+                    {
+                        sqlValues3 = sqlValues3 + `, (${feeStructureId}, ${tempDiscountType.discountType.id}, ${tempDiscountType.amount}, NOW(), ${feeStructure.createdById})`; 
+                    }
+                }
+                if(sqlValues3 != "")
+                {
+                    let sql3 = `INSERT INTO admission_fee_structure_discount_type (fee_structure_id, discount_type_id, amount, created_on, created_by_id)
+                    VALUES ${sqlValues3}`;
+                    dbConn.query(sql3, (error3, result3) => 
+                    {
+                        if(error3)
+                        {
+                            return reject(error3);
+                        }
+                    });
+                }
+    /////Tax Rates
+                for(let i=0;i<feeStructure.feeStructureTaxRates.length;i++)
+                {
+                    let tempTaxRate = feeStructure.feeStructureTaxRates[i];
+                    let sql4 = `INSERT INTO admission_fee_structure_tax_rate (fee_structure_id, tax_type_id, tax_rate_id, created_on, created_by_id)
+                    VALUES (${feeStructureId}, ${tempTaxRate.taxType.id}, ${tempTaxRate.taxRate.id}, NOW(), ${feeStructure.createdById})`;
+                    dbConn.query(sql4, (error4, result4) => 
+                    {
+                        if(error4)
+                        {
+                            return reject(error4);
+                        }
+                        feeStructure.feeStructureTotals[i].feeStructureTaxRateId = result4.insertId;
+
+                        let tempTaxRate = feeStructure.feeStructureTotals[i];
+                        let sql5 = `INSERT INTO admission_fee_structure_totals (fee_structure_id, fee_structure_tax_rate_id, total_amount, total_discount, net_amount, tax_amount, gross_amount)
+                        VALUES (${feeStructureId}, NULLIF('${tempTaxRate.feeStructureTaxRateId}', ''), ${tempTaxRate.totalAmount}, ${tempTaxRate.totalDiscount}, ${tempTaxRate.netAmount}, ${tempTaxRate.taxAmount}, ${tempTaxRate.grossAmount})`;
+                    
+                        dbConn.query(sql5, (error5, result5) => 
+                        {
+                            if(error5)
+                            {
+                                return reject(error5);
+                            }
+                        });
+                    });
+                }
+    /////Totals
+                if(feeStructure.feeStructureTaxRates.length == 0)
+                {
+                    for(let i=0;i<feeStructure.feeStructureTotals.length;i++)
+                    {
+                        let tempTaxRate = feeStructure.feeStructureTotals[i];
+                        let sql5 = `INSERT INTO admission_fee_structure_totals (fee_structure_id, fee_structure_tax_rate_id, total_amount, total_discount, net_amount, tax_amount, gross_amount)
+                        VALUES (${feeStructureId}, NULLIF('${tempTaxRate.feeStructureTaxRateId}', ''), ${tempTaxRate.totalAmount}, ${tempTaxRate.totalDiscount}, ${tempTaxRate.netAmount}, ${tempTaxRate.taxAmount}, ${tempTaxRate.grossAmount})`;
+                    
+                        dbConn.query(sql5, (error5, result5) => 
+                        {
+                            if(error5)
+                            {
+                                return reject(error5);
+                            }
+                        });
+                    }
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteFeeStructure = (id) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM admission_fee_structure_installment WHERE fee_structure_id = ${id};
+            DELETE FROM admission_fee_structure_fee_type WHERE fee_structure_id = ${id};
+            DELETE FROM admission_fee_structure_discount_type WHERE fee_structure_id = ${id};
+            DELETE FROM admission_fee_structure_tax_rate WHERE fee_structure_id = ${id};
+            DELETE FROM admission_fee_structure_totals WHERE fee_structure_id = ${id};
+            DELETE FROM admission_fee_structure WHERE id = ${id};`;            
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
                 return resolve(result);
             });
         }            

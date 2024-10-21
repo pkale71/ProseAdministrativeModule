@@ -37,7 +37,6 @@ export class DiscountTypeEditComponent {
 
     this.editDiscountTypeForm = this.formbuilder.group({
       id:[''],
-      code:['',[Validators.required]],
       name: ['',[Validators.required]]
     });  
 

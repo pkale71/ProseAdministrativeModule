@@ -73,30 +73,6 @@ INSERT INTO `academy_enclosure_document` VALUES (1,'Pan',1,'2024-06-21 18:53:43'
 UNLOCK TABLES;
 
 --
--- Table structure for table `admission_app_base`
---
-
-DROP TABLE IF EXISTS `admission_app_base`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `admission_app_base` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `api_url` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `admission_app_base`
---
-
-LOCK TABLES `admission_app_base` WRITE;
-/*!40000 ALTER TABLE `admission_app_base` DISABLE KEYS */;
-INSERT INTO `admission_app_base` VALUES (1,'http://localhost:3000/api/');
-/*!40000 ALTER TABLE `admission_app_base` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `admission_course_exit_reason`
 --
 
@@ -105,15 +81,15 @@ DROP TABLE IF EXISTS `admission_course_exit_reason`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `admission_course_exit_reason` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
+  `name` text NOT NULL,
   `exit_reason_type_id` int(11) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
-  `updated_on` datetime NOT NULL,
-  `updated_by_id` int(11) NOT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +98,7 @@ CREATE TABLE `admission_course_exit_reason` (
 
 LOCK TABLES `admission_course_exit_reason` WRITE;
 /*!40000 ALTER TABLE `admission_course_exit_reason` DISABLE KEYS */;
-INSERT INTO `admission_course_exit_reason` VALUES (1,'Migrated to New Location',3,1,'2024-10-07 12:54:22',2,'0000-00-00 00:00:00',0),(2,'Financial Reason',4,1,'2024-10-07 12:54:35',2,'0000-00-00 00:00:00',0),(3,'Financial Reason',3,1,'2024-10-07 12:54:47',2,'2024-10-07 13:05:12',2);
+INSERT INTO `admission_course_exit_reason` VALUES (1,'Migrated to New Location',3,1,'2024-10-07 12:54:22',2,NULL,NULL),(3,'Financial Reason',3,1,'2024-10-07 12:54:47',2,'2024-10-14 12:34:06',2),(4,'Financial Reason',4,1,'2024-10-14 12:10:32',2,NULL,NULL);
 /*!40000 ALTER TABLE `admission_course_exit_reason` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +152,7 @@ CREATE TABLE `admission_discount_type` (
 
 LOCK TABLES `admission_discount_type` WRITE;
 /*!40000 ALTER TABLE `admission_discount_type` DISABLE KEYS */;
-INSERT INTO `admission_discount_type` VALUES (2,'EBO Discount','EBOD',1,'2024-10-05 19:14:33',2,'2024-10-05 19:15:29',2),(3,'Single Instalment Discount','SIID',1,'2024-10-05 19:16:48',2,NULL,NULL);
+INSERT INTO `admission_discount_type` VALUES (2,'EBO Discount','EBOD',1,'2024-10-05 19:14:33',2,'2024-10-10 15:51:31',2),(3,'Single Instalment Discount','SIID',1,'2024-10-05 19:16:48',2,'2024-10-19 15:35:23',2);
 /*!40000 ALTER TABLE `admission_discount_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,7 +189,7 @@ DROP TABLE IF EXISTS `admission_fee_category`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `admission_fee_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `availing_installment` int(11) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL,
@@ -221,7 +197,7 @@ CREATE TABLE `admission_fee_category` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -230,7 +206,7 @@ CREATE TABLE `admission_fee_category` (
 
 LOCK TABLES `admission_fee_category` WRITE;
 /*!40000 ALTER TABLE `admission_fee_category` DISABLE KEYS */;
-INSERT INTO `admission_fee_category` VALUES (1,'Regular - Single Payment',0,1,'2024-10-07 10:31:45',2,NULL,NULL),(2,'Regular - Installment',1,1,'2024-10-07 10:32:08',2,NULL,NULL),(3,'Beginner Early Student - Single Installment',0,1,'2024-10-07 10:32:25',2,NULL,NULL),(5,'Beginner Early Student  - Installment',0,1,'2024-10-07 10:39:22',2,NULL,NULL);
+INSERT INTO `admission_fee_category` VALUES (2,'Regular - Installment',1,1,'2024-10-07 10:32:08',2,NULL,NULL),(3,'Beginner Early Student - Single Installment',0,1,'2024-10-07 10:32:25',2,NULL,NULL),(5,'Beginner Early Student  - Installment',1,1,'2024-10-07 10:39:22',2,'2024-10-14 10:50:51',2),(6,'Regular - Single Payment',0,1,'2024-10-14 10:45:15',2,NULL,NULL),(7,'Science Group - Installment',1,1,'2024-10-14 10:45:26',2,NULL,NULL);
 /*!40000 ALTER TABLE `admission_fee_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,15 +231,14 @@ CREATE TABLE `admission_fee_structure` (
   `validity_from` date NOT NULL,
   `validity_to` date NOT NULL,
   `tax_applicable` int(11) NOT NULL,
-  `tax_type_id` int(11) DEFAULT NULL,
-  `tax_rate_id` int(11) DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
+  `uuid` varchar(36) NOT NULL,
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -272,6 +247,7 @@ CREATE TABLE `admission_fee_structure` (
 
 LOCK TABLES `admission_fee_structure` WRITE;
 /*!40000 ALTER TABLE `admission_fee_structure` DISABLE KEYS */;
+INSERT INTO `admission_fee_structure` VALUES (10,1,1,1,1,1,3,2,1,3,'2024-04-01','2025-03-31',1,1,'607953c0-8c49-11ef-88f3-b38aa8c71931','2024-10-17 11:03:45',2,NULL,NULL),(11,1,1,1,1,1,3,2,1,3,'2024-04-01','2025-03-31',0,1,'e29e2be0-8c4a-11ef-8591-bb567a72f4ec','2024-10-17 11:14:32',2,NULL,NULL),(13,1,4,1,1,1,3,2,1,2,'2024-10-19','2024-12-31',0,1,'01c228a0-8dea-11ef-a1be-71346586cf64','2024-10-19 12:46:06',2,NULL,NULL);
 /*!40000 ALTER TABLE `admission_fee_structure` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -293,7 +269,7 @@ CREATE TABLE `admission_fee_structure_discount_type` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -302,6 +278,7 @@ CREATE TABLE `admission_fee_structure_discount_type` (
 
 LOCK TABLES `admission_fee_structure_discount_type` WRITE;
 /*!40000 ALTER TABLE `admission_fee_structure_discount_type` DISABLE KEYS */;
+INSERT INTO `admission_fee_structure_discount_type` VALUES (9,10,2,5000.00,1,'2024-10-17 11:03:45',2,NULL,NULL),(10,11,2,5000.00,1,'2024-10-17 11:14:32',2,NULL,NULL);
 /*!40000 ALTER TABLE `admission_fee_structure_discount_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -323,7 +300,7 @@ CREATE TABLE `admission_fee_structure_fee_type` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -332,6 +309,7 @@ CREATE TABLE `admission_fee_structure_fee_type` (
 
 LOCK TABLES `admission_fee_structure_fee_type` WRITE;
 /*!40000 ALTER TABLE `admission_fee_structure_fee_type` DISABLE KEYS */;
+INSERT INTO `admission_fee_structure_fee_type` VALUES (17,10,2,100000.00,1,'2024-10-17 11:03:45',2,NULL,NULL),(18,10,4,30000.00,1,'2024-10-17 11:03:45',2,NULL,NULL),(19,11,2,100000.00,1,'2024-10-17 11:14:32',2,NULL,NULL),(20,11,4,30000.00,1,'2024-10-17 11:14:32',2,NULL,NULL),(23,13,2,200000.00,1,'2024-10-19 12:46:06',2,NULL,NULL),(24,13,4,120000.00,1,'2024-10-19 12:46:06',2,NULL,NULL);
 /*!40000 ALTER TABLE `admission_fee_structure_fee_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -354,7 +332,7 @@ CREATE TABLE `admission_fee_structure_installment` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -363,7 +341,67 @@ CREATE TABLE `admission_fee_structure_installment` (
 
 LOCK TABLES `admission_fee_structure_installment` WRITE;
 /*!40000 ALTER TABLE `admission_fee_structure_installment` DISABLE KEYS */;
+INSERT INTO `admission_fee_structure_installment` VALUES (25,10,'1st Installment',40.00,'2024-04-01',1,'2024-10-17 11:03:45',2,NULL,NULL),(26,10,'2nd Installment',30.00,'2024-08-01',1,'2024-10-17 11:03:45',2,NULL,NULL),(27,10,'3rd Installment',30.00,'2024-11-01',1,'2024-10-17 11:03:45',2,NULL,NULL),(28,11,'1st Installment',40.00,'2024-04-01',1,'2024-10-17 11:14:32',2,NULL,NULL),(29,11,'2nd Installment',30.00,'2024-08-01',1,'2024-10-17 11:14:32',2,NULL,NULL),(30,11,'3rd Installment',30.00,'2024-11-01',1,'2024-10-17 11:14:32',2,NULL,NULL),(33,13,'1st Installment',60.00,'2024-10-19',1,'2024-10-19 12:46:06',2,NULL,NULL),(34,13,'2nd Installment',40.00,'2024-12-06',1,'2024-10-19 12:46:06',2,NULL,NULL);
 /*!40000 ALTER TABLE `admission_fee_structure_installment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `admission_fee_structure_tax_rate`
+--
+
+DROP TABLE IF EXISTS `admission_fee_structure_tax_rate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admission_fee_structure_tax_rate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fee_structure_id` int(11) NOT NULL,
+  `tax_type_id` int(11) NOT NULL,
+  `tax_rate_id` int(11) NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admission_fee_structure_tax_rate`
+--
+
+LOCK TABLES `admission_fee_structure_tax_rate` WRITE;
+/*!40000 ALTER TABLE `admission_fee_structure_tax_rate` DISABLE KEYS */;
+INSERT INTO `admission_fee_structure_tax_rate` VALUES (15,10,2,3,1,'2024-10-17 11:03:45',2),(16,10,2,4,1,'2024-10-17 11:03:45',2);
+/*!40000 ALTER TABLE `admission_fee_structure_tax_rate` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `admission_fee_structure_totals`
+--
+
+DROP TABLE IF EXISTS `admission_fee_structure_totals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admission_fee_structure_totals` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fee_structure_id` int(11) NOT NULL,
+  `fee_structure_tax_rate_id` int(11) DEFAULT NULL,
+  `total_amount` decimal(11,2) NOT NULL,
+  `total_discount` decimal(11,2) NOT NULL,
+  `net_amount` decimal(11,2) NOT NULL,
+  `tax_amount` decimal(11,2) NOT NULL,
+  `gross_amount` decimal(11,2) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admission_fee_structure_totals`
+--
+
+LOCK TABLES `admission_fee_structure_totals` WRITE;
+/*!40000 ALTER TABLE `admission_fee_structure_totals` DISABLE KEYS */;
+INSERT INTO `admission_fee_structure_totals` VALUES (5,10,15,130000.00,5000.00,125000.00,22500.00,147500.00),(6,10,16,130000.00,5000.00,125000.00,13125.00,138125.00),(7,11,NULL,130000.00,5000.00,125000.00,0.00,125000.00),(9,13,NULL,320000.00,0.00,320000.00,0.00,320000.00);
+/*!40000 ALTER TABLE `admission_fee_structure_totals` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -383,7 +421,7 @@ CREATE TABLE `admission_fee_type` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -392,7 +430,7 @@ CREATE TABLE `admission_fee_type` (
 
 LOCK TABLES `admission_fee_type` WRITE;
 /*!40000 ALTER TABLE `admission_fee_type` DISABLE KEYS */;
-INSERT INTO `admission_fee_type` VALUES (2,'Admission Confirmation Charge','ADCC',1,'2024-10-05 18:48:22',2,'2024-10-05 18:53:21',2),(3,'Tuition Fee','TUFE',1,'2024-10-05 18:52:32',2,NULL,NULL);
+INSERT INTO `admission_fee_type` VALUES (2,'Admission Confirmation Charge','ADCC',1,'2024-10-05 18:48:22',2,'2024-10-10 13:35:43',2),(4,'Tuition Fee','TUFE',1,'2024-10-10 13:01:45',2,NULL,NULL);
 /*!40000 ALTER TABLE `admission_fee_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -416,7 +454,7 @@ CREATE TABLE `admission_grade_section` (
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -425,7 +463,7 @@ CREATE TABLE `admission_grade_section` (
 
 LOCK TABLES `admission_grade_section` WRITE;
 /*!40000 ALTER TABLE `admission_grade_section` DISABLE KEYS */;
-INSERT INTO `admission_grade_section` VALUES (1,1,1,1,3,5,1,'A',1,'2024-10-07 16:10:38',2),(2,1,1,1,3,5,1,'B',1,'2024-10-07 16:10:55',2),(3,1,1,1,3,5,1,'C',1,'2024-10-07 16:11:02',2),(5,2,1,1,3,5,1,'B',1,'2024-10-07 16:24:08',2),(6,2,1,1,3,5,1,'C',1,'2024-10-07 16:24:14',2),(7,2,1,1,3,5,1,'D',1,'2024-10-07 16:24:16',2),(8,2,1,1,3,5,2,'D',1,'2024-10-07 16:34:08',2),(9,2,1,1,3,5,2,'C',1,'2024-10-07 16:34:26',2),(16,3,1,1,3,7,1,'A',1,'2024-10-07 19:57:30',2),(17,3,1,1,3,7,1,'B',1,'2024-10-07 19:57:30',2),(18,3,1,1,3,7,1,'C',1,'2024-10-07 19:57:30',2),(19,3,1,1,3,7,1,'D',1,'2024-10-07 19:57:30',2),(20,3,1,1,3,7,1,'E',1,'2024-10-07 19:57:30',2),(22,3,1,1,3,7,1,'F',1,'2024-10-07 19:58:11',2),(23,3,1,1,3,7,1,'G',1,'2024-10-07 19:58:11',2),(24,3,1,1,3,7,1,'H',1,'2024-10-07 20:00:06',2),(25,3,1,1,3,7,1,'I',1,'2024-10-07 20:00:06',2);
+INSERT INTO `admission_grade_section` VALUES (1,1,1,1,3,5,1,'A',1,'2024-10-07 16:10:38',2),(2,1,1,1,3,5,1,'B',1,'2024-10-07 16:10:55',2),(3,1,1,1,3,5,1,'C',1,'2024-10-07 16:11:02',2),(5,2,1,1,3,5,1,'B',1,'2024-10-07 16:24:08',2),(6,2,1,1,3,5,1,'C',1,'2024-10-07 16:24:14',2),(9,2,1,1,3,5,2,'C',1,'2024-10-07 16:34:26',2),(16,3,1,1,3,7,1,'A',1,'2024-10-07 19:57:30',2),(17,3,1,1,3,7,1,'B',1,'2024-10-07 19:57:30',2),(18,3,1,1,3,7,1,'C',1,'2024-10-07 19:57:30',2),(19,3,1,1,3,7,1,'D',1,'2024-10-07 19:57:30',2),(20,3,1,1,3,7,1,'E',1,'2024-10-07 19:57:30',2),(22,3,1,1,3,7,1,'F',1,'2024-10-07 19:58:11',2),(23,3,1,1,3,7,1,'G',1,'2024-10-07 19:58:11',2),(36,4,1,1,5,8,2,'A',1,'2024-10-15 10:45:44',2),(37,4,1,1,5,8,2,'B',1,'2024-10-15 10:45:44',2),(38,4,1,1,5,8,2,'C',1,'2024-10-15 10:45:44',2),(39,4,1,2,7,9,1,'A',1,'2024-10-15 10:46:23',2),(40,4,1,2,7,9,1,'B',1,'2024-10-15 10:46:23',2),(41,4,1,2,7,9,1,'C',1,'2024-10-15 10:46:23',2),(42,4,1,2,7,9,1,'D',1,'2024-10-15 10:46:23',2),(43,4,1,2,7,9,1,'E',1,'2024-10-15 10:46:23',2),(44,4,1,2,7,9,1,'F',1,'2024-10-15 10:46:23',2),(45,3,1,2,7,9,2,'A',1,'2024-10-15 10:50:59',2),(47,7,1,1,5,8,1,'A',1,'2024-10-15 11:05:28',2),(50,1,1,2,7,9,1,'A',1,'2024-10-15 11:09:35',2),(51,1,1,2,7,9,1,'B',1,'2024-10-15 11:09:35',2),(52,1,1,2,7,9,1,'C',1,'2024-10-15 11:09:35',2),(53,1,1,2,7,9,1,'D',1,'2024-10-15 11:09:35',2),(54,1,1,2,7,9,1,'E',1,'2024-10-15 11:09:35',2),(55,1,1,2,7,9,1,'F',1,'2024-10-15 11:09:35',2),(56,1,1,2,7,9,1,'G',1,'2024-10-15 11:09:35',2),(57,1,1,2,7,9,1,'H',1,'2024-10-15 11:09:35',2),(58,1,1,2,7,9,1,'I',1,'2024-10-15 11:09:35',2),(59,1,1,2,7,9,1,'J',1,'2024-10-15 11:09:35',2),(60,1,1,2,7,9,1,'K',1,'2024-10-15 11:09:35',2),(61,1,1,2,7,9,1,'L',1,'2024-10-15 11:09:35',2),(62,1,1,2,7,9,1,'M',1,'2024-10-15 11:09:35',2),(63,1,1,2,7,9,1,'N',1,'2024-10-15 11:09:35',2),(64,1,1,2,7,9,1,'O',1,'2024-10-15 11:09:35',2),(65,1,1,2,7,9,1,'P',1,'2024-10-15 11:09:35',2),(66,1,1,2,7,9,1,'Q',1,'2024-10-15 11:09:35',2),(67,1,1,2,7,9,1,'R',1,'2024-10-15 11:09:35',2),(68,1,1,2,7,9,1,'S',1,'2024-10-15 11:09:35',2),(70,7,1,2,7,9,2,'A',1,'2024-10-15 12:16:29',2),(71,7,1,2,7,9,2,'B',1,'2024-10-15 12:16:29',2),(72,7,1,2,7,9,2,'C',1,'2024-10-15 12:16:29',2),(73,4,1,1,5,8,1,'A',1,'2024-10-15 12:17:29',2),(74,4,1,1,5,8,1,'B',1,'2024-10-15 12:17:29',2);
 /*!40000 ALTER TABLE `admission_grade_section` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -443,7 +481,7 @@ CREATE TABLE `admission_student_document` (
   `created_on` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -452,7 +490,7 @@ CREATE TABLE `admission_student_document` (
 
 LOCK TABLES `admission_student_document` WRITE;
 /*!40000 ALTER TABLE `admission_student_document` DISABLE KEYS */;
-INSERT INTO `admission_student_document` VALUES (2,'Address Proof (Aaadhaar/Passport)',1,'2024-10-07 11:06:00',2),(4,'Copy of Mark sheet of Class X Board Examination attested by a gazetted officer',1,'2024-10-07 11:07:30',2),(5,'Transfer Certificate from the last school attended',1,'2024-10-07 11:08:30',2),(6,'Proof of Date of Birth attested by a gazetted officer',1,'2024-10-07 11:08:39',2),(7,'Color passport size photograph with name of the Learner and the date of photograph taken imprinted',1,'2024-10-07 11:08:55',2);
+INSERT INTO `admission_student_document` VALUES (4,'Copy of Mark sheet of Class X Board Examination attested by a gazetted officer',1,'2024-10-07 11:07:30',2),(5,'Transfer Certificate from the last school attended',1,'2024-10-07 11:08:30',2),(6,'Proof of Date of Birth attested by a gazetted officer',1,'2024-10-07 11:08:39',2),(7,'Color passport size photograph with name of the Learner and the date of photograph taken imprinted',1,'2024-10-07 11:08:55',2),(9,'Address Proof (Aadhaar/Passport)',1,'2024-10-10 18:30:02',2);
 /*!40000 ALTER TABLE `admission_student_document` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -477,7 +515,7 @@ CREATE TABLE `admission_subject_group` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -486,17 +524,18 @@ CREATE TABLE `admission_subject_group` (
 
 LOCK TABLES `admission_subject_group` WRITE;
 /*!40000 ALTER TABLE `admission_subject_group` DISABLE KEYS */;
+INSERT INTO `admission_subject_group` VALUES (1,1,3,4,'Subject Group - 1',2,3,1,'2024-10-08 11:55:02',2,'2024-10-15 20:27:22',2),(4,1,3,5,'Subject Group-2',3,4,1,'2024-10-15 13:53:21',2,'2024-10-15 19:46:30',2),(5,1,3,4,'Try-2',1,3,1,'2024-10-15 13:57:02',2,'2024-10-15 19:53:46',2),(6,1,5,8,'Try-1',1,1,1,'2024-10-15 13:59:55',2,NULL,NULL),(8,1,3,4,'Try-4',3,3,1,'2024-10-15 14:05:57',2,NULL,NULL);
 /*!40000 ALTER TABLE `admission_subject_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `admission_subject_group_alocation`
+-- Table structure for table `admission_subject_group_allocation`
 --
 
-DROP TABLE IF EXISTS `admission_subject_group_alocation`;
+DROP TABLE IF EXISTS `admission_subject_group_allocation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `admission_subject_group_alocation` (
+CREATE TABLE `admission_subject_group_allocation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subject_group_id` int(11) NOT NULL,
   `subject_id` int(11) NOT NULL,
@@ -506,16 +545,17 @@ CREATE TABLE `admission_subject_group_alocation` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `admission_subject_group_alocation`
+-- Dumping data for table `admission_subject_group_allocation`
 --
 
-LOCK TABLES `admission_subject_group_alocation` WRITE;
-/*!40000 ALTER TABLE `admission_subject_group_alocation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `admission_subject_group_alocation` ENABLE KEYS */;
+LOCK TABLES `admission_subject_group_allocation` WRITE;
+/*!40000 ALTER TABLE `admission_subject_group_allocation` DISABLE KEYS */;
+INSERT INTO `admission_subject_group_allocation` VALUES (1,1,3,1,'2024-10-08 11:55:02',2,NULL,NULL),(2,1,4,1,'2024-10-08 11:55:02',2,NULL,NULL),(3,1,5,1,'2024-10-08 11:55:02',2,NULL,NULL),(10,4,7,1,'2024-10-15 13:53:21',2,NULL,NULL),(12,4,9,1,'2024-10-15 13:53:21',2,NULL,NULL),(13,4,8,1,'2024-10-15 13:53:21',2,NULL,NULL),(14,5,3,1,'2024-10-15 13:57:02',2,NULL,NULL),(15,5,5,1,'2024-10-15 13:57:02',2,NULL,NULL),(16,5,4,1,'2024-10-15 13:57:02',2,NULL,NULL),(17,6,6,1,'2024-10-15 13:59:55',2,NULL,NULL),(20,8,3,1,'2024-10-15 14:05:57',2,NULL,NULL),(21,8,5,1,'2024-10-15 14:05:57',2,NULL,NULL),(22,8,4,1,'2024-10-15 14:05:57',2,NULL,NULL),(23,4,10,1,'2024-10-15 19:02:42',2,NULL,NULL);
+/*!40000 ALTER TABLE `admission_subject_group_allocation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -536,7 +576,7 @@ CREATE TABLE `admission_tax_rate` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -545,7 +585,7 @@ CREATE TABLE `admission_tax_rate` (
 
 LOCK TABLES `admission_tax_rate` WRITE;
 /*!40000 ALTER TABLE `admission_tax_rate` DISABLE KEYS */;
-INSERT INTO `admission_tax_rate` VALUES (2,2,1,12.00,1,'2024-10-05 15:27:45',2,'2024-10-05 16:02:30',2),(3,2,1,18.00,1,'2024-10-05 15:28:25',2,'2024-10-05 16:05:15',2);
+INSERT INTO `admission_tax_rate` VALUES (3,2,1,18.00,1,'2024-10-05 15:28:25',2,'2024-10-05 16:05:15',2),(4,2,1,10.50,1,'2024-10-10 17:27:47',2,NULL,NULL),(5,4,1,18.00,1,'2024-10-10 17:46:51',2,NULL,NULL);
 /*!40000 ALTER TABLE `admission_tax_rate` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -565,7 +605,7 @@ CREATE TABLE `admission_tax_type` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -574,8 +614,34 @@ CREATE TABLE `admission_tax_type` (
 
 LOCK TABLES `admission_tax_type` WRITE;
 /*!40000 ALTER TABLE `admission_tax_type` DISABLE KEYS */;
-INSERT INTO `admission_tax_type` VALUES (2,'GST',1,'2024-10-05 11:06:10',2,NULL,NULL);
+INSERT INTO `admission_tax_type` VALUES (2,'GST',1,'2024-10-05 11:06:10',2,NULL,NULL),(4,'VAT1',1,'2024-10-10 12:06:23',2,'2024-10-10 12:20:38',2);
 /*!40000 ALTER TABLE `admission_tax_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `app_base`
+--
+
+DROP TABLE IF EXISTS `app_base`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `app_base` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `module_id` int(11) NOT NULL,
+  `api_url` text NOT NULL,
+  `ui_url` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `app_base`
+--
+
+LOCK TABLES `app_base` WRITE;
+/*!40000 ALTER TABLE `app_base` DISABLE KEYS */;
+INSERT INTO `app_base` VALUES (1,3,'http://localhost:3000/api/','http://localhost:4200');
+/*!40000 ALTER TABLE `app_base` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1182,7 +1248,7 @@ CREATE TABLE `module` (
 
 LOCK TABLES `module` WRITE;
 /*!40000 ALTER TABLE `module` DISABLE KEYS */;
-INSERT INTO `module` VALUES (1,'LMS','http://localhost:4203/#/dashboard/default'),(2,'E-Resource','http://localhost:4202/#/dashboard/default'),(3,'Admission','http://localhost:4201/#/dashboard/default');
+INSERT INTO `module` VALUES (1,'LMS','http://localhost:4203/'),(2,'E-Resource','http://localhost:4202/'),(3,'Admission','http://localhost:4201/');
 /*!40000 ALTER TABLE `module` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1602,7 +1668,7 @@ CREATE TABLE `subject` (
   `updated_on` datetime DEFAULT NULL,
   `updated_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1611,7 +1677,7 @@ CREATE TABLE `subject` (
 
 LOCK TABLES `subject` WRITE;
 /*!40000 ALTER TABLE `subject` DISABLE KEYS */;
-INSERT INTO `subject` VALUES (1,1,2,6,'Hindi',1,NULL,260,35,1,0,0,1,'2024-09-19 12:52:52',13,NULL,NULL),(3,1,3,4,'English',1,NULL,260,35,2,1,1,1,'2024-09-19 17:09:45',13,NULL,NULL),(4,1,3,4,'Physics',1,NULL,260,35,1,1,0,1,'2024-09-19 17:31:36',13,NULL,NULL),(5,1,3,4,'Maths',1,NULL,260,35,1,0,1,1,'2024-09-23 11:53:14',13,NULL,NULL),(6,1,5,8,'Computer',1,NULL,250,40,1,1,1,1,'2024-10-03 12:34:25',13,'2024-10-03 12:51:52',13);
+INSERT INTO `subject` VALUES (1,1,2,6,'Hindi',1,NULL,260,35,1,0,0,1,'2024-09-19 12:52:52',13,NULL,NULL),(3,1,3,4,'English',1,NULL,260,35,2,1,1,1,'2024-09-19 17:09:45',13,NULL,NULL),(4,1,3,4,'Physics',1,NULL,260,35,1,1,0,1,'2024-09-19 17:31:36',13,NULL,NULL),(5,1,3,4,'Maths',1,NULL,260,35,1,0,1,1,'2024-09-23 11:53:14',13,NULL,NULL),(6,1,5,8,'Computer',1,NULL,250,40,1,1,1,1,'2024-10-03 12:34:25',13,'2024-10-03 12:51:52',13),(7,1,3,5,'Computer',1,NULL,200,40,1,1,1,1,'2024-10-08 19:10:29',13,NULL,NULL),(8,1,3,5,'Science',1,NULL,200,40,1,1,1,1,'2024-10-08 19:10:39',13,NULL,NULL),(9,1,3,5,'Maths',1,NULL,200,40,1,0,1,1,'2024-10-08 19:10:52',13,NULL,NULL),(10,1,3,5,'Enviormental Studies',1,NULL,150,30,1,1,1,1,'2024-10-08 19:12:07',13,NULL,NULL);
 /*!40000 ALTER TABLE `subject` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1876,7 +1942,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'HR','Admin','pkale711@gmail.com','9993443711','Male',1,NULL,'5816EE12CB8BD00C6D28A7B640D1D48E',NULL,1,1,NULL,'2024-05-20 12:26:39',0,'2024-08-22 14:24:29',1,NULL,NULL,'2024-05-20 12:26:39',0,NULL,NULL,'27537b39-1676-11ef-866d-54ee753f9eea'),(2,'Admin','General','admin.general@proseedu.com','1234567890','Male',3,1,'5816EE12CB8BD00C6D28A7B640D1D48E','81c5bfd0-1739-11ef-9262-bb5f70f380f8_Pic.png',1,1,'VLFqLBow8rI4zNKwmFpeKDLgYI8oRvxI1TcCvgu3MDu6yGKTUj06xKnu','2024-05-21 11:45:22',1,'2024-08-22 14:22:36',1,NULL,NULL,'2024-05-27 16:16:13',1,'2024-05-21 15:16:00',1,'81c5bfd0-1739-11ef-9262-bb5f70f380f8'),(9,'Kamlesh','Singh','kamlesh.1223@gmail.com','7773443701','Male',5,NULL,'8A14FF7F88739EB67A837FB10BD35933',NULL,1,1,NULL,'2024-05-21 12:02:56',1,'2024-07-16 14:57:37',1,NULL,NULL,'2024-05-23 16:06:20',1,NULL,NULL,'f5c03b20-173b-11ef-86f5-1774f3e8216f'),(10,'Umesh','Yadav','umesh.yadav@gmail.com','7773443639','Male',5,NULL,'FD88B4A891D0ACC524777DEC2A6C1D05','a9177500-173f-11ef-86f5-1774f3e8216f_Pic.png',0,1,NULL,'2024-05-21 12:29:25',1,'2024-07-16 14:57:28',1,'2024-07-16 14:58:53',1,'2024-05-23 16:07:16',1,NULL,NULL,'a9177500-173f-11ef-86f5-1774f3e8216f'),(12,'Rajesh',NULL,'pkale71@yahoo.com','9993443712','Male',5,NULL,'FD88B4A891D0ACC524777DEC2A6C1D05',NULL,1,1,'JSWSFKFI13mtTME0OZo3RkteiGfGuBUxGjOnhXpryycG4ivwTe2U0vwP','2024-06-12 14:04:50',1,'2024-07-16 14:58:32',1,NULL,NULL,'2024-07-16 16:12:12',1,NULL,NULL,'a229d270-2896-11ef-b5f4-6fdbbd826909'),(13,'Rakesh','Jaiswal','pkale111828@gmail.com','9993445709','Male',2,NULL,'650EB8F04280030788ED749DD42DB611',NULL,1,1,'YIp8f0aRjZmZfoUndIIqRosZKqCr3EWU9ePSvEX8Mb4IgvYiWeMWSuqT','2024-07-16 13:44:42',1,'2024-08-22 14:24:01',1,NULL,NULL,'2024-07-16 16:40:26',1,NULL,NULL,'749b2eb0-434b-11ef-8a09-53c95d2ff855'),(14,'Santosh',NULL,'pkale71@gmail.com','9993443707','Male',4,3,'5816EE12CB8BD00C6D28A7B640D1D48E','767d4270-7980-11ef-8a40-d72077a38398_Pic.jpg',1,1,'f2v5OXkbuBp3UvpLboFYLJQj14qktgcft8iXYDeHWq4mNnZdJmPoKKeA','2024-09-23 13:20:12',1,NULL,NULL,NULL,NULL,'2024-09-23 14:16:24',1,NULL,NULL,'767d4270-7980-11ef-8a40-d72077a38398');
+INSERT INTO `user` VALUES (1,'HR','Admin','pkale711@gmail.com','9993443711','Male',1,NULL,'5816EE12CB8BD00C6D28A7B640D1D48E',NULL,1,1,NULL,'2024-05-20 12:26:39',0,'2024-08-22 14:24:29',1,NULL,NULL,'2024-05-20 12:26:39',0,NULL,NULL,'27537b39-1676-11ef-866d-54ee753f9eea'),(2,'Admin','General','admin.general@proseedu.com','1234567890','Male',3,1,'5816EE12CB8BD00C6D28A7B640D1D48E','81c5bfd0-1739-11ef-9262-bb5f70f380f8_Pic.png',1,1,NULL,'2024-05-21 11:45:22',1,'2024-08-22 14:22:36',1,NULL,NULL,'2024-05-27 16:16:13',1,'2024-05-21 15:16:00',1,'81c5bfd0-1739-11ef-9262-bb5f70f380f8'),(9,'Kamlesh','Singh','kamlesh.1223@gmail.com','7773443701','Male',5,NULL,'5816EE12CB8BD00C6D28A7B640D1D48E',NULL,1,1,NULL,'2024-05-21 12:02:56',1,'2024-07-16 14:57:37',1,NULL,NULL,'2024-05-23 16:06:20',1,NULL,NULL,'f5c03b20-173b-11ef-86f5-1774f3e8216f'),(10,'Umesh','Yadav','umesh.yadav@gmail.com','7773443639','Male',5,NULL,'5816EE12CB8BD00C6D28A7B640D1D48E','a9177500-173f-11ef-86f5-1774f3e8216f_Pic.png',0,1,NULL,'2024-05-21 12:29:25',1,'2024-07-16 14:57:28',1,'2024-07-16 14:58:53',1,'2024-05-23 16:07:16',1,NULL,NULL,'a9177500-173f-11ef-86f5-1774f3e8216f'),(12,'Rajesh',NULL,'pkale71@yahoo.com','9993443712','Male',5,NULL,'5816EE12CB8BD00C6D28A7B640D1D48E',NULL,1,1,NULL,'2024-06-12 14:04:50',1,'2024-07-16 14:58:32',1,NULL,NULL,'2024-07-16 16:12:12',1,NULL,NULL,'a229d270-2896-11ef-b5f4-6fdbbd826909'),(13,'Rakesh','Jaiswal','pkale111828@gmail.com','9993445709','Male',2,NULL,'5816EE12CB8BD00C6D28A7B640D1D48E',NULL,1,1,'bNp7QAPAqkGKCpVgu0hnVGWOTiMkfHDDIC5iMXxyjbkUWqFb3WpBGXTh','2024-07-16 13:44:42',1,'2024-08-22 14:24:01',1,NULL,NULL,'2024-07-16 16:40:26',1,NULL,NULL,'749b2eb0-434b-11ef-8a09-53c95d2ff855'),(14,'Santosh',NULL,'pkale71@gmail.com','9993443707','Male',4,3,'5816EE12CB8BD00C6D28A7B640D1D48E','767d4270-7980-11ef-8a40-d72077a38398_Pic.jpg',1,1,'f2v5OXkbuBp3UvpLboFYLJQj14qktgcft8iXYDeHWq4mNnZdJmPoKKeA','2024-09-23 13:20:12',1,NULL,NULL,NULL,NULL,'2024-09-23 14:16:24',1,NULL,NULL,'767d4270-7980-11ef-8a40-d72077a38398');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1945,7 +2011,7 @@ CREATE TABLE `user_login_logout_history` (
   `logout_on` datetime DEFAULT NULL,
   `logout_as` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1954,7 +2020,7 @@ CREATE TABLE `user_login_logout_history` (
 
 LOCK TABLES `user_login_logout_history` WRITE;
 /*!40000 ALTER TABLE `user_login_logout_history` DISABLE KEYS */;
-INSERT INTO `user_login_logout_history` VALUES (1,1,'JoAtervlxY11izO3SAConmT8FxYAY9EWBcZjN1Wx2VNi0QJVSF0ekWMu','2024-05-20 13:56:22','2024-05-20 13:57:02','Forced'),(2,1,'xTYjn84jotRq8eBQyDkezCQSDndpqTfeq7AxeFmbjf42zGIKVaIm1UuZ','2024-05-20 13:57:02','2024-05-20 14:13:55','Forced'),(3,1,'9wjPmFyiwO63BnQTbrXY6h9P7AgdcqdLiv1ywbEY6IU6eCH91J55rbzj','2024-05-20 14:13:55','2024-05-20 15:57:48','Normal'),(4,1,'9D6GCsQy0YbjHAMgz7lMlYztVAmlR8XNw14hGLzydxTPnjrwTDrEf3nl','2024-05-20 16:00:22','2024-05-20 16:49:40',NULL),(5,1,'W8RFlhGbvXFd9TJBZf3IJSmev9PSXyDqL6LFWfrbCGpkHSBfyZ42CzQt','2024-05-20 16:55:07','2024-05-21 10:26:20','Forced'),(6,1,'KFxeLwW9rdwKytGKP5q9TKbdY6zsZFlwKj5B89WDscFb7KGAkjGdmJ2j','2024-05-21 10:26:20','2024-05-21 14:07:23','Forced'),(7,1,'cSESWUmzcLs9mbINe8AmJI2aYDoqsBLls7QoHuKbbublPfc8dTcNrF2o','2024-05-21 14:07:23','2024-05-23 16:08:16','Forced'),(8,9,'emEmQKJb1I68gtxsuRPaN88XlXhttFpYl8guJx8O7Lffxfz1ZCWhKh6z','2024-05-23 16:06:32','2024-05-27 15:14:35','Forced'),(9,1,'NlqnIGvdiJpjKun3mDI8vyW44K7U5IaaRPHSR7nUGyy1A6s3rsTs42yI','2024-05-23 16:08:16','2024-05-23 16:11:53','Forced'),(10,1,'Dif9dTQxKqox524Sn8kPFljAW1gEItsdIp78pjdnyNd2znRfv8K8HoXr','2024-05-23 16:11:53','2024-05-23 16:15:16','Forced'),(11,1,'0a1Q4ocrAqXVC54YNjO7TmLmgViTVGpjXWIeuuCiPijZCkZN1ql8MlaA','2024-05-23 16:15:16','2024-05-23 16:15:29','Forced'),(12,1,'FhQEQ3Yk3Jmo1Bbdx8Q81kvtmrciTvWJgBhs02VOiZVBg66ozrP2dJz5','2024-05-23 16:15:29','2024-05-23 16:16:31','Forced'),(13,1,'dQlnGFgceQDZHk665sQSpBBXVVyfByi1oWbv75CPq9bOKHiwVfGl3xfM','2024-05-23 16:16:31','2024-05-23 16:18:25','Forced'),(14,1,'ZgzwIJinKj0Nf1O3Qu5xxM2QDkZCjmwyzTbpfXdvhcA5cpuu2846IJeQ','2024-05-23 16:18:25','2024-05-23 16:19:35','Forced'),(15,1,'58hIiRLWIqD9MDHIhQokbzvSoULTWlYV8WlXKKC9NFNinWgLrenAeDCe','2024-05-23 16:19:35','2024-05-23 16:20:38','Forced'),(16,1,'R8cfTsIAnugwMO5pPHBY4rnri6V8PyXwXpHg8y7l6b19AuO7qrl577VK','2024-05-23 16:20:38','2024-05-23 16:22:56','Forced'),(17,1,'h9VY33SciRFNfFiKEPUuXk6YpIKCrnXkThyvKkA4FD9pu7orX4zTth5E','2024-05-23 16:22:56','2024-05-24 15:48:23','Forced'),(18,1,'codd3jniQvEyyY9Wce8ek5cLoyP0Or57uX0lSxwWPjgJoxtzy7N1ZVL5','2024-05-24 15:48:23','2024-05-24 15:49:00','Forced'),(19,1,'VtbsxzRJ6zDbLT3fbtA6NPoEVngz8RGKX83Xqu3p3Ctu5IcjqOLlBtmJ','2024-05-24 15:49:00','2024-05-24 17:22:36','Forced'),(20,1,'jmIX647AzAErVwMfU5Z4Jv1AZ4QxZOystTjlmlkOP2OLaberQnm4CN2i','2024-05-24 17:22:36','2024-05-24 17:23:25','Forced'),(21,1,'sgdn0OGUU6KzIEn3tUrfiPeDXVM4biANTuFgkklXySQm9fvVBOYM9qyV','2024-05-24 17:23:25','2024-05-24 17:24:18','Forced'),(22,1,'howoRHbD9Dt0Zk4yDhwdBATx8bgreSDw1jjOZsdwu7oloKA2fO6pLflN','2024-05-24 17:24:18','2024-05-24 17:24:38','Forced'),(23,1,'s6RRx7n7TJfRA2Fc8EloSRWORxZj8KBtA1wp69rIRqrIsyW4tImyMcL7','2024-05-24 17:24:38','2024-05-24 17:25:10','Forced'),(24,1,'uGs73n8s2wRfvfdm6yujdZ1aNrpPloqGOnX7n3O0Yo4WgCDhfpgYFx6Z','2024-05-24 17:25:10','2024-05-24 17:25:49','Forced'),(25,1,'vhEMY2V8fO7S0fN4Q1VduvAyUqrb7HzF4KxQGXpuskPRFoBDyHLV10vj','2024-05-24 17:25:49','2024-05-24 18:06:35','Forced'),(26,1,'rbvC4y6ho1ukyFTBog8v3aEXrJJ3M8eSf7RdrPWCKbnryaqk46n49qHb','2024-05-24 18:06:35','2024-05-24 18:08:07','Forced'),(27,1,'IhRxRIWNHAPCyz3zVCEk0yf467CP7Ks5oS4nMvoIKYzKV1yMedQFjeON','2024-05-24 18:08:07','2024-05-24 18:08:29','Forced'),(28,1,'wOzvqzyEbJRFwhDUjRQS1qcQZR0BXzfII0nnXsOEcG9TxbVBmZQdtxiE','2024-05-24 18:08:29','2024-05-24 18:08:34','Forced'),(29,1,'gvM2t45ElQWawDmE7v6gA91GtDGHWyhqtACRfoqWLc1KBbtiA3Uo2aCl','2024-05-24 18:08:34','2024-05-24 18:08:51','Forced'),(30,1,'74XfrpFohyHLwh9brDVJ0GB7C0GLmHSdFdbET1ykdr0VtbH35V9QxBOI','2024-05-24 18:08:51','2024-05-24 18:09:26','Forced'),(31,1,'ScJY6V9jsZSt8hLlWPyliI96wuaHHLNtbdtBc8dz7ywRN2Rp4JZmYsjK','2024-05-24 18:09:26','2024-05-24 18:09:36','Forced'),(32,1,'gMbqdLiCdq9QN7lCf7LRaNkGVKLVcEVZA1n0MbdoNnOwbBLUiDSCCF2J','2024-05-24 18:09:36','2024-05-24 18:10:32','Forced'),(33,1,'XtJKZsxlfNpEpChEJ5aPRNYNipUQJKq5SzpAEMSi6OgE6blbz1vm7Acu','2024-05-24 18:10:32','2024-05-24 18:10:43','Forced'),(34,1,'T7gT7ZyIlfrSNmZ4usBGsgK4A7C4wZiXXrqdDzQkeUtm4QuIzb6uYXVb','2024-05-24 18:10:43','2024-05-24 18:13:02','Forced'),(35,1,'BzZq7QXRSC61PbEbkvJkHgrpmMPWW79eKEHOco3Kh8DnKsBoyjEFSp1Y','2024-05-24 18:13:02','2024-05-24 18:15:07','Forced'),(36,1,'LTpWCVdySfHAt45A2Y6VBIS6XRL1O3DNaHAJDYMlwrslL921g5mommbe','2024-05-24 18:15:07','2024-05-24 18:16:45','Forced'),(37,1,'7CnrgOFN3oiPbW5lr9mQUs4Q6qBO3JHUA3RdiYdfcLKHsM5n0UPnUtHl','2024-05-24 18:16:45','2024-05-27 14:47:18','Forced'),(38,1,'LAofL5xQN5tYSQyp9dm61GwvpabDkAJ2pYyyZHKYT3qfkEyI5LtHvpdE','2024-05-27 14:47:18','2024-05-27 14:50:20','Forced'),(39,1,'D3ScStWpRzWjeBcdp5UxHicVAMTKucw3y7hxHan11RYOHZoJyQvM8kHl','2024-05-27 14:50:20','2024-05-27 14:51:31','Forced'),(40,1,'15ljuw9Y35yJb5f5szTUjSuyAq32CH6boPLSOQx6fX0zxGnQjAR5IYyb','2024-05-27 14:51:31','2024-05-27 14:51:51','Forced'),(41,1,'czrneWKpX1eHw61pcwuKHglKePk2AQjhDQmB031EenJTLFZlJoVSe47V','2024-05-27 14:51:51','2024-05-27 14:58:15','Forced'),(42,1,'zt4acBekoscovfgDlm4OW4QkVl69ilsVfd2wsqQ4AXSF0XO5gR2XSnrr','2024-05-27 14:58:15','2024-05-27 14:59:36','Forced'),(43,1,'2DqLt5ExeOrGV9DNFeX8PzjQD6RYEUjvDbBTdsr7YMF5fTKuMTVBfZ9a','2024-05-27 14:59:36','2024-05-27 14:59:44','Forced'),(44,1,'45Q7ONITVkF4LkM0QWetloYgg3Xru7qfjyK6mZMfXJHcAdPPP5zHZ6H5','2024-05-27 14:59:44','2024-05-27 14:59:55','Forced'),(45,1,'66noUms9czjJgcgkm2NwozCIjDu8sqTHRtUp9fKj941Ih7e6v8C0EONp','2024-05-27 14:59:55','2024-05-27 15:01:13','Forced'),(46,1,'S4XlMvnw6XV9RK3BFtIt73Uo7C1PpLvwFsUAr58DGNyHzR4vsL83NpIE','2024-05-27 15:01:13','2024-05-27 15:01:50','Forced'),(47,1,'419SDulLVyC8fAQmSQPprDhuzcCjaUkM3cq3xAsTqBzCM5KIZWUD1c8f','2024-05-27 15:01:50','2024-05-27 15:02:51','Forced'),(48,1,'D0WvYV8gebjIcczLvtI7f7Z1MAmZqShglGSNfvZQpb0uvbCzRcoIUMQR','2024-05-27 15:02:51','2024-05-27 15:12:45','Forced'),(49,1,'tA0offbfyW3HqjTpqxfbr16lCYZ6pDpr7TDTIaNSW4voLIMvpUiGprm2','2024-05-27 15:12:45','2024-05-27 15:26:14','Forced'),(50,9,'sxkx7gwLlyULEi13bj2CIq09SSFtsNgm9b7lRnfsk75dRo42VsSGkbR1','2024-05-27 15:14:35','2024-05-27 15:27:19','Forced'),(51,1,'Fa8T5zfvAQYxejmWLqee9PQkms6KEBkqJavnCeSKxDgiZzhGEyLS6CKC','2024-05-27 15:26:14','2024-05-27 15:26:20','Normal'),(52,9,'aPp3AXiA86gNbD2VkvDs2Kc34G53ZQ2gY1T4H2xxcp7OytoWggN7EozM','2024-05-27 15:27:19','2024-05-27 15:35:07','Normal'),(53,9,'neUXdIJdP4U0oTpX3Uyb8LkPJjPKufLofWzaXqhiBU2hhVpY8QzsndF2','2024-05-27 15:35:10','2024-05-27 15:38:24','Forced'),(54,9,'zqi5Kz7CrVEhv9juksItbPAEdGq1C1EgehyXPgIovpPUMTRVGiQpcIrW','2024-05-27 15:38:24','2024-05-27 15:39:58','Forced'),(55,9,'LejDkZYevyhkPxJWJ6rYvTNL136yKF1UDQDA3r5RJ3bQdkBESjtm3o6W','2024-05-27 15:39:58','2024-05-27 15:43:50','Forced'),(56,9,'Pg2Iz9I6iglDxRIMyVNQjj5eTNzjOJ1GC1INuZ7cfueiFO9GcMcBRNwN','2024-05-27 15:43:50','2024-05-27 15:44:48','Forced'),(57,9,'KphDBBYPzc60XdiY1862bZkMtCXx1JS96xAVvitFCOdioNh3Zdtrr9Gu','2024-05-27 15:44:48','2024-05-27 15:45:43','Forced'),(58,9,'GCmwjdHvJ1b4JVK66uWmRd1eSF2BuHsEAl1IBhAi2JREEK6XiAIPLwGS','2024-05-27 15:45:43','2024-05-27 15:46:23','Forced'),(59,9,'U2dB4xwtyG9vVirQL9HkZU47cDs8dChuPAitTMJcP4R4BvlgKP2sgRgs','2024-05-27 15:46:23','2024-05-27 15:48:23','Forced'),(60,9,'8hCzTJXOcIbR6pfSJVqTwrS6V5E4iy3U1BXvYxi2Zg4Bxi2ooBgmVibC','2024-05-27 15:48:23','2024-05-27 16:13:21','Normal'),(61,4,'2QVu8ivqSnEIxlw8F1ERkONvBnhgTLHUE1p2TqcEAsBsaGvjxbHjexpg','2024-05-27 16:17:00','2024-05-27 16:17:37','Forced'),(62,4,'jVLVcKuSWHrQd4EvcEAc1BIqgltLPgCAwjwS38ZGNLYyvKdnv4I8Ssb6','2024-05-27 16:17:37','2024-05-27 16:18:47','Forced'),(63,4,'Erqis4fUQBuOYYH8MEfZ5BGi6hnrY39QOY9tqEkLt4Z5RdiGCf6URG3F','2024-05-27 16:18:47','2024-05-27 16:19:01','Forced'),(64,4,'LdTrweKSBaZR83oMrYfBmHfrt4QEqY7NBszlNDfZjo4EII5lh6nAmxHY','2024-05-27 16:19:01','2024-06-27 16:26:13','Forced'),(65,4,'1EAM9KWWWVTYGcxGrylmTYndHbGdXRgLCTHHwVZfIPdtl9G2AHO3tgh7','2024-06-27 16:26:13','2024-06-27 16:36:04','Forced'),(66,4,'KCnU2tEUCpSUAV5s2mEps8blUxpQTs7ZdteJFsqd5NzIzorrpY4s8Vuw','2024-06-27 16:36:04','2024-08-13 19:35:48','Forced'),(67,1,'Bgb3Gjx9uyatzAvphpvwzpWswfAuOWA1TyjUOqlZOLmOD7WX3u0pu3ly','2024-06-27 16:36:24','2024-06-27 16:43:21','Forced'),(68,1,'FREHt5n5KuYdqPxrCo9vIdqwVsXw2uRT6chBe0ToZWxCWFjGzlCGL4BJ','2024-06-27 16:43:21','2024-07-16 11:42:49','Forced'),(69,1,'ZBFqsSwqSoCMpI4TuBydHyTGqAcuOYwqlYRXVuNqfdbQAK4BM55SwNaK','2024-07-16 11:42:49','2024-07-16 11:43:08','Normal'),(70,1,'TUMUkFywgsq7lANjYdcXDsXscsZgM4NOqmRmLzsrPd9FH3aEilAfHW6y','2024-07-16 11:43:11','2024-07-16 16:39:51','Normal'),(71,1,'kjzhOyTJnGPm1uZ7eHsCheo1BGlS78XRxf7QsF9X9fUHDOfrY2FQeV1o','2024-07-16 16:40:05','2024-07-16 16:40:32','Normal'),(72,13,'i9xw7tR2uFVcNLqzvLfuM3PaDJlDLAePjM7m5er9l97EsQ0I5Og5wUXh','2024-07-16 16:40:38','2024-07-16 16:40:51','Normal'),(73,1,'HOEndIFL2Qs2elAOfhSP8pnEAVHnc3wUKfvUlM8cPvX8vQ5tERrz2FM8','2024-07-16 16:46:48','2024-07-16 17:08:49','Normal'),(74,13,'8tcNpPZnr6Jo6mluz2Idqdmd7RV9UpmvI8GN1sQ3Ku787yIGSV3m6rzj','2024-07-16 17:08:53','2024-07-17 10:31:08','Forced'),(75,13,'oMhragQKfTJphSXFYTxkO6QxEIygGzT9SSHmvmcyj7BkIr02hxKil441','2024-07-17 10:31:08','2024-07-18 10:13:37','Forced'),(76,13,'w63fKyAPSWFul3HwQHmTuEzAp6SE1rpoYc1nFJ8pUyrjWosFCIRCqOxu','2024-07-18 10:13:37','2024-07-23 10:41:31','Forced'),(77,13,'a1oYnh2Ee0lbcNQrxcMfpydR8kXR7JgrrZK7PM9NNiUz0DHqjSY1W1yY','2024-07-23 10:41:31','2024-07-24 10:19:21','Forced'),(78,13,'1eBZpEpkGu11b0IofyHFvWl9zQWqulZOsgtKMSLnOwMLD5TwoIBb2lSw','2024-07-24 10:19:21','2024-09-19 12:43:11','Forced'),(79,1,'7TG5dr6El9P6i2ukoBcx2qc7rzmILW4fFnAsiEGkxGVmpeQvusUCsmpQ','2024-08-13 19:33:27','2024-08-13 19:35:27','Normal'),(80,4,'Z7DWZfky7MKknFotyr4pbBb7uYe2LLzLLtNhbcjpN9eE3cuw8YEE7zQc','2024-08-13 19:35:48','2024-08-14 20:09:29','Forced'),(81,4,'dxeYCrt5RRTcbiOWDGi0U3kFNt4VemJlFhU3yCk1DTBumnETNoeRlsDU','2024-08-14 20:09:29','2024-08-14 20:36:48','Forced'),(82,1,'grSE3KjSIMDyxID1Na4LTmcYpE7SJxObvoGoBvJ0QIpw2h4rBukqhoFX','2024-08-14 20:35:21','2024-08-14 20:36:34','Normal'),(83,4,'W4DOBwATifoxcqbEs7rihhuBm8md84fRpHocqHvSMV1qof4zXKzvswqE','2024-08-14 20:36:48','2024-08-16 07:48:56','Forced'),(84,4,'g9tWTdFC5JSN66OgWKVvcCwVWF4g6I4GAkm7jzI5RcDG9IgAcMA8MZ3b','2024-08-16 07:48:56','2024-08-16 07:52:45','Forced'),(85,4,'02ymL8vtKyxWXmsHkGGDKJLTme4MbVEncnKCApvbfgwRo6svvS2yvWEr','2024-08-16 07:52:45',NULL,NULL),(86,1,'IqqGQDou33G6YmYO58XB8sz6h4Rrz1PoIyAUBFQE83bniTzp6O1FbPNR','2024-08-22 14:22:11','2024-09-19 12:27:11','Forced'),(87,1,'VpeNHSOMSSE9GF5iyFxkK5PdcgFrTBhYq3UOZe0jdTBxeVxjQNN23xd0','2024-09-19 12:27:11','2024-09-19 12:42:32','Normal'),(88,13,'38Sq9BH6XdsFYt7ciWAog9Xh3BRsWZNdGKdErtQBI7tOcTZWUXjQSAVD','2024-09-19 12:43:11','2024-09-19 16:52:44','Forced'),(89,13,'TMngMGXwx2kAvZgY2LPAds9HHNxT3OLXFs50gWh8J5pK5c6OA731ios6','2024-09-19 16:52:44','2024-09-19 17:13:36','Normal'),(90,12,'Fu4T1RbU97HEKB1C3x1sVlOI7xtTFlXNKliDvx3WEzDK1FKnY6wTxb2I','2024-09-19 17:14:21','2024-09-19 17:23:33','Normal'),(91,13,'ShJjJPgJvGFnRVbm3Tcx1lifVca6LXi6GZcNRsUNRApZTXxLSHWQ7UDV','2024-09-19 17:23:39','2024-09-19 17:28:16','Normal'),(92,12,'8wun6atHd8oSWeUOyNE9DxHHB4ZHHWY1zUWRKM1GucUbZdaBBxxq9Ql6','2024-09-19 17:28:24','2024-09-19 17:30:25','Normal'),(93,13,'br7Zv59UHTktxuYL92pX338SMj5HJhfdW1sLburVdjkH1bysOVPyTVxC','2024-09-19 17:30:31','2024-09-19 17:38:43','Normal'),(94,12,'QhjA3tpKMjcnZA3JTlwnVpV17iHMoaRPi6qMpVtIR0Pxz5JQl4AJn78l','2024-09-19 17:38:47','2024-09-23 12:05:13','Forced'),(95,1,'PqEnKucNSZjApn8xgHC9yIJuf8jvYiHiSkA79BPLvjtTD5jJOWAPvMCP','2024-09-23 11:35:02','2024-09-23 11:51:31','Normal'),(96,13,'n8AvNzLAjP8xBbPZNlbMdgFQP3MkTzNyx1m6RvIxl4HVZ2sjZ5c7qHnP','2024-09-23 11:52:02','2024-09-23 12:05:02','Normal'),(97,12,'0vudj2Y79dWW8dMRjh51e1jGSIPuxwgPlLrYWJiGG6dKZIF4RSU8LSL5','2024-09-23 12:05:13','2024-09-23 12:58:51','Normal'),(98,1,'pAomLVCYIsrreMeUU0eJA14zM8mvSsH9otCFpDq6vueD48lydHaXtUP8','2024-09-23 12:59:01','2024-09-23 13:11:05','Normal'),(99,1,'1jIr5sSeKLYgFlTZTWV4j3uQLsVFyxDt5cEuIz9pG0ydChwphd7quAWM','2024-09-23 13:11:15','2024-09-23 14:18:11','Normal'),(100,14,'BB6irkn6zUpeqFTr58moiRlcvtU3GzaeurFigCj1IOrbtziHSxdzQ9bj','2024-09-23 14:18:20','2024-10-01 16:13:36','Forced'),(101,13,'LIp22BnCVBSVo6XmurtqH14bJxKR6kOVf5iDfQP5xdwleYOfPHOf5tZm','2024-09-23 14:20:54','2024-09-23 15:49:53','Normal'),(102,13,'ebXU6NJWRNgdi0I5C2MT5owiIsiMvCXEpx8hvd2n9vJuUUGOrkzO2PlD','2024-09-23 15:50:09','2024-09-23 17:44:07','Forced'),(103,13,'2GHVfOWTnwmwA8bPsW2miWYuIbltJd8F5lVLIeRXdTFyCHkVmIdBPruS','2024-09-23 17:44:07','2024-09-25 13:48:01','Forced'),(104,13,'RwSvfoIex46I9nBeWQ1Qz1L51qqoQkXlybnhubdTnbR1TuAfvDZe7zfU','2024-09-25 13:48:01','2024-09-25 13:48:08','Normal'),(105,12,'KBdMWRy7xDMuK6TApGbYwxfJA4gn9QE8m1EnTlmdpSCrx8ZkFG5kHT7L','2024-09-25 13:48:15','2024-09-25 14:39:31','Forced'),(106,12,'Zpg0hZD2YKh2rHSBxTzTFEOwdQf29w277cOQgHFdsQ50fY7v9yY3Vq2f','2024-09-25 14:39:31','2024-09-26 10:00:13','Forced'),(107,12,'S2aXjgHoOnfYkBePFDdoFQixK28UCzmSd2fiosI6XPBQXdIqI8RoLG5V','2024-09-26 10:00:13','2024-09-26 11:29:39','Forced'),(108,12,'AhM87gP5ON6pVYl33DKXWEZZ5Nmv6mwRNEyrY5xYO7AowNk1zxljTGS3','2024-09-26 11:29:39','2024-09-26 19:56:44','Forced'),(109,12,'AFRamVJIPvKATBxuhNheQbUkwtEwz8ZxJJ1dO4VQgtepJZzZhpdpTcPz','2024-09-26 19:56:44','2024-09-27 10:10:06','Forced'),(110,12,'2dwFKOpqQBdA7nLmSlVVGvSyEuf9Rmqk7h1rhDiBAnihYAEivTOBx0W7','2024-09-27 10:10:06','2024-09-27 12:47:51','Forced'),(111,12,'LJydkh5xxD3gQUkU4v4258cK2LW9hit9Agve5ELUJ1L63RM9rm9eCMHT','2024-09-27 12:47:51','2024-10-01 16:13:12','Forced'),(112,12,'qFa37uZCePLrzMdMBcOowYG7ImW5M9RdKh5zscdwPgG3gjtbzBF8O2rG','2024-10-01 16:13:12','2024-10-01 16:13:16','Normal'),(113,14,'f2v5OXkbuBp3UvpLboFYLJQj14qktgcft8iXYDeHWq4mNnZdJmPoKKeA','2024-10-01 16:13:36',NULL,NULL),(114,1,'BCnLxLLwZpbUGkTUgh9DmcPgGRFnkdw0Vyh464TN5eT8tvj9MCvnwGzj','2024-10-01 16:13:49','2024-10-03 11:48:24','Forced'),(115,12,'mfkM9Cj2DWsHCPJ1Wc2CIosqxvuUqXPFLUxbkijFBKgDuMYRNXyQ3Xvy','2024-10-01 19:18:51','2024-10-02 16:24:32','Forced'),(116,12,'JSWSFKFI13mtTME0OZo3RkteiGfGuBUxGjOnhXpryycG4ivwTe2U0vwP','2024-10-02 16:24:32',NULL,NULL),(117,1,'UMsxmCPkNVPRTXfZvTNsL6ChzZYNVAwGM7DQotoVschbpZiPFVVKsmGd','2024-10-03 11:48:24','2024-10-03 11:48:45','Normal'),(118,13,'CUevsIYaCToT4YqdIpzdn9fsonPmkSTCWPyBScrC8VkwtMibh0k0Zz0q','2024-10-03 11:48:50','2024-10-03 13:17:45','Normal'),(119,13,'YIp8f0aRjZmZfoUndIIqRosZKqCr3EWU9ePSvEX8Mb4IgvYiWeMWSuqT','2024-10-03 13:40:07',NULL,NULL),(120,1,'KYGClyPP8TtH4U2IfL4jhhZwt4X1PwshLn43A3spiMDMjDIHLNkM1T4Y','2024-10-04 10:17:04','2024-10-04 10:59:42','Normal'),(121,2,'ixM9SuQuhWXEdPszxCp63Q1eil4xvK6eAXS16rOibAFel9mDl610ehyU','2024-10-04 11:00:23','2024-10-04 11:24:58','Forced'),(122,1,'FVeeyfpBcyf33GcLBiSow6XzZNCq6nWoFoFlUaNQhhQteEgzGcEIco59','2024-10-04 11:10:16','2024-10-04 11:24:37','Normal'),(123,2,'PcN2IM0QqJ8VXVgBN4bYG7Ohkhtg8oueN8fyENoyOIfvcVgTVTImpmtY','2024-10-04 11:24:58','2024-10-04 11:28:48','Forced'),(124,2,'PPeYPAz3mAQNzHDNocFb8zYuBQliHZ9nedQF5ctB8xbesnPOoeD8BXUT','2024-10-04 11:28:48','2024-10-04 11:33:38','Forced'),(125,2,'vt1BWhJvu1GWgQmPOT5JmdxdL8BbB8goGW75lpyJnc157e9KudU7d4B2','2024-10-04 11:33:38','2024-10-04 11:45:50','Forced'),(126,1,'oF8Ism8iarTrR3YMrEmaUT8dXAfi1UhFGYn6WsJilnQnbt36NxMIRT1v','2024-10-04 11:42:44','2024-10-04 11:45:30','Normal'),(127,2,'0kdhtqLWbm3gSxpm6iLIwC2gOrRj2GhR4jqaP9Xl975I3r8XFRtNnhUm','2024-10-04 11:45:50','2024-10-04 11:47:53','Normal'),(128,2,'Gjtvifh79rjzofb63tsdMXq6VItm2LJ7ryUyLLD6Z51uEy1PclqnXdjQ','2024-10-04 11:48:12','2024-10-04 11:56:59','Normal'),(129,2,'CBIGdAXpgeLD1TqqwB4DKIHgPqoW5JzSEMB78sNWQnTejmUYtKQJBl9u','2024-10-04 11:57:15','2024-10-04 12:14:13','Normal'),(130,2,'EXWw72RLxMTVy3XdKeQwW9sT53pZqSjlAJLWQYU4iqUkBJ34k8Qq4dcX','2024-10-04 12:14:41','2024-10-04 12:15:15','Normal'),(131,2,'8LBE8k9BF7uTqvDFTKyfD5LYGP6zUH34eCd1BnD4ysft16pfGmgckqlU','2024-10-04 12:15:29','2024-10-04 12:15:49','Normal'),(132,2,'ISrJuHUpkj1Pj2OyLbUIuML7eDb4sfPp8Q6FFfJ5CQ9583WK2fgGNJx9','2024-10-04 12:16:08','2024-10-04 12:17:57','Normal'),(133,2,'2GiyOP8f9Pv6cFNn8JXQCTJn1l2ISPBRiKyGC0jJUX8vBlM7IgOJWPIb','2024-10-04 12:18:16','2024-10-04 12:21:23','Normal'),(134,2,'VLFqLBow8rI4zNKwmFpeKDLgYI8oRvxI1TcCvgu3MDu6yGKTUj06xKnu','2024-10-04 12:21:30',NULL,NULL);
+INSERT INTO `user_login_logout_history` VALUES (1,1,'JoAtervlxY11izO3SAConmT8FxYAY9EWBcZjN1Wx2VNi0QJVSF0ekWMu','2024-05-20 13:56:22','2024-05-20 13:57:02','Forced'),(2,1,'xTYjn84jotRq8eBQyDkezCQSDndpqTfeq7AxeFmbjf42zGIKVaIm1UuZ','2024-05-20 13:57:02','2024-05-20 14:13:55','Forced'),(3,1,'9wjPmFyiwO63BnQTbrXY6h9P7AgdcqdLiv1ywbEY6IU6eCH91J55rbzj','2024-05-20 14:13:55','2024-05-20 15:57:48','Normal'),(4,1,'9D6GCsQy0YbjHAMgz7lMlYztVAmlR8XNw14hGLzydxTPnjrwTDrEf3nl','2024-05-20 16:00:22','2024-05-20 16:49:40',NULL),(5,1,'W8RFlhGbvXFd9TJBZf3IJSmev9PSXyDqL6LFWfrbCGpkHSBfyZ42CzQt','2024-05-20 16:55:07','2024-05-21 10:26:20','Forced'),(6,1,'KFxeLwW9rdwKytGKP5q9TKbdY6zsZFlwKj5B89WDscFb7KGAkjGdmJ2j','2024-05-21 10:26:20','2024-05-21 14:07:23','Forced'),(7,1,'cSESWUmzcLs9mbINe8AmJI2aYDoqsBLls7QoHuKbbublPfc8dTcNrF2o','2024-05-21 14:07:23','2024-05-23 16:08:16','Forced'),(8,9,'emEmQKJb1I68gtxsuRPaN88XlXhttFpYl8guJx8O7Lffxfz1ZCWhKh6z','2024-05-23 16:06:32','2024-05-27 15:14:35','Forced'),(9,1,'NlqnIGvdiJpjKun3mDI8vyW44K7U5IaaRPHSR7nUGyy1A6s3rsTs42yI','2024-05-23 16:08:16','2024-05-23 16:11:53','Forced'),(10,1,'Dif9dTQxKqox524Sn8kPFljAW1gEItsdIp78pjdnyNd2znRfv8K8HoXr','2024-05-23 16:11:53','2024-05-23 16:15:16','Forced'),(11,1,'0a1Q4ocrAqXVC54YNjO7TmLmgViTVGpjXWIeuuCiPijZCkZN1ql8MlaA','2024-05-23 16:15:16','2024-05-23 16:15:29','Forced'),(12,1,'FhQEQ3Yk3Jmo1Bbdx8Q81kvtmrciTvWJgBhs02VOiZVBg66ozrP2dJz5','2024-05-23 16:15:29','2024-05-23 16:16:31','Forced'),(13,1,'dQlnGFgceQDZHk665sQSpBBXVVyfByi1oWbv75CPq9bOKHiwVfGl3xfM','2024-05-23 16:16:31','2024-05-23 16:18:25','Forced'),(14,1,'ZgzwIJinKj0Nf1O3Qu5xxM2QDkZCjmwyzTbpfXdvhcA5cpuu2846IJeQ','2024-05-23 16:18:25','2024-05-23 16:19:35','Forced'),(15,1,'58hIiRLWIqD9MDHIhQokbzvSoULTWlYV8WlXKKC9NFNinWgLrenAeDCe','2024-05-23 16:19:35','2024-05-23 16:20:38','Forced'),(16,1,'R8cfTsIAnugwMO5pPHBY4rnri6V8PyXwXpHg8y7l6b19AuO7qrl577VK','2024-05-23 16:20:38','2024-05-23 16:22:56','Forced'),(17,1,'h9VY33SciRFNfFiKEPUuXk6YpIKCrnXkThyvKkA4FD9pu7orX4zTth5E','2024-05-23 16:22:56','2024-05-24 15:48:23','Forced'),(18,1,'codd3jniQvEyyY9Wce8ek5cLoyP0Or57uX0lSxwWPjgJoxtzy7N1ZVL5','2024-05-24 15:48:23','2024-05-24 15:49:00','Forced'),(19,1,'VtbsxzRJ6zDbLT3fbtA6NPoEVngz8RGKX83Xqu3p3Ctu5IcjqOLlBtmJ','2024-05-24 15:49:00','2024-05-24 17:22:36','Forced'),(20,1,'jmIX647AzAErVwMfU5Z4Jv1AZ4QxZOystTjlmlkOP2OLaberQnm4CN2i','2024-05-24 17:22:36','2024-05-24 17:23:25','Forced'),(21,1,'sgdn0OGUU6KzIEn3tUrfiPeDXVM4biANTuFgkklXySQm9fvVBOYM9qyV','2024-05-24 17:23:25','2024-05-24 17:24:18','Forced'),(22,1,'howoRHbD9Dt0Zk4yDhwdBATx8bgreSDw1jjOZsdwu7oloKA2fO6pLflN','2024-05-24 17:24:18','2024-05-24 17:24:38','Forced'),(23,1,'s6RRx7n7TJfRA2Fc8EloSRWORxZj8KBtA1wp69rIRqrIsyW4tImyMcL7','2024-05-24 17:24:38','2024-05-24 17:25:10','Forced'),(24,1,'uGs73n8s2wRfvfdm6yujdZ1aNrpPloqGOnX7n3O0Yo4WgCDhfpgYFx6Z','2024-05-24 17:25:10','2024-05-24 17:25:49','Forced'),(25,1,'vhEMY2V8fO7S0fN4Q1VduvAyUqrb7HzF4KxQGXpuskPRFoBDyHLV10vj','2024-05-24 17:25:49','2024-05-24 18:06:35','Forced'),(26,1,'rbvC4y6ho1ukyFTBog8v3aEXrJJ3M8eSf7RdrPWCKbnryaqk46n49qHb','2024-05-24 18:06:35','2024-05-24 18:08:07','Forced'),(27,1,'IhRxRIWNHAPCyz3zVCEk0yf467CP7Ks5oS4nMvoIKYzKV1yMedQFjeON','2024-05-24 18:08:07','2024-05-24 18:08:29','Forced'),(28,1,'wOzvqzyEbJRFwhDUjRQS1qcQZR0BXzfII0nnXsOEcG9TxbVBmZQdtxiE','2024-05-24 18:08:29','2024-05-24 18:08:34','Forced'),(29,1,'gvM2t45ElQWawDmE7v6gA91GtDGHWyhqtACRfoqWLc1KBbtiA3Uo2aCl','2024-05-24 18:08:34','2024-05-24 18:08:51','Forced'),(30,1,'74XfrpFohyHLwh9brDVJ0GB7C0GLmHSdFdbET1ykdr0VtbH35V9QxBOI','2024-05-24 18:08:51','2024-05-24 18:09:26','Forced'),(31,1,'ScJY6V9jsZSt8hLlWPyliI96wuaHHLNtbdtBc8dz7ywRN2Rp4JZmYsjK','2024-05-24 18:09:26','2024-05-24 18:09:36','Forced'),(32,1,'gMbqdLiCdq9QN7lCf7LRaNkGVKLVcEVZA1n0MbdoNnOwbBLUiDSCCF2J','2024-05-24 18:09:36','2024-05-24 18:10:32','Forced'),(33,1,'XtJKZsxlfNpEpChEJ5aPRNYNipUQJKq5SzpAEMSi6OgE6blbz1vm7Acu','2024-05-24 18:10:32','2024-05-24 18:10:43','Forced'),(34,1,'T7gT7ZyIlfrSNmZ4usBGsgK4A7C4wZiXXrqdDzQkeUtm4QuIzb6uYXVb','2024-05-24 18:10:43','2024-05-24 18:13:02','Forced'),(35,1,'BzZq7QXRSC61PbEbkvJkHgrpmMPWW79eKEHOco3Kh8DnKsBoyjEFSp1Y','2024-05-24 18:13:02','2024-05-24 18:15:07','Forced'),(36,1,'LTpWCVdySfHAt45A2Y6VBIS6XRL1O3DNaHAJDYMlwrslL921g5mommbe','2024-05-24 18:15:07','2024-05-24 18:16:45','Forced'),(37,1,'7CnrgOFN3oiPbW5lr9mQUs4Q6qBO3JHUA3RdiYdfcLKHsM5n0UPnUtHl','2024-05-24 18:16:45','2024-05-27 14:47:18','Forced'),(38,1,'LAofL5xQN5tYSQyp9dm61GwvpabDkAJ2pYyyZHKYT3qfkEyI5LtHvpdE','2024-05-27 14:47:18','2024-05-27 14:50:20','Forced'),(39,1,'D3ScStWpRzWjeBcdp5UxHicVAMTKucw3y7hxHan11RYOHZoJyQvM8kHl','2024-05-27 14:50:20','2024-05-27 14:51:31','Forced'),(40,1,'15ljuw9Y35yJb5f5szTUjSuyAq32CH6boPLSOQx6fX0zxGnQjAR5IYyb','2024-05-27 14:51:31','2024-05-27 14:51:51','Forced'),(41,1,'czrneWKpX1eHw61pcwuKHglKePk2AQjhDQmB031EenJTLFZlJoVSe47V','2024-05-27 14:51:51','2024-05-27 14:58:15','Forced'),(42,1,'zt4acBekoscovfgDlm4OW4QkVl69ilsVfd2wsqQ4AXSF0XO5gR2XSnrr','2024-05-27 14:58:15','2024-05-27 14:59:36','Forced'),(43,1,'2DqLt5ExeOrGV9DNFeX8PzjQD6RYEUjvDbBTdsr7YMF5fTKuMTVBfZ9a','2024-05-27 14:59:36','2024-05-27 14:59:44','Forced'),(44,1,'45Q7ONITVkF4LkM0QWetloYgg3Xru7qfjyK6mZMfXJHcAdPPP5zHZ6H5','2024-05-27 14:59:44','2024-05-27 14:59:55','Forced'),(45,1,'66noUms9czjJgcgkm2NwozCIjDu8sqTHRtUp9fKj941Ih7e6v8C0EONp','2024-05-27 14:59:55','2024-05-27 15:01:13','Forced'),(46,1,'S4XlMvnw6XV9RK3BFtIt73Uo7C1PpLvwFsUAr58DGNyHzR4vsL83NpIE','2024-05-27 15:01:13','2024-05-27 15:01:50','Forced'),(47,1,'419SDulLVyC8fAQmSQPprDhuzcCjaUkM3cq3xAsTqBzCM5KIZWUD1c8f','2024-05-27 15:01:50','2024-05-27 15:02:51','Forced'),(48,1,'D0WvYV8gebjIcczLvtI7f7Z1MAmZqShglGSNfvZQpb0uvbCzRcoIUMQR','2024-05-27 15:02:51','2024-05-27 15:12:45','Forced'),(49,1,'tA0offbfyW3HqjTpqxfbr16lCYZ6pDpr7TDTIaNSW4voLIMvpUiGprm2','2024-05-27 15:12:45','2024-05-27 15:26:14','Forced'),(50,9,'sxkx7gwLlyULEi13bj2CIq09SSFtsNgm9b7lRnfsk75dRo42VsSGkbR1','2024-05-27 15:14:35','2024-05-27 15:27:19','Forced'),(51,1,'Fa8T5zfvAQYxejmWLqee9PQkms6KEBkqJavnCeSKxDgiZzhGEyLS6CKC','2024-05-27 15:26:14','2024-05-27 15:26:20','Normal'),(52,9,'aPp3AXiA86gNbD2VkvDs2Kc34G53ZQ2gY1T4H2xxcp7OytoWggN7EozM','2024-05-27 15:27:19','2024-05-27 15:35:07','Normal'),(53,9,'neUXdIJdP4U0oTpX3Uyb8LkPJjPKufLofWzaXqhiBU2hhVpY8QzsndF2','2024-05-27 15:35:10','2024-05-27 15:38:24','Forced'),(54,9,'zqi5Kz7CrVEhv9juksItbPAEdGq1C1EgehyXPgIovpPUMTRVGiQpcIrW','2024-05-27 15:38:24','2024-05-27 15:39:58','Forced'),(55,9,'LejDkZYevyhkPxJWJ6rYvTNL136yKF1UDQDA3r5RJ3bQdkBESjtm3o6W','2024-05-27 15:39:58','2024-05-27 15:43:50','Forced'),(56,9,'Pg2Iz9I6iglDxRIMyVNQjj5eTNzjOJ1GC1INuZ7cfueiFO9GcMcBRNwN','2024-05-27 15:43:50','2024-05-27 15:44:48','Forced'),(57,9,'KphDBBYPzc60XdiY1862bZkMtCXx1JS96xAVvitFCOdioNh3Zdtrr9Gu','2024-05-27 15:44:48','2024-05-27 15:45:43','Forced'),(58,9,'GCmwjdHvJ1b4JVK66uWmRd1eSF2BuHsEAl1IBhAi2JREEK6XiAIPLwGS','2024-05-27 15:45:43','2024-05-27 15:46:23','Forced'),(59,9,'U2dB4xwtyG9vVirQL9HkZU47cDs8dChuPAitTMJcP4R4BvlgKP2sgRgs','2024-05-27 15:46:23','2024-05-27 15:48:23','Forced'),(60,9,'8hCzTJXOcIbR6pfSJVqTwrS6V5E4iy3U1BXvYxi2Zg4Bxi2ooBgmVibC','2024-05-27 15:48:23','2024-05-27 16:13:21','Normal'),(61,4,'2QVu8ivqSnEIxlw8F1ERkONvBnhgTLHUE1p2TqcEAsBsaGvjxbHjexpg','2024-05-27 16:17:00','2024-05-27 16:17:37','Forced'),(62,4,'jVLVcKuSWHrQd4EvcEAc1BIqgltLPgCAwjwS38ZGNLYyvKdnv4I8Ssb6','2024-05-27 16:17:37','2024-05-27 16:18:47','Forced'),(63,4,'Erqis4fUQBuOYYH8MEfZ5BGi6hnrY39QOY9tqEkLt4Z5RdiGCf6URG3F','2024-05-27 16:18:47','2024-05-27 16:19:01','Forced'),(64,4,'LdTrweKSBaZR83oMrYfBmHfrt4QEqY7NBszlNDfZjo4EII5lh6nAmxHY','2024-05-27 16:19:01','2024-06-27 16:26:13','Forced'),(65,4,'1EAM9KWWWVTYGcxGrylmTYndHbGdXRgLCTHHwVZfIPdtl9G2AHO3tgh7','2024-06-27 16:26:13','2024-06-27 16:36:04','Forced'),(66,4,'KCnU2tEUCpSUAV5s2mEps8blUxpQTs7ZdteJFsqd5NzIzorrpY4s8Vuw','2024-06-27 16:36:04','2024-08-13 19:35:48','Forced'),(67,1,'Bgb3Gjx9uyatzAvphpvwzpWswfAuOWA1TyjUOqlZOLmOD7WX3u0pu3ly','2024-06-27 16:36:24','2024-06-27 16:43:21','Forced'),(68,1,'FREHt5n5KuYdqPxrCo9vIdqwVsXw2uRT6chBe0ToZWxCWFjGzlCGL4BJ','2024-06-27 16:43:21','2024-07-16 11:42:49','Forced'),(69,1,'ZBFqsSwqSoCMpI4TuBydHyTGqAcuOYwqlYRXVuNqfdbQAK4BM55SwNaK','2024-07-16 11:42:49','2024-07-16 11:43:08','Normal'),(70,1,'TUMUkFywgsq7lANjYdcXDsXscsZgM4NOqmRmLzsrPd9FH3aEilAfHW6y','2024-07-16 11:43:11','2024-07-16 16:39:51','Normal'),(71,1,'kjzhOyTJnGPm1uZ7eHsCheo1BGlS78XRxf7QsF9X9fUHDOfrY2FQeV1o','2024-07-16 16:40:05','2024-07-16 16:40:32','Normal'),(72,13,'i9xw7tR2uFVcNLqzvLfuM3PaDJlDLAePjM7m5er9l97EsQ0I5Og5wUXh','2024-07-16 16:40:38','2024-07-16 16:40:51','Normal'),(73,1,'HOEndIFL2Qs2elAOfhSP8pnEAVHnc3wUKfvUlM8cPvX8vQ5tERrz2FM8','2024-07-16 16:46:48','2024-07-16 17:08:49','Normal'),(74,13,'8tcNpPZnr6Jo6mluz2Idqdmd7RV9UpmvI8GN1sQ3Ku787yIGSV3m6rzj','2024-07-16 17:08:53','2024-07-17 10:31:08','Forced'),(75,13,'oMhragQKfTJphSXFYTxkO6QxEIygGzT9SSHmvmcyj7BkIr02hxKil441','2024-07-17 10:31:08','2024-07-18 10:13:37','Forced'),(76,13,'w63fKyAPSWFul3HwQHmTuEzAp6SE1rpoYc1nFJ8pUyrjWosFCIRCqOxu','2024-07-18 10:13:37','2024-07-23 10:41:31','Forced'),(77,13,'a1oYnh2Ee0lbcNQrxcMfpydR8kXR7JgrrZK7PM9NNiUz0DHqjSY1W1yY','2024-07-23 10:41:31','2024-07-24 10:19:21','Forced'),(78,13,'1eBZpEpkGu11b0IofyHFvWl9zQWqulZOsgtKMSLnOwMLD5TwoIBb2lSw','2024-07-24 10:19:21','2024-09-19 12:43:11','Forced'),(79,1,'7TG5dr6El9P6i2ukoBcx2qc7rzmILW4fFnAsiEGkxGVmpeQvusUCsmpQ','2024-08-13 19:33:27','2024-08-13 19:35:27','Normal'),(80,4,'Z7DWZfky7MKknFotyr4pbBb7uYe2LLzLLtNhbcjpN9eE3cuw8YEE7zQc','2024-08-13 19:35:48','2024-08-14 20:09:29','Forced'),(81,4,'dxeYCrt5RRTcbiOWDGi0U3kFNt4VemJlFhU3yCk1DTBumnETNoeRlsDU','2024-08-14 20:09:29','2024-08-14 20:36:48','Forced'),(82,1,'grSE3KjSIMDyxID1Na4LTmcYpE7SJxObvoGoBvJ0QIpw2h4rBukqhoFX','2024-08-14 20:35:21','2024-08-14 20:36:34','Normal'),(83,4,'W4DOBwATifoxcqbEs7rihhuBm8md84fRpHocqHvSMV1qof4zXKzvswqE','2024-08-14 20:36:48','2024-08-16 07:48:56','Forced'),(84,4,'g9tWTdFC5JSN66OgWKVvcCwVWF4g6I4GAkm7jzI5RcDG9IgAcMA8MZ3b','2024-08-16 07:48:56','2024-08-16 07:52:45','Forced'),(85,4,'02ymL8vtKyxWXmsHkGGDKJLTme4MbVEncnKCApvbfgwRo6svvS2yvWEr','2024-08-16 07:52:45',NULL,NULL),(86,1,'IqqGQDou33G6YmYO58XB8sz6h4Rrz1PoIyAUBFQE83bniTzp6O1FbPNR','2024-08-22 14:22:11','2024-09-19 12:27:11','Forced'),(87,1,'VpeNHSOMSSE9GF5iyFxkK5PdcgFrTBhYq3UOZe0jdTBxeVxjQNN23xd0','2024-09-19 12:27:11','2024-09-19 12:42:32','Normal'),(88,13,'38Sq9BH6XdsFYt7ciWAog9Xh3BRsWZNdGKdErtQBI7tOcTZWUXjQSAVD','2024-09-19 12:43:11','2024-09-19 16:52:44','Forced'),(89,13,'TMngMGXwx2kAvZgY2LPAds9HHNxT3OLXFs50gWh8J5pK5c6OA731ios6','2024-09-19 16:52:44','2024-09-19 17:13:36','Normal'),(90,12,'Fu4T1RbU97HEKB1C3x1sVlOI7xtTFlXNKliDvx3WEzDK1FKnY6wTxb2I','2024-09-19 17:14:21','2024-09-19 17:23:33','Normal'),(91,13,'ShJjJPgJvGFnRVbm3Tcx1lifVca6LXi6GZcNRsUNRApZTXxLSHWQ7UDV','2024-09-19 17:23:39','2024-09-19 17:28:16','Normal'),(92,12,'8wun6atHd8oSWeUOyNE9DxHHB4ZHHWY1zUWRKM1GucUbZdaBBxxq9Ql6','2024-09-19 17:28:24','2024-09-19 17:30:25','Normal'),(93,13,'br7Zv59UHTktxuYL92pX338SMj5HJhfdW1sLburVdjkH1bysOVPyTVxC','2024-09-19 17:30:31','2024-09-19 17:38:43','Normal'),(94,12,'QhjA3tpKMjcnZA3JTlwnVpV17iHMoaRPi6qMpVtIR0Pxz5JQl4AJn78l','2024-09-19 17:38:47','2024-09-23 12:05:13','Forced'),(95,1,'PqEnKucNSZjApn8xgHC9yIJuf8jvYiHiSkA79BPLvjtTD5jJOWAPvMCP','2024-09-23 11:35:02','2024-09-23 11:51:31','Normal'),(96,13,'n8AvNzLAjP8xBbPZNlbMdgFQP3MkTzNyx1m6RvIxl4HVZ2sjZ5c7qHnP','2024-09-23 11:52:02','2024-09-23 12:05:02','Normal'),(97,12,'0vudj2Y79dWW8dMRjh51e1jGSIPuxwgPlLrYWJiGG6dKZIF4RSU8LSL5','2024-09-23 12:05:13','2024-09-23 12:58:51','Normal'),(98,1,'pAomLVCYIsrreMeUU0eJA14zM8mvSsH9otCFpDq6vueD48lydHaXtUP8','2024-09-23 12:59:01','2024-09-23 13:11:05','Normal'),(99,1,'1jIr5sSeKLYgFlTZTWV4j3uQLsVFyxDt5cEuIz9pG0ydChwphd7quAWM','2024-09-23 13:11:15','2024-09-23 14:18:11','Normal'),(100,14,'BB6irkn6zUpeqFTr58moiRlcvtU3GzaeurFigCj1IOrbtziHSxdzQ9bj','2024-09-23 14:18:20','2024-10-01 16:13:36','Forced'),(101,13,'LIp22BnCVBSVo6XmurtqH14bJxKR6kOVf5iDfQP5xdwleYOfPHOf5tZm','2024-09-23 14:20:54','2024-09-23 15:49:53','Normal'),(102,13,'ebXU6NJWRNgdi0I5C2MT5owiIsiMvCXEpx8hvd2n9vJuUUGOrkzO2PlD','2024-09-23 15:50:09','2024-09-23 17:44:07','Forced'),(103,13,'2GHVfOWTnwmwA8bPsW2miWYuIbltJd8F5lVLIeRXdTFyCHkVmIdBPruS','2024-09-23 17:44:07','2024-09-25 13:48:01','Forced'),(104,13,'RwSvfoIex46I9nBeWQ1Qz1L51qqoQkXlybnhubdTnbR1TuAfvDZe7zfU','2024-09-25 13:48:01','2024-09-25 13:48:08','Normal'),(105,12,'KBdMWRy7xDMuK6TApGbYwxfJA4gn9QE8m1EnTlmdpSCrx8ZkFG5kHT7L','2024-09-25 13:48:15','2024-09-25 14:39:31','Forced'),(106,12,'Zpg0hZD2YKh2rHSBxTzTFEOwdQf29w277cOQgHFdsQ50fY7v9yY3Vq2f','2024-09-25 14:39:31','2024-09-26 10:00:13','Forced'),(107,12,'S2aXjgHoOnfYkBePFDdoFQixK28UCzmSd2fiosI6XPBQXdIqI8RoLG5V','2024-09-26 10:00:13','2024-09-26 11:29:39','Forced'),(108,12,'AhM87gP5ON6pVYl33DKXWEZZ5Nmv6mwRNEyrY5xYO7AowNk1zxljTGS3','2024-09-26 11:29:39','2024-09-26 19:56:44','Forced'),(109,12,'AFRamVJIPvKATBxuhNheQbUkwtEwz8ZxJJ1dO4VQgtepJZzZhpdpTcPz','2024-09-26 19:56:44','2024-09-27 10:10:06','Forced'),(110,12,'2dwFKOpqQBdA7nLmSlVVGvSyEuf9Rmqk7h1rhDiBAnihYAEivTOBx0W7','2024-09-27 10:10:06','2024-09-27 12:47:51','Forced'),(111,12,'LJydkh5xxD3gQUkU4v4258cK2LW9hit9Agve5ELUJ1L63RM9rm9eCMHT','2024-09-27 12:47:51','2024-10-01 16:13:12','Forced'),(112,12,'qFa37uZCePLrzMdMBcOowYG7ImW5M9RdKh5zscdwPgG3gjtbzBF8O2rG','2024-10-01 16:13:12','2024-10-01 16:13:16','Normal'),(113,14,'f2v5OXkbuBp3UvpLboFYLJQj14qktgcft8iXYDeHWq4mNnZdJmPoKKeA','2024-10-01 16:13:36',NULL,NULL),(114,1,'BCnLxLLwZpbUGkTUgh9DmcPgGRFnkdw0Vyh464TN5eT8tvj9MCvnwGzj','2024-10-01 16:13:49','2024-10-03 11:48:24','Forced'),(115,12,'mfkM9Cj2DWsHCPJ1Wc2CIosqxvuUqXPFLUxbkijFBKgDuMYRNXyQ3Xvy','2024-10-01 19:18:51','2024-10-02 16:24:32','Forced'),(116,12,'JSWSFKFI13mtTME0OZo3RkteiGfGuBUxGjOnhXpryycG4ivwTe2U0vwP','2024-10-02 16:24:32','2024-10-14 15:59:03','Forced'),(117,1,'UMsxmCPkNVPRTXfZvTNsL6ChzZYNVAwGM7DQotoVschbpZiPFVVKsmGd','2024-10-03 11:48:24','2024-10-03 11:48:45','Normal'),(118,13,'CUevsIYaCToT4YqdIpzdn9fsonPmkSTCWPyBScrC8VkwtMibh0k0Zz0q','2024-10-03 11:48:50','2024-10-03 13:17:45','Normal'),(119,13,'YIp8f0aRjZmZfoUndIIqRosZKqCr3EWU9ePSvEX8Mb4IgvYiWeMWSuqT','2024-10-03 13:40:07','2024-10-14 15:59:23','Forced'),(120,1,'KYGClyPP8TtH4U2IfL4jhhZwt4X1PwshLn43A3spiMDMjDIHLNkM1T4Y','2024-10-04 10:17:04','2024-10-04 10:59:42','Normal'),(121,2,'ixM9SuQuhWXEdPszxCp63Q1eil4xvK6eAXS16rOibAFel9mDl610ehyU','2024-10-04 11:00:23','2024-10-04 11:24:58','Forced'),(122,1,'FVeeyfpBcyf33GcLBiSow6XzZNCq6nWoFoFlUaNQhhQteEgzGcEIco59','2024-10-04 11:10:16','2024-10-04 11:24:37','Normal'),(123,2,'PcN2IM0QqJ8VXVgBN4bYG7Ohkhtg8oueN8fyENoyOIfvcVgTVTImpmtY','2024-10-04 11:24:58','2024-10-04 11:28:48','Forced'),(124,2,'PPeYPAz3mAQNzHDNocFb8zYuBQliHZ9nedQF5ctB8xbesnPOoeD8BXUT','2024-10-04 11:28:48','2024-10-04 11:33:38','Forced'),(125,2,'vt1BWhJvu1GWgQmPOT5JmdxdL8BbB8goGW75lpyJnc157e9KudU7d4B2','2024-10-04 11:33:38','2024-10-04 11:45:50','Forced'),(126,1,'oF8Ism8iarTrR3YMrEmaUT8dXAfi1UhFGYn6WsJilnQnbt36NxMIRT1v','2024-10-04 11:42:44','2024-10-04 11:45:30','Normal'),(127,2,'0kdhtqLWbm3gSxpm6iLIwC2gOrRj2GhR4jqaP9Xl975I3r8XFRtNnhUm','2024-10-04 11:45:50','2024-10-04 11:47:53','Normal'),(128,2,'Gjtvifh79rjzofb63tsdMXq6VItm2LJ7ryUyLLD6Z51uEy1PclqnXdjQ','2024-10-04 11:48:12','2024-10-04 11:56:59','Normal'),(129,2,'CBIGdAXpgeLD1TqqwB4DKIHgPqoW5JzSEMB78sNWQnTejmUYtKQJBl9u','2024-10-04 11:57:15','2024-10-04 12:14:13','Normal'),(130,2,'EXWw72RLxMTVy3XdKeQwW9sT53pZqSjlAJLWQYU4iqUkBJ34k8Qq4dcX','2024-10-04 12:14:41','2024-10-04 12:15:15','Normal'),(131,2,'8LBE8k9BF7uTqvDFTKyfD5LYGP6zUH34eCd1BnD4ysft16pfGmgckqlU','2024-10-04 12:15:29','2024-10-04 12:15:49','Normal'),(132,2,'ISrJuHUpkj1Pj2OyLbUIuML7eDb4sfPp8Q6FFfJ5CQ9583WK2fgGNJx9','2024-10-04 12:16:08','2024-10-04 12:17:57','Normal'),(133,2,'2GiyOP8f9Pv6cFNn8JXQCTJn1l2ISPBRiKyGC0jJUX8vBlM7IgOJWPIb','2024-10-04 12:18:16','2024-10-04 12:21:23','Normal'),(134,2,'VLFqLBow8rI4zNKwmFpeKDLgYI8oRvxI1TcCvgu3MDu6yGKTUj06xKnu','2024-10-04 12:21:30','2024-10-09 14:09:19','Forced'),(135,2,'fnpsPZtTqQLpYTlQSIEqWPZqXUtziQFbjncl2xhupqG8KPuhnsyWdblC','2024-10-09 14:09:19','2024-10-09 14:14:55','Normal'),(136,2,'fAWuLdVDFfsvZM4obGZTgqKSoYIdVNhGWJgxKHnbGSpYHADQsLPpaP49','2024-10-09 14:27:42','2024-10-09 17:11:30','Forced'),(137,2,'Bp2ullmgBI9ln76TcEvO8scN8hnH09B9QWD4QGOOL7U6BU55wdxHz7BJ','2024-10-09 17:11:30','2024-10-09 17:11:41','Forced'),(138,2,'2SrxTVzppZyzUeWmNFj5C9Gn7iNlTLDw6ioQpr0SJFlj9EYzAX9HD7iE','2024-10-09 17:11:41','2024-10-09 17:18:09','Forced'),(139,2,'DVWw2510X9PrJAoxqLXec5YIwb8I4GKeNzH6hwz2uaisN12D5ttQtJKt','2024-10-09 17:18:09','2024-10-09 17:19:31','Forced'),(140,2,'JVRXbXwRQk9ODHCT097z7YK3obo4g7iOSnmbIZKnkwJbhJA6zEkus3AE','2024-10-09 17:19:31','2024-10-09 17:19:50','Forced'),(141,2,'vKVaayrGIYIwpnrYo6HZVLzE5hSoiBDKhGx8tnHl1gS0KqhIjmRR6cy8','2024-10-09 17:19:50','2024-10-09 18:59:42','Forced'),(142,2,'c8DAGPlZMxKkoVNeK5LqSRLfWqm8FrWrVKBWlP8zbwUhCW8tyDtNbqU4','2024-10-09 18:59:42','2024-10-09 18:59:48','Forced'),(143,2,'hsihEqhHla4jxZ6yYY6Lq3inIw5zUGrPnArz6YGZk41DjSwc2k0oGr51','2024-10-09 18:59:48','2024-10-09 19:16:37','Forced'),(144,2,'PxcPVBgFpHUntic6mCYJ1LfH2StPZpnU4dhM7slOlo7pLNxNM3GVe1a2','2024-10-09 19:16:37','2024-10-09 20:18:29','Forced'),(145,2,'WsErPJCd20Bjr1e2XjoFNhUG5GYe7E9rcCWtKkK9ogLx9AgLiCVnfDo1','2024-10-09 20:18:29','2024-10-09 20:18:34','Forced'),(146,2,'6dphOivN8xEtEiGfBddHz2SeAS71AHXEZoRvHf3mXcO1TxoCPQ5868u4','2024-10-09 20:18:34','2024-10-09 20:23:06','Normal'),(147,2,'JHn0sMdBQERRCKmnQjhvEeYh6czcj1ZhdtPcuKsIxmzzvmD7ZNrXjyYI','2024-10-09 20:27:15','2024-10-09 20:27:20','Normal'),(148,2,'zLFIcoAPkN28yvwnryQjSjO2wP1vvyA9MAhwQhZVgRdafTFkp3e8CuXm','2024-10-10 09:44:18','2024-10-10 09:44:51','Forced'),(149,2,'wwLICY1cxsRZvHDyuFiSqdRwDY6AkdSKGTPvBfc7pqfZnJCz4resJ9jV','2024-10-10 09:44:51','2024-10-10 10:14:01','Normal'),(150,2,'6Iv7aIV9t79ZtiOzacAL8WuK2ZatJnLrr4TQLVY7YJhJiZwoKFsy2FyV','2024-10-10 10:14:27','2024-10-10 11:46:47','Forced'),(151,2,'5glrjYl8qEhFWqjOsx5OmFBpjWyGFtCtnHpHUOkKZRPf64AiHPZohK3w','2024-10-10 11:46:47','2024-10-10 11:53:18','Forced'),(152,2,'PyX3fPa3X9BQDyq4SOJxU1RFUq9dXJUsY6q9ZhtUURXCT03MPdXLbQfZ','2024-10-10 11:53:18','2024-10-10 15:18:09','Forced'),(153,2,'pgdxfXkwHof88VtU6PiqPSCA72KtPgnuvVzbWOn5rCGNXUjUYrD1u0Et','2024-10-10 15:18:09','2024-10-10 15:18:17','Forced'),(154,2,'n4ozpDmIoYroxbmRPPJMnKy5D5wgYwslXw5x3g5czHQJKzvyoc9iQK28','2024-10-10 15:18:17','2024-10-10 15:18:25','Normal'),(155,2,'FHz3RDcSkK14LdkLsrD56UeysM2hENq7IUVLuSPzzdXnlnMGZdYRIWMG','2024-10-10 15:18:31','2024-10-10 15:19:33','Forced'),(156,2,'bIU9QpRdDOkcYs1YjCWBHrsz1vPhy7yzPJrmZR1VQ52QA3Fu92A7NLKK','2024-10-10 15:19:33','2024-10-14 10:09:06','Forced'),(157,2,'UJoO7c8gW7POt7jgGsDwC6GmrPTbj9sdtwK6YwNntl8bYs0l2EBEtEmD','2024-10-14 10:09:06','2024-10-14 16:56:57','Forced'),(158,1,'WiKyUKLOUiygK2uE1FTbRRTGmtV5o2wWgYhqKVdtgrJnl41UlXZCPoyA','2024-10-14 15:58:42','2024-10-14 15:58:47','Normal'),(159,12,'u3wpBqGVbAKkAlw0LmS47iPd7mrkOCxVHbXt2GiVKPG4Za7TNqKK5qBG','2024-10-14 15:59:03','2024-10-14 15:59:12','Normal'),(160,13,'bNp7QAPAqkGKCpVgu0hnVGWOTiMkfHDDIC5iMXxyjbkUWqFb3WpBGXTh','2024-10-14 15:59:23',NULL,NULL),(161,2,'S1r85R6p4FQDJOZJE3Wabg9pYmlZXYolyZxFbjd6jNZEJD7FFcOWhLw8','2024-10-14 16:56:57','2024-10-15 10:27:38','Forced'),(162,2,'w4uP6sscqeObJM5b3bc8d6MxggRuVRJVtJqY3nMJMcvU9BfLRlXJet16','2024-10-15 10:27:38','2024-10-16 15:34:30','Forced'),(163,1,'RLmNTvhXe66qi4it9BTDnToDGSGIs9MsnJhTwTTfTBVrhhvAmT8hdSfC','2024-10-16 15:33:18','2024-10-16 15:33:31','Normal'),(164,2,'7MgKEvW9fRX3PLrXFUMd5y8RE37h55sYtn1Jks15jU3W2Y7JHCgTQtUO','2024-10-16 15:34:30','2024-10-16 15:34:48','Forced'),(165,2,'knQDNfk7AfZPJQ1IRQHTEtMjJtt9tg9KARxeRO9ZFIGdVOWWK4UySi5j','2024-10-16 15:34:48','2024-10-16 15:35:00','Forced'),(166,2,'JXaAkPbjI3ybIRnFUbKPZQuzxOx646v4UT7eh3dSaVgKbDOMUkFNaQHC','2024-10-16 15:35:00','2024-10-16 15:39:47','Forced'),(167,2,'1MRnZcAUdv6I5fnR02KONXmQql8qbWwJhEHSZDU6JRLWeEpanV91uWl2','2024-10-16 15:39:47','2024-10-16 15:42:26','Forced'),(168,2,'zrMiHciSUkmgiKjXpMvPdyvxduPdTNDVd33JgMqHQdo6TtyniMsUkVWr','2024-10-16 15:42:26','2024-10-16 15:48:42','Forced'),(169,2,'SrM7cL2qB6D9gr79dUPANVcabfrWDqHvP9d0nzLSbr3AALdvvVIAheLS','2024-10-16 15:48:42','2024-10-17 15:32:42','Forced'),(170,2,'LcMLRcuvhCa1bQFiwdxJqrmPyMHgkX7RiIK1OMdj6q2JCkAGL7nPIrrZ','2024-10-17 15:32:42','2024-10-18 13:01:55','Forced'),(171,2,'esCTqUYRRSsD7Jb3VwvUXpffmGK6mDoSU323VfxgMSAe3SBOWMAjwhyS','2024-10-18 13:01:55','2024-10-19 11:41:59','Forced'),(172,2,'Mb7tN52Ia4BeXYj6JeDnDt1bFywSOVjRdzCxKJVVpztAgymOS8Wb4k6t','2024-10-19 11:41:59','2024-10-19 15:12:26','Normal'),(173,2,'PKmtbUUodoKVv4M4DnPLBDgouVuf25s3uUHCW9L5W2rs3v23UcnG8Ucw','2024-10-19 15:32:50','2024-10-19 15:36:06','Normal'),(174,2,'qGUAo5pRkUHrkKFSuxwMTPSSv0ymQXpd7s2ujUjioMjnuWEjZi2rgdCW','2024-10-19 16:01:18','2024-10-19 16:45:01','Normal'),(175,2,'Ym1LxqHfqhPn4wcmZfbHwCj0QRuhzM4cWyavWdSdbYyOpdwNQoYPlUcF','2024-10-19 16:45:16','2024-10-19 18:30:00','Forced'),(176,2,'Ij6xAn3qbFZ59RwONHH4orYQbov3k4jVceHZT75WcbvEChpGYArm3ufH','2024-10-19 18:30:00','2024-10-19 18:35:19','Normal'),(177,1,'bZYOZmFgjtPlOcSzqkFDSeDSqBiZQggCDg8Dlzv69CTLhaUbrgC2gxUJ','2024-10-19 18:35:33','2024-10-19 19:02:19','Normal'),(178,1,'gWgByQEAEm3cvdVYvqSXwWi8dv0Gi9ngCpWltP94xVRjRp7iM9OJiSS1','2024-10-19 19:02:40','2024-10-19 19:06:07','Normal'),(179,1,'SXEjVC2HO47180e1Wdx24YhQ4S1WxNCHILrvU3XY1OwAnTQxj0oywbS0','2024-10-19 19:06:48','2024-10-19 19:08:44','Normal'),(180,9,'aflXC1iKuuxmiHrq158Q6qNR4fmDRGINdobpTPUCswFWuMs3PayOGFqs','2024-10-19 19:08:49','2024-10-19 19:11:24','Normal');
 /*!40000 ALTER TABLE `user_login_logout_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1980,7 +2046,7 @@ CREATE TABLE `user_module` (
   `denied_on` datetime DEFAULT NULL,
   `denied_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1989,7 +2055,7 @@ CREATE TABLE `user_module` (
 
 LOCK TABLES `user_module` WRITE;
 /*!40000 ALTER TABLE `user_module` DISABLE KEYS */;
-INSERT INTO `user_module` VALUES (1,2,3,1,1,1,1,'2024-10-04 10:38:32',1,'2024-10-04 10:40:14',1,NULL,NULL),(2,2,2,NULL,NULL,1,0,'2024-10-04 10:39:06',1,NULL,NULL,NULL,NULL),(3,2,1,NULL,NULL,1,0,'2024-10-04 10:39:17',1,NULL,NULL,NULL,NULL);
+INSERT INTO `user_module` VALUES (1,2,3,1,1,1,1,'2024-10-04 10:38:32',1,'2024-10-04 10:40:14',1,NULL,NULL),(2,2,2,NULL,NULL,1,0,'2024-10-04 10:39:06',1,NULL,NULL,NULL,NULL),(3,2,1,NULL,NULL,1,0,'2024-10-04 10:39:17',1,NULL,NULL,NULL,NULL),(7,1,3,NULL,NULL,1,0,'2024-10-19 18:58:27',1,NULL,NULL,NULL,NULL),(8,1,1,NULL,NULL,1,0,'2024-10-19 18:59:09',1,NULL,NULL,NULL,NULL),(9,1,2,NULL,NULL,1,0,'2024-10-19 19:03:56',1,NULL,NULL,NULL,NULL),(10,9,3,NULL,NULL,1,0,'2024-10-19 19:08:10',1,NULL,NULL,NULL,NULL),(11,9,1,NULL,NULL,1,0,'2024-10-19 19:08:22',1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user_module` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2010,7 +2076,7 @@ CREATE TABLE `user_module_history` (
   `assigned_by_id` int(11) NOT NULL,
   `remark` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2019,7 +2085,7 @@ CREATE TABLE `user_module_history` (
 
 LOCK TABLES `user_module_history` WRITE;
 /*!40000 ALTER TABLE `user_module_history` DISABLE KEYS */;
-INSERT INTO `user_module_history` VALUES (1,2,2,0,0,'2024-10-04 10:39:06',1,'Created'),(2,2,1,0,0,'2024-10-04 10:39:17',1,'Created'),(3,2,1,1,1,'2024-10-04 10:40:14',1,'Approve');
+INSERT INTO `user_module_history` VALUES (1,2,2,0,0,'2024-10-04 10:39:06',1,'Created'),(2,2,1,0,0,'2024-10-04 10:39:17',1,'Created'),(3,2,1,1,1,'2024-10-04 10:40:14',1,'Approve'),(4,1,3,NULL,NULL,'2024-10-19 18:58:27',1,'Created'),(5,1,1,NULL,NULL,'2024-10-19 18:59:09',1,'Created'),(6,1,2,NULL,NULL,'2024-10-19 19:03:56',1,'Created'),(7,9,3,NULL,NULL,'2024-10-19 19:08:10',1,'Created'),(8,9,1,NULL,NULL,'2024-10-19 19:08:22',1,'Created');
 /*!40000 ALTER TABLE `user_module_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2094,6 +2160,7 @@ DROP TABLE IF EXISTS `user_type`;
 CREATE TABLE `user_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
+  `code` varchar(5) NOT NULL,
   `module_id` int(11) NOT NULL,
   `user_role_id` int(11) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
@@ -2109,7 +2176,7 @@ CREATE TABLE `user_type` (
 
 LOCK TABLES `user_type` WRITE;
 /*!40000 ALTER TABLE `user_type` DISABLE KEYS */;
-INSERT INTO `user_type` VALUES (1,'Admin-General',3,1,1,'2024-10-04 10:26:10',1),(2,'Account Team',3,1,1,'2024-10-04 10:26:34',1),(3,'Admin-Pedagogy',3,1,1,'2024-10-04 10:28:06',1),(4,'Admission Team',3,1,1,'2024-10-04 10:28:38',1),(5,'Center Coordinator',3,1,1,'2024-10-04 10:32:15',1),(6,'Logistic Coordinator',3,1,1,'2024-10-04 10:33:03',1),(7,'Partner Coordinator',3,2,1,'2024-10-04 10:33:38',1);
+INSERT INTO `user_type` VALUES (1,'Admin-General','ADMGN',3,1,1,'2024-10-04 10:26:10',1),(2,'Account Team','ACCTM',3,1,1,'2024-10-04 10:26:34',1),(3,'Admin-Pedagogy','ADMPD',3,1,1,'2024-10-04 10:28:06',1),(4,'Admission Team','ADMTM',3,1,1,'2024-10-04 10:28:38',1),(5,'Center Coordinator','CETCO',3,1,1,'2024-10-04 10:32:15',1),(6,'Logistic Coordinator','LOGCO',3,1,1,'2024-10-04 10:33:03',1),(7,'Partner Coordinator','PTRCO',3,2,1,'2024-10-04 10:33:38',1);
 /*!40000 ALTER TABLE `user_type` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -2122,4 +2189,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-08 10:25:24
+-- Dump completed on 2024-10-21 15:55:39

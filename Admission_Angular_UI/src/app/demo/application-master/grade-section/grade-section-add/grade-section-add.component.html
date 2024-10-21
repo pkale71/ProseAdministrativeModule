@@ -1,0 +1,124 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="gradeSectionAddModal"><i class="fa fa-plus"></i>&nbsp;Add Grade Section</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addGradeSectionForm" id="addGradeSectionForm" (ngSubmit)="saveGradeSection()" autocomplete="off">
+    <div class="modal-body"> 
+        <div class="row">
+            <div class="col-md-4">   
+                <form [formGroup]="schoolForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="school">School &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchool"></i></label>
+                        <select class="form-control" required id="school" formControlName="school">
+                            <option value="{{school?.uuid}}" *ngFor="let school of schools">{{school?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="schoolForm.controls['school'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select school.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">   
+                <form [formGroup]="academicSessionForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="academicSession">Academic Session &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedAcademicSession"></i></label>
+                        <select class="form-control" required id="academicSession" formControlName="academicSession" (change)="getBatchTypes(academicSessionForm.controls['academicSession'].value, 'Active')">
+                            <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession.year}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="academicSessionForm.controls['academicSession'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select academic session.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">   
+                <form [formGroup]="syllabusForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="syllabus">Syllabus &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSyllabus"></i></label>
+                        <select class="form-control" required id="syllabus" formControlName="syllabus" (change)="getGradeCategories(syllabusForm.controls['syllabus'].value)">
+                            <option value="{{syllabus.id}}" *ngFor="let syllabus of syllabuses">{{syllabus.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select syllabus.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">   
+                <form [formGroup]="gradeCategoryForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="gradeCategory">Grade Category &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGradeCategory"></i></label>
+                        <select class="form-control" required id="gradeCategory" formControlName="gradeCategory" (change)="getGrades(gradeCategoryForm.controls['gradeCategory'].value, 'Active')">
+                            <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select grade category.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2">   
+                <form [formGroup]="gradeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i></label>
+                        <select class="form-control" required id="grade" formControlName="grade">
+                            <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="gradeForm.controls['grade'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select grade.</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">   
+                <form [formGroup]="batchTypeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="batchType">Batch Type &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedBatchType"></i></label>
+                        <select class="form-control" required id="batchType" formControlName="batchType">
+                            <option value="{{batchType.id}}" *ngFor="let batchType of batchTypes">{{batchType.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="batchTypeForm.controls['batchType'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select batch type.</label>
+                    </div>
+                </form>
+            </div> 
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="form-control-label" for="totalSection">Total Section&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="totalSection" type="text" required 
+                    formControlName="totalSection" maxlength="2"
+                    [ngClass]="{'is-invalid': !addGradeSectionForm.controls['totalSection'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="addGradeSectionForm.controls['totalSection'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter total section.</label>
+                    <label style="color: red;"
+                    *ngIf="addGradeSectionForm.controls['totalSection'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid total section.</label>
+                </div>                
+            </div> 
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

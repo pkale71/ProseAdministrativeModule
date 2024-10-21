@@ -97,10 +97,60 @@ const NavigationItems = [
                         target: false
                     }, 
                     {
+                        id: 'feeCategories',
+                        title: 'Fee Categories',
+                        type: 'item',
+                        url: '/admissionMaster/feeCategories',
+                        param: "",
+                        userTypeCode: ['ADMGN'],
+                        hidden: false,
+                        target: false
+                    }, 
+                    {
                         id: 'studentDocuments',
                         title: 'Student Documents',
                         type: 'item',
                         url: '/admissionMaster/studentDocuments',
+                        param: "",
+                        userTypeCode: ['ADMGN'],
+                        hidden: false,
+                        target: false
+                    },
+                    {
+                        id: 'courseExitReasons',
+                        title: 'Course Exit Reasons',
+                        type: 'item',
+                        url: '/admissionMaster/courseExitReasons',
+                        param: "",
+                        userTypeCode: ['ADMGN'],
+                        hidden: false,
+                        target: false
+                    },
+                    {
+                        id: 'gradeSections',
+                        title: 'Grade Sections',
+                        type: 'item',
+                        url: '/admissionMaster/gradeSections',
+                        param: "",
+                        userTypeCode: ['ADMGN'],
+                        hidden: false,
+                        target: false
+                    },
+                    {
+                        id: 'subjectGroups',
+                        title: 'Subject Group Combinations',
+                        type: 'item',
+                        url: '/admissionMaster/subjectGroups',
+                        param: "",
+                        userTypeCode: ['ADMGN'],
+                        hidden: false,
+                        target: false
+                    }, 
+                    {
+                        id: 'feeStructures',
+                        title: 'Fee Structures',
+                        type: 'item',
+                        url: '/admissionMaster/feeStructures',
                         param: "",
                         userTypeCode: ['ADMGN'],
                         hidden: false,

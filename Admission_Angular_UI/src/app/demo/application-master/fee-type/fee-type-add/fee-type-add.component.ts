@@ -37,7 +37,6 @@ export class FeeTypeAddComponent
 
     this.addFeeTypeForm = this.formbuilder.group({
       id:[''],
-      code:['',[Validators.required]],
       name: ['',[Validators.required]]
     });  
   }

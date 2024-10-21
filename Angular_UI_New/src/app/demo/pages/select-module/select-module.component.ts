@@ -6,7 +6,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { UserService } from 'src/app/theme/shared/service';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
 import { CommonService } from 'src/app/theme/shared/service/common.service';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FileUploadValidators, FileUploadModule } from '@iplab/ngx-file-upload';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -21,6 +21,7 @@ export class SelectModuleComponent {
     @Input() public modalParams;
     loginUser !: any;
     selectedModule : any;
+    modules : any[];
 
     constructor(private notifier: NotifierService,
         private commonSharedService: CommonSharedService,
@@ -28,14 +29,17 @@ export class SelectModuleComponent {
         private userService : UserService,
         private router: Router,
         private formBuilder : FormBuilder,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private location : Location
     ) 
     {
-        this.loginUser = this.commonSharedService.loginUser;
+        this.modules = [];
+        this.getModules();
     }
 
     ngOnInit()
     {
+        
     }
 
     showNotification(type: string, message: string): void 
@@ -44,16 +48,48 @@ export class SelectModuleComponent {
         this.notifier.notify(type, message);
     }
 
+    async getModules() 
+    {  
+        try
+        {
+            let response = await this.commonService.getModules().toPromise();
+            if (response.status_code == 200 && response.message == 'success') 
+            {
+                this.modules = response.modules;
+                this.loginUser = this.commonSharedService.loginUser;
+                console.log(this.loginUser)
+                for(let i=0;i<this.modules.length;i++)
+                {
+                    let tempModule = this.loginUser.userModules.filter(userModule=>userModule.module.id == this.modules[i].id);
+                    if(tempModule.length == 0)
+                    {
+                        this.loginUser.userModules.push({
+                        id : 0,
+                        isActive : 0,
+                        isModuleAdminApproved : 0,
+                        module : {id: this.modules[i].id, name: this.modules[i].name, redirectUrl: this.modules[i].redirectUrl},
+                        tableName : "user_module",
+                        userRole : {id: null, name: null},
+                        userType : {id: null, name: null, code: null}
+                        })
+                    }
+                }
+            }
+        }
+        catch(e)
+        {
+            this.showNotification("error", e);
+        }
+    }
+
     getUserModulesData(index : number)
     {
-        this.loginUser = this.commonSharedService.loginUser;
         this.selectedModule = this.loginUser;    
         this.selectedModule['userModule'] = this.loginUser?.userModules[index];
         if(this.selectedModule['userModule'].userRole?.id != null && this.selectedModule['userModule'].userType?.id != null)
         {
             let redirectPath = this.selectedModule['userModule'].module.redirectUrl + "#/auth/signin/" + this.loginUser.uuid + "/" + this.selectedModule['userModule'].module.id;
-            window.open(redirectPath);
-            //delete this.selectedModule.userModules;   
+            window.open(redirectPath, "_self");
         }
     }
 
@@ -73,5 +109,10 @@ export class SelectModuleComponent {
         {
             this.showNotification("info", "Logout Unsuccessful");
         }
+    }
+
+    back()
+    {
+        this.location.back();
     }
 }

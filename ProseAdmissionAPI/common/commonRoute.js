@@ -8,6 +8,8 @@ commonRoute.use('/getAppBase', require('./app-base.js'));
 commonRoute.use('/updateStatus', require('../util/validateToken.js'), require('./update-status.js'));
 
 ///Masters
+commonRoute.use('/getCurrencies', require('../util/validateToken.js'), require('./currencies.js'));
+
 commonRoute.use('/getTaxTypes', require('../util/validateToken.js'), require('./tax-types.js'));
 commonRoute.use('/saveTaxType', require('../util/validateToken.js'), require('./save-tax-type.js'));
 commonRoute.use('/updateTaxType', require('../util/validateToken.js'), require('./update-tax-type.js'));
@@ -50,12 +52,18 @@ commonRoute.use('/saveGradeSection', require('../util/validateToken.js'), requir
 commonRoute.use('/deleteGradeSection', require('../util/validateToken.js'), require('./delete-grade-section.js'));
 
 commonRoute.use('/getSubjectGroups', require('../util/validateToken.js'), require('./subject-groups.js'));
+commonRoute.use('/getSubjectGroup', require('../util/validateToken.js'), require('./subject-group.js'));
 commonRoute.use('/saveSubjectGroup', require('../util/validateToken.js'), require('./save-subject-group.js'));
 commonRoute.use('/updateSubjectGroup', require('../util/validateToken.js'), require('./update-subject-group.js'));
 commonRoute.use('/deleteSubjectGroup', require('../util/validateToken.js'), require('./delete-subject-group.js'));
 commonRoute.use('/getSubjectGroupAllocations', require('../util/validateToken.js'), require('./subject-group-allocations.js'));
 commonRoute.use('/updateSubjectGroupAllocation', require('../util/validateToken.js'), require('./update-subject-group-allocation.js'));
 commonRoute.use('/deleteSubjectGroupAllocation', require('../util/validateToken.js'), require('./delete-subject-group-allocation.js'));
+
+commonRoute.use('/getFeeStructures', require('../util/validateToken.js'), require('./fee-structures.js'));
+commonRoute.use('/getFeeStructure', require('../util/validateToken.js'), require('./fee-structure.js'));
+commonRoute.use('/saveFeeStructure', require('../util/validateToken.js'), require('./save-fee-structure.js'));
+commonRoute.use('/deleteFeeStructure', require('../util/validateToken.js'), require('./delete-fee-structure.js'));
 
 commonRoute.use('/',(req,res,next) => 
 {

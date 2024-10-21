@@ -15,12 +15,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.code != undefined)
+        if(reqData.name != undefined)
         {
-            if(reqData.name != "" && reqData.code != "")
+            if(reqData.name != "")
             {
                 name = reqData.name;
-                code = reqData.code;
+                code = commonFunction.generateCodeByName(reqData.name);
 
                 //check duplicate fee-type   
                 feeType = await dbCommon.duplicateFeeType(name, code, "");

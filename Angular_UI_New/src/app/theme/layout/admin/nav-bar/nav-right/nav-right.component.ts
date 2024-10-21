@@ -76,6 +76,11 @@ export class NavRightComponent implements DoCheck {
     this.notifier.notify(type, message);
   }
 
+  selectModule()
+  {
+    this.router.navigateByUrl("/pages/module-selection");
+  }
+
   async logout() 
   {
     try

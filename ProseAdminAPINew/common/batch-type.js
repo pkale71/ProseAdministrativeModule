@@ -14,7 +14,7 @@ module.exports = require('express').Router().get('/:id', async(req,res) =>
     {
         id = commonFunction.validateNumber(req.params?.id);
         batchType = await dbCommon.getBatchType(id);
-        if(batchType.length == 1)
+        if(batchType.length >= 0)
         {
             res.status(200)
             return res.json({

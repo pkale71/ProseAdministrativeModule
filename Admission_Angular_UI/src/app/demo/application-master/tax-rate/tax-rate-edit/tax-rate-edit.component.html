@@ -14,10 +14,14 @@
             <div class="col-md-12">   
                 <form [formGroup]="academicSessionForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="academicSession">Academic Session &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedAcademicSession"></i></label>
+                        <label class="form-control-label" for="academicSession">Academic Session &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedAcademicSession"></i></label>
                         <select class="form-control" required id="academicSession" formControlName="academicSession">
                             <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession.year}}</option>
                         </select>
+                        <label style="color: red;"
+                        *ngIf="academicSessionForm.controls['academicSession'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please enter academic session.</label>
                     </div>
                 </form>
             </div>
@@ -26,10 +30,14 @@
             <div class="col-md-12">
                 <form [formGroup]="taxTypeForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="taxType">Tax Type &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedTaxType"></i></label>
+                        <label class="form-control-label" for="taxType">Tax Type &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedTaxType"></i></label>
                         <select class="form-control" required id="taxType" formControlName="taxType">
                             <option value="{{taxType?.id}}" *ngFor="let taxType of taxTypes">{{taxType?.name}}</option>
                         </select>
+                        <label style="color: red;"
+                        *ngIf="taxTypeForm.controls['taxType'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please enter academic session.</label>
                     </div>
                 </form>                
             </div> 

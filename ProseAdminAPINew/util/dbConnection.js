@@ -6,7 +6,8 @@ let obj = {
     port: "3306",
     user: "root",
     password: "admin",    
-    database: commonFunction.databaseName()
+    database: commonFunction.databaseName(),
+    multipleStatements: true
 }
 const pool = mysql2.createPool(obj);
 pool.on('error', (err) => 

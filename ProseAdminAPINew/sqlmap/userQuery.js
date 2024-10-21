@@ -402,6 +402,7 @@ db.getUsers = (userGradeId, userCategoryId, action) =>
     })
 };
 
+
 db.insertUser = (user) => 
 {
     return new Promise((resolve, reject) => 
@@ -746,7 +747,7 @@ db.insertUserModuleHistory = (userModuleHistory) =>
         {
             let sql = `INSERT INTO user_module_history (user_id, module_id, user_role_id, user_type_id, assigned_on, assigned_by_id, remark) 
             VALUES (${userModuleHistory.userId}, ${userModuleHistory.moduleId}, NULLIF('${userModuleHistory.userRoleId}', ''), NULLIF('${userModuleHistory.userTypeId}',''), NOW(), ${userModuleHistory.createdById}, '${userModuleHistory.remark}')`
-        
+
             dbConn.query(sql, (error, result) => 
             {
                 if(error)

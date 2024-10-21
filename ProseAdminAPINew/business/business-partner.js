@@ -14,7 +14,7 @@ module.exports = require('express').Router().get('/:uuid', async(req,res) =>
         uuid = req.params.uuid;
         
         businessPartner = await dbBusiness.getBusinessPartner(uuid);
-        if(businessPartner.length == 1)
+        if(businessPartner.length >= 0)
         {
             res.status(200)
             return res.json({

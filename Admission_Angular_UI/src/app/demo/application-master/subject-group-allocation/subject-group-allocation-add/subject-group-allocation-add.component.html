@@ -1,0 +1,76 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="subjectGroupAllocationAddModal"><i class="fa fa-plus"></i>&nbsp;Allocate Subjects</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="addSubjectGroupAllocationForm" id="addSubjectGroupForm" (ngSubmit)="saveSubjectGroupAllocation()" autocomplete="off">
+    <div class="modal-body"> 
+        <div class="row">
+            <div class="col-sm-2">
+                <label class="form-control-label" for="groupName">Group Name</label>
+                <label class="form-control input-md">{{subjectGroup?.groupName}}</label>                 
+            </div>
+            <div class="col-sm-2">
+                <label class="form-control-label" for="syllabus">Syllabus</label>
+                <label class="form-control input-md">{{subjectGroup?.syllabus?.name}}</label>                 
+            </div>
+            <div class="col-sm-2">
+                <label class="form-control-label" for="gradeCategory">Grade Category</label>
+                <label class="form-control input-md">{{subjectGroup?.gradeCategory?.name}}</label>                  
+            </div>
+            <div class="col-sm-2">
+                <label class="form-control-label" for="grade">Grade</label>
+                <label class="form-control input-md">{{subjectGroup?.grade?.name}}</label>                  
+            </div>
+            <div class="col-sm-2">
+                <label class="form-control-label" for="minSubject">Min Subject</label>
+                <label class="form-control input-md">{{subjectGroup?.minSubject}}</label>                 
+            </div>
+            <div class="col-sm-2">
+                <label class="form-control-label" for="maxSubject">Max Subject</label>
+                <label class="form-control input-md">{{subjectGroup?.maxSubject}}</label>                 
+            </div>
+        </div>
+        <div class="row mt-4">
+            <h5>Allocate Subjects&nbsp;<span class="badge bg-info">{{subjects.length}}</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSubject"></i></h5>
+            <div class="table-responsive">
+                <table class="table table-striped row-border table-hover pt-10">
+                    <thead>
+                        <tr>
+                            <th style="padding : 1rem 0 1rem 1.2rem;">Sno</th>
+                            <th style="padding : 1rem 0 1rem 1.2rem;">Subject</th>
+                            <th style="padding : 1rem 0 1rem 1.2rem;">Assign Subjects</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let subject of subjects let i=index">
+                            <td style="padding : 0 0 0 1.5rem;align-content: center;">{{i+1}}</td>
+                            <td style="padding : 0 0 0 1.2rem;align-content: center;">{{subject?.name}}</td>
+                            <td style="padding : 0 0 0 2rem;align-content: center;">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="checkbox-{{subject.id}}" [value] = "subject.id" (change)="selSubjects($event)" name="checkbox-{{subject.id}}"><label class="cr" for="checkbox-{{subject.id}}">&nbsp;</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="subjects.length == 0">
+                            <td></td>
+                            <td>No record(s) found</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

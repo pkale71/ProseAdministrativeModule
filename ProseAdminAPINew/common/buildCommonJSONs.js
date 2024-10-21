@@ -115,7 +115,7 @@ buildCommonJSON.userTypes = function(datas)
 }
 
 ///Academic Admin
-buildCommonJSON.schoolingProgrmas = function(datas)
+buildCommonJSON.schoolingProgrmas = function(datas, action = 1)
 {
     let resultJSON = [];
     let schoolingCategoryJSON = [];
@@ -136,7 +136,14 @@ buildCommonJSON.schoolingProgrmas = function(datas)
             "schoolingCategory" : schoolingCategoryJSON,
             "isExist" :  data.isExist
         }
-        resultJSON.push(finalJSON);
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
 
     return resultJSON;

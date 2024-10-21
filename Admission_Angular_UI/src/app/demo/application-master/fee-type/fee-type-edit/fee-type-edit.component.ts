@@ -38,7 +38,6 @@ export class FeeTypeEditComponent
 
     this.editFeeTypeForm = this.formbuilder.group({
       id:[''],
-      code:['',[Validators.required]],
       name: ['',[Validators.required]]
     });  
 

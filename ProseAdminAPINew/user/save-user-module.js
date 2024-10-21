@@ -30,8 +30,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 {            
             /////Check User Grade
                     let user = await dbUser.getUser(userUUID);
-                    if(user[0].userGradeCode != 'HRADM' && user[0].userGradeCode != 'ACADM')
-                    {
+                    // if(user[0].userGradeCode != 'HRADM' && user[0].userGradeCode != 'ACADM')
+                    // {
     ////Check Duplicate User Module
                         userModule = await dbUser.duplicateUserModule(userUUID, moduleId, '', '');
                         if(userModule.length == 0)
@@ -40,6 +40,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             let insertJSON = {
                                 "userId" : user[0].userId,
                                 "moduleId" : moduleId,
+                                "userRoleId" : "",
+                                "userTypeId" : "",
                                 "createdById" : authData.id
                             }
                             let insertUserModuleResult = await dbUser.insertUserModule(insertJSON);
@@ -78,17 +80,17 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                 "error" : errorCode.getStatus(500)
                             })
                         }
-                    }
-                    else
-                    {
-                        res.status(500)
-                        return res.json({
-                            "status_code" : 500,
-                            "message" : "User Module Not Assigned To " + user[0].userGradeName,
-                            "success" : false,
-                            "error" : errorCode.getStatus(500)
-                        })
-                    }
+                    // }
+                    // else
+                    // {
+                    //     res.status(500)
+                    //     return res.json({
+                    //         "status_code" : 500,
+                    //         "message" : "User Module Not Assigned To " + user[0].userGradeName,
+                    //         "success" : false,
+                    //         "error" : errorCode.getStatus(500)
+                    //     })
+                    // }
                 }
                 else
                 {

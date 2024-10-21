@@ -27,8 +27,7 @@ module.exports = require('express').Router().get('/:schoolUUID/:academicSessionI
         action = "";
 
         let tempParams = req.params?.schoolUUID + '/' + req.params?.academicSessionId + '/' + req.params?.syllabusId + '/' + req.params?.gradeCategoryId + '/' + req.params?.gradeId;
-
-
+        
         req.params[0] = req.params['optParam'] ? '/' + req.params['optParam'] + req.params[0] : req.params[0];
         tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);
         tempParams = tempParams.toString().split("/");

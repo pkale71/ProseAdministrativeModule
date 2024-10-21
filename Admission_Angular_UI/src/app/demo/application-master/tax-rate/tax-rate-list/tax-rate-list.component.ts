@@ -68,7 +68,7 @@ export class TaxRateListComponent
   {
     if(res.result == "success")
     {
-      this.getTaxRates(0, 0, 'All');
+      this.filterData();
     }
   })
 

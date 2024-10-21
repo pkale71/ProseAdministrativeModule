@@ -14,7 +14,7 @@ module.exports = require('express').Router().get('/:id', async(req,res) =>
     {
         id = commonFunction.validateNumber(req.params?.id);
         subject = await dbCommon.getSubject(id);
-        if(subject.length == 1)
+        if(subject.length >= 0)
         {
             res.status(200)
             return res.json({

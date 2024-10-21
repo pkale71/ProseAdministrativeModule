@@ -24,20 +24,6 @@
                 </div>                
             </div> 
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label class="form-control-label" for="code">Code&nbsp;<span style="color: red;">*</span></label>
-                    <input class="form-control input-md" id="code" type="text" required 
-                    formControlName="code" maxlength="5"
-                    [ngClass]="{'is-invalid': !addDiscountTypeForm.controls['code'].valid && !isValidForm}"/>
-                    <label style="color: red;"
-                    *ngIf="addDiscountTypeForm.controls['code'].hasError('required') && !isValidForm"
-                    class="error jquery-validation-error small form-text"
-                    >Please enter code.</label>
-                </div>                
-            </div> 
-        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>

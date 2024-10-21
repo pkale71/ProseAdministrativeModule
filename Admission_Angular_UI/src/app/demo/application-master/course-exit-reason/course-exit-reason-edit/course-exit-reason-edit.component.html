@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="courseExitReasonEditModal"><i class="fa fa-edit"></i>&nbsp;Edit Course Exit Reason</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="editCourseExitReasonForm" id="editCourseExitReasonForm" (ngSubmit)="saveCourseExitReason()" autocomplete="off">
+    <div class="modal-body"> 
+        <div class="row">
+            <div class="col-md-12">   
+                <form [formGroup]="exitReasonTypeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="exitReasonType">Exit Reason Type &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedExitReasonType"></i></label>
+                        <select class="form-control" required id="exitReasonType" formControlName="exitReasonType">
+                            <option value="{{exitReasonType.id}}" *ngFor="let exitReasonType of exitReasonTypes">{{exitReasonType.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="exitReasonTypeForm.controls['exitReasonType'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please enter exit reason type.</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Reason&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="150"
+                    [ngClass]="{'is-invalid': !editCourseExitReasonForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="editCourseExitReasonForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter reason.</label>
+                </div>                
+            </div> 
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

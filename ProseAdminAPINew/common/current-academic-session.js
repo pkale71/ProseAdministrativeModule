@@ -12,7 +12,7 @@ module.exports = require('express').Router().get('/', async(req,res) =>
     try
     {
         currentAcademicSession = await dbCommon.getCurrentAcademicSession();
-        if(currentAcademicSession.length == 1)
+        if(currentAcademicSession.length >= 0)
         {
             res.status(200)
             return res.json({

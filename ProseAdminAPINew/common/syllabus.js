@@ -14,7 +14,7 @@ module.exports = require('express').Router().get('/:id', async(req,res) =>
     {
         id = commonFunction.validateNumber(req.params?.id);
         syllabus = await dbCommon.getSyllabus(id);
-        if(syllabus.length == 1)
+        if(syllabus.length >= 0)
         {
             res.status(200)
             return res.json({

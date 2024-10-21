@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-clone"></i>&nbsp; Fee Categories &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="addFeeCategory()">Add Fee Category</button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table datatable id="tblFeeCategory" class="table table-striped row-border table-hover pt-10">
+                <thead>
+                  <tr>
+                    <th>Sno</th>
+                    <th>Fee Category</th>
+                    <th>Installments</th>
+                    <th>Active</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let feeCategory of feeCategories let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{feeCategory.name}}</td>
+                    <td>{{feeCategory.availingInstallment == 1 ? 'Yes' : 'No'}}</td>                    
+                    <td>
+                      <span [ngClass]="feeCategory.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(feeCategory)" 
+                      style="cursor: pointer;" title="Update Status">
+                        {{feeCategory.isActive? 'Yes' : 'No' }}
+                      </span>
+                    </td>   
+                    <td style="width:40px;text-align: right;">
+                        <i class="fa fa-edit" (click)="editFeeCategory(feeCategory)" *ngIf="feeCategory.isExist == 0" title="Edit" style="cursor: pointer;"></i>&nbsp;
+                        <i class="fa fa-trash-alt" (click)="deleteFeeCategory(feeCategory)" *ngIf="feeCategory.isExist == 0" title="Delete" style="cursor: pointer;"></i>
+                    </td>
+                  </tr>
+                  <tr *ngIf="feeCategories.length == 0">
+                    <td></td>
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>

@@ -45,6 +45,25 @@ commonFunction.generateCode = function(length, prefix, id)
     return (res);
 }
 
+commonFunction.generateCodeByName = function(name) 
+{
+    // Remove spaces and convert the name to uppercase
+    let cleanedName = name.replace(/\s+/g, '').toUpperCase();  
+    // Take the first two letters and last two letters (if name length is sufficient)
+    let code = '';    
+    if (cleanedName.length >= 4) 
+    {
+      code = cleanedName.slice(0, 2) + cleanedName.slice(-2);
+    } 
+    else 
+    {
+      // If name is shorter, fill with numbers or characters derived from the name
+      code = cleanedName.padEnd(4, 'X'); // 'X' used as filler, can replace with any logic
+    }
+  
+    return code;
+  }
+
 commonFunction.isValidDate = function(dateString, format) 
 {
     return moment(dateString, format, true).isValid();

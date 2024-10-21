@@ -1,57 +1,88 @@
-<div class="container">
-    <div class="container-fluid">
-        <div class="row m-4">
-            <div class="col-md-6">
-                <img src="./assets/images/logo/logo.png" style="width: 180px; margin-left: 0px; margin-top: -7px;">
-            </div>
-            <div class="col-md-6 mt-2 text-end">
-                <i class="feather icon-log-out" style="cursor: pointer;" (click)="logout()">&nbsp;Signout</i>
-            </div>
-        </div>
-        <div class="m-3">
-            <div class="row justify-content-md-center" style="text-align: center;">
-                <div class="col-md-12">
-                    <h3 class="wow fadeInUp" data-wow-delay="0s"><i class="fa fa-layer-group" ></i>&nbsp; Select Module</h3>
-                </div>
-            </div>            
-        </div> 
-        <div class="card" style="background: transparent;box-shadow: none;" *ngIf="loginUser?.userModules?.length > 0">     
-            <div class="row">
-                <div class="ng-trigger ng-trigger-collapsedCard col-md-4">&nbsp;</div>
-                <div class="ng-trigger ng-trigger-collapsedCard col-md-4" style="text-align: center;" *ngFor="let userModule of loginUser.userModules; let i=index">
-                    <div class="card-block theme-bg2" (click)="getUserModulesData(i)" style="cursor: pointer;">
-                        <div class="d-flex">
-                            <div class="flex-grow-1 me-3">
-                                <h4 class="text-white">{{userModule?.module?.name}}</h4>
+<div class="wrapper landing">
+    <div class="main">
+        <div class="hero-section app-hero">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <img src="./assets/images/logo/logo.png" style="width: 180px; margin-left: 0px; margin-top: -7px;">
+                                <button type="button" class="btn btn-sm btn-primary float-end" (click)="logout()">
+                                    <i class="feather icon-log-out mt-3">&nbsp;Signout</i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-black float-end" *ngIf="loginUser?.userGrade?.code != 'MOADM' && loginUser?.userGrade?.code != 'MOUSR'" (click)="back()">Back</button>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-auto flex-grow-1">
-                                <p class="text-white text-sm text-opacity-50 mb-1">Grade</p>
-                                <h6 class="text-white mb-0">{{loginUser?.userGrade?.name}}</h6>
+                            <div class="card-body border-bottom py-2">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h4 class="d-inline-block mb-0"><i class="feather icon-user text-primary f-20 wid-20"></i><span class="p-l-5">Profile</span></h4>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <!-- <div class="btn-star"><a href="javascript:" class="btn btn-light-success btn-sm">Mark as unread</a><a href="javascript:"><i class="feather icon-star text-warning f-20 m-l-10 wid-20"></i></a></div> -->
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-auto flex-grow-1">
-                                <p class="text-white text-sm text-opacity-50 mb-1">Type</p>
-                                <h6 class="text-white mb-0">{{userModule?.userType?.name}}</h6>
+                            <!-- <div class="border-bottom card-body py-2">
+                                <div class="row align-items-center">
+                                    <div class="col-md-12"><button type="button" class="btn btn-sm my-2 m-r-10 btn-light-success"><i class="feather icon-message-circle me-2"></i> Post a reply </button><button type="button" class="btn btn-sm my-2 m-r-10 btn-light-warning"><i anticon="" type="edit" theme="outline" class="feather icon-edit-2 me-2"></i> Post a Note </button><button type="button" class="btn btn-sm my-2 btn-light-danger"><i anticon="" type="user" theme="outline" class="feather icon-user me-2"></i> Customer Notes </button></div>
+                                </div>
+                            </div> -->
+                            <div class="border-bottom card-body ng-star-inserted">
+                                <div class="row">
+                                    <div class="col-sm-auto mb-3 mb-sm-0">
+                                        <div class="d-sm-inline-block d-flex align-items-center">
+                                        <img alt="Generic placeholder image " class="wid-60 img-radius mb-2" src="assets/images/user/avatar-2.jpg">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                        <div class="col">
+                                            <div>
+                                                <h4 class="d-inline-block">{{loginUser?.name}}</h4>
+                                                <span class="badge bg-light-secondary m-l-10"><i class="fa fa-envelope"></i>&nbsp;{{loginUser?.email}}</span>
+                                                <span class="badge bg-light-secondary m-l-10"><i class="fa fa-mobile"></i>&nbsp;{{loginUser?.mobile}}</span>
+                                                <p class="text-muted"><i class="{{loginUser?.gender == 'Male' ? 'fa fa-male' : 'fa fa-female'}}"></i>&nbsp;{{loginUser?.gender}}</p>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        <div>
+                                        <p><b>Hello {{loginUser?.name}},</b></p>
+                                        <p> Enable user to select a module and redirect them to the appropriate module, selection are given below that captures the user choice and navigates to the corresponding module page.</p>
+                                        <p>Thanks...</p>
+                                        </div>
+                                        <!---->
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row" *ngIf="userModule?.userRole?.id == null || userModule?.userType?.id == null">
-                            <div class="col-auto flex-grow-1 mt-3">
-                                <span class="badge bg-danger">Role Not Assigned For This Module</span>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="userModule?.isActive == 0">
-                            <div class="col-auto flex-grow-1 mt-3">
-                                <span class="badge bg-danger">De-active For This Module</span>
-                            </div>
+                            <div class="border-bottom card-body ng-star-inserted">
+                                <div class="row">
+                                    <!-- *ngIf="userModule?.userRole?.id == null || userModule?.userType?.id == null" -->
+                                    <div class="ng-trigger ng-trigger-collapsedCard col-md-4" style="text-align: center;" *ngFor="let userModule of loginUser?.userModules; let i=index">
+                                        <div class="{{(userModule?.userRole?.id == null || userModule?.userType?.id == null) ? 'card-block theme-bg2 flushed' : 'card-block theme-bg2'}}" (click)="getUserModulesData(i)" style="cursor: pointer;">
+                                            <div class="d-flex">
+                                                <div class="flex-grow-1 me-3">
+                                                    <h4 class="text-white">{{userModule?.module?.name}}</h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-auto flex-grow-1">
+                                                    <p class="text-white text-sm text-opacity-50 mb-1">Grade</p>
+                                                    <h6 class="text-white mb-0">{{loginUser?.userGrade?.name}}</h6>
+                                                </div>
+                                                <div class="col-auto flex-grow-1">
+                                                    <p class="text-white text-sm text-opacity-50 mb-1">Type</p>
+                                                    <h6 class="text-white mb-0">{{userModule?.userType?.name}}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>            
+                            <!---->
                         </div>
                     </div>
                 </div>
-                <div class="ng-trigger ng-trigger-collapsedCard col-md-4">&nbsp;</div>
-            </div>      
-        </div>
-        <div class="card" *ngIf="loginUser?.userModules?.length == 0 ">
-            <p class="mt-2" style="font-size: 20px;text-align: center;">No Module(s) Assigned.</p>
+            </div>
         </div>
     </div>
 </div>

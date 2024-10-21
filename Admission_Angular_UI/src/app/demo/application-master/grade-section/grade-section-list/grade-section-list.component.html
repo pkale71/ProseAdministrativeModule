@@ -1,0 +1,132 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header" style="padding: 10px 25px;">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-cubes"></i>&nbsp; Grade Sections &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+          <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+           (click)="addGradeSection()">Add Grade Section</button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <form [formGroup]="schoolForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="school">School &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchool"></i></label>
+                            <select class="form-control" required id="school" formControlName="school">
+                                <option value="{{school?.uuid}}" *ngFor="let school of schools">{{school?.name}}</option>
+                            </select>
+                            <label style="color: red;"
+                            *ngIf="schoolForm.controls['school'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select school.</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <form [formGroup]="academicSessionForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="academicSession">Academic Session &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedAcademicSession"></i></label>
+                            <select class="form-control" required id="academicSession" formControlName="academicSession" (change)="getBatchTypes(academicSessionForm.controls['academicSession'].value, 'All')">
+                                <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession.year}}</option>
+                            </select>
+                            <label style="color: red;"
+                            *ngIf="academicSessionForm.controls['academicSession'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select academic session.</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-2">
+                    <form [formGroup]="syllabusForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="syllabus">Syllabus &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSyllabus"></i></label>
+                            <select class="form-control" required id="syllabus" formControlName="syllabus" (change)="getGradeCategories(syllabusForm.controls['syllabus'].value)">
+                                <option value="{{syllabus.id}}" *ngFor="let syllabus of syllabuses">{{syllabus.name}}</option>
+                            </select>
+                            <label style="color: red;"
+                            *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select syllabus.</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <form [formGroup]="gradeCategoryForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="gradeCategory">Grade Category &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGradeCategory"></i></label>
+                            <select class="form-control" required id="gradeCategory" formControlName="gradeCategory" (change)="getGrades(gradeCategoryForm.controls['gradeCategory'].value, 'All')">
+                                <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory.name}}</option>
+                            </select>
+                            <label style="color: red;"
+                            *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select grade category.</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <form [formGroup]="gradeForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i></label>
+                            <select class="form-control" required id="grade" formControlName="grade">
+                                <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade.name}}</option>
+                            </select>
+                            <label style="color: red;"
+                            *ngIf="gradeForm.controls['grade'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select grade.</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-2">
+                    <form [formGroup]="batchTypeForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="batchType">Batch Type &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedBatchType"></i></label>
+                            <select class="form-control" id="batchType" formControlName="batchType">
+                                <option value="{{batchType.id}}" *ngFor="let batchType of batchTypes">{{batchType.name}}</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <br/>
+                    <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
+                    (click)="filterData()"><i class="fa fa-search"></i>&nbsp;Search</button>
+                    <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                    <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+              <table datatable id="tblGradeSection" class="table table-striped row-border table-hover pt-10">
+                <thead>
+                  <tr>
+                    <th>Sno</th>
+                    <th>Grade - Batch</th>
+                    <th>Sections</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let gradeSection of gradeSections let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{gradeSection?.grade?.name}} [{{gradeSection?.batchType?.name}}]</td>
+                    <td class="text-wrap">
+                        <span class="badge bg-info m-r-5 m-b-5" *ngFor="let section of gradeSection.sections">{{section.name}}<br>
+                        <i class="fa fa-trash-alt text-danger m-t-5" style="cursor: pointer;" title="Delete" (click)="deleteSection(gradeSection.sections, section)"></i></span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="gradeSections.length == 0">
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>

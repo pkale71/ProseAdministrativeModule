@@ -19,6 +19,23 @@ buildCommonJSON.appBase = function(datas)
     return resultJSON;
 }
 
+buildCommonJSON.currencies = function(datas)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
 buildCommonJSON.exitReasonTypes = function(datas)
 {
     let resultJSON = [];
@@ -375,6 +392,277 @@ buildCommonJSON.subjectGroupAllocations = function(datas, action = 1)
             "subject" : subjectJSON,
             "tableName" : data.tableName,
             "isActive" : data.isActive
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildCommonJSON.feeStructures = function(datas, action = 1)
+{
+    let schoolJSON = [];
+    let academicSessionJSON = [];
+    let syllabusJSON = [];
+    let gradeCategoryJSON = [];
+    let schoolingProgramJSON = [];
+    let batchYearJSON = [];
+    let feeCategoryJSON = [];
+    let currencyJSON = [];
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        schoolJSON = [];
+        academicSessionJSON = [];
+        syllabusJSON = [];
+        gradeCategoryJSON = [];
+        schoolingProgramJSON = [];
+        batchYearJSON = [];
+        feeCategoryJSON = [];
+        currencyJSON = [];
+
+        schoolJSON = {
+            "uuid" : data.schoolUUID,
+            "name" : data.schoolName
+        }
+        academicSessionJSON = {
+            "id" : data.academicSessionId,
+            "year" : data.academicSessionYear
+        }
+        batchYearJSON = {
+            "id" : data.batchYearId,
+            "batchYear" : data.batchYear
+        }
+        syllabusJSON = {
+            "id" : data.syllabusId,
+            "name" : data.syllabusName
+        }
+        gradeCategoryJSON = {
+            "id" : data.gradeCategoryId,
+            "name" : data.gradeCategoryName
+        }
+        schoolingProgramJSON = {
+            "id" : data.schoolingProgramId,
+            "name" : data.schoolingProgramName
+        }
+        feeCategoryJSON = {
+            "id" : data.feeCategoryId,
+            "name" : data.feeCategoryName
+        }
+        currencyJSON = {
+            "id" : data.currencyId,
+            "name" : data.currencyName
+        }
+
+        //Final JSON
+        let finalJSON = {
+            "uuid" : data.uuid,
+            "validityFrom" : commonFunction.getFormattedDate(data.validityFrom, "yyyy-mm-dd"),
+            "validityTo" : commonFunction.getFormattedDate(data.validityTo, "yyyy-mm-dd"),
+            "taxApplicable" : data.taxApplicable,
+            "school" : schoolJSON,
+            "academicSession" : academicSessionJSON,
+            "batchYear" : batchYearJSON,
+            "syllabus" : syllabusJSON,
+            "gradeCategory" : gradeCategoryJSON,
+            "schoolingProgram" : schoolingProgramJSON,
+            "feeCategory" : feeCategoryJSON,
+            "currency" : currencyJSON,
+            "totalInstallment" : data.totalInstallment,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildCommonJSON.feeStructureInstallments = function(datas, action = 1)
+{
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "name" : data.name,
+            "installmentRate" : data.installmentRate,
+            "dueDate" : commonFunction.getFormattedDate(data.dueDate, "yyyy-mm-dd"),
+            "isActive" : data.isActive
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildCommonJSON.feeStructureFeeTypes = function(datas, action = 1)
+{
+    let feeTypeJSON = [];
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        feeTypeJSON = [];
+
+        feeTypeJSON = {
+            "id" : data.feeTypeId,
+            "name" : data.feeTypeName
+        }
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "feeType" : feeTypeJSON,
+            "amount" : data.amount,            
+            "isActive" : data.isActive
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildCommonJSON.feeStructureDiscountTypes = function(datas, action = 1)
+{
+    let discountTypeJSON = [];
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        discountTypeJSON = [];
+
+        discountTypeJSON = {
+            "id" : data.discountTypeId,
+            "name" : data.discountTypeName
+        }
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "discountType" : discountTypeJSON,
+            "amount" : data.amount,            
+            "isActive" : data.isActive
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildCommonJSON.feeStructureTaxRates = function(datas, action = 1)
+{
+    let taxTypeJSON = [];
+    let taxRateJSON = [];
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        taxTypeJSON = [];
+        taxRateJSON = [];
+
+        taxTypeJSON = {
+            "id" : data.taxTypeId,
+            "name" : data.taxTypeName
+        }
+        taxRateJSON = {
+            "id" : data.taxRateId,
+            "rate" : data.taxRate
+        }
+
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "taxType" : taxTypeJSON,
+            "taxRate" : taxRateJSON,            
+            "isActive" : data.isActive
+        }
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
+    });
+
+    return resultJSON;
+}
+
+buildCommonJSON.feeStructureTotals = function(datas, action = 1)
+{
+    let feeStructureTaxRateJSON = [];
+    let taxTypeJSON = [];
+    let taxRateJSON = [];
+    let resultJSON = [];
+
+    datas.forEach((data) => 
+    { 
+        feeStructureTaxRateJSON = [];
+        taxTypeJSON = [];
+        taxRateJSON = [];
+
+        taxTypeJSON = {
+            "id" : data.taxTypeId,
+            "name" : data.taxTypeName
+        }
+        taxRateJSON = {
+            "id" : data.taxRateId,
+            "rate" : data.taxRate
+        }
+
+        feeStructureTaxRateJSON = {
+            "id" : data.feeStructureTaxRateId
+        }
+
+        //Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "feeStructureTaxRate" : feeStructureTaxRateJSON,
+            "taxType" : taxTypeJSON,
+            "taxRate" : taxRateJSON,
+            "totalAmount" : data.totalAmount,
+            "totalDiscount" : data.totalDiscount,
+            "netAmount" : data.netAmount,
+            "taxAmount" : data.taxAmount,
+            "grossAmount" : data.grossAmount,
         }
         if(action == 1)
         {
