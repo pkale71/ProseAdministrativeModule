@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="batchtypeAddModal"><i class="fa fa-list"></i>&nbsp;Schooling Program Validities&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+</div>
+            
+<div class="modal-body">
+    <div class="table-responsive">
+        <table datatable id="tblSchoolingProgramDetail" class="table table-striped row-border table-hover pt-10">
+            <thead>
+                <tr>
+                    <th>Sno</th>
+                    <th>Academic Session</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Adm. Start Date</th>
+                    <th>Adm. End Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let schoolingProgramDetail of schoolingProgramDetails let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{schoolingProgramDetail.academicSession?.year}}</td>
+                    <td>{{schoolingProgramDetail.startDate | date : "dd/MM/yyyy"}}</td>
+                    <td>{{schoolingProgramDetail.endDate | date : "dd/MM/yyyy"}}</td>
+                    <td>{{schoolingProgramDetail.admissionStartDate | date : "dd/MM/yyyy"}}</td>
+                    <td>{{schoolingProgramDetail.admissionEndDate | date : "dd/MM/yyyy"}}</td>
+                    <td style="width:40px;text-align: right;">
+                        <i class="fa fa-edit" (click)="editSchoolingProgramDetail(schoolingProgramDetail)" title="Edit" style="cursor: pointer;" *ngIf="schoolingProgramDetail.isExist == 0"></i>&nbsp;
+                        <i class="fa fa-trash-alt" (click)="deleteSchoolingProgramDetail(schoolingProgramDetail)" 
+                        title="Delete" style="cursor: pointer;" *ngIf="schoolingProgramDetail.isExist == 0"></i>&nbsp;
+                        <i class="fa fa-list" (click)="detailSchoolingProgramBatches(schoolingProgramDetail)" title="Batches" style="cursor: pointer;"></i>
+                    </td>
+                </tr>
+                <tr *ngIf="schoolingProgramDetails.length == 0">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close </button>
+</div>

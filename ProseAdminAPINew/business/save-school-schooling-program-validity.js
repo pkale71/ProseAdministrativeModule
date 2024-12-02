@@ -7,7 +7,7 @@ let genUUID = require('uuid');
 ////////Variables 
 let schoolUUID;
 let academicSessionId;
-let schoolingProgramId;
+let schoolSchoolingProgramId;
 let startDate;
 let endDate;
 let admissionStartDate;
@@ -16,9 +16,9 @@ let batchTypeIds;
 //////
 let school;
 let academicSession;
-let schoolingProgram;
-let batchTypes;
 let schoolSchoolingProgram;
+let batchTypes;
+let schoolSchoolingProgramValidity;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -27,13 +27,13 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.school != undefined && reqData.academicSession != undefined && reqData.schoolingProgram != undefined && reqData.startDate != undefined && reqData.endDate != undefined && reqData.admissionStartDate != undefined && reqData.admissionEndDate != undefined && reqData.batchTypeIds != undefined)
+        if(reqData.school != undefined && reqData.academicSession != undefined && reqData.schoolSchoolingProgram != undefined && reqData.startDate != undefined && reqData.endDate != undefined && reqData.admissionStartDate != undefined && reqData.admissionEndDate != undefined && reqData.batchTypeIds != undefined)
         {
-            if(reqData.school.uuid != "" && reqData.academicSession.id != "" && reqData.schoolingProgram.id != "" && reqData.startDate != "" && reqData.endDate != "" && reqData.admissionStartDate != "" && reqData.admissionEndDate != "" && reqData.batchTypeIds != "")
+            if(reqData.school.uuid != "" && reqData.academicSession.id != "" && reqData.schoolSchoolingProgram.id != "" && reqData.startDate != "" && reqData.endDate != "" && reqData.admissionStartDate != "" && reqData.admissionEndDate != "" && reqData.batchTypeIds != "")
             {
                 schoolUUID = reqData.school.uuid;
                 academicSessionId = reqData.academicSession.id;
-                schoolingProgramId = reqData.schoolingProgram.id;
+                schoolSchoolingProgramId = reqData.schoolSchoolingProgram.id;
                 startDate = reqData.startDate;
                 endDate = reqData.endDate;
                 admissionStartDate = reqData.admissionStartDate;
@@ -94,35 +94,34 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             "error" : errorCode.getStatus(500)
                         })
                     }
-                /////check Schooling Program
-                    schoolingProgram = await dbCommon.getSchoolingProgram(schoolingProgramId);
-                    if(schoolingProgram.length == 0)
+                /////check School Schooling Program
+                    schoolSchoolingProgram = await dbBusiness.getSchoolSchoolingProgram(schoolSchoolingProgramId);
+                    if(schoolSchoolingProgram.length == 0)
                     { 
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Invalid Schooling Program",
+                            "message" : "Invalid School Schooling Program",
                             "success" : false,
                             "error" : errorCode.getStatus(500)
                         })
                     }
-                //duplicate school schooling program
-                    schoolSchoolingProgram = await dbBusiness.duplicateSchoolSchoolingProgram(school[0].id, academicSessionId, schoolingProgramId, '');
-                    if(schoolSchoolingProgram.length > 0)
+                //duplicate school schooling program validity
+                    schoolSchoolingProgramValidity = await dbBusiness.duplicateSchoolSchoolingProgramValidity(school[0].id, academicSessionId, schoolSchoolingProgramId, '');
+                    if(schoolSchoolingProgramValidity.length > 0)
                     {
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Schooling Program Already Exist For Academic Session And School",
+                            "message" : "Schooling Program Validity Already Exist For Academic Session And School",
                             "success" : false,
                             "error" : errorCode.getStatus(500)
                         })
                     }
                     let insertJSON = {
-                        "uuid" : genUUID.v1(),
                         "schoolId" : school[0].id,
                         "academicSessionId" : academicSessionId,
-                        "schoolingProgramId" : schoolingProgramId,
+                        "schoolSchoolingProgramId" : schoolSchoolingProgramId,
                         "startDate" : startDate,
                         "endDate" : endDate,
                         "admissionStartDate" : admissionStartDate,
@@ -130,7 +129,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         "batchTypeIds" : batchTypeIds,
                         "createdById" : authData.id
                     }
-                    let insertResult = await dbBusiness.insertSchoolSchoolingProgram(insertJSON);
+                    let insertResult = await dbBusiness.insertSchoolSchoolingProgramValidity(insertJSON);
                     let insertId = insertResult.insertId;
                     if(parseInt(insertId) > 0)
                     {
@@ -146,7 +145,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Schooling Program Not Saved",
+                            "message" : "School Schooling Program Validity Not Saved",
                             "success" : false,
                             "error" : errorCode.getStatus(500)
                         })

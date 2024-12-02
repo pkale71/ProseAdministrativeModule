@@ -145,30 +145,18 @@ commonFunction.copyFile = async function(sourcePath, destiPath)
 
 commonFunction.createRequiredDir = function(basePath)
 {
-    // if(!fs.existsSync(basePath + "/uploads"))
-    // {
-    //     fs.mkdirSync(basePath + "/uploads");
-    // }
-    // if(!fs.existsSync(basePath + "/uploads/user-docs"))
-    // {
-    //     fs.mkdirSync(basePath + "/uploads/user-docs");
-    // }
-    // if(!fs.existsSync(basePath + "/uploads/business-partner-docs"))
-    // {
-    //     fs.mkdirSync(basePath + "/uploads/business-partner-docs");
-    // }
-    // if(!fs.existsSync(basePath + "/uploads/tie-up-school-docs"))
-    // {
-    //     fs.mkdirSync(basePath + "/uploads/tie-up-school-docs");
-    // }
-    // if(!fs.existsSync(basePath + "/uploads/study-center-docs"))
-    // {
-    //     fs.mkdirSync(basePath + "/uploads/study-center-docs");
-    // }
-    // if(!fs.existsSync(basePath + "/uploads/school-docs"))
-    // {
-    //     fs.mkdirSync(basePath + "/uploads/school-docs");
-    // }
+    if(!fs.existsSync(basePath + "/uploads"))
+    {
+        fs.mkdirSync(basePath + "/uploads");
+    }
+    if(!fs.existsSync(basePath + "/uploads/application-docs"))
+    {
+        fs.mkdirSync(basePath + "/uploads/application-docs");
+    }
+    if(!fs.existsSync(basePath + "/uploads/enrollment-docs"))
+    {
+        fs.mkdirSync(basePath + "/uploads/enrollment-docs");
+    }
     /////////////
     if(!fs.existsSync(basePath + "/uploads/uploadedFiles")) // For Multer Files
     {
@@ -181,25 +169,13 @@ commonFunction.getUploadFolder = function(uploadIn)
     //After uploads Folder
     let folderPath = '';
     let baseDir = process.cwd();
-    if(uploadIn == 'UserDoc')
+    if(uploadIn == 'ApplicationDoc')
     {       
-        folderPath = baseDir + "/uploads/user-docs/";
+        folderPath = baseDir + "/uploads/application-docs/";
     }
-    else if(uploadIn == 'BusinessPartnerDoc')
+    else if(uploadIn == 'EnrollmentDoc')
     {       
-        folderPath = baseDir + "/uploads/business-partner-docs/";
-    }
-    else if(uploadIn == 'TieUpSchoolDoc')
-    {       
-        folderPath = baseDir + "/uploads/tie-up-school-docs/";
-    }
-    else if(uploadIn == 'StudyCenterDoc')
-    {       
-        folderPath = baseDir + "/uploads/study-center-docs/";
-    }
-    else if(uploadIn == 'SchoolDoc')
-    {       
-        folderPath = baseDir + "/uploads/school-docs/";
+        folderPath = baseDir + "/uploads/enrollment-docs/";
     }
 
     return folderPath;
@@ -317,27 +293,34 @@ commonFunction.sendMail = function (toEmail, fullName, emailBody)
     {
         const headers = 
         {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'API-key' : ''
         };
-        let data = 
-        {
-            "to":[{"email" : toEmail, "name" : fullName, "type" : "to"}],
-            "from_email" : "admin@proseedu.com",
-            "from_name" : "Admin",
-            "subject" : "Welcome to PROSE EDU",
-            "text" : emailBody,
-            "clientKey" : "prose-uCOgPCL5PkxL6JZmCTcZuyT47h9rYC"
-        }
+        let data = JSON.stringify(
+        {  
+            "sender":{  
+               "name":"Admin",
+               "email":"admin@proseedu.com"
+            },
+            "to":[  
+               {  
+                  "email":toEmail,
+                  "name":fullName
+               }
+            ],
+            "subject":"Welcome to PROSE EDU",
+            "htmlContent":`<html><head></head><body>${emailBody}</body></html>`
+        });
 
         return new Promise((resolve, reject) => 
         {
-            let url = 'https://mqm.proseedu.in/saveMailMaster';
+            let url = 'https://api.brevo.com/v3/smtp/email';
             axios.post(url, data, 
             {
                 headers: headers
             })
             .then(response1 => {
-                if (response1?.data?.status_code == 200) 
+                if (response1?.status == 201) 
                 {
                     resolve(true);
                 }
@@ -407,6 +390,20 @@ commonFunction.onBoardingEmailBody = function(linkUrl, email)
 
     let emailBody = `<p>Dear ${userName},</p><br><p>Welcome to PROSE EDU! We’re thrilled to have you join our community.</p><br><p>Personalize your profile by adding a profile picture and filling out your details. <a href = ${linkUrl}>Complete Your Profile</a>.</p><br><p></p><p>Best regards,</p><p>Prose Edu Team</p>`;
     return(emailBody);
+}
+
+commonFunction.generateShortDescription = function(sentence) 
+{
+    const excludeWords = ['of', 'by', 'a', 'the', 'and', 'for', 'to', 'in', 'on', 'with'];
+    
+    const meaningfulWords = sentence
+    .split(' ') // Split into words
+    .map(word => word.replace(/[^a-zA-Z0-9]/g, '')) // Remove non-alphanumeric characters
+    .filter(word => word.length > 0 && !excludeWords.includes(word.toLowerCase())) // Exclude filler words
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .splice(0,5); // Capitalize first letter of each word
+
+    return `${meaningfulWords.join('_')}`;  
 }
 
 module.exports = commonFunction;

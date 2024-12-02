@@ -295,7 +295,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     "feeStructureTotals" : feeStructureTotals,
                     "createdById" : authData.id
                 }
-                let insertFeeStructureResult = await dbCommon.insertfeeStructure(insertJSON);
+                let insertFeeStructureResult = await dbCommon.insertFeeStructure(insertJSON);
                 let insertFeeStructureId = insertFeeStructureResult.insertId;
     
                 if(parseInt(insertFeeStructureId) > 0)
@@ -348,7 +348,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
             "status_code" : 500,
             "message" : "Something Went Wrong",
             "success" : false,
-            "error" : e?.stack
+            "error" : e
         });
     }
 })

@@ -48,6 +48,7 @@ export class CommonSharedService
     public currentAcademicYearListObject = new Subject<any>();
     public schoolListObject = new Subject<any>();
     public schoolSchoolingProgramListObject = new Subject<any>();
+    public schoolSchoolingProgramDetailListObject = new Subject<any>();
     public loginUser : any;
   
     constructor() 
@@ -74,19 +75,6 @@ export class CommonSharedService
 
     public prepareSelectOptions(options: Array<IOption>): Array<IOption> {
         return options.map((option) => ({ value: option.value, label: option.label }));
-    }
-
-    public convert12HrsTimeFormatPipe(time : any)
-    {
-        let hour = (time.split(':'))[0]
-        let min = (time.split(':'))[1]
-        let part = hour >= 12 ? 'PM' : 'AM';
-        if(parseInt(hour) == 0)
-        hour = 12;
-        min = (min+'').length == 1 ? `0${min}` : min;
-        hour = hour > 12 ? hour - 12 : hour;
-        hour = (hour+'').length == 1 ? `0${hour}` : hour;
-        return `${hour}:${min} ${part}`
     }
 
     public ExcelFormatDownload(formatFor : string) 

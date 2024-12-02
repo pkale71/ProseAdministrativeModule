@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
       <div class="card">
-        <div class="card-header" style="padding: 10px 25px;">
+        <div class="card-header">
           <h5 style="margin-top: 0.8rem;"><i class="fa fa-percent"></i>&nbsp; Tax Rates &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
           <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
            (click)="addTaxRate()">Add Tax Rate</button>
@@ -43,7 +43,9 @@
                   <tr>
                     <th>Sno</th>
                     <th>Academic Session</th>
-                    <th>Tax Type - Rate(%)</th>             
+                    <th>Tax Type - Rate(%)</th>
+                    <th>Applicable From</th>
+                    <th>Applicable To</th>             
                     <th>Active</th>
                     <th></th>
                   </tr>
@@ -53,6 +55,8 @@
                     <td>{{i+1}}</td>
                     <td>{{taxRate?.academicSession?.year}}</td>
                     <td>{{taxRate?.taxType?.name}} - {{taxRate.rate | number}}%</td>
+                    <td>{{taxRate?.applicableFrom | date : "dd/MM/yyyy"}}</td>
+                    <td>{{taxRate?.applicableTo | date : "dd/MM/yyyy"}}</td>
                     <td>
                       <span [ngClass]="taxRate.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(taxRate)" 
                       style="cursor: pointer;" title="Update Status">
@@ -67,7 +71,9 @@
                   <tr *ngIf="taxRates.length == 0">
                     <td></td>
                     <td></td>
+                    <td></td>
                     <td>No record(s) found</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                   </tr>

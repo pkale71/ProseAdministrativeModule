@@ -406,11 +406,11 @@ export class BusinessService {
     }
 
     // study center
-    getStudyCenters(studyCenterTypeId : any)
+    getStudyCenters(studyCenterTypeId : any, action : string)
     {
         if(studyCenterTypeId != "")
         {
-        return this.apiService.get('/business/getStudyCenters/' + studyCenterTypeId);
+        return this.apiService.get('/business/getStudyCenters/' + studyCenterTypeId + '/' + action);
         }
         else
         {
@@ -533,18 +533,28 @@ export class BusinessService {
         return this.apiService.get('/business/getSchoolSchoolingPrograms/' + schoolUUID + '/' + action);
     }
 
-    saveSchoolSchoolingProgram(schoolSchoolingProgram : any)
+    getSchoolSchoolingProgramValidities(schoolUUID : string, schoolSchoolingProgramId : number, action : string)
     {
-        return this.apiService.post('/business/saveSchoolSchoolingProgram', schoolSchoolingProgram);
+        return this.apiService.get('/business/getSchoolSchoolingProgramValidities/' + schoolUUID + '/' + schoolSchoolingProgramId + '/' + action);
     }
 
-    updateSchoolSchoolingProgram(schoolSchoolingProgram : any)
+    saveSchoolSchoolingProgramValidity(schoolSchoolingProgramValidity : any)
     {
-        return this.apiService.post('/business/updateSchoolSchoolingProgram', schoolSchoolingProgram);
+        return this.apiService.post('/business/saveSchoolSchoolingProgramValidity', schoolSchoolingProgramValidity);
+    }
+
+    updateSchoolSchoolingProgramValidity(schoolSchoolingProgramValidity : any)
+    {
+        return this.apiService.post('/business/updateSchoolSchoolingProgramValidity', schoolSchoolingProgramValidity);
     }
 
     deleteSchoolSchoolingProgram(schoolSchoolingProgram : any)
     {
         return this.apiService.post('/business/deleteSchoolSchoolingProgram', schoolSchoolingProgram);
+    }
+
+    deleteSchoolSchoolingProgramValidity(schoolSchoolingProgramValidity : any)
+    {
+        return this.apiService.post('/business/deleteSchoolSchoolingProgramValidity', schoolSchoolingProgramValidity);
     }
 }

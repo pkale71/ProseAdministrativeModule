@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="assignModuleRoleTypeModal"><i class="fa fa-user-check"></i>&nbsp;Assign Module Role/Type</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="assignModuleRoleTypeForm" id="assignModuleRoleTypeForm" (ngSubmit)="assignModuleRoleType()" autocomplete="off" >
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-12">
+                <form [formGroup]="userRoleForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="userRole">Role&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="userRole" formControlName="userRole" (change)="getUserTypes(userRoleForm.controls['userRole'].value, 'Active')"
+                        [ngClass]="{'is-invalid': !userRoleForm.controls['userRole'].valid && !isValidForm}">
+                        <option value="{{userRole.id}}" *ngFor="let userRole of userRoles">{{userRole?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="userRoleForm.controls['userRole'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select user role.</label>
+                    </div>
+                </form>
+            </div> 
+        </div> 
+        <div class="row">
+            <div class="col-md-12">
+                <form [formGroup]="userTypeForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="userType">Type&nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control"  required id="userType" formControlName="userType"
+                        [ngClass]="{'is-invalid': !userTypeForm.controls['userType'].valid && !isValidForm}">
+                        <option value="{{userType.id}}" *ngFor="let userType of userTypes">{{userType?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="userTypeForm.controls['userType'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select user type.</label>
+                    </div>
+                </form>
+            </div> 
+        </div>  
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Apply</button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Applying...</button>
+    </div>
+</form>

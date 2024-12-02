@@ -214,7 +214,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                         res.status(500)
                                                         return res.json({
                                                             "status_code" : 500,
-                                                            "message" : "City Not Exist For Country : " + city[0].countryName + ", State/Region : " + city[0].stateRegionName + " And District : " + city[0].districtName,
+                                                            "message" : "City Not Exist For Country : " + district[0].countryName + ", State/Region : " + district[0].stateRegionName + " And District : " + district[0].name,
                                                             "success" : false,
                                                             "error" : errorCode.getStatus(500)
                                                         })
@@ -225,7 +225,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                                     res.status(500)
                                                     return res.json({
                                                         "status_code" : 500,
-                                                        "message" : "District Not Exist For Country : " + district[0].countryName + " And State/Region : " + district[0].stateRegionName,
+                                                        "message" : "District Not Exist For Country : " + stateRegion[0].countryName + " And State/Region : " + stateRegion[0].name,
                                                         "success" : false,
                                                         "error" : errorCode.getStatus(500)
                                                     })

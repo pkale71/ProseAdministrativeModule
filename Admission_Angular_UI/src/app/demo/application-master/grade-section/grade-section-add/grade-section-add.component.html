@@ -83,12 +83,12 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-2">   
+            <div class="col-md-4">   
                 <form [formGroup]="batchTypeForm">
                     <div class="form-group">
                         <label class="form-control-label" for="batchType">Batch Type &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedBatchType"></i></label>
                         <select class="form-control" required id="batchType" formControlName="batchType">
-                            <option value="{{batchType.id}}" *ngFor="let batchType of batchTypes">{{batchType.name}}</option>
+                            <option value="{{batchType.id}}" *ngFor="let batchType of batchTypes">{{batchType.name}} {{batchType.startTime | convert12HrsTimeFormat}} - {{batchType.endTime | convert12HrsTimeFormat}}</option>
                         </select>
                         <label style="color: red;"
                         *ngIf="batchTypeForm.controls['batchType'].hasError('required') && !isValidForm"

@@ -1,11 +1,23 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="batchtypeAddModal"><i class="fa fa-plus"></i>&nbsp;Add School Schooling Program</h5>
+    <h5 class="modal-title" id="batchtypeAddModal"><i class="fa fa-plus"></i>&nbsp;Add School Schooling Program Validity</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
 </div>
 <form [formGroup]="addSchoolSchoolingProgramForm" id="addSchoolSchoolingProgramForm" (ngSubmit)="saveSchoolSchoolingProgram()" autocomplete="off">
     <div class="modal-body">
         <div class="row">
-            <!-- Year field -->
+            <div class="col-md-3">                
+                <div class="form-group">
+                    <label class="form-control-label" for="schoolingProgram">Schooling Program&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="schoolingProgram" type="text"
+                    formControlName="schoolingProgram" readonly
+                    [ngClass]="{'is-invalid': !addSchoolSchoolingProgramForm.controls['schoolingProgram'].valid && !isValidForm}"
+                    />
+                    <label style="color: red;"
+                    *ngIf="addSchoolSchoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please select schooling program.</label>
+                </div>                           
+            </div>
             <div class="col-md-3">
                 <form [formGroup]="academicSessionForm">
                     <div class="form-group">
@@ -21,25 +33,10 @@
                     </div>
                 </form>                
             </div> 
-            <div class="col-md-3">
-                <form [formGroup]="schoolingProgramForm">
-                    <div class="form-group">
-                        <label class="form-control-label" for="schoolingProgram">Schooling Program&nbsp;<span style="color: red;">*</span></label>
-                        <select class="form-control"  required id="schoolingProgram" formControlName="schoolingProgram"
-                        [ngClass]="{'is-invalid': !schoolingProgramForm.controls['schoolingProgram'].valid && !isValidForm}">
-                        <option value="{{schoolingProgram.id}}" *ngFor="let schoolingProgram of schoolingPrograms">{{schoolingProgram?.name}}</option>
-                        </select>
-                        <label style="color: red;"
-                        *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
-                        class="error jquery-validation-error small form-text"
-                        >Please select schooling program.</label>
-                    </div>
-                </form>                
-            </div> 
             <div class="col-md-6">
                 <form [formGroup]="batchTypeForm">
                     <div class="form-group">
-                        <label class="form-control-label" for="schoolingProgram">Batch Types&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="batchTypeClicked"></i></label>
+                        <label class="form-control-label" for="batchTypes">Batch Types&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="batchTypeClicked"></i></label>
                         <ng-select id="batchTypes" required
                         formControlName="batchTypes" [options]="batchTypes" [multiple]="true"
                         [ngClass]="!batchTypeForm.controls['batchTypes'].valid && !isValidForm ? ['ng select', 'is-invalid'] : ['ng-select']">

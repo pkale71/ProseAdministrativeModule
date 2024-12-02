@@ -15,6 +15,9 @@ import 'hammerjs';
 import 'mousetrap';
 import { GalleryModule } from '@ks89/angular-modal-gallery';
 
+//////Custom Pipe
+import { Convert12HrsTimeFormatPipe } from './custom-pipe/convert12-hrs-time-format.pipe';
+
 // bootstrap import
 import {
   NgbDropdownModule,
@@ -39,6 +42,7 @@ import {
     NgScrollbarModule,
     NgbProgressbarModule,
     GalleryModule,
+    Convert12HrsTimeFormatPipe,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
@@ -58,7 +62,8 @@ import {
     NgbProgressbar,
     NgbProgressbarModule,
     GalleryModule,
-    CalendarModule
+    CalendarModule,
+    Convert12HrsTimeFormatPipe
   ]
 })
 export class SharedModule {}

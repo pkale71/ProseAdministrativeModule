@@ -20,6 +20,11 @@ import { SubjectGroupDetailComponent } from './demo/application-master/subject-g
 import { FeeStructureAddComponent } from './demo/application-master/fee-structure/fee-structure-add/fee-structure-add.component';
 import { FeeStructureListComponent } from './demo/application-master/fee-structure/fee-structure-list/fee-structure-list.component';
 import { FeeStructureDetailComponent } from './demo/application-master/fee-structure/fee-structure-detail/fee-structure-detail.component';
+import { UserDetailComponent } from './demo/user/user-detail/user-detail.component';
+import { B2cApplicationListComponent } from './demo/admission/b2c-application/b2c-application-list/b2c-application-list.component';
+import { B2cApplicationStageOneComponent } from './demo/admission/b2c-application/b2c-application-stage-one/b2c-application-stage-one.component';
+import { B2cApplicationDeatilComponent } from './demo/admission/b2c-application/b2c-application-deatil/b2c-application-deatil.component';
+import { B2cApplicationStageTwoComponent } from './demo/admission/b2c-application/b2c-application-stage-two/b2c-application-stage-two.component';
 
 const routes: Routes = [
     {
@@ -38,14 +43,15 @@ const routes: Routes = [
         
         // for user 
             {
-                path: 'users',
-                loadComponent: () => UserListComponent,
+                path: 'user/users',
+                loadComponent : () => UserListComponent,
                 canActivate: [AuthGuardService],
-                // resolve: 
-                // { 
-                // users : UserListResolver,
-                // },
-            },            
+            },
+            {
+                path: 'user/detail/:uuid',
+                loadComponent : () => UserDetailComponent,
+                canActivate: [AuthGuardService],
+            },
             {
                 path: 'admissionMaster/taxTypes',
                 loadComponent : () => TaxTypeListComponent,
@@ -109,6 +115,26 @@ const routes: Routes = [
             {
                 path: 'admissionMaster/feeStructure/detail/:uuid',
                 loadComponent : () => FeeStructureDetailComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'b2cApplication/registrations',
+                loadComponent : () => B2cApplicationListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'b2cApplication/detail/:applicationFor/:uuid',
+                loadComponent : () => B2cApplicationDeatilComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'b2cApplication/b2cApplicationStage1/add',
+                loadComponent : () => B2cApplicationStageOneComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'b2cApplication/b2cApplicationStage2/add/:uuid',
+                loadComponent : () => B2cApplicationStageTwoComponent,
                 canActivate: [AuthGuardService],
             },
         ]

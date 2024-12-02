@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="card" >
-            <div class="card-header" style="padding: 10px 25px;">
+            <div class="card-header" style="padding: 5px 25px;">
                 <h5 style="margin-top: 0.8rem;"><i class="fa fa-plus"></i>&nbsp;Add School&nbsp;
                 </h5>
             </div>
@@ -76,7 +76,7 @@
                             <form [formGroup]="schoolingCategoryForm">
                                 <div class="form-group">
                                     <label class="form-control-label col-md-12" for="schoolingCategory">Schooling Category &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked1"></i></label>
-                                    <select class="form-control"  required id="schoolingCategory" formControlName="schoolingCategory" 
+                                    <select class="form-control"  required id="schoolingCategory" formControlName="schoolingCategory" (change)="getSchoolingPrograms(schoolingCategoryForm.controls['schoolingCategory'].value)"
                                     [ngClass]="{'is-invalid': !schoolingCategoryForm.controls['schoolingCategory'].valid && !isValidForm}">
                                     <option value="{{schoolingCategory.id}}" *ngFor="let schoolingCategory of schoolingCategories">{{schoolingCategory?.name}}</option>
                                     </select>
@@ -286,20 +286,43 @@
                         </div> 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="contractFrom">Contract From</label>
+                                <label class="form-control-label" for="contractFrom">Contract From&nbsp;<span style="color: red;">*</span></label>
                                 <input class="form-control input-md" id="contractFrom" type="date" required formControlName="contractFrom"
                                 [ngClass]="{'is-invalid': !addSchoolForm.controls['contractFrom'].valid && !isValidForm}" />
+                                <label style="color: red;"
+                                *ngIf="addSchoolForm.controls['contractFrom'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please select contract from date.</label>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label class="form-control-label" for="contractTo">Contract To</label>
-                                <input class="form-control input-md" id="contractTo" type="date"  formControlName="contractTo" min="{{addSchoolForm.controls['contractFrom'].value}}"
+                                <label class="form-control-label" for="contractTo">Contract To&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="contractTo" type="date" required formControlName="contractTo" min="{{addSchoolForm.controls['contractFrom'].value}}"
                                 [ngClass]="{'is-invalid': !addSchoolForm.controls['contractTo'].valid && !isValidForm}" />
+                                <label style="color: red;"
+                                *ngIf="addSchoolForm.controls['contractTo'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please select contract to date.</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-6">
+                            <form [formGroup]="schoolingProgramForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="schoolingPrograms">Schooling Programs&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="schoolingProgramClicked"></i></label>
+                                    <ng-select id="schoolingPrograms" required
+                                    formControlName="schoolingPrograms" [options]="schoolingPrograms" [multiple]="true"
+                                    [ngClass]="!schoolingProgramForm.controls['schoolingPrograms'].valid && !isValidForm ? ['ng select', 'is-invalid'] : ['ng-select']">
+                                    </ng-select>
+                                    <label style="color: red;"
+                                    *ngIf="schoolingProgramForm.controls['schoolingPrograms'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select schooling program.</label>
+                                </div>
+                            </form>                
+                        </div>
                         <div class="col-md-6">
                             <label class="mb-1" for="logoFile">Select Logo (JPG, PNG)</label>
                             <input  _ngcontent-ng-c896720819="" type="file" id="logoFile" formControlName="logoFile" [multiple]="false" [accept]="'image/png, image/jpeg'" (change)="fileChange($event)" [ngClass]="{'is-invalid': !addSchoolForm.controls['logoFile'].valid && !isValidForm}" class="form-control">          

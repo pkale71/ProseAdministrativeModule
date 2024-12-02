@@ -45,6 +45,28 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
+                    <label class="form-control-label" for="rate">Applicable From&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control" id="applicableFrom" type="date" required formControlName="applicableFrom" 
+                    [ngClass]="{'is-invalid': !editTaxRateForm.controls['applicableFrom'].valid && !isValidForm}" />
+                    <label style="color: red;" *ngIf="editTaxRateForm.controls['applicableFrom'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text">Please enter applicable from date.</label>
+                </div>                
+            </div> 
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="rate">Applicable To&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control" id="applicableTo" type="date" required formControlName="applicableTo" 
+                    [ngClass]="{'is-invalid': !editTaxRateForm.controls['applicableTo'].valid && !isValidForm}" />
+                    <label style="color: red;" *ngIf="editTaxRateForm.controls['applicableTo'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text">Please enter applicable to date.</label>
+                </div>                
+            </div> 
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
                     <label class="form-control-label" for="rate">Rate (%)&nbsp;<span style="color: red;">*</span></label>
                     <input class="form-control input-md" id="rate" type="text" required 
                     formControlName="rate" maxlength="5"

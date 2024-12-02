@@ -40,7 +40,7 @@ module.exports = require('express').Router().get('/?*',async(req,res) =>
         {
             res.status(200)
             return res.json({
-                "user" : buildJSON.user(users),
+                "users" : buildJSON.user(users),
                 "status_code" : 200,
                 "success" : true,                            
                 "message" : errorCode.getStatus(200)

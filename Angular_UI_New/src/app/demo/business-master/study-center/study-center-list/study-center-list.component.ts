@@ -121,7 +121,7 @@ export class StudyCenterListComponent
         try
         {
             this.searchClicked = true;
-            let response = await this.businessService.getStudyCenters(studyCenterTypeId).toPromise();
+            let response = await this.businessService.getStudyCenters(studyCenterTypeId, "All").toPromise();
             if (response.status_code == 200 && response.message == 'success') 
             {
                 $('#tblStudyCenter').DataTable().destroy();

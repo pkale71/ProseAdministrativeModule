@@ -1,0 +1,121 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card" >
+            <div class="card-header">
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-user"></i>&nbsp;User&nbsp;
+                <!-- <span [ngClass]="user.active?'badge bg-success':'badge bg-danger'"> Active : {{user.active?'Yes':'No'}}</span> -->
+                </h5>
+                <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                (click)="back()">Back</button>
+            </div>
+            <div class="card" *ngIf = "user?.userGrade?.code != 'MOADM' || user?.userGrade?.code != 'MOUSR' ">
+                <div class="card-header">
+                    <h4>User Info&nbsp;<i class="fa fa-spin fa-spinner" *ngIf = "searchClicked"></i></h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="fullName">Name</label>
+                                <label class="form-control input-md">{{user?.fullName}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="email">Email</label>
+                                <label class="form-control input-md">{{user?.email}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="mobile">Mobile</label>
+                                <label class="form-control input-md">{{user?.mobile}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="form-control-label" for="gender">Gender</label>
+                                <label class="form-control input-md">{{user?.gender}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="userGrade">Grade</label>
+                                <label class="form-control input-md">{{user?.userGrade?.name}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="userCategory">Category</label>
+                                <label class="form-control input-md">{{user?.userCategory?.id != "" ? user?.userCategory?.name : '----'}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 style="margin-top: 0.8rem;">&nbsp;User Modules&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i>
+                    </h4>
+                </div>
+                <div class="card-body" >
+                    <div class="row">
+                        <div class="col-md-12">      
+                            <div class="table-responsive">
+                                <table datatable id="tblUserModule" class="table table-striped row-border table-hover pt-10">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Module</th>
+                                            <th>Role</th>
+                                            <th>Type</th>
+                                            <th>Active</th>
+                                            <th>Is Approved</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let userModule of userModules let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{userModule.module?.name}}</td>
+                                            <td>{{userModule.userRole?.name}}</td>
+                                            <td>{{userModule.userType?.name}}</td>
+                                            <td>
+                                                <span [ngClass]="userModule.isActive? 'badge bg-success':'badge bg-danger'" (click)="updateStatus(userModule)" 
+                                                style="cursor: pointer;" title="Update Status">
+                                                {{userModule.isActive? 'Yes' : 'No' }}
+                                                </span>
+                                            </td>
+                                            <td *ngIf = "userModule.isModuleAdminApproved == null"></td>
+                                            <td *ngIf = "userModule.isModuleAdminApproved != null">
+                                                <span [ngClass]="userModule.isModuleAdminApproved ? 'badge bg-success' : 'badge bg-danger'">
+                                                <i class="{{userModule.isModuleAdminApproved? 'fa fa-user-check' : 'fa fa-user-times'}}" ></i>
+                                                {{userModule.isModuleAdminApproved? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td style="width:40px; text-align: right;">
+                                                <i class="fa fa-user-tag" (click)="approveUserModule(userModule)" title="Approve/Deny" style="cursor: pointer;"></i>&nbsp;
+                                                <i class="fa fa-check" (click)="assignUserTypeRole(userModule)" title="Assign Role/Type" style="cursor: pointer;"></i>&nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="userModules.length == 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

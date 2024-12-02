@@ -6,6 +6,7 @@ let errorCode = new errorCodes();
 ////////Variables
 let uuid;
 let action;
+let date;
 //////
 let school;
 let schoolSchoolingPrograms;
@@ -14,7 +15,11 @@ module.exports = require('express').Router().get('/:uuid/:optParam?*', async(req
 {
     try
     {
+        uuid = "";
+        action = "";
+        date = "";
         let tempParams = req.params?.uuid;
+        req.params[0] = req.params['optParam'] ? '/' + req.params['optParam'] + req.params[0] : req.params[0];
         tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);
         
         tempParams = tempParams.toString().split("/");
@@ -28,6 +33,12 @@ module.exports = require('express').Router().get('/:uuid/:optParam?*', async(req
             uuid = tempParams[0];
             action = tempParams[1];
         }
+        else if(tempParams.length == 3)
+        {
+            uuid = tempParams[0];
+            action = tempParams[1];
+            date = tempParams[2];
+        }
         
         school = await dbBusiness.getSchool(uuid);
         if(school.length == 0)
@@ -40,7 +51,7 @@ module.exports = require('express').Router().get('/:uuid/:optParam?*', async(req
                 "error" : errorCode.getStatus(500)
             })
         }
-        schoolSchoolingPrograms = await dbBusiness.getSchoolSchoolingPrograms(school[0].id, action);
+        schoolSchoolingPrograms = await dbBusiness.getSchoolSchoolingPrograms(school[0].id, date, action);
         if(schoolSchoolingPrograms.length >= 0)
         {
             res.status(200)

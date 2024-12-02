@@ -1,0 +1,473 @@
+<div class="row">
+    <div class="col-sm-12">
+        <form [formGroup]="addApplicationForm1" id="addFeeStructureForm" (ngSubmit)="saveApplicationForm1()" autocomplete="off">
+            <div class="card">
+                <div class="card-header">
+                    <h5 style="margin-top: 0.8rem;">Student Profile&nbsp;</h5>
+                    <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                    (click)="back()">Back
+                    </button>
+                </div>            
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form [formGroup]="applicationTypeForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="applicationType">Application Type&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedApplicationType"></i></label>
+                                    <select class="form-control"  required id="applicationType" formControlName="applicationType" (change)="checkForApplicationType(applicationTypeForm.controls['applicationType'].value)"
+                                    [ngClass]="{'is-invalid': !applicationTypeForm.controls['applicationType'].valid && !isValidForm}">
+                                    <option value="{{applicationType.id}}" *ngFor="let applicationType of applicationTypes">{{applicationType?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="applicationTypeForm.controls['applicationType'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select application type.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="academicSessionForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="academicSession">Academic Session&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedAcademicSession"></i></label>
+                                    <select class="form-control"  required id="academicSession" formControlName="academicSession" 
+                                    [ngClass]="{'is-invalid': !academicSessionForm.controls['academicSession'].valid && !isValidForm}">
+                                    <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession?.year}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="academicSessionForm.controls['academicSession'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select academic session.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="admissionDate">Admission Date&nbsp;<span
+                                style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="admissionDate" type="date" required formControlName="admissionDate" (change)="getSchools(addApplicationForm1.controls['admissionDate'].value)"
+                                [ngClass]="{'is-invalid': !addApplicationForm1.controls['admissionDate'].valid && !isValidForm}" [max]="curDate"/>
+                                <label style="color: red;" 
+                                *ngIf="addApplicationForm1.controls['admissionDate'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text">Please enter admission date.</label>
+                            </div>      
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="schoolForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="school">School&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchool"></i></label>
+                                    <select class="form-control"  required id="school" formControlName="school" (change)="getSchoolSchoolingPrograms(schoolForm.controls['school'].value, addApplicationForm1.controls['admissionDate'].value)"
+                                    [ngClass]="{'is-invalid': !schoolForm.controls['school'].valid && !isValidForm}">
+                                    <option value="{{school.uuid}}" *ngFor="let school of schools">{{school?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="schoolForm.controls['school'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select school.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="isSiblingForm">
+                        <div class="col-md-3">
+                            <form [formGroup]="siblingTypeForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="siblingType">Sibling Type&nbsp;<span style="color: red;" *ngIf="isSiblingForm">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSiblingType"></i></label>
+                                    <select class="form-control"  id="siblingType" [ngRequired] = "isSiblingForm" formControlName="siblingType" (change)="checkForSiblingApplication(siblingTypeForm.controls['siblingType'].value)"
+                                    [ngClass]="{'is-invalid': !siblingTypeForm.controls['siblingType'].valid && !isValidForm}">
+                                    <option value="{{siblingType.id}}" *ngFor="let siblingType of siblingTypes">{{siblingType?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="siblingTypeForm.controls['siblingType'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select sibling type.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3" *ngIf="siblingTypeForm.controls['siblingType'].value != ''">
+                            <form [formGroup]="lastAcademicSessionForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="lastAcademicSession">{{isLastAdmission ? 'Last' : 'Current'}} Academic Session&nbsp;<span style="color: red;" *ngIf="isSiblingForm">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedAcademicSession"></i></label>
+                                    <select class="form-control" [ngRequired]="isSiblingForm" id="lastAcademicSession" formControlName="lastAcademicSession" (change)="getApplicationStudents(lastAcademicSessionForm.controls['lastAcademicSession'].value)" [ngClass]="{'is-invalid': !lastAcademicSessionForm.controls['lastAcademicSession'].valid && !isValidForm}">
+                                    <option value="{{academicSession.id}}" *ngFor="let academicSession of lastAcademicSessions">{{academicSession?.year}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="lastAcademicSessionForm.controls['lastAcademicSession'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select {{isLastAdmission ? 'last' : 'current'}} academic session.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3" *ngIf="siblingTypeForm.controls['siblingType'].value != ''">
+                            <form [formGroup]="studentForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="student">{{isLastAdmission ? 'Last Year' : 'Current Year'}} Student&nbsp;<span style="color: red;" *ngIf="isSiblingForm">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedStudent"></i></label>
+                                    <select class="form-control" [ngRequired]="isSiblingForm" id="student"
+                                    formControlName="student" (change)="getStudentData(studentForm.controls['student'].value)" [ngClass]="{'is-invalid': !studentForm.controls['student'].valid && !isValidForm}">
+                                    <option value="{{applicationStudent.uuid}}" *ngFor="let applicationStudent of applicationStudents">{{applicationStudent?.studentName}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="studentForm.controls['student'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select {{isLastAdmission ? 'last year' : 'current year'}} student.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3" *ngIf="siblingTypeForm.controls['siblingType'].value != ''">
+                            <div class="form-group">
+                                <label class="form-control-label" for="lastEnrollment">{{isLastAdmission ? 'Enrollment Number' : 'Application Number'}}&nbsp;<span style="color: red;" *ngIf="isSiblingForm">*</span></label>
+                                <input class="form-control input-md" id="lastEnrollment" type="text" [ngRequired] = "isSiblingForm"  formControlName="lastEnrollment" 
+                                [ngClass]="{'is-invalid': !addApplicationForm1.controls['lastEnrollment'].valid && !isValidForm}" readonly/>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['lastEnrollment'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter {{isLastAdmission ? 'enrollment number' : 'application number'}}.</label>
+                            </div>                
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form [formGroup]="schoolingProgramForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="schoolingProgram">Schooling Program&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchoolingProgram"></i></label>
+                                    <select class="form-control"  required id="schoolingProgram" formControlName="schoolingProgram" (change)="getSchoolSchoolingProgramBatches(schoolForm.controls['school'].value, schoolingProgramForm.controls['schoolingProgram'].value, addApplicationForm1.controls['admissionDate'].value)"
+                                    [ngClass]="{'is-invalid': !schoolingProgramForm.controls['schoolingProgram'].valid && !isValidForm}">
+                                    <option value="{{sp.schoolingProgram?.id}}" *ngFor="let sp of schoolingPrograms">{{sp.schoolingProgram?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select schooling program.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="studentName">Student Full Name&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="studentName" type="text" required  formControlName="studentName" 
+                                [ngClass]="{'is-invalid': !addApplicationForm1.controls['studentName'].valid && !isValidForm}" maxlength="150"/>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['studentName'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter student name.</label>
+                            </div>                
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="parentName">Parent/Guardian Full Name&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="parentName" type="text" required  formControlName="parentName" [readOnly]="isSiblingForm"
+                                [ngClass]="{'is-invalid': !addApplicationForm1.controls['parentName'].valid && !isValidForm}" maxlength="150"/>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['parentName'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter parent name.</label>
+                            </div>                
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="parentEmail">Parent/Guardian Email&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="parentEmail" type="email" required  formControlName="parentEmail" [readOnly]="isSiblingForm"
+                                [ngClass]="{'is-invalid': !addApplicationForm1.controls['parentEmail'].valid && !isValidForm}" maxlength="150"/>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['parentEmail'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter parent email.</label>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['parentEmail'].hasError('email') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid parent email.</label>
+                            </div>                
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="parentMobile">Parent/Guardian Mobile&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="parentMobile" type="text" required  formControlName="parentMobile" [readOnly]="isSiblingForm"
+                                [ngClass]="{'is-invalid': !addApplicationForm1.controls['parentMobile'].valid && !isValidForm}" maxlength="15" minlength="10"/>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['parentMobile'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter mobile.</label>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['parentMobile'].hasError('minlength') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Mobile number should be 10 to 15 digits long</label>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['parentMobile'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid mobile number</label>
+                            </div>                
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="genderForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="gender">Gender&nbsp;<span style="color: red;">*</span></label>
+                                    <select class="form-control"  id="gender" formControlName="gender" 
+                                    [ngClass]="{'is-invalid': !genderForm.controls['gender'].valid && !isValidForm}">
+                                    <option value="{{gender.id}}" *ngFor="let gender of genders">{{gender?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="genderForm.controls['gender'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select gender.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="relationship">Relationship With Student&nbsp;<span style="color: red;">*</span></label>
+                                <select class="form-control"  id="relationship" formControlName="relationship" 
+                                [ngClass]="{'is-invalid': !addApplicationForm1.controls['relationship'].valid && !isValidForm}">
+                                <option value="">Select Relationship</option>
+                                <option value="Father">Father</option>
+                                <option value="Mother">Mother</option>
+                                <option value="Guardian">Guardian</option>
+                                </select>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['relationship'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please select relationship.</label>
+                            </div>                 
+                        </div>    
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="batchYear">Batch Year&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="batchYear" type="text" required  formControlName="batchYear" 
+                                [ngClass]="{'is-invalid': !addApplicationForm1.controls['batchYear'].valid && !isValidForm}" readonly/>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm1.controls['batchYear'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter batch year.</label>
+                            </div>                
+                        </div>                   
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form [formGroup]="batchTypeForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="batchType">Preferred Batch Time&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedBatch"></i></label>
+                                    <select class="form-control"  id="batchType" formControlName="batchType" 
+                                    [ngClass]="{'is-invalid': !batchTypeForm.controls['batchType'].valid && !isValidForm}">
+                                    <option value="{{batchType.id}}" *ngFor="let batchType of batchTypes">{{batchType?.name}} {{batchType.startTime | convert12HrsTimeFormat}} - {{batchType.endTime | convert12HrsTimeFormat}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="batchTypeForm.controls['batchType'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select batch time.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="gradeCategoryForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="gradeCategory">Grade Category&nbsp;<span style="color: red;">*</span></label>
+                                    <select class="form-control"  id="gradeCategory" formControlName="gradeCategory" (change)="getGrades(gradeCategoryForm.controls['gradeCategory'].value)"
+                                    [ngClass]="{'is-invalid': !gradeCategoryForm.controls['gradeCategory'].valid && !isValidForm}">
+                                    <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select grade category.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="gradeForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="grade">Grade&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i></label>
+                                    <select class="form-control"  id="grade" formControlName="grade" 
+                                    [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}">
+                                    <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="gradeForm.controls['grade'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select grade.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="syllabusForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="syllabus">Syllabus&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSyllabus"></i></label>
+                                    <select class="form-control"  id="syllabus" formControlName="syllabus" (change)="getSubjectGroups(gradeCategoryForm.controls['gradeCategory'].value, gradeForm.controls['grade'].value, syllabusForm.controls['syllabus'].value)"
+                                    [ngClass]="{'is-invalid': !syllabusForm.controls['syllabus'].valid && !isValidForm}">
+                                    <option value="{{syllabus.id}}" *ngFor="let syllabus of syllabuses">{{syllabus?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select syllabus.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form [formGroup]="subjectGroupForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="subjectGroup">Subject Group&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSubjectGroup"></i></label>
+                                    <select class="form-control"  id="subjectGroup" formControlName="subjectGroup" (change)="getSubjects(subjectGroupForm.controls['subjectGroup'].value)"
+                                    [ngClass]="{'is-invalid': !subjectGroupForm.controls['subjectGroup'].valid && !isValidForm}">
+                                    <option value="{{subjectGroup.id}}" *ngFor="let subjectGroup of subjectGroups">{{subjectGroup?.groupName}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="subjectGroupForm.controls['subjectGroup'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select subject group.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="studyCenterForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="studyCenter">Study Center&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedStudyCenter"></i></label>
+                                    <select class="form-control"  id="studyCenter" formControlName="studyCenter" 
+                                    [ngClass]="{'is-invalid': !studyCenterForm.controls['studyCenter'].valid && !isValidForm}">
+                                    <option value="{{studyCenter.uuid}}" *ngFor="let studyCenter of studyCenters">{{studyCenter?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="studyCenterForm.controls['studyCenter'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select study center.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="profileCompletionForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="profileCompletion">Student Profile Completion&nbsp;<span style="color: red;">*</span></label>
+                                    <select class="form-control"  id="profileCompletion" formControlName="profileCompletion" (change)="getParentUndertakings(profileCompletionForm.controls['profileCompletion'].value)"
+                                    [ngClass]="{'is-invalid': !profileCompletionForm.controls['profileCompletion'].valid && !isValidForm}">
+                                    <option value="{{profileCompletion.id}}" *ngFor="let profileCompletion of profileCompletions">{{profileCompletion?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="profileCompletionForm.controls['profileCompletion'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select profile completion.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="parentUndertakingForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="parentUndertaking">Parent Undertaking&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedUndertaking"></i></label>
+                                    <select class="form-control"  id="parentUndertaking" formControlName="parentUndertaking" 
+                                    [ngClass]="{'is-invalid': !parentUndertakingForm.controls['parentUndertaking'].valid && !isValidForm}">
+                                    <option value="{{undertaking.id}}" *ngFor="let undertaking of undertakings">{{undertaking?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="parentUndertakingForm.controls['parentUndertaking'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select parent undertaking.</label>
+                                </div>
+                            </form>                  
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>Subjects Offered&nbsp;<span class="badge bg-info">{{subjectGroupAllocations.length}}</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSubject"></i></h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped row-border table-hover pt-10">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding : 1rem 0 1rem 1.2rem;">Sno</th>
+                                            <th style="padding : 1rem 0 1rem 1.2rem;">Subject</th>
+                                            <th style="padding : 1rem 0 1rem 1.2rem;">Subject Type</th>
+                                            <th style="padding : 1rem 0 1rem 1.2rem;">Is Mandatory</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let subjectGroupAllocation of subjectGroupAllocations let i=index">
+                                            <td style="padding : 0 0 0 1.5rem;align-content: center;">{{i+1}}</td>
+                                            <td style="padding : 0 0 0 1.2rem;align-content: center;">{{subjectGroupAllocation?.subject?.name}}</td>
+                                            <td style="padding : 0 0 0 1.2rem;align-content: center;">{{subjectGroupAllocation?.subject?.subjectType?.name}}</td>
+                                            <td style="padding : 0 0 0 1.2rem;align-content: center;">{{subjectGroupAllocation?.subject?.isMandatory == 1 ? 'Yes' : 'No'}}</td>
+                                            <td style="padding : 0 0 0 2rem;align-content: center;">
+                                                <div class="checkbox">
+                                                    <input type="checkbox" 
+                                                    id="checkbox-{{subjectGroupAllocation?.subject.id}}" 
+                                                    [value] = "subjectGroupAllocation?.subject.id" 
+                                                    (change)="selSubjects($event)" name="checkbox-{{subjectGroupAllocation?.subject.id}}" 
+                                                    [checked]="subjectGroupAllocation?.subject.isSelected"
+                                                    [disabled]="subjectGroupAllocation?.subject?.isMandatory == 1">
+                                                    <label class="cr" for="checkbox-{{subjectGroupAllocation?.subject.id}}">&nbsp;</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="subjectGroupAllocations.length == 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5>Lead Information</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form [formGroup]="leadStudentTypeForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="leadStudentType">Student Lead Type&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedLeadStudent"></i></label>
+                                    <select class="form-control"  id="leadStudentType" formControlName="leadStudentType" required 
+                                    [ngClass]="{'is-invalid': !leadStudentTypeForm.controls['leadStudentType'].valid && !isValidForm}">
+                                    <option value="{{leadStudentType.id}}" *ngFor="let leadStudentType of leadStudentTypes">{{leadStudentType?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="leadStudentTypeForm.controls['leadStudentType'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select lead student type.</label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <form [formGroup]="marketLeadTypeForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="marketLeadType">Market Lead Type&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedMarketLead"></i></label>
+                                    <select class="form-control"  id="marketLeadType" formControlName="marketLeadType" required (change)="checkWalkinLead(marketLeadTypeForm.controls['marketLeadType'].value)"
+                                    [ngClass]="{'is-invalid': !marketLeadTypeForm.controls['marketLeadType'].valid && !isValidForm}">
+                                    <option value="{{marketLeadType.id}}" *ngFor="let marketLeadType of marketLeadTypes">{{marketLeadType?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="marketLeadTypeForm.controls['marketLeadType'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select market lead type.</label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3" *ngIf="isWalkInMode">
+                            <form [formGroup]="walkinModeForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="walkinMode">Walk-In Mode&nbsp;<span style="color: red;" *ngIf="isWalkInMode">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedWalkIn"></i></label>
+                                    <select class="form-control"  id="walkinMode" formControlName="walkinMode" [ngRequired]="isWalkInMode"
+                                    [ngClass]="{'is-invalid': !walkinModeForm.controls['walkinMode'].valid && !isValidForm}">
+                                    <option value="{{walkinMode.id}}" *ngFor="let walkinMode of walkinModes">{{walkinMode?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="walkinModeForm.controls['walkinMode'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select walkin mode.</label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-footer float-end">
+                        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+                        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+                            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

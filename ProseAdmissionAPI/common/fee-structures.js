@@ -11,6 +11,7 @@ let batchYearId;
 let syllabusId;
 let gradeCategoryId;
 let action;
+let date;
 //
 let feeStructures;
 
@@ -25,13 +26,13 @@ module.exports = require('express').Router().get('/:schoolUUID/:schoolingProgram
         syllabusId = "";
         gradeCategoryId = "";
         action = '';
-
+        date = '';
+        
         let tempParams = req.params?.schoolUUID + '/' + req.params?.schoolingProgramId + '/' + req.params?.academicSessionId + '/' + req.params?.batchYearId + '/' + req.params?.syllabusId + '/' + req.params?.gradeCategoryId;
-
         req.params[0] = req.params['optParam'] ? '/' + req.params['optParam'] + req.params[0] : req.params[0];
         tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);
         tempParams = tempParams.toString().split("/");
-
+        
         if(tempParams.length == 1)
         {
             schoolUUID = tempParams[0];
@@ -81,8 +82,19 @@ module.exports = require('express').Router().get('/:schoolUUID/:schoolingProgram
             gradeCategoryId = commonFunction.validateNumber(tempParams[5]);
             action = tempParams[6];
         }
+        else if(tempParams.length == 8)
+        {
+            schoolUUID = tempParams[0];
+            schoolingProgramId = commonFunction.validateNumber(tempParams[1]);
+            academicSessionId = commonFunction.validateNumber(tempParams[2]);
+            batchYearId = commonFunction.validateNumber(tempParams[3]);
+            syllabusId = commonFunction.validateNumber(tempParams[4]);
+            gradeCategoryId = commonFunction.validateNumber(tempParams[5]);
+            action = tempParams[6];
+            date = tempParams[7];
+        }
         
-        feeStructures = await dbCommon.getFeeStructures(schoolUUID, schoolingProgramId, academicSessionId, batchYearId, syllabusId, gradeCategoryId, action);
+        feeStructures = await dbCommon.getFeeStructures(schoolUUID, schoolingProgramId, academicSessionId, batchYearId, syllabusId, gradeCategoryId, action, date);
         if(feeStructures.length >= 0)
         {
             res.status(200)

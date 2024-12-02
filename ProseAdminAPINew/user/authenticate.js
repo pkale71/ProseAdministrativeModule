@@ -27,28 +27,28 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 if(user.length == 1)
                 {
                     let userModuleAssigned = 1;
-                    if(user[0].userGradeCode != 'HRADM' && user[0].userGradeCode != 'ACADM' && user[0].userGradeCode != 'BUADM'
-                    )
-                    {
+                    // if(user[0].userGradeCode != 'HRADM' && user[0].userGradeCode != 'ACADM' && user[0].userGradeCode != 'BUADM'
+                    // )
+                    // {
             ////Get User Module
                         userModules = [];
-                        userModules = await dbUser.getUserModules(user[0].userUUID, 'Approved');
+                        userModules = await dbUser.getUserModules(user[0].userUUID, '');
                         if(userModules.length == 0)
                         {
                             userModuleAssigned = 0;
                         }
 
-                    }
-                    if(parseInt(userModuleAssigned) == 0)
-                    {
-                        res.status(500)
-                        return res.json({
-                            "status_code" : 500,
-                            "message" : "User Module Not Assigned",
-                            "success" : false,
-                            "error" : errorCode.getStatus(500)
-                        })
-                    }
+                    // }
+                    // if(parseInt(userModuleAssigned) == 0)
+                    // {
+                    //     res.status(500)
+                    //     return res.json({
+                    //         "status_code" : 500,
+                    //         "message" : "User Module Not Assigned",
+                    //         "success" : false,
+                    //         "error" : errorCode.getStatus(500)
+                    //     })
+                    // }
                     let authToken = commonFunction.generateToken(56);
                     let autoTokenResult = await dbUser.updateAuthToken(authToken, user[0].userId);
                     
@@ -56,6 +56,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     {
                         let loginLogoutHistoryJSON = {
                             "userId" : user[0].userId,
+                            "moduleId" : 0,
                             "authToken" : authToken,
                             "logoutAs" : 'Forced'
                         }

@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="moduleApprovalModal"><i class="fa fa-user-check"></i>&nbsp;Module Access Approval</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="approveModuleForm" id="approveModuleForm" (ngSubmit)="approveModule()" autocomplete="off" >
+    <div class="modal-body">    
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-control-label" for="action">Module Access Approval&nbsp;<span style="color: red;">*</span></label>
+                    <select class="form-control input-md" required id="action" formControlName="action" 
+                    [ngClass]="{'is-invalid': !approveModuleForm.controls['action'].valid && !isValidForm}">
+                        <option value="">Select Approval</option>
+                        <option value="Approve">Approve</option>
+                        <option value="Deny">Deny</option>
+                    </select>
+                    <label style="color: red;"
+                    *ngIf="approveModuleForm.controls['action'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please select approval.</label>
+                </div>
+            </div> 
+        </div>  
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Apply</button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Applying...</button>
+    </div>
+</form>

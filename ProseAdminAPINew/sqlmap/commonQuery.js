@@ -636,14 +636,14 @@ db.getSchoolingPrograms = (schoolingCategoryId, action) =>
     })
 };
 
-db.getSchoolingProgram = (id) => 
+db.getSchoolingProgram = (ids) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
             let sql = `SELECT sp.id AS schoolingProgramId, sp.name AS schoolingProgramName
-            FROM schooling_program sp WHERE id = ${id}`;
+            FROM schooling_program sp WHERE FIND_IN_SET(id, '${ids}') > 0`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -688,14 +688,18 @@ db.duplicateSchoolingProgram = (names, schoolingCategoryId, id) =>
     })
 };
 
-db.checkSchoolingProgramExist = (id) => 
+db.checkSchoolingProgramExist = (id, schoolId) => 
 {
     return new Promise((resolve, reject) => 
     {
         try
         {
             let sql = `SELECT sspd.id AS schoolSchoolingProgramDetailId
-            FROM school_schooling_program_detail sspd WHERE sspd.schooling_program_id = ${id}`;
+            FROM school_schooling_program_detail sspd WHERE FIND_IN_SET(sspd.schooling_program_id, '${id}') > 0`;
+            if(schoolId != "")
+            {
+                sql = sql + ` AND sspd.school_id = ${schoolId}`
+            }
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1080,31 +1084,6 @@ db.getAcademicSession = (id) =>
             let sql = `SELECT acs.id, acs.year, acs.batch_year AS batchYear, acs.is_current_session AS isCurrentSession
             FROM academic_session acs 
             WHERE acs.id = ${id}`;
-            
-            dbConn.query(sql, (error, result) => 
-            {
-                if(error)
-                {
-                    return reject(error);
-                }
-                return resolve(result);
-            });
-        }
-        catch(e)
-        {
-            throw e;
-        }
-    })
-};
-
-db.getAcademicSession = (id) => 
-{
-    return new Promise((resolve, reject) => 
-    {
-        try
-        {
-            let sql = `SELECT acs.id
-            FROM academic_session acs WHERE acs.id = ${id}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -3360,10 +3339,10 @@ db.getBatchTypes = (academicSessionId, action) =>
         {
             let sql = `SELECT bt.id, bt.name, bt.start_time AS startTime, bt.end_time AS endTime, bt.is_active AS isActive, 'batch_type' AS tableName, 
             acs.id AS academicSessionId, acs.year AS academicSessionYear, acs.batch_year AS batchYear,
-            COUNT(sspd.id) AS isExist
+            COUNT(sspbv.id) AS isExist
             FROM batch_type bt 
             JOIN academic_session acs ON acs.id = bt.applicable_from_year_id
-            LEFT JOIN school_schooling_program_detail sspd ON FIND_IN_SET(bt.id, sspd.batch_type_ids) > 0`;
+            LEFT JOIN school_schooling_program_batch_validity sspbv ON FIND_IN_SET(bt.id, sspbv.batch_type_ids) > 0`;
             if(academicSessionId != "")
             {
                 sql = sql + ` WHERE bt.applicable_from_year_id = ${academicSessionId}`;
@@ -3528,8 +3507,8 @@ db.checkBatchTypeExist = (id) =>
     {
         try
         {
-            let sql = `SELECT sspd.id AS schoolingProgramDetailId
-            FROM school_schooling_program_detail sspd WHERE FIND_IN_SET(${id}, sspd.batch_type_ids) > 0`;
+            let sql = `SELECT sspbv.id AS schoolingProgramDetailId
+            FROM school_schooling_program_batch_validity sspbv WHERE FIND_IN_SET(${id}, sspbv.batch_type_ids) > 0`;
            
             dbConn.query(sql, (error, result) => 
             {

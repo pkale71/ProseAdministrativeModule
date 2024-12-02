@@ -11,12 +11,14 @@ userRoute.use('/changePassword', require('../util/validateToken.js'), require('.
 userRoute.use('/signout', require('../util/validateToken.js'), require('./signout.js'));
 userRoute.use('/getUser', require('../util/validateToken.js'), require('./user.js'));
 userRoute.use('/getUsers', require('../util/validateToken.js'), require('./users.js'));
+userRoute.use('/getModuleUsers', require('../util/validateToken.js'), require('./users-by-module.js'));
 userRoute.use('/saveUser', uploads, require('./save-user.js'));
 userRoute.use('/updateUser', require('../util/validateToken.js'), require('./update-user.js'));
 userRoute.use('/deleteUser', require('../util/validateToken.js'), require('./delete-user.js'));
 userRoute.use('/approveDenyUser', require('../util/validateToken.js'), require('./approve-deny-user.js'));
 userRoute.use('/getUserModules', require('../util/validateToken.js'), require('./user-modules.js'));
 userRoute.use('/saveUserModule', require('../util/validateToken.js'), require('./save-user-module.js'));
+userRoute.use('/assignUserRoleTypeModule', require('../util/validateToken.js'), require('./assign-user-role-type-module.js'));
 userRoute.use('/deleteUserModule', require('../util/validateToken.js'), require('./delete-user-module.js'));
 userRoute.use('/approveDenyUserModule', require('../util/validateToken.js'), require('./approve-deny-user-module.js'));
 userRoute.use('/updateStatus', require('../util/validateToken.js'), require('./update-status.js'));

@@ -4,7 +4,7 @@ let dbBusiness = require('../sqlmap/businessQuery.js');
 let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables
-let uuid; 
+let id; 
 //////
 let schoolSchoolingProgram;
 
@@ -13,14 +13,25 @@ module.exports = require('express').Router().post('/', async(req,res) =>
     try
     {
         let reqData = commonFunction.trimSpaces(req.body);
-        uuid = reqData.uuid;
+        id = reqData.id;
         let authData = reqData.authData;
        
-        schoolSchoolingProgram = await dbBusiness.getSchoolSchoolingProgram(uuid);
+        schoolSchoolingProgram = await dbBusiness.getSchoolSchoolingProgram(id);
         if(schoolSchoolingProgram.length == 1)
         {
+            let schoolSchoolingProgramValidity = await dbBusiness.checkSchoolSchoolingProgramExist(id);
+            if(schoolSchoolingProgramValidity.length > 0)
+            {
+                res.status(500)
+                return res.json({
+                    "status_code" : 500,
+                    "message" : "Schooling Program Currently In Use",
+                    "success" : false,
+                    "error" : errorCode.getStatus(500)
+                })
+            }
             ///delete School Schooling program
-            let deleteResult = await dbBusiness.deleteSchoolSchoolingProgram(schoolSchoolingProgram[0].id);
+            let deleteResult = await dbBusiness.deleteSchoolSchoolingProgram(id);
             ///////
             if(deleteResult.affectedRows > 0)
             {

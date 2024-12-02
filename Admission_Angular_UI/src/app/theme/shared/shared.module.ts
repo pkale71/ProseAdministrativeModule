@@ -1,7 +1,7 @@
 // Angular Import
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';  
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 
 // Project import
 import { BreadcrumbModule } from './components';
@@ -14,6 +14,9 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import 'hammerjs';
 import 'mousetrap';
 import { GalleryModule } from '@ks89/angular-modal-gallery';
+
+///Custom Pipe
+import { Convert12HrsTimeFormatPipe } from 'src/app/theme/shared/custom-pipe/convert12-hrs-time-format.pipe';
 
 // bootstrap import
 import {
@@ -39,6 +42,7 @@ import {
     NgScrollbarModule,
     NgbProgressbarModule,
     GalleryModule,
+    Convert12HrsTimeFormatPipe,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
@@ -58,7 +62,8 @@ import {
     NgbProgressbar,
     NgbProgressbarModule,
     GalleryModule,
-    CalendarModule
+    CalendarModule,
+    Convert12HrsTimeFormatPipe
   ]
 })
 export class SharedModule {}

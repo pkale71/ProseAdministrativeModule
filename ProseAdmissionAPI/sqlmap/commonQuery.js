@@ -97,7 +97,7 @@ db.validateToken = (token) =>
             FROM user u 
             JOIN user_grade ug ON ug.id = u.user_grade_id
             LEFT JOIN user_category uc ON uc.id = u.user_category_id
-            WHERE (ug.code = 'MOADM' OR ug.code = 'MOUSR') AND auth_token='${token}'`
+            WHERE auth_token='${token}'`
             
             dbConn.query(sql, (error, result) => 
             {
@@ -405,7 +405,7 @@ db.getTaxRates = (academicSessionId, taxTypeId, action) =>
         try
         {
             let filters = "";
-            let sql = `SELECT atr.id, atr.rate, atr.is_active AS isActive, 'admission_tax_rate' AS tableName,
+            let sql = `SELECT atr.id, atr.rate, atr.applicable_from AS applicableFrom, atr.applicable_to AS applicableTo, atr.is_active AS isActive, 'admission_tax_rate' AS tableName,
             att.id AS taxTypeId, att.name AS taxTypeName,
             acs.id AS academicSessionId, acs.year AS academicSessionYear,
             COUNT(afstr.id) AS isExist
@@ -472,7 +472,7 @@ db.getTaxRate = (id) =>
     {
         try
         {
-            let sql = `SELECT atr.id, atr.rate, atr.is_active AS isActive, 
+            let sql = `SELECT atr.id, atr.rate, atr.applicable_from AS applicableFrom, atr.applicable_to AS applicableTo, atr.is_active AS isActive, 
             att.id AS taxTypeId, att.name AS taxTypeName,
             acs.id AS academicSessionId, acs.year AS academicSessionYear
             FROM admission_tax_rate atr
@@ -536,8 +536,8 @@ db.insertTaxRate = (taxRate) =>
     {
         try
         {
-            let sql = `INSERT INTO admission_tax_rate (academic_session_id, tax_type_id, rate, created_on, created_by_id)
-            VALUES (${taxRate.academicSessionId}, ${taxRate.taxTypeId}, ${taxRate.rate}, NOW(), ${taxRate.createdById})`;
+            let sql = `INSERT INTO admission_tax_rate (academic_session_id, tax_type_id, rate, applicable_from, applicable_to, created_on, created_by_id)
+            VALUES (${taxRate.academicSessionId}, ${taxRate.taxTypeId}, ${taxRate.rate}, '${taxRate.applicableFrom}', '${taxRate.applicableTo}', NOW(), ${taxRate.createdById})`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -561,7 +561,7 @@ db.updateTaxRate = (taxRate) =>
     {
         try
         {
-            let sql = `UPDATE admission_tax_rate SET academic_session_id = ${taxRate.academicSessionId}, tax_type_id = ${taxRate.taxTypeId}, rate = ${taxRate.rate},
+            let sql = `UPDATE admission_tax_rate SET academic_session_id = ${taxRate.academicSessionId}, tax_type_id = ${taxRate.taxTypeId}, rate = ${taxRate.rate}, applicable_from = '${taxRate.applicableFrom}', applicable_to = '${taxRate.applicableTo}',
             updated_on = NOW(), updated_by_id = ${taxRate.createdById} WHERE id = ${taxRate.id}`;
             
             dbConn.query(sql, (error, result) => 
@@ -887,6 +887,32 @@ db.getDiscountType = (id) =>
             let sql = `SELECT adt.id, adt.name, adt.code, adt.is_active AS isActive
             FROM admission_discount_type adt 
             WHERE FIND_IN_SET(adt.id, '${id}') > 0`;
+    
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+}; 
+
+db.getDiscountTypeByCode = (code) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT adt.id, adt.name, adt.code, adt.is_active AS isActive
+            FROM admission_discount_type adt 
+            WHERE adt.code = '${code}'`;
     
             dbConn.query(sql, (error, result) => 
             {
@@ -2095,7 +2121,7 @@ db.deleteSubjectGroup = (id) =>
     })
 };
 
-db.getSubjectGroupAllocations = (subjectGroupId, action) =>
+db.getSubjectGroupAllocations = (subjectGroupId, academicSessionId, action) =>
 {
     return new Promise((resolve, reject) =>
     {
@@ -2104,22 +2130,27 @@ db.getSubjectGroupAllocations = (subjectGroupId, action) =>
             let filters = "";
             let sql = `SELECT asga.id, asga.is_active AS isActive, 'admission_subject_group_allocation' AS tableName,
             asg.id AS subjectGroupId, asg.group_name AS subjectGroupName, asg.min_subject AS minSubject, asg.max_subject AS maxSubject,
-            sub.id AS subjectId, sub.name AS subjectName
+            sub.id AS subjectId, sub.name AS subjectName, sub.total_session AS totalSession, sub.session_duration AS duration, sub.has_practical AS hasPractical, sub.is_mandatory AS isMandatory, subt.id AS subjectTypeId, subt.name AS subjectTypeName 
             FROM admission_subject_group_allocation asga
             JOIN admission_subject_group asg ON asg.id = asga.subject_group_id
             JOIN subject sub ON sub.id = asga.subject_id 
+            JOIN subject_type subt ON subt.id = sub.subject_type_id
             WHERE asga.subject_group_id = ${subjectGroupId}`;
             
             if(action == 'Active')
             {
                 if(filters == "")
                 {
-                    filters = filters + ` WHERE asga.is_active = 1`;
+                    filters = filters + ` AND asga.is_active = 1`;
                 }
                 else
                 {
                     filters = filters + ` AND asga.is_active = 1`;
                 }
+            }
+            if(academicSessionId != "")
+            {
+                filters = filters + ` AND sub.applicable_from_year_id >= ${academicSessionId} AND (sub.effective_till_year_id IS NULL OR sub.effective_till_year_id <= ${academicSessionId})`;
             }
             
             sql = sql + filters + ` GROUP BY asga.id ORDER BY asga.id`;
@@ -2233,7 +2264,7 @@ db.deleteSubjectGroupAllocation = (id, subjectGroupId) =>
     })
 };
 
-db.getFeeStructures = (schoolUUID, schoolingProgramId, academicSessionId, batchYearId, syllabusId, gradeCategoryId, action) =>
+db.getFeeStructures = (schoolUUID, schoolingProgramId, academicSessionId, batchYearId, syllabusId, gradeCategoryId, action, date) =>
 {
     return new Promise((resolve, reject) =>
     {
@@ -2337,6 +2368,18 @@ db.getFeeStructures = (schoolUUID, schoolingProgramId, academicSessionId, batchY
                     filters = filters + ` AND afs.is_active = 1`;
                 }
             }
+
+            if(date != '')
+            {
+                if(filters == "")
+                {
+                    filters = filters + ` WHERE '${date}' BETWEEN afs.validity_from AND afs.validity_to`;
+                }
+                else
+                {
+                    filters = filters + ` AND '${date}' BETWEEN afs.validity_from AND afs.validity_to`;
+                }
+            }
             
             sql = sql + filters + ` GROUP BY afs.id
             ORDER BY afc.name`;
@@ -2357,7 +2400,7 @@ db.getFeeStructures = (schoolUUID, schoolingProgramId, academicSessionId, batchY
     });
 };
 
-db.getFeeStructure = (uuid) =>
+db.getFeeStructure = (uuid, date) =>
 {
     return new Promise((resolve, reject) =>
     {
@@ -2372,7 +2415,7 @@ db.getFeeStructure = (uuid) =>
             s.id AS syllabusId, s.name AS syllabusName,
             gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
             afc.id AS feeCategoryId, afc.name feeCategoryName,
-            acur.id AS currencyId, acur.name currencyName
+            acur.id AS currencyId, acur.name currencyName, atr.rate
             FROM admission_fee_structure afs
             JOIN school sch ON sch.id = afs.school_id
             JOIN schooling_program sp ON sp.id = afs.schooling_program_id
@@ -2382,7 +2425,16 @@ db.getFeeStructure = (uuid) =>
             JOIN grade_category gc ON gc.id = afs.grade_category_id
             JOIN admission_fee_category afc ON afc.id = afs.fee_category_id
             JOIN admission_currency acur ON acur.id = afs.currency_id
+            LEFT JOIN admission_fee_structure_tax_rate afstr ON afstr.fee_structure_id = afs.id
+            LEFT JOIN admission_tax_rate atr ON atr.id = afstr.tax_rate_id
             WHERE afs.uuid = '${uuid}'`;
+
+            if(date != "")
+            {
+                sql = sql + ` AND (afs.tax_applicable = 0 OR (afs.tax_applicable = 1 
+                AND '${date}' BETWEEN atr.applicable_from AND atr.applicable_to))`
+            }
+            sql = sql + ` GROUP BY afs.id`;
 
             dbConn.query(sql, (error, result) => 
             {
@@ -2512,22 +2564,19 @@ db.getFeeStructureTaxRates = (feeStructureId) =>
     });
 };
 
-db.getFeeStructureTotals = (feeStructureId) =>
+db.checkFeeStructureTaxRateForAdmission = (feeStructureId, admissionDate) =>
 {
     return new Promise((resolve, reject) =>
     {
         try
         {
-            let sql = `SELECT afst.id, afstr.id AS feeStructureTaxRateId,
-            afst.total_amount AS totalAmount, afst.total_discount AS totalDiscount,
-            afst.net_amount AS netAmount, afst.tax_amount AS taxAmount, afst.gross_amount AS grossAmount, 
+            let sql = `SELECT afstr.id, afstr.is_active AS isActive,
             att.id AS taxTypeId, att.name AS taxTypeName,
             atr.id AS taxRateId, atr.rate AS taxRate
-            FROM admission_fee_structure_totals afst
-            LEFT JOIN admission_fee_structure_tax_rate afstr ON afstr.id = afst.fee_structure_tax_rate_id
-            LEFT JOIN admission_tax_type att ON att.id = afstr.tax_type_id
-            LEFT JOIN admission_tax_rate atr ON atr.id = afstr.tax_rate_id
-            WHERE afst.fee_structure_id = ${feeStructureId}`;
+            FROM admission_fee_structure_tax_rate afstr
+            JOIN admission_tax_type att ON att.id = afstr.tax_type_id
+            JOIN admission_tax_rate atr ON atr.id = afstr.tax_rate_id
+            WHERE afstr.fee_structure_id = ${feeStructureId} AND '${admissionDate}' BETWEEN atr.applicable_from AND atr.applicable_to`;
 
             dbConn.query(sql, (error, result) => 
             {
@@ -2545,7 +2594,43 @@ db.getFeeStructureTotals = (feeStructureId) =>
     });
 };
 
-db.insertfeeStructure = (feeStructure) => 
+db.getFeeStructureTotals = (feeStructureId, taxRate) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT afst.id, afstr.id AS feeStructureTaxRateId,
+            afst.total_amount AS totalAmount, afst.total_discount AS totalDiscount,
+            afst.net_amount AS netAmount, afst.tax_amount AS taxAmount, afst.gross_amount AS grossAmount, 
+            att.id AS taxTypeId, att.name AS taxTypeName,
+            atr.id AS taxRateId, atr.rate AS taxRate, atr.applicable_from AS taxApplicableFrom, atr.applicable_to AS taxApplicableTo
+            FROM admission_fee_structure_totals afst
+            LEFT JOIN admission_fee_structure_tax_rate afstr ON afstr.id = afst.fee_structure_tax_rate_id
+            LEFT JOIN admission_tax_type att ON att.id = afstr.tax_type_id
+            LEFT JOIN admission_tax_rate atr ON atr.id = afstr.tax_rate_id
+            WHERE afst.fee_structure_id = ${feeStructureId}`;
+            if(parseInt(taxRate) > 0)
+            {
+                sql = sql + ` AND atr.rate = ${taxRate}`
+            }
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.insertFeeStructure = (feeStructure) => 
 {
     return new Promise((resolve, reject) => 
     {

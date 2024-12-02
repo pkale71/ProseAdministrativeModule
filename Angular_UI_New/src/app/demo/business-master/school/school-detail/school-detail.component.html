@@ -10,8 +10,8 @@
                     <button type="button" class="btn btn-rounded btn-black float-end" style="margin-top: 0rem;"
                     (click)="back()">Back</button>
                 </h5>
-                <ul class="nav nav-tabs" ngbNav #nav="ngbNav">
-                    <li class="nav-item" [ngbNavItem]="1">
+                <ul class="nav nav-pills" ngbNav #nav="ngbNav">
+                    <li class="nav-item" [ngbNavItem]="1" role="presentation">
                         <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
                         School Info
                         </a>
@@ -101,28 +101,23 @@
                         <div class="row mt-2"> 
                             <div class="col-sm-3">
                                 <label class="form-control-label" for="contractFrom">Contract From</label>
-                                <label class="form-control input-md">{{school?.contractFrom != null ? (school?.contractFrom | date : "dd/MM/yyyy") : '----'}}</label>                
+                                <label class="form-control input-md">{{school?.contractFrom != "" ? (school?.contractFrom | date : "dd/MM/yyyy") : '----'}}</label>                
                             </div>                                       
                             <div class="col-sm-3">
                                 <label class="form-control-label" for="contractTo">Contract To</label>
-                                <label class="form-control input-md">{{school?.contractTo != null ? (school?.contractTo | date : "dd/MM/yyyy") : '----'}}</label>                
+                                <label class="form-control input-md">{{school?.contractTo != "" ? (school?.contractTo | date : "dd/MM/yyyy") : '----'}}</label>                
                             </div> 
                         </div>
                         </ng-template>
                     </li>
-                    <li class="nav-item" [ngbNavItem]="2">
+                    <li class="nav-item" [ngbNavItem]="2" role="presentation">
                         <a class="nav-link text-uppercase" aria-controls="contacts" aria-selected="true" ngbNavLink>Schooling Programs</a>
                         <ng-template ngbNavContent>
-                            <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
-                            (click)="addSchollingProgram(school.uuid, school.schoolingCategory?.id)">Add Schooling Program</button>  
                             <table class="table table-striped row-border table-hover pt-10">
                                 <thead>
                                     <tr>
                                         <th>Sno</th>
-                                        <th>Academic Session</th>
                                         <th>Schooling Program</th>
-                                        <th>Adm.Start Date</th>
-                                        <th>Adm.End Date</th>
                                         <th>Active</th>
                                         <th></th>
                                     </tr>
@@ -130,19 +125,16 @@
                                 <tbody>
                                     <tr *ngFor="let schoolSchoolingProgram of schoolSchoolingPrograms; let i = index">
                                         <td>{{i+1}}</td>
-                                        <td>{{schoolSchoolingProgram?.academicSession?.year}}</td>
                                         <td>{{schoolSchoolingProgram?.schoolingProgram?.name}}</td>
-                                        <td>{{schoolSchoolingProgram?.admissionStartDate  | date : "dd/MM/yyyy"}}</td>
-                                        <td>{{schoolSchoolingProgram?.admissionEndDate  | date : "dd/MM/yyyy"}}</td>
                                         <td>
                                         <span [ngClass]="schoolSchoolingProgram.isActive ? 'badge bg-success' : ' badge bg-danger'" style="cursor: pointer;" title="Change Status" (click)="updateStatus(schoolSchoolingProgram)">{{schoolSchoolingProgram.isActive? 'Yes' : 'No'}}</span>
                                         </td>
                                         <td>
-                                        <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteSchoolingProgram(schoolSchoolingProgram.uuid)"></i>
-                                        &nbsp;
-                                        <i class="fa fa-edit" (click)="editSchoolSchoolingProgram(schoolSchoolingProgram, school.schoolingCategory?.id)" title="Edit" style="cursor: pointer;"></i>
-                                        &nbsp;
-                                        <i class="fa fa-list" (click)="detailSchoolSchoolingProgram(schoolSchoolingProgram)" title="Detail" style="cursor: pointer;"></i>
+                                            <i class="fa fa-plus" title="Add" style="cursor: pointer;" (click)="addSchollingProgram(school.uuid, schoolSchoolingProgram)"></i>
+                                            &nbsp;
+                                            <i class="fa fa-trash-alt" title="Delete" style="cursor: pointer;" (click)="deleteSchoolingProgram(schoolSchoolingProgram.id)" *ngIf="schoolSchoolingProgram.isExist == 0"></i>
+                                            &nbsp;
+                                            <i class="fa fa-list" (click)="detailSchoolSchoolingProgram(school.uuid, schoolSchoolingProgram)" title="Detail" style="cursor: pointer;"></i>
                                         </td>
                                     </tr>
                                     <tr *ngIf="schoolSchoolingPrograms.length == 0">

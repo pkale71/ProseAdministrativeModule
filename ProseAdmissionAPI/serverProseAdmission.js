@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({limit: '100mb',extended : true}));
 
 /////////Routings
 app.use('/api/common', require('./common/commonRoute.js'));
+app.use('/api/admission', require('./admission/admissionRoute.js'));
 
 app.use('/api/',(req,res,next) =>
 {

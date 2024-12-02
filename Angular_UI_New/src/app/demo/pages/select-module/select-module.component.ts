@@ -57,7 +57,6 @@ export class SelectModuleComponent {
             {
                 this.modules = response.modules;
                 this.loginUser = this.commonSharedService.loginUser;
-                console.log(this.loginUser)
                 for(let i=0;i<this.modules.length;i++)
                 {
                     let tempModule = this.loginUser.userModules.filter(userModule=>userModule.module.id == this.modules[i].id);
@@ -78,7 +77,7 @@ export class SelectModuleComponent {
         }
         catch(e)
         {
-            this.showNotification("error", e);
+            //this.showNotification("error", e);
         }
     }
 

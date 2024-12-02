@@ -27,9 +27,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 if(user.length == 1)
                 {
                     let userModuleAssigned = 1;
-                    if(user[0].userGradeCode != 'HRADM' && user[0].userGradeCode != 'ACADM' && user[0].userGradeCode != 'BUADM'
-                    )
-                    {
+                    // if(user[0].userGradeCode != 'HRADM' && user[0].userGradeCode != 'ACADM' && user[0].userGradeCode != 'BUADM'
+                    // )
+                    // {
             ////Get User Module
                         userModules = [];
                         userModules = await dbUser.getUserModules(uuid, 'Approved', moduleId);
@@ -38,7 +38,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             userModuleAssigned = 0;
                         }
 
-                    }
+                    // }
                     if(parseInt(userModuleAssigned) == 0)
                     {
                         res.status(500)
@@ -56,9 +56,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     {
                         let loginLogoutHistoryJSON = {
                             "userId" : user[0].userId,
+                            "moduleId" : moduleId,
                             "authToken" : authToken,
                             "logoutAs" : 'Forced'
                         }
+
+                        let updateLoginLogoutHistoryForModule = await dbUser.updateLoginLogoutHistoryForModule(loginLogoutHistoryJSON);
                         let loginLogoutHistoryResult = await dbUser.insertLoginLogoutHistory(loginLogoutHistoryJSON);
                         
                         let userGradeJSON = {

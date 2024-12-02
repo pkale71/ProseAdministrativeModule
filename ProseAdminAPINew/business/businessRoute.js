@@ -30,6 +30,7 @@ businessRoute.use('/updateBusinessVerticalType', require('../util/validateToken.
 businessRoute.use('/deleteBusinessVerticalType', require('../util/validateToken.js'), require('./delete-business-vertical-type.js'));
 
 businessRoute.use('/getCoaches', require('../util/validateToken.js'), require('./coaches.js'));
+businessRoute.use('/getCoach', require('../util/validateToken.js'), require('./coach.js'));
 businessRoute.use('/saveCoach', require('../util/validateToken.js'), require('./save-coach.js'));
 businessRoute.use('/updateCoach', require('../util/validateToken.js'), require('./update-coach.js'));
 businessRoute.use('/deleteCoach', require('../util/validateToken.js'), require('./delete-coach.js'));
@@ -124,10 +125,13 @@ businessRoute.use('/saveSchool', uploads, require('../util/validateToken.js'), r
 businessRoute.use('/updateSchool', uploads, require('../util/validateToken.js'), require('./update-school.js'));
 businessRoute.use('/deleteSchool', uploads, require('../util/validateToken.js'), require('./delete-school.js'));
 
+businessRoute.use('/getSchoolSchoolingProgramBatches', require('../util/validateToken.js'), require('./school-schooling-program-batches.js'));
 businessRoute.use('/getSchoolSchoolingPrograms', require('../util/validateToken.js'), require('./school-schooling-programs.js'));
-businessRoute.use('/saveSchoolSchoolingProgram', uploads, require('../util/validateToken.js'), require('./save-school-schooling-program.js'));
-businessRoute.use('/updateSchoolSchoolingProgram', uploads, require('../util/validateToken.js'), require('./update-school-schooling-program.js'));
+businessRoute.use('/getSchoolSchoolingProgramValidities', uploads, require('../util/validateToken.js'), require('./school-schooling-program-validities.js'));
+businessRoute.use('/saveSchoolSchoolingProgramValidity', uploads, require('../util/validateToken.js'), require('./save-school-schooling-program-validity.js'));
+businessRoute.use('/updateSchoolSchoolingProgramValidity', uploads, require('../util/validateToken.js'), require('./update-school-schooling-program-validity.js'));
 businessRoute.use('/deleteSchoolSchoolingProgram', uploads, require('../util/validateToken.js'), require('./delete-school-schooling-program.js'));
+businessRoute.use('/deleteSchoolSchoolingProgramValidity', uploads, require('../util/validateToken.js'), require('./delete-school-schooling-program-validity.js'));
 
 businessRoute.use('/',(req,res,next) => 
 {

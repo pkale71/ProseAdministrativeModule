@@ -1,107 +1,299 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
-            <div class="card-header" style="padding: 10px 25px;">
-                <h5 style="margin-top: 0.8rem;"><i class="fa fa-user"></i>&nbsp;Users&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+            <div class="card-header">
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-users"></i>&nbsp;Users&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i>
+                <span class="badge bg-info">{{users.length}}</span>
+                </h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <form [formGroup]="userGradeForm">
-                            <div class="form-group">
-                                <label class="form-control-label" for="userGrade">User Grade</label>
-                                <select class="form-control" required id="userGrade" formControlName="userGrade" (change)="filterUserCategories()">
-                                    <option value="{{userGrade.id}}" *ngFor="let userGrade of userGrades">{{userGrade.name}}</option>
-                                </select>
+                <ul class="nav nav-tabs" ngbNav #nav="ngbNav">
+                    <li class="nav-item" [ngbNavItem]="1">
+                        <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                        Active&nbsp;<span class="badge bg-info">{{activeUsers.length}}</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                            <div class="table-responsive">
+                                <table datatable id="tblActiveUser" class="table table-striped row-border table-hover pt-10">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Full Name</th>
+                                            <th>Gender</th>
+                                            <th>Email</th>
+                                            <th>Mobile</th>
+                                            <th>Grade</th>
+                                            <th>Category</th>
+                                            <th>Password</th>
+                                            <th>Active</th>
+                                            <th>Is Admin Approved</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let user of activeUsers let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{user.fullName}}</td>
+                                            <td>{{user.gender}}</td>
+                                            <td>{{user.email}}</td>
+                                            <td>{{user.mobile}}</td>
+                                            <td>{{user.userGrade?.name}}</td>
+                                            <td>{{user.userCategory?.name}}</td>
+                                            <td>
+                                                <i class="fa fa-eye-slash" id="togglePassword_{{i}}" 
+                                                style="cursor:pointer;position: relative;" (click)="applyTogglePassword(i)"></i>
+                                                &nbsp;<input type="password" id="password_{{i}}" value="{{user.password}}" 
+                                                style="background: transparent;border: none;"/>
+                                            </td>
+                                            <td>
+                                                <span [ngClass]="user.isActive ? 'badge bg-success' : 'badge bg-danger'">
+                                                {{user.isActive ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td *ngIf = "user.isAdminApproved == null"></td>
+                                            <td *ngIf = "user.isAdminApproved != null">
+                                                <span [ngClass]="user.isAdminApproved ? 'badge bg-success' : 'badge bg-danger'">
+                                                <i class="{{user.isAdminApproved ? 'fa fa-user-check' : 'fa fa-user-times'}}"></i>
+                                                {{user.isAdminApproved ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td style="width:40px;text-align: right;">
+                                                <i class="fa fa-list" (click)="detailUser(user.uuid)" title="Detail" style="cursor: pointer;"></i>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="activeUsers.length == 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </form>
-                    </div>
-                    <div class="col-md-3">
-                        <form [formGroup]="userCategoryForm">
-                            <div class="form-group">
-                                <label class="form-control-label" for="userCategory">User Category</label>
-                                <select class="form-control" required id="userCategory" formControlName="userCategory">
-                                    <option value="{{userCategory.id}}" *ngFor="let userCategory of userCategories">{{userCategory.name}}</option>
-                                </select>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="2">
+                        <a class="nav-link text-uppercase" aria-controls="user1" aria-selected="true" ngbNavLink>      
+                        Deactive&nbsp;<span class="badge bg-info">{{deActiveUsers.length}}</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                            <div class="table-responsive">
+                                <table datatable id="tblDeactiveUser" class="table table-striped row-border table-hover pt-10">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Full Name</th>
+                                            <th>Gender</th>
+                                            <th>Email</th>
+                                            <th>Mobile</th>
+                                            <th>Grade</th>
+                                            <th>Category</th>
+                                            <th>Password</th>
+                                            <th>Active</th>
+                                            <th>Is Admin Approved</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let user of deActiveUsers let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{user.fullName}}</td>
+                                            <td>{{user.gender}}</td>
+                                            <td>{{user.email}}</td>
+                                            <td>{{user.mobile}}</td>
+                                            <td>{{user.userGrade?.name}}</td>
+                                            <td>{{user.userCategory?.name}}</td>
+                                            <td>
+                                                <i class="fa fa-eye-slash" id="togglePassword_{{i}}" 
+                                                style="cursor:pointer;position: relative;" (click)="applyTogglePassword(i)"></i>
+                                                &nbsp;<input type="password" id="password_{{i}}" value="{{user.password}}" 
+                                                style="background: transparent;border: none;"/>
+                                            </td>
+                                            <td>
+                                                <span [ngClass]="user.isActive ? 'badge bg-success' : 'badge bg-danger'">
+                                                {{user.isActive ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td *ngIf = "user.isAdminApproved == null"></td>
+                                            <td *ngIf = "user.isAdminApproved != null">
+                                                <span [ngClass]="user.isAdminApproved ? 'badge bg-success' : 'badge bg-danger'">
+                                                <i class="{{user.isAdminApproved ? 'fa fa-user-check' : 'fa fa-user-times'}}"></i>
+                                                {{user.isAdminApproved ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td style="width:40px;text-align: right;">
+                                                <i class="fa fa-list" (click)="detailUser(user.uuid)" title="Detail" style="cursor: pointer;"></i>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="deActiveUsers.length == 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </form>
-                    </div>                
-                    <div class="col-md-3">
-                        <br/>
-                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked"
-                        (click)="getUsers()"><i class="fa fa-search"></i>&nbsp;Search</button>
-                        <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
-                            <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table datatable id="tblUser" class="table table-striped row-border table-hover pt-10">
-                        <thead>
-                            <tr>
-                                <th>Sno</th>
-                                <th>Full Name</th>
-                                <th>Gender</th>
-                                <th>Email</th>
-                                <th>Mobile</th>
-                                <th>Grade</th>
-                                <th>Category</th>
-                                <th>Password</th>
-                                <th>Active</th>
-                                <th>Is Admin Approved</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let user of user let i=index">
-                                <td>{{i+1}}</td>
-                                <td>{{user.fullName}}</td>
-                                <td>{{user.gender}}</td>
-                                <td>{{user.email}}</td>
-                                <td>{{user.mobile}}</td>
-                                <td>{{user.userGrade?.name}}</td>
-                                <td>{{user.userCategory?.name}}</td>
-                                <td>
-                                    <i class="fa fa-eye-slash" id="togglePassword_{{i}}" 
-                                    style="cursor:pointer;position: relative;" (click)="applyTogglePassword(i)"></i>
-                                    &nbsp;<input type="password" id="password_{{i}}" value="{{user.password}}" 
-                                    style="background: transparent;border: none;"/>
-                                </td>
-                                <td>
-                                    <span [ngClass]="user.isActive ? 'badge bg-success' : 'badge bg-danger'" 
-                                    style="cursor: pointer;" title="Change Status" (click)="updateStatus(user)" >
-                                    {{user.isActive ? 'Yes' : 'No'}}
-                                    </span>
-                                </td>
-                                <td *ngIf = "user.isAdminApproved == null"></td>
-                                <td *ngIf = "user.isAdminApproved != null">
-                                    <span [ngClass]="user.isAdminApproved ? 'badge bg-success' : 'badge bg-danger'">
-                                    <i class="{{user.isAdminApproved ? 'fa fa-user-check' : 'fa fa-user-times'}}"></i>
-                                    {{user.isAdminApproved ? 'Yes' : 'No'}}
-                                    </span>
-                                </td>
-                                <td style="width:40px;text-align: right;">
-                                    <i class="fa fa-user-tag" (click)="approvedUser(user.uuid)" title="Approve/Deny" style="cursor: pointer;"></i>&nbsp;
-                                    <i class="fa fa-edit" (click)="editUser(user.uuid)" title="Edit" style="cursor: pointer;"></i>&nbsp;
-                                    <i class="fa fa-trash-alt" (click)="deleteUser(user.uuid)" title="Delete" style="cursor: pointer;"></i>&nbsp;
-                                    <i class="fa fa-list" (click)="detailUser(user.uuid)" title="Detail" style="cursor: pointer;"></i>
-                                </td>
-                            </tr>
-                            <tr *ngIf="user.length == 0">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>No record(s) found</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="3">
+                        <a class="nav-link text-uppercase" aria-controls="user2" aria-selected="true" ngbNavLink>      
+                        Pending&nbsp;<span class="badge bg-info">{{pendingUsers.length}}</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                            <div class="table-responsive">
+                                <table datatable id="tblPendingUser" class="table table-striped row-border table-hover pt-10">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Full Name</th>
+                                            <th>Gender</th>
+                                            <th>Email</th>
+                                            <th>Mobile</th>
+                                            <th>Grade</th>
+                                            <th>Category</th>
+                                            <th>Password</th>
+                                            <th>Active</th>
+                                            <th>Is Admin Approved</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let user of pendingUsers let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{user.fullName}}</td>
+                                            <td>{{user.gender}}</td>
+                                            <td>{{user.email}}</td>
+                                            <td>{{user.mobile}}</td>
+                                            <td>{{user.userGrade?.name}}</td>
+                                            <td>{{user.userCategory?.name}}</td>
+                                            <td>
+                                                <i class="fa fa-eye-slash" id="togglePassword_{{i}}" 
+                                                style="cursor:pointer;position: relative;" (click)="applyTogglePassword(i)"></i>
+                                                &nbsp;<input type="password" id="password_{{i}}" value="{{user.password}}" 
+                                                style="background: transparent;border: none;"/>
+                                            </td>
+                                            <td>
+                                                <span [ngClass]="user.isActive ? 'badge bg-success' : 'badge bg-danger'">
+                                                {{user.isActive ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td *ngIf = "user.isAdminApproved == null"></td>
+                                            <td *ngIf = "user.isAdminApproved != null">
+                                                <span [ngClass]="user.isAdminApproved ? 'badge bg-success' : 'badge bg-danger'">
+                                                <i class="{{user.isAdminApproved ? 'fa fa-user-check' : 'fa fa-user-times'}}"></i>
+                                                {{user.isAdminApproved ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td style="width:40px;text-align: right;">
+                                                <i class="fa fa-list" (click)="detailUser(user.uuid)" title="Detail" style="cursor: pointer;"></i>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="pendingUsers.length == 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="4">
+                        <a class="nav-link text-uppercase" aria-controls="user2" aria-selected="true" ngbNavLink>      
+                        Deactive By HR Admin&nbsp;<span class="badge bg-info">{{deActiveHRUsers.length}}</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                            <div class="table-responsive">
+                                <table datatable id="tblDeactiveHRUser" class="table table-striped row-border table-hover pt-10">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Full Name</th>
+                                            <th>Gender</th>
+                                            <th>Email</th>
+                                            <th>Mobile</th>
+                                            <th>Grade</th>
+                                            <th>Category</th>
+                                            <th>Password</th>
+                                            <th>Active</th>
+                                            <th>Is Admin Approved</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let user of deActiveHRUsers let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{user.fullName}}</td>
+                                            <td>{{user.gender}}</td>
+                                            <td>{{user.email}}</td>
+                                            <td>{{user.mobile}}</td>
+                                            <td>{{user.userGrade?.name}}</td>
+                                            <td>{{user.userCategory?.name}}</td>
+                                            <td>
+                                                <i class="fa fa-eye-slash" id="togglePassword_{{i}}" 
+                                                style="cursor:pointer;position: relative;" (click)="applyTogglePassword(i)"></i>
+                                                &nbsp;<input type="password" id="password_{{i}}" value="{{user.password}}" 
+                                                style="background: transparent;border: none;"/>
+                                            </td>
+                                            <td>
+                                                <span [ngClass]="user.isActive ? 'badge bg-success' : 'badge bg-danger'">
+                                                {{user.isActive ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td *ngIf = "user.isAdminApproved == null"></td>
+                                            <td *ngIf = "user.isAdminApproved != null">
+                                                <span [ngClass]="user.isAdminApproved ? 'badge bg-success' : 'badge bg-danger'">
+                                                <i class="{{user.isAdminApproved ? 'fa fa-user-check' : 'fa fa-user-times'}}"></i>
+                                                {{user.isAdminApproved ? 'Yes' : 'No'}}
+                                                </span>
+                                            </td>
+                                            <td style="width:40px;text-align: right;">
+                                                <i class="fa fa-list" (click)="detailUser(user.uuid)" title="Detail" style="cursor: pointer;"></i>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="deActiveHRUsers.length == 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="nav"></div>
             </div>
         </div>
     </div>

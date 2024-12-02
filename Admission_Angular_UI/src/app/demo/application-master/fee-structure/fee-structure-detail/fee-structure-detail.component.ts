@@ -56,7 +56,7 @@ export class FeeStructureDetailComponent
   async getFeeStructure(uuid : string) 
   {
     this.searchClicked = true;
-    let response = await this.commonService.getFeeStructure(uuid).toPromise(); 
+    let response = await this.commonService.getFeeStructure(uuid, "").toPromise(); 
     if (response.status_code == 200 && response.message == 'success') 
     {
         this.feeStructure = response.feeStructure;

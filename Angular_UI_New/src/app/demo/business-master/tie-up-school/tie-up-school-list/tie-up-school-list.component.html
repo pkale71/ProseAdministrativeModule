@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
-            <div class="card-header" style="padding: 10px 25px;">
+            <div class="card-header" style="padding: 5px 25px;">
                 <h5 style="margin-top: 0.8rem;"><i class="fa fa-school"></i>&nbsp; Tie-UP Schools &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
                 <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
                 (click)="addTieUpSchool()">Add Tie-Up School
@@ -36,7 +36,7 @@
                                 </td>
                                 <td style="width:40px;text-align: right;">
                                     <i class="fa fa-edit" (click)="editTieUpSchool(tieUpSchool.uuid)" title="Edit" style="cursor: pointer;"></i>&nbsp;
-                                    <i class="fa fa-trash-alt" (click)="deleteTieUpSchool(tieUpSchool)" title="Delete" style="cursor: pointer;"></i>&nbsp;
+                                    <i class="fa fa-trash-alt" (click)="deleteTieUpSchool(tieUpSchool)" title="Delete" style="cursor: pointer;" *ngIf="tieUpSchool.isExist == 0"></i>&nbsp;
                                     <i class="fa fa-list" (click)="detailTieUpSchool(tieUpSchool.uuid)" title="Detail" style="cursor: pointer;"></i>
                                 </td>
                             </tr>

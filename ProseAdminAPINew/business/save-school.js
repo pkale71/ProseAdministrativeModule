@@ -25,6 +25,7 @@ let pincode;
 let contractFrom;
 let contractTo;
 let deliveryModeId;
+let schoolingProgramIds;
 let allowedMimeTypes = [
     'image/png',
     'image/jpeg'
@@ -41,6 +42,8 @@ let district;
 let city;
 let school;
 let deliveryMode;
+let schoolingProgram;
+let schoolingProgramArray;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -50,9 +53,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.email != undefined && reqData.mobile1 != undefined && reqData.mobile2 != undefined && reqData.landline1 != undefined && reqData.landline2 != undefined && reqData.website != undefined && reqData.address != undefined && reqData.country != undefined && reqData.stateRegion != undefined && reqData.district != undefined && reqData.city != undefined && reqData.pincode != undefined && reqData.schoolingGroup != undefined && reqData.schoolSubGroup != undefined && reqData.schoolingCategory != undefined && reqData.contractFrom != undefined && reqData.contractTo != undefined && reqData.deliveryMode != undefined)
+        if(reqData.name != undefined && reqData.email != undefined && reqData.mobile1 != undefined && reqData.mobile2 != undefined && reqData.landline1 != undefined && reqData.landline2 != undefined && reqData.website != undefined && reqData.address != undefined && reqData.country != undefined && reqData.stateRegion != undefined && reqData.district != undefined && reqData.city != undefined && reqData.pincode != undefined && reqData.schoolingGroup != undefined && reqData.schoolSubGroup != undefined && reqData.schoolingCategory != undefined && reqData.contractFrom != undefined && reqData.contractTo != undefined && reqData.deliveryMode != undefined && reqData.schoolingProgramIds != undefined)
         {
-            if(reqData.name != "" && reqData.email != "" && reqData.mobile1 != "" && reqData.address != "" && JSON.parse(reqData.country).id != "" && JSON.parse(reqData.stateRegion).id != "" && JSON.parse(reqData.district).id != "" && JSON.parse(reqData.city).id != "" && reqData.pincode != "" && JSON.parse(reqData.schoolingGroup).id != "" && JSON.parse(reqData.schoolSubGroup).id != "" && JSON.parse(reqData.schoolingCategory).id != "" && JSON.parse(reqData.deliveryMode).id != "")
+            if(reqData.name != "" && reqData.email != "" && reqData.mobile1 != "" && reqData.address != "" && JSON.parse(reqData.country).id != "" && JSON.parse(reqData.stateRegion).id != "" && JSON.parse(reqData.district).id != "" && JSON.parse(reqData.city).id != "" && reqData.pincode != "" && JSON.parse(reqData.schoolingGroup).id != "" && JSON.parse(reqData.schoolSubGroup).id != "" && JSON.parse(reqData.schoolingCategory).id != "" && JSON.parse(reqData.deliveryMode).id != "" && reqData.schoolingProgramIds != "")
             {
                 name = reqData.name;
                 code = "";
@@ -74,6 +77,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 schoolSubGroupId = commonFunction.validateNumber(JSON.parse(reqData.schoolSubGroup).id);
                 schoolingCategoryId = commonFunction.validateNumber(JSON.parse(reqData.schoolingCategory).id);
                 deliveryModeId = commonFunction.validateNumber(JSON.parse(reqData.deliveryMode).id);
+                schoolingProgramIds = reqData.schoolingProgramIds;
 
             
             /////check School Logo Format
@@ -91,6 +95,21 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             "error" : errorCode.getStatus(500)
                         })
                     }
+                }
+                /////check Schooling Program
+                schoolingProgramArray = schoolingProgramIds.toString().split(",");
+                schoolingProgram = await dbCommon.getSchoolingProgram(schoolingProgramIds);
+                if(schoolingProgram.length != schoolingProgramArray.length)
+                { 
+                    //Remove Files
+                    commonFunction.deleteFiles(req.files);
+                    res.status(500)
+                    return res.json({
+                        "status_code" : 500,
+                        "message" : "Some Of The Schooling Program Are Invalid",
+                        "success" : false,
+                        "error" : errorCode.getStatus(500)
+                    })
                 }
             /////check Schooling Group
                 schoolingGroup = await dbCommon.getSchoolingGroup(schoolingGroupId);
@@ -219,6 +238,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                             "schoolingGroupId" : schoolingGroupId,
                                             "schoolSubGroupId" : schoolSubGroupId,
                                             "schoolingCategoryId" : schoolingCategoryId,
+                                            "schoolingProgramIds" : schoolingProgramArray,
                                             "address" : address,
                                             "countryId" : countryId,
                                             "stateRegionId" : stateRegionId,
@@ -286,7 +306,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                     res.status(500)
                                     return res.json({
                                         "status_code" : 500,
-                                        "message" : "City Not Exist For Country : " + city[0].countryName + ", State/Region : " + city[0].stateRegionName + " And District : " + city[0].districtName,
+                                        "message" : "City Not Exist For Country : " + district[0].countryName + ", State/Region : " + district[0].stateRegionName + " And District : " + district[0].name,
                                         "success" : false,
                                         "error" : errorCode.getStatus(500)
                                     })
@@ -299,7 +319,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                                 res.status(500)
                                 return res.json({
                                     "status_code" : 500,
-                                    "message" : "District Not Exist For Country : " + district[0].countryName + " And State/Region : " + district[0].stateRegionName,
+                                    "message" : "District Not Exist For Country : " + stateRegion[0].countryName + " And State/Region : " + stateRegion[0].name,
                                     "success" : false,
                                     "error" : errorCode.getStatus(500)
                                 })
@@ -380,7 +400,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
             "status_code" : 500,
             "message" : "Something Went Wrong",
             "success" : false,
-            "error" : e?.stack
+            "error" : e
         });
     }
 })

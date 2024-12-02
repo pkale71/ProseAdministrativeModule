@@ -25,24 +25,64 @@ export class CommonService {
         return this.apiAdminService.get('/common/getBatchTypes/' + academicSessionId + '/' + action);
     }
 
+    getGradeCategories(action : string)
+    {
+        return this.apiAdminService.get('/common/getGradeCategories/' + action);
+    }
+
     getGrades(gradeCategoryId : number, action : string)
     {
         return this.apiAdminService.get('/common/getGrades/' + gradeCategoryId + '/' + action);
     }
 
-    getSchools(action : string)
+    getSchools(action : string, date : string)
     {
-        return this.apiAdminService.get('/business/getSchools/' + action);
+        return this.apiAdminService.get('/business/getSchools/' + action + '/' + date);
     }
 
-    getSchoolSchoolingPrograms(schoolUUID : string, action : string)
+    getSchoolSchoolingPrograms(schoolUUID : string, action : string, date : string)
     {
-        return this.apiAdminService.get('/business/getSchoolSchoolingPrograms/' + schoolUUID + '/' + action);
+        return this.apiAdminService.get('/business/getSchoolSchoolingPrograms/' + schoolUUID + '/' + action + '/' + date);
+    }
+
+    getSchoolSchoolingProgramBatches(schoolUUID : string, schoolingProgramId : number, date : string)
+    {
+        return this.apiAdminService.get('/business/getSchoolSchoolingProgramBatches/' + schoolUUID + '/' + schoolingProgramId + '/' + date);
     }
 
     getSubjects(gradeCategoryId : number, gradeId : number, syllabusId : number, action : string)
     {
         return this.apiAdminService.get('/common/getSubjects/' + gradeCategoryId + '/' + gradeId + '/' + syllabusId + '/' + action);
+    }
+
+    getUserGrades()
+    {
+        return this.apiAdminService.get('/common/getUserGrades');
+    }
+
+    getUserCategories()
+    {
+        return this.apiAdminService.get('/common/getUserCategories');
+    }
+
+    getUserRoles(moduleId : number, action : string)
+    {
+        return this.apiAdminService.get('/common/getUserRoles/' + moduleId + '/' + action);
+    }
+
+    getUserTypes(moduleId : number, roleId : number, action : string)
+    {
+        return this.apiAdminService.get('/common/getUserTypes/' + moduleId + '/' + roleId + '/' + action);
+    }
+
+    getStudyCenters(studyCenterTypeId : any, action : string)
+    {
+        return this.apiAdminService.get('/business/getStudyCenters/' + studyCenterTypeId + '/' + action);
+    }
+
+    getTieUpSchools(action : string)
+    {
+        return this.apiAdminService.get('/business/getTieUpSchools/' + action);
     }
 //////////    
     getAppBase(moduleId : number)
@@ -265,14 +305,14 @@ export class CommonService {
     }
 
      //Fee Structure
-     getFeeStructures(schoolUUID : string, schoolingProgramId : number, academicSessionId : number, batchYearId : number, syllabusId : number, gradeCategoryId : number, action : string)
+     getFeeStructures(schoolUUID : string, schoolingProgramId : number, academicSessionId : number, batchYearId : number, syllabusId : number, gradeCategoryId : number, action : string, date : string)
      {
-         return this.apiService.get('/common/getFeeStructures/' + schoolUUID + '/' + schoolingProgramId + '/' + academicSessionId + '/' + batchYearId + '/' + syllabusId  + '/' + gradeCategoryId + '/' + action);
+         return this.apiService.get('/common/getFeeStructures/' + schoolUUID + '/' + schoolingProgramId + '/' + academicSessionId + '/' + batchYearId + '/' + syllabusId  + '/' + gradeCategoryId + '/' + action + '/' + date);
      }
  
-     getFeeStructure(uuid : string)
+     getFeeStructure(uuid : string, date : string)
      {
-         return this.apiService.get('/common/getFeeStructure/' + uuid);
+         return this.apiService.get('/common/getFeeStructure/' + uuid + '/' + date);
      }
  
      saveFeeStructure(feeStructure: any) 

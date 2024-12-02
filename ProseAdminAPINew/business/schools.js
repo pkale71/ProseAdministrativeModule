@@ -5,20 +5,32 @@ let errorCodes = require('../util/errorCodes.js');
 let errorCode = new errorCodes();
 ////////Variables
 let action;
+let date;
 //////
 let schools;
 
-module.exports = require('express').Router().get('/?*', async(req,res) =>
+module.exports = require('express').Router().get('/:optParam?*', async(req,res) =>
 {
     try
     {
-        action = '';
+        action = "";
+        date = "";
         if(req.params)
         {
-            action = req.params[0];
+            let tempParams = req.params['optParam'] + req.params[0];
+            tempParams = tempParams.toString().split("/");
+            if(tempParams.length == 1)
+            {
+                action = tempParams[0];
+            }
+            else if(tempParams.length == 2)
+            {
+                action = tempParams[0];
+                date = tempParams[1];
+            }
         }
 
-        schools = await dbBusiness.getSchools(action);
+        schools = await dbBusiness.getSchools(date, action);
         if(schools.length >= 0)
         {
             res.status(200)

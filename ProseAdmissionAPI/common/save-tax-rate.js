@@ -10,6 +10,8 @@ let taxTypeId;
 let academicSession;
 let taxType;
 let taxRate;
+let applicableFrom;
+let applicableTo;
 
 module.exports = require('express').Router().post('/',async(req,res) =>
 {
@@ -18,13 +20,26 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.rate != undefined && reqData.academicSession != undefined && reqData.taxType != undefined)
+        if(reqData.rate != undefined && reqData.academicSession != undefined && reqData.taxType != undefined && reqData.applicableFrom != undefined && reqData.applicableTo != undefined)
         {
-            if(reqData.rate != "" && reqData.academicSession.id != "" && reqData.taxType.id != "")
+            if(reqData.rate != "" && reqData.academicSession.id != "" && reqData.taxType.id != "" && reqData.applicableFrom != "" && reqData.applicableTo != "")
             {
                 rate = commonFunction.validateNumber(reqData.rate);
                 academicSessionId = commonFunction.validateNumber(reqData.academicSession.id);
                 taxTypeId = commonFunction.validateNumber(reqData.taxType.id);
+                applicableFrom = reqData.applicableFrom;
+                applicableTo = reqData.applicableTo;
+                
+                if(!commonFunction.isValidDate(applicableFrom) || !commonFunction.isValidDate(applicableTo))
+                {
+                    res.status(500)
+                    return res.json({
+                        "status_code" : 500,
+                        "message" : "Invalid Applicable From Or Applicalbe To Date",
+                        "success" : false,
+                        "error" : errorCode.getStatus(500)
+                    });
+                }
 
                 let getAcademicSessionUrl = global.adminPortalAPIUrl+"common/getAcademicSession/"+academicSessionId;
                 academicSession = await commonFunction.getExternalAPI(getAcademicSessionUrl);                
@@ -60,6 +75,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         "rate" : rate,
                         "academicSessionId" : academicSessionId,
                         "taxTypeId" : taxTypeId,
+                        "applicableFrom" : applicableFrom,
+                        "applicableTo" : applicableTo,
                         "createdById" : authData.id
                     }
                     let insertTaxRateResult = await dbCommon.insertTaxRate(insertJSON);

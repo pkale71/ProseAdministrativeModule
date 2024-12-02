@@ -1,6 +1,6 @@
 <div class="card" [ngClass]="cardClass" [@cardRemove]="cardRemove" #toAnimate>
   <!-- animates animatesInitMode="show" [animatesOnInit]="{useVisibility: false, disabled: true}" -->
-  <div class="card-header" *ngIf="!hidHeader" [ngClass]="headerClass">
+  <div class="card-header"*ngIf="!hidHeader" [ngClass]="headerClass">
     <h5 *ngIf="!customHeader">{{ cardTitle }}</h5>
     <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
     *ngIf="(userTypeCode == 'SCHPL' || userTypeCode == 'SCHVP') && cardTitle == 'Year Calender' && !yearCalenderGenerated && !yearCalenderClicked" 

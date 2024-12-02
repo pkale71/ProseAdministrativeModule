@@ -11,9 +11,8 @@ import { DataTablesModule } from 'angular-datatables';
 import { BusinessService } from 'src/app/theme/shared/service/business.service';
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SchoolSchoolingProgramDetailComponent } from '../school-schooling-program-detail/school-schooling-program-detail.component';
 import { SchoolSchoolingProgramAddComponent } from '../school-schooling-program-add/school-schooling-program-add.component';
-import { SchoolSchoolingProgramEditComponent } from '../school-schooling-program-edit/school-schooling-program-edit.component';
+import { SchoolSchoolingProgramValidityListComponent } from '../school-schooling-program-validity-list/school-schooling-program-validity-list.component';
 
 @Component({
   selector: 'app-school-detail',
@@ -155,7 +154,7 @@ export class SchoolDetailComponent {
         try
         {
             let tempJson = {
-                id : schoolSchoolingProgram.uuid,
+                id : schoolSchoolingProgram.id,
                 tableName : schoolSchoolingProgram.tableName
             }
             this.showNotification("info", "Please wait...");
@@ -174,7 +173,7 @@ export class SchoolDetailComponent {
     });   
   }
 
-  addSchollingProgram(schoolUUID : string, schoolingCategoryId : number)
+  addSchollingProgram(schoolUUID : string, schoolSchoolingProgram : any)
   {
     const dialogRef = this.modalService.open(SchoolSchoolingProgramAddComponent, 
     { 
@@ -182,34 +181,23 @@ export class SchoolDetailComponent {
     });
     dialogRef.componentInstance.modalParams = {
       "schoolUUID" : schoolUUID,
-      "schoolingCategoryId" : schoolingCategoryId
-    };
-  }
-
-  editSchoolSchoolingProgram(schoolSchoolingProgram : any, schoolingCategoryId : number)
-  {
-    const dialogRef = this.modalService.open(SchoolSchoolingProgramEditComponent, 
-    { 
-        size: 'xl', backdrop: 'static' 
-    });
-    dialogRef.componentInstance.modalParams = {
-      "schoolSchoolingProgram" : schoolSchoolingProgram,
-      "schoolingCategoryId" : schoolingCategoryId
-    };
-  }
-
-  detailSchoolSchoolingProgram(schoolSchoolingProgram : any)
-  {
-    const dialogRef = this.modalService.open(SchoolSchoolingProgramDetailComponent, 
-    { 
-        size: 'lg', backdrop: 'static' 
-    });
-    dialogRef.componentInstance.modalParams = {
       "schoolSchoolingProgram" : schoolSchoolingProgram
     };
   }
 
-  deleteSchoolingProgram(uuid : string)
+  detailSchoolSchoolingProgram(schoolUUID : string, schoolSchoolingProgram : any)
+  {
+    const dialogRef = this.modalService.open(SchoolSchoolingProgramValidityListComponent, 
+    { 
+        size: 'lg', backdrop: 'static' 
+    });
+    dialogRef.componentInstance.modalParams = {
+      "schoolUUID" : schoolUUID,
+      "schoolSchoolingProgram" : schoolSchoolingProgram
+    };
+  }
+
+  deleteSchoolingProgram(id : string)
   {
     Swal.fire({
     customClass: {
@@ -228,7 +216,7 @@ export class SchoolDetailComponent {
       else 
       {
           this.showNotification("info", "Please wait...");
-          let tempJSON = { "uuid" : uuid };
+          let tempJSON = { "id" : id };
           try
           {
               let response = await this.businessService.deleteSchoolSchoolingProgram(tempJSON).toPromise();

@@ -202,7 +202,7 @@ module.exports = require('express').Router().post('/', async(req, res) =>
             "status_code" : 500,
             "success" : false,
             "message" : "Something Went Wrong",
-            "error" : e?.stack
+            "error" : e
         });
     }
 });

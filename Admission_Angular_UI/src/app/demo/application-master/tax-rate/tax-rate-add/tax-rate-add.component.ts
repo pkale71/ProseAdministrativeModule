@@ -45,7 +45,9 @@ export class TaxRateAddComponent
       id:[''],
       academicSession: this.formbuilder.group({ 'id': [''] }),
       taxType: this.formbuilder.group({ 'id': [''] }),
-      rate: ['',[Validators.required, Validators.pattern('^[0-9.]{1,5}$')]]
+      rate: ['',[Validators.required, Validators.pattern('^[0-9.]{1,5}$')]],
+      applicableFrom : ['', Validators.required],
+      applicableTo : ['', Validators.required]
     });  
 
     this.academicSessionForm = this.formbuilder.group({

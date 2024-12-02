@@ -32,8 +32,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     let insertJSON = {
                         "userId" : userModule[0].userId,
                         "moduleId" : userModule[0].moduleId,
-                        "userRoleId" : userModule[0].userRoleId,
-                        "userTypeId" : userModule[0].userTypeId,
+                        "userRoleId" : userModule[0].userRoleId ? userModule[0].userRoleId : '',
+                        "userTypeId" : userModule[0].userTypeId ? userModule[0].userTypeId : '',
                         "createdById" : authData.id,
                         "remark" : "Delete"
                     }

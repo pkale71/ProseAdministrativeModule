@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
-            <div class="card-header" style="padding: 10px 25px;">
+            <div class="card-header" style="padding: 5px 25px;">
                 <h5 style="margin-top: 0.8rem;"><i class="fa fa-graduation-cap"></i>&nbsp; Batch-Types &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
                 <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
                 (click)="addBatchType()">Add Batch-Type</button>
@@ -25,8 +25,8 @@
                                 <td>{{i+1}}</td>
                                 <td>{{batchType.name | titlecase}}</td>
                                 <td>{{batchType?.academicSession?.batchYear}}</td>
-                                <td>{{batchType.startTime}}</td>
-                                <td>{{batchType.endTime}}</td>
+                                <td>{{batchType.startTime | convert12HrsTimeFormat}}</td>
+                                <td>{{batchType.endTime | convert12HrsTimeFormat}}</td>
                                 <td>
                                     <span [ngClass]="batchType.isActive ? 'badge bg-success' : 'badge bg-danger'" 
                                     style="cursor: pointer;" title="Change Status" (click)="updateStatus(batchType)">

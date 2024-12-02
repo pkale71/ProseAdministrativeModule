@@ -3,7 +3,7 @@ const commonFunction = require('../util/commonFunctions');
 let secretKey = commonFunction.getSecretKey();
 let db = {};
 
-db.insertLoginLogoutHistory = (ullh) => 
+db.updateLoginLogoutHistoryForModule = (ullh) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -17,9 +17,33 @@ db.insertLoginLogoutHistory = (ullh) =>
                 {
                     return reject(error);
                 }   
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertLoginLogoutHistory = (ullh) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE user_login_logout_history SET logout_on = NOW(), logout_as = '${ullh.logoutAs}' 
+            WHERE user_id = ${ullh.userId} AND module_id = ${ullh.moduleId} AND logout_on IS NULL`
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }   
         /////       
-                let sql1 = `INSERT INTO user_login_logout_history(user_id, auth_token, login_on) 
-                VALUES (${ullh.userId}, '${ullh.authToken}', NOW())`
+                let sql1 = `INSERT INTO user_login_logout_history(user_id, module_id, auth_token, login_on) 
+                VALUES (${ullh.userId}, ${ullh.moduleId}, '${ullh.authToken}', NOW())`
                 dbConn.query(sql1, (error1, result1) => 
                 {
                     if(error1)
@@ -76,7 +100,7 @@ db.authenticateUser = (email, password) =>
             WHERE (u.email='${email}' OR u.mobile='${email}') 
             AND password = HEX(AES_ENCRYPT('${password}', '${secretKey}'))
             AND u.is_active = 1 AND u.is_approved_by_admin = 1`
-            
+        
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -402,6 +426,41 @@ db.getUsers = (userGradeId, userCategoryId, action) =>
     })
 };
 
+db.getUsersByModule = (moduleId) =>
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `select u.id AS userId, u.uuid AS userUUID, u.first_name AS firstName, u.last_name AS lastName, 
+            TRIM(CONCAT(u.first_name, ' ', IFNULL(u.last_name, ''))) AS fullName, u.email AS userEmail, 
+            u.mobile AS userMobile, u.gender AS userGender, u.profile_pic_file_name AS profilePicFileName, IF(u.is_approved_by_admin = 1 && u.is_active = 1, IF(um.user_role_id IS NOT NULL AND user_type_id IS NOT NULL AND um.is_active = 1 AND um.is_approved_by_module_admin = 1, 'Active', IF(um.user_role_id IS NULL OR user_type_id IS NULL, 'Pending','Deactive')), 'Deactive By HR Admin') AS userStatus,
+            CONVERT(AES_DECRYPT(UNHEX(password), '${secretKey}'), CHAR) AS password,
+            u.is_approved_by_admin AS userIsApproved, u.is_active AS userIsActive, 
+            ug.id AS userGradeId, ug.name AS userGradeName, ug.code AS userGradeCode,
+            uc.id AS userCategoryId, uc.name AS userCategoryName, uc.code AS userCategoryCode
+            FROM user u 
+            JOIN user_grade ug ON ug.id = u.user_grade_id
+            JOIN user_module um ON um.user_id = u.id
+            LEFT JOIN user_category uc ON uc.id = u.user_category_id 
+            WHERE u.deleted_on IS NULL AND deleted_by_id IS NULL 
+            AND um.module_id = ${moduleId}`
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }   
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+}
 
 db.insertUser = (user) => 
 {
@@ -657,6 +716,30 @@ db.insertUserModule = (userModule) =>
             let sql = `INSERT INTO user_module (user_id, module_id, created_on, created_by_id) 
             VALUES (${userModule.userId}, ${userModule.moduleId}, NOW(), ${userModule.createdById})`
         
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }   
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateUserModule = (userModule) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE user_module SET user_role_id = ${userModule.userRoleId}, user_type_id = ${userModule.userTypeId}, updated_on = NOW(), updated_by_id = ${userModule.createdById} WHERE user_id = ${userModule.userId} AND module_id = ${userModule.moduleId} AND id = ${userModule.id}`
+       
             dbConn.query(sql, (error, result) => 
             {
                 if(error)

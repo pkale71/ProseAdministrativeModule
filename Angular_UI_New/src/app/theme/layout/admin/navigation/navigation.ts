@@ -41,7 +41,7 @@ const NavigationItems = [
                 type: 'item',
                 url: '/dashboard/default',
                 param: "",
-                userGradeCode: [],
+                userGradeCode: ['HRADM','ACADM','BUADM'],
                 hidden: false
             },
             ]

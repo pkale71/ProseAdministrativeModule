@@ -273,7 +273,7 @@ export class FeeStructureAddComponent
     try
     {
       this.searchClickedSchool = true;
-      let response = await this.commonService.getSchools(action).toPromise();
+      let response = await this.commonService.getSchools(action, "").toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
           this.schools = response.schools;
@@ -299,7 +299,7 @@ export class FeeStructureAddComponent
     {
       this.schoolingProgramForm.get("schoolingProgram").setValue("");
       this.searchClickedSchoolingProgram = true;
-      let response = await this.commonService.getSchoolSchoolingPrograms(schoolUUID, action).toPromise();
+      let response = await this.commonService.getSchoolSchoolingPrograms(schoolUUID, action, "").toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
           this.schoolingPrograms = response.schoolSchoolingPrograms;
@@ -713,7 +713,6 @@ export class FeeStructureAddComponent
         this.msgLabel[1] = "";
         this.msgLabel[2] = "";
         let finalJSON = this.createFinalJSON();
-        console.log(finalJSON)
         this.isValidForm = true;
         this.saveClicked = true;
         try

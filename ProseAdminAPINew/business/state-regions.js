@@ -17,6 +17,7 @@ module.exports = require('express').Router().get('/:countryId/:optParam?*', asyn
         action = '';
 
         let tempParams = req.params?.countryId;
+        req.params[0] = req.params['optParam'] ? '/' + req.params['optParam'] + req.params[0] : req.params[0];
         tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);
         
         tempParams = tempParams.toString().split("/");
@@ -50,7 +51,7 @@ module.exports = require('express').Router().get('/:countryId/:optParam?*', asyn
             "status_code" : 500,
             "message" : "Something Went Wrong",
             "success" : false,
-            "error" : e?.stack,
+            "error" : e,
         });
     }
 })

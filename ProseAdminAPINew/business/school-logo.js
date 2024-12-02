@@ -63,7 +63,7 @@ module.exports = require('express').Router().get('/:uuid', async(req,res) =>
             "status_code" : 500,
             "message" : "Something Went Wrong",
             "success" : false,
-            "error" : e?.stack,
+            "error" : e,
         });
     }
 })

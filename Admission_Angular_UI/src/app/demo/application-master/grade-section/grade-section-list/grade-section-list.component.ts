@@ -232,7 +232,7 @@ export class GradeSectionListComponent
     try
     {
         this.searchClickedSchool = true;
-        let response = await this.commonService.getSchools(action).toPromise();
+        let response = await this.commonService.getSchools(action, "").toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
             this.schools = response.schools;

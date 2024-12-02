@@ -25,8 +25,8 @@ import { UserDetailComponent } from '../user-detail/user-detail.component';
 })
 export class UserListComponent 
 {
-    user : any[];
-    masterUser : any[];
+    users : any[];
+    masterUsers : any[];
     userGrades : any[];
     masterUserCategories : any[];
     userCategories : any[];
@@ -57,7 +57,7 @@ export class UserListComponent
         this.isRequired = false;
         this.userCategories = [];
         this.userGrades = [];
-        this.user = [];
+        this.users = [];
 
         this.userGradeForm = this.formbuilder.group({
             'userGrade': ['0']
@@ -202,8 +202,8 @@ export class UserListComponent
                 if (response.status_code == 200 && response.message == 'success') 
                 {
                     $('#tblUser').DataTable().destroy();
-                    this.masterUser = response.user;
-                    this.user = this.masterUser;
+                    this.masterUsers = response.users;
+                    this.users = this.masterUsers;
                     setTimeout(function(){
                         $('#tblUser').DataTable();
                     },800);
@@ -212,13 +212,13 @@ export class UserListComponent
                 }
                 else
                 {
-                    this.user = [];
+                    this.users = [];
                     this.searchClicked = false;
                 }    
             }
             else
             {
-                this.user = [];
+                this.users = [];
                 this.searchClicked = false;
             }
         }

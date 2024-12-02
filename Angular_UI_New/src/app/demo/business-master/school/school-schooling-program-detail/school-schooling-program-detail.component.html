@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="studyCenterEditModal"><i class="fa fa-list"></i>&nbsp;Schooling Program Detail</h5>
+    <h5 class="modal-title" id="schoolingProgramValidityModal"><i class="fa fa-list"></i>&nbsp;Schooling Program Validity Detail</h5>
     <button
     type="button"
     class="btn-close"
@@ -18,12 +18,6 @@
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                <label class="form-control-label" for="name">Schooling Program</label>
-                <label class="form-control input-md">{{schoolSchoolingProgram?.schoolingProgram.name}}</label>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
                 <label class="form-control-label" for="name">Start Date</label>
                 <label class="form-control input-md">{{schoolSchoolingProgram?.startDate | date : "dd/MM/yyyy"}}</label>
             </div>
@@ -34,14 +28,14 @@
                 <label class="form-control input-md">{{schoolSchoolingProgram?.endDate | date : "dd/MM/yyyy"}}</label>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-md-3">
             <div class="form-group">
                 <label class="form-control-label" for="name">Adm. Start Date</label>
                 <label class="form-control input-md">{{schoolSchoolingProgram?.admissionStartDate | date : "dd/MM/yyyy"}}</label>
             </div>
         </div>
+    </div>
+    <div class="row">        
         <div class="col-md-3">
             <div class="form-group">
                 <label class="form-control-label" for="name">Adm. End Date</label>

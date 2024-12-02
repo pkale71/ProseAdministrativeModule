@@ -119,7 +119,7 @@ export class FeeStructureListComponent
     try
     {
         this.searchClickedSchool = true;
-        let response = await this.commonService.getSchools(action).toPromise();
+        let response = await this.commonService.getSchools(action, "").toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
             this.schools = response.schools;
@@ -144,7 +144,8 @@ export class FeeStructureListComponent
     try
     {
         this.searchClickedSchoolingProgram = true;
-        let response = await this.commonService.getSchoolSchoolingPrograms(schoolUUID, action).toPromise();
+        this.schoolingProgramForm.get("schoolingProgram").setValue("");
+        let response = await this.commonService.getSchoolSchoolingPrograms(schoolUUID, action, "").toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
             this.schoolingPrograms = response.schoolSchoolingPrograms;
@@ -228,6 +229,7 @@ export class FeeStructureListComponent
   async getGradeCategories(syllabusId : number) 
   {
     this.searchClickedGradeCategory = true;
+    this.gradeCategoryForm.get("gradeCategory").setValue("");
     let filterGradeCategories = this.syllabuses.filter(syllabus => syllabus.id == syllabusId);
     if(filterGradeCategories.length > 0)
     {
@@ -256,7 +258,7 @@ export class FeeStructureListComponent
     try
     {
         this.searchClicked = true;
-        let response = await this.commonService.getFeeStructures(schoolUUID, schoolingProgramId, academicSessionId, batchYearId, syllabusId, gradeCategoryId, action).toPromise();
+        let response = await this.commonService.getFeeStructures(schoolUUID, schoolingProgramId, academicSessionId, batchYearId, syllabusId, gradeCategoryId, action, "").toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           $('#tblFeeStructure').DataTable().destroy();

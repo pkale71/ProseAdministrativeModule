@@ -61,6 +61,7 @@ export default class AuthSigninV2Component implements OnInit {
             if (response1.status_code == 200 && response1.message == 'success') 
             {
                 this.commonSharedService.adminBaseUrl = response1.appBase.uiUrl;
+                
                 if(this.commonSharedService.adminBaseUrl != "")
                 {
                     let response = await this.userService.authenticateUser(this.loginForm.value).toPromise();
@@ -71,7 +72,8 @@ export default class AuthSigninV2Component implements OnInit {
                             localStorage.setItem("user", JSON.stringify(response.authData));                    
                             this.commonSharedService.loginUser = response.authData;
                             this.signinClicked = false;
-                            if(this.commonSharedService.loginUser.userGrade.code == "MOADM" || this.commonSharedService.loginUser.userGrade.code == "MOUSR")
+                        
+                            if(this.commonSharedService.loginUser?.userModule?.userType?.code == "ADMGN" || this.commonSharedService.loginUser?.userModule?.userType?.code == "ADMTM")
                             {
                                 this.router.navigate(['/dashboard/default']);
                             }

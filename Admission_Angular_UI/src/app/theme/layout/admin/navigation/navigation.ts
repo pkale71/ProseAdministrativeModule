@@ -32,21 +32,30 @@ const NavigationItems = [
                 title: 'Dashboard',
                 type: 'collapse',
                 icon: 'feather icon-home',
-                userTypeCode: ['ADMGN'],
+                userTypeCode: ['ADMGN','ADMTM'],
                 hidden: false,
                 children: [
-                {
-                    id: 'default',
-                    title: 'Dashboard',
-                    type: 'item',
-                    url: '/dashboard/default',
-                    param: "",
-                    userTypeCode: [],
-                    hidden: false
-                },
+                    {
+                        id: 'default',
+                        title: 'Dashboard',
+                        type: 'item',
+                        url: '/dashboard/default',
+                        param: "",
+                        userTypeCode: ['ADMGN','ADMTM'],
+                        hidden: false
+                    },
                 ]
             },
-
+            {
+                id: 'users',
+                title: 'Users',
+                type: 'item',
+                classes: 'nav-item',
+                url: '/user/users',
+                param: "",
+                userTypeCode: ['ADMGN'],
+                icon: 'feather icon-user'
+            },
             // academic master for academic admin
             {
                 id: 'admissionMaster',
@@ -157,6 +166,16 @@ const NavigationItems = [
                         target: false
                     },                     
                 ]
+            },
+            {
+                id: 'b2cRegistrations',
+                title: 'B2C Registrations',
+                type: 'item',
+                classes: 'nav-item',
+                url: '/b2cApplication/registrations',
+                param: "",
+                userTypeCode: ['ADMTM'],
+                icon: 'feather icon-umbrella'
             },
         ]            
     }

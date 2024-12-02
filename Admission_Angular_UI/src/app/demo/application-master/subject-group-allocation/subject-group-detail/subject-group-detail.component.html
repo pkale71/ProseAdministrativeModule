@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="card-header" style="padding: 10px 25px;">
+                    <div class="card-header">
                         <h5 class="mb-3"> Subject Group Combination :&nbsp;
                             <span class="{{subjectGroup?.isActive == 1 ? 'badge bg-success' :  'badge bg-danger'}}">
                                 Status : {{subjectGroup?.isActive == 1 ? 'Yes' : 'No'}}
@@ -11,11 +11,11 @@
                         </h5>
                         <button type="button" class="btn btn-rounded btn-black float-end" style="margin-top: -10px;" (click)="back()">Back</button>
                     </div>
-                    <div class="col-sm-4 mt-2">
+                    <div class="col-sm-3 mt-2">
                         <label class="form-control-label" for="groupName">Group Name</label>
                         <label class="form-control input-md">{{subjectGroup?.groupName}}</label>                 
                     </div>
-                    <div class="col-sm-2 mt-2">
+                    <div class="col-sm-3 mt-2">
                         <label class="form-control-label" for="syllabus">Syllabus</label>
                         <label class="form-control input-md">{{subjectGroup?.syllabus?.name}}</label>                 
                     </div>
@@ -29,17 +29,17 @@
                     </div>
                 </div>
                 <div class="row mt-4">
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <label class="form-control-label" for="minSubject">Min Subject</label>
                         <label class="form-control input-md">{{subjectGroup?.minSubject}}</label>                 
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <label class="form-control-label" for="maxSubject">Max Subject</label>
                         <label class="form-control input-md">{{subjectGroup?.maxSubject}}</label>                 
                     </div>
                 </div>
                 <div class="row mt-4">
-                    <div class="card-header" style="padding: 10px 25px;">
+                    <div class="card-header">
                         <h5 class="mb-3">Allocated Subjects&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSubjectGroupAllocation"></i></h5>
                         <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: -10px;" (click)="allocateSubjects()">Allocate Subjects</button>
                     </div>

@@ -209,7 +209,7 @@ buildBusinessJSON.businessVerticalTypes = function(datas)
     return resultJSON;
 }
 
-buildBusinessJSON.coaches = function(datas)
+buildBusinessJSON.coaches = function(datas, action = 1)
 {
     let resultJSON = [];
     let businessVerticalJSON = [];
@@ -236,6 +236,7 @@ buildBusinessJSON.coaches = function(datas)
         }
 /////Final JSON
         let finalJSON = {
+            "id" : data.id,
             "uuid" : data.uuid,
             "code" : data.code,
             "name" : data.name,
@@ -248,7 +249,14 @@ buildBusinessJSON.coaches = function(datas)
             "businessVerticalType" : businessVerticalTypeJSON,
             "isExist" :  data.isExist
         }
-        resultJSON.push(finalJSON);
+        if(action == 1)
+        {
+            resultJSON.push(finalJSON);
+        }
+        else
+        {
+            resultJSON = finalJSON;
+        }
     });
 
     return resultJSON;
@@ -526,6 +534,7 @@ buildBusinessJSON.businessPartner = function(datas)
         }
 /////Final JSON
         let finalJSON = {
+            "id" : data.id,
             "uuid" : data.uuid,
             "code" : data.code,
             "name" : data.name,
@@ -704,6 +713,7 @@ buildBusinessJSON.tieUpSchools = function(datas, action = 1)
         }
 /////Final JSON
         let finalJSON = {
+            "id" : data.id,
             "uuid" : data.uuid,
             "name" : data.name,
             "email" : data.email,
@@ -720,7 +730,8 @@ buildBusinessJSON.tieUpSchools = function(datas, action = 1)
             "stateRegion" : stateRegionJSON,
             "district" : districtJSON,
             "city" : cityJSON,
-            "contract" : contractJSON
+            "contract" : contractJSON,
+            "isExist" : data.isExist
         }
         if(action == 1)
         {
@@ -735,7 +746,7 @@ buildBusinessJSON.tieUpSchools = function(datas, action = 1)
     return resultJSON;
 }
 
-buildBusinessJSON.tieUpSchoolSyllabuses = function(datas, action = 0)
+buildBusinessJSON.tieUpSchoolSyllabuses = function(datas, action = 1)
 {
     let resultJSON = [];
 
@@ -749,7 +760,7 @@ buildBusinessJSON.tieUpSchoolSyllabuses = function(datas, action = 0)
             "tableName" : data.tableName ? data.tableName : '',
             "isExist" :  data.isExist
         }
-        if(action == 0)
+        if(action == 1)
         {
             resultJSON.push(finalJSON);
         }
@@ -870,6 +881,7 @@ buildBusinessJSON.studyCenters = function(datas, action = 1)
         }
 /////Final JSON
         let finalJSON = {
+            "id" : data.id,
             "uuid" : data.uuid,
             "name" : data.name,
             "code" : data.code,
@@ -892,7 +904,8 @@ buildBusinessJSON.studyCenters = function(datas, action = 1)
             "district" : districtJSON,
             "city" : cityJSON,
             "rewardType" : rewardTypeJSON,
-            "agreement" : agreementJSON
+            "agreement" : agreementJSON,
+            "isExist" : data.isExist
         }
         if(action == 1)
         {
@@ -1035,7 +1048,9 @@ buildBusinessJSON.schools = function(datas, action = 1)
             "contractTo" : commonFunction.getFormattedDate(data.contractTo, "yyyy-mm-dd"),
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '',
-            "isExistDetail" : data.isExistDetail
+            "isExistDetail" : data.isExistDetail,
+            "isExist" : data.isExist,
+            "schoolingProgramIds" : data.schoolingProgramIds || ""
         }
         if(action == 1)
         {
@@ -1053,40 +1068,12 @@ buildBusinessJSON.schools = function(datas, action = 1)
 buildBusinessJSON.schoolSchoolingPrograms = function(datas, action = 1)
 {
     let resultJSON = [];
-    let academicSessionJSON = [];
     let schoolingProgramJSON = [];
-    let batchTypeJSON = [];
-    let schoolJSON = [];
     
     datas.forEach((data) => 
     { 
-        academicSessionJSON = [];
         schoolingProgramJSON = [];
-        batchTypeJSON = [];
-        schoolJSON = [];
 
-        let batchTypeIds = data.batchTypeIds.toString().split(",");
-        let batchTypeNames = data.batchTypeNames.toString().split(",");
-        let batchTypeStartTimes = data.batchTypeStartTimes.toString().split(",");
-        let batchTypeEndTimes = data.batchTypeEndTimes.toString().split(",");
-        for(let i=0;i<batchTypeIds.length;i++)
-        {
-            batchTypeJSON.push({
-                "id" : batchTypeIds[i],
-                "name" : batchTypeNames[i],
-                "startTime" : batchTypeStartTimes[i],
-                "endTime" : batchTypeEndTimes[i]
-            });
-        }
-        academicSessionJSON = {
-            "id" : data.academicSessionId,
-            "year" : data.academicSessionYear,
-            "batchYear" : data.batchYear
-        } 
-        schoolJSON = {
-            "uuid" : data.schoolUUID,
-            "name" : data.schoolName
-        }
         schoolingProgramJSON = {
             "id" : data.schoolingProgramId,
             "name" : data.schoolingProgramName
@@ -1094,17 +1081,11 @@ buildBusinessJSON.schoolSchoolingPrograms = function(datas, action = 1)
         
 /////Final JSON
         let finalJSON = {
-            "uuid" : data.uuid,
-            "academicSession" : academicSessionJSON,
-            "school" : schoolJSON,
+            "id" : data.id,
             "schoolingProgram" : schoolingProgramJSON,
-            "admissionStartDate" : commonFunction.getFormattedDate(data.admissionStartDate, "yyyy-mm-dd"),
-            "admissionEndDate" : commonFunction.getFormattedDate(data.admissionEndDate, "yyyy-mm-dd"),
-            "startDate" : commonFunction.getFormattedDate(data.startDate, "yyyy-mm-dd"),
-            "endDate" : commonFunction.getFormattedDate(data.endDate, "yyyy-mm-dd"),
-            "batchTypes" : batchTypeJSON,
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '',
+            "isExist" : data.isExist
         }
         if(action == 1)
         {
@@ -1114,6 +1095,75 @@ buildBusinessJSON.schoolSchoolingPrograms = function(datas, action = 1)
         {
             resultJSON = finalJSON;
         }
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.schoolSchoolingProgramValidities = function(datas)
+{
+    let resultJSON = [];
+    let academicSessionJSON = [];
+    let schoolingProgramJSON = [];
+    let batchTypeJSON = [];
+    
+    datas.forEach((data) => 
+    { 
+        academicSessionJSON = [];
+        batchTypeJSON = [];
+
+        academicSessionJSON = {
+            "id" : data.academicSessionId,
+            "year" : data.academicSessionYear
+        }
+
+        let batchTypeIdArray = data.batchTypeIds.toString().split(",");
+        let batchTypeNameArray = data.batchTypeNames.toString().split(",");
+        let batchTypeStartTimeArray = data.batchTypeStartTimes.toString().split(",");
+        let batchTypeEndTimeArray = data.batchTypeEndTimes.toString().split(",");
+        for(let i=0;i<batchTypeIdArray.length;i++)
+        {
+            batchTypeJSON.push({
+                "id" : batchTypeIdArray[i],
+                "name" : batchTypeNameArray[i],
+                "startTime" : batchTypeStartTimeArray[i],
+                "endTime" : batchTypeEndTimeArray[i]
+            })
+        }
+
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "startDate" : commonFunction.getFormattedDate(data.startDate, "yyyy-mm-dd"),
+            "endDate" : commonFunction.getFormattedDate(data.endDate, "yyyy-mm-dd"),
+            "admissionStartDate" : commonFunction.getFormattedDate(data.admissionStartDate, "yyyy-mm-dd"),
+            "admissionEndDate" : commonFunction.getFormattedDate(data.admissionEndDate, "yyyy-mm-dd"),
+            "academicSession" : academicSessionJSON,
+            "batchTypes" : batchTypeJSON,
+            "isActive" : data.isActive,
+            "tableName" : data.tableName,
+            "isExist" : data.isExist
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
+buildBusinessJSON.schoolSchoolingProgramBatches = function(datas)
+{
+    let resultJSON = [];
+    
+    datas.forEach((data) => 
+    { 
+/////Final JSON
+        let finalJSON = {
+            "id" : data.batchTypeId,
+            "name" : data.batchTypeName,
+            "startTime" : data.batchTypeStartTime,
+            "endTime" : data.batchTypeEndTime
+        }
+        resultJSON.push(finalJSON);
     });
 
     return resultJSON;

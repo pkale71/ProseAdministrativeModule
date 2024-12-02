@@ -12,9 +12,12 @@ module.exports = require('express').Router().get('/?*', async(req,res) =>
     try
     {
         action = '';
-        if(req.params)
+        date = '';
+        let tempParams = req.params[0];
+        tempParams = tempParams.toString().split("/");
+        if(tempParams.length == 1)
         {
-            action = req.params[0];
+            action = tempParams[0];
         }
         
         tieUpSchools = await dbBusiness.getTieUpSchools(action);

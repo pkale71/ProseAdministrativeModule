@@ -1,0 +1,387 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="mb-3">{{applicationFor}} Application Form &nbsp;
+                    <span class="badge bg-info">
+                        {{studentProfileData?.applicationStatus?.name == 'Enrolled/Renewed' ? studentProfileData?.enrollmentNumber : studentProfileData?.applicationNumber}}
+                    </span>&nbsp;
+                    <span class="{{studentProfileData?.applicationStatus?.name == 'Enrolled/Renewed' ? 'badge bg-success' :  'badge bg-danger'}}">
+                        Status : {{studentProfileData?.applicationStatus?.name}}
+                    </span>
+                    <button type="button" class="btn btn-rounded btn-black float-end" style="margin-top: 0rem;"
+                    (click)="back()">Back</button>
+                </h5>
+                <ul class="nav nav-pills" ngbNav #nav="ngbNav">
+                    <li class="nav-item" [ngbNavItem]="1">
+                        <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                        Student Profile&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentProfileClicked"></i>
+                        </a>
+                        <ng-template ngbNavContent>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="applicationType">Application Type</label>
+                                    <label class="form-control input-md">{{studentProfileData?.applicationType?.name}}</label>    
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="admissionDate">Admission Date</label>
+                                    <label class="form-control input-md">{{studentProfileData?.admissionDate | date : "dd/MM/yyyy"}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="academicSession">Academic Session</label>
+                                    <label class="form-control input-md">{{studentProfileData?.academicSession?.year}}</label>                  
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="batchYear">Batch Year</label>
+                                    <label class="form-control input-md">{{studentProfileData?.academicSession?.batchYear}}</label>                  
+                                </div>
+                            </div>
+                            <div class="row mt-2" *ngIf="studentProfileData?.applicationType?.name == 'Sibling Application'">
+                                <div class="col-sm-3" *ngIf="studentProfileData?.lastAcademicSession?.id != null">
+                                    <label class="form-control-label" for="lAcademicSession">Last Academic Session</label>
+                                    <label class="form-control input-md">{{studentProfileData?.lastAcademicSession?.year}}</label>                 
+                                </div>
+                                <div class="col-sm-6" *ngIf="studentProfileData?.lastAcademicSession?.id != null">
+                                    <label class="form-control-label" for="lStudentName">Last Year Student Name</label>
+                                    <label class="form-control input-md">{{studentProfileData?.lastEnrollment?.studentName}}</label>                 
+                                </div>
+                                <div class="col-sm-3" *ngIf="studentProfileData?.lastAcademicSession?.id != null">
+                                    <label class="form-control-label" for="lEnrollment">Last Year Enrollment No.</label>
+                                    <label class="form-control input-md">{{studentProfileData?.lastEnrollment?.enrollmentNumber}}</label>                 
+                                </div>
+                                <div class="col-sm-3" *ngIf="studentProfileData?.currentAcademicSession?.id != null">
+                                    <label class="form-control-label" for="cAcademicSession">Current Academic Session</label>
+                                    <label class="form-control input-md">{{studentProfileData?.currentAcademicSession?.year}}</label>                 
+                                </div>
+                                <div class="col-sm-6" *ngIf="studentProfileData?.currentAcademicSession?.id != null">
+                                    <label class="form-control-label" for="cStudentName">Current Year Student Name</label>
+                                    <label class="form-control input-md">{{studentProfileData?.currentApplication?.studentName}}</label>                 
+                                </div>
+                                <div class="col-sm-3" *ngIf="studentProfileData?.currentAcademicSession?.id != null">
+                                    <label class="form-control-label" for="cApplication">Current Year Application No.</label>
+                                    <label class="form-control input-md">{{studentProfileData?.currentApplication?.applicationNumber}}</label>                 
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="school">School</label>
+                                    <label class="form-control input-md">{{studentProfileData?.school?.name}}</label>    
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="studentName">Student Name</label>
+                                    <label class="form-control input-md">{{studentProfileData?.studentName}}</label>                  
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="schoolingProgram">Schooling Program</label>
+                                    <label class="form-control input-md">{{studentProfileData?.schoolingProgram?.name}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="gender">Gender</label>
+                                    <label class="form-control input-md">{{studentProfileData?.gender?.name}}</label>                  
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="dob">Date Of Birth</label>
+                                    <label class="form-control input-md">{{(studentProfileData?.dob | date : "dd/MM/yyyy") || "----"}}</label>
+                                </div> 
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="nationality">Nationality</label>
+                                    <label class="form-control input-md">{{studentProfileData?.nationality || "----"}}</label>
+                                </div> 
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="aadharNo">Aadhar Number</label>
+                                    <label class="form-control input-md">{{studentProfileData?.aadharNumber || "----"}}</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="passportNo">Passport Number</label>
+                                    <label class="form-control input-md">{{studentProfileData?.passportNumber || "----"}}</label>
+                                </div> 
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="studyCenter">Study Center</label>
+                                    <label class="form-control input-md">{{studentProfileData?.studyCenter?.name}}</label>
+                                </div>                              
+                            </div>  
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="name">Syllabus</label>
+                                    <label class="form-control input-md">{{studentProfileData?.syllabus?.name}}</label>    
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="gradeCategory">Grade Category</label>
+                                    <label class="form-control input-md">{{studentProfileData?.gradeCategory?.name}}</label>
+                                </div> 
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="grade">Grade</label>
+                                    <label class="form-control input-md">{{studentProfileData?.grade?.name}}</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="profileCompletion">Profile Completion</label>
+                                    <label class="form-control input-md">{{studentProfileData?.profileCompletion?.name}}</label>                
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="parentUndertaking">Parent Undertaking</label>
+                                    <label class="form-control input-md">{{studentProfileData?.parentUndertaking?.name}}</label>
+                                </div> 
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="leadStudentType">Lead Student Type</label>
+                                    <label class="form-control input-md">{{studentProfileData?.leadStudentType?.name}}</label>
+                                </div> 
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="marketLeadType">Market Lead Type</label>
+                                    <label class="form-control input-md">{{studentProfileData?.marketLeadType?.name}}</label>
+                                </div>
+                                <div class="col-sm-3" *ngIf="studentProfileData?.walkinMode?.name">
+                                    <label class="form-control-label" for="walkinMode">Walk-In Mode</label>
+                                    <label class="form-control input-md">{{studentProfileData?.walkinMode?.name || "----"}}</label> 
+                                </div> 
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="2">
+                        <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                        Parent Profile&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="parentProfileClicked"></i>
+                        </a>
+                        <ng-template ngbNavContent>
+                            <div class="row mt-2">
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="name">Parent/Guardian Name</label>
+                                    <label class="form-control input-md">{{parentProfileData?.name}}</label>    
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="email">Email</label>
+                                    <label class="form-control input-md">{{parentProfileData?.email}}</label>                  
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="mobile">Mobile</label>
+                                    <label class="form-control input-md">{{parentProfileData?.mobile}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="relationship">Relationship</label>
+                                    <label class="form-control input-md">{{parentProfileData?.relationship}}</label>                  
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="aadharNumber">Aadhar Number</label>
+                                    <label class="form-control input-md">{{parentProfileData?.aadharNumber || "----"}}</label>
+                                </div> 
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="passportNumber">Passport Number</label>
+                                    <label class="form-control input-md">{{parentProfileData?.passportNumber || "----"}}</label>
+                                </div> 
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="panNumber">PAN Number</label>
+                                    <label class="form-control input-md">{{parentProfileData?.panNumber || "----"}}</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    <label class="form-control-label" for="address">Address</label>
+                                    <label class="form-control input-md">{{parentProfileData?.address || "----"}}</label>
+                                </div>                              
+                            </div>  
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="country">Country</label>
+                                    <label class="form-control input-md">{{parentProfileData?.country?.name || "----"}}</label>
+                                </div> 
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="state">State/Region</label>
+                                    <label class="form-control input-md">{{parentProfileData?.state?.name || "----"}}</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="district">District</label>
+                                    <label class="form-control input-md">{{parentProfileData?.district?.name || "----"}}</label>                
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="city">City</label>
+                                    <label class="form-control input-md">{{parentProfileData?.city?.name || "----"}}</label>
+                                </div> 
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="3">
+                        <a class="nav-link text-uppercase" aria-controls="gradeSubjects" aria-selected="true" ngbNavLink>Batch Time & Subject Offered&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="subjectGroupClicked"></i></a>
+                        <ng-template ngbNavContent>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="name">Subject Group</label>
+                                    <label class="form-control input-md">{{subjectGroupData?.name}}</label>    
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="email">Batch Time</label>
+                                    <label class="form-control input-md">{{subjectGroupData?.batchType?.startTime | convert12HrsTimeFormat}} - {{subjectGroupData?.batchType?.endTime | convert12HrsTimeFormat}}</label>                  
+                                </div>
+                            </div>
+                            <h5 class="mt-4">Subjects Offered</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped row-border table-hover pt-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Name</th>
+                                            <th>Subject Type</th>
+                                            <th>Is Mandatory</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let subject of subjectGroupData?.subjects let i=index" >
+                                            <td>{{i+1}}</td>
+                                            <td>{{subject?.name}}</td>
+                                            <td>{{subject?.subjectType?.name}}</td>
+                                            <td>{{subject?.isMandatory == 1 ? 'Yes' : 'No'}}</td>
+                                        </tr>
+                                        <tr *ngIf="subjects?.length == 0">
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="4" *ngIf="feeStructureData != ''">
+                        <a class="nav-link text-uppercase" aria-controls="feeStructure" aria-selected="true" ngbNavLink>Fee Structure & Tie-Up School&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="feeStructureClicked"></i></a>
+                        <ng-template ngbNavContent>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="name">Fee Structure</label>
+                                    <label class="form-control input-md">{{feeStructureData?.feeCategory?.name}}</label>    
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="email">Tie-Up School</label>
+                                    <label class="form-control input-md">{{studentProfileData?.tieupSchool?.name || "----"}}</label>                  
+                                </div>
+                            </div>
+                            <h5 class="mt-4">Fee Types</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped row-border table-hover pt-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Name</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let feeType of feeStructureData?.feeTypes let i=index" >
+                                            <td>{{i+1}}</td>
+                                            <td>{{feeType?.name}}</td>
+                                            <td>{{feeType?.amount | number}}</td>
+                                        </tr>
+                                        <tr *ngIf="feeStructureData?.feeTypes?.length == 0">
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h5 class="mt-4">Discount Types</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped row-border table-hover pt-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Name</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let discountType of feeStructureData?.discountTypes let i=index" >
+                                            <td>{{i+1}}</td>
+                                            <td>{{discountType?.name}}</td>
+                                            <td>{{discountType?.amount | number}}</td>
+                                        </tr>
+                                        <tr *ngIf="feeStructureData?.discountTypes?.length == 0">
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h5 class="mt-4">Installments</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped row-border table-hover pt-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Name</th>
+                                            <th>Rate(%)</th>
+                                            <th>Due Date</th>
+                                            <th>Amount</th>
+                                            <th>Amount Paid</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let installment of feeStructureData?.installments let i=index" >
+                                            <td>{{i+1}}</td>
+                                            <td>{{installment?.name}}</td>
+                                            <td>{{installment?.rate | number}}</td>
+                                            <td>{{installment?.dueDate | date : "dd/MM/yyyy"}}</td>
+                                            <td>{{installment?.amount | number}}</td>
+                                            <td>{{installment?.amountPaid | number}}</td>
+                                            <td>{{installment?.amount - installment?.amountPaid | number: '1.2-2'}}</td>
+                                        </tr>
+                                        <tr *ngIf="feeStructureData?.discountTypes?.length == 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h5 class="mt-4">Total</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped row-border table-hover pt-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Total Amount</th>
+                                            <th>Total Discount</th>
+                                            <th>Net Amount</th>
+                                            <th *ngIf="feeStructureData?.taxApplicable == 1">Tax Rate</th>
+                                            <th *ngIf="feeStructureData?.taxApplicable == 1">Tax Amount</th>
+                                            <th>Gross Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{feeStructureData?.total?.totalAmount | number}}</td>
+                                            <td>{{feeStructureData?.total?.totalDiscount | number}}</td>
+                                            <td>{{feeStructureData?.total?.netAmount | number}}</td>
+                                            <td *ngIf="feeStructureData?.taxApplicable == 1">{{feeStructureData?.total?.taxType?.name}} - {{feeStructureData?.total?.taxRate?.rate}}%</td>
+                                            <td *ngIf="feeStructureData?.taxApplicable == 1">{{feeStructureData?.total?.taxAmount | number}}</td>
+                                            <td>{{feeStructureData?.total?.grossAmount | number}}</td>
+                                        </tr>
+                                        <tr *ngIf="feeStructureData?.total?.length == 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td *ngIf="feeStructureData?.taxApplicable == 1"></td>
+                                            <td *ngIf="feeStructureData?.taxApplicable == 1"></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="nav"></div>
+            </div>
+        </div>
+    </div>
+</div>

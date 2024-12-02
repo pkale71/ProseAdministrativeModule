@@ -18,7 +18,7 @@ module.exports = require('express').Router().get('/:id', async(req,res) =>
         {
             res.status(200)
             return res.json({
-                "tieUpSchoolSyllabus" : buildJSON.tieUpSchoolSyllabuses(tieUpSchoolSyllabus, 1),
+                "tieUpSchoolSyllabus" : buildJSON.tieUpSchoolSyllabuses(tieUpSchoolSyllabus, 0),
                 "status_code" : 200,
                 "success" : true,                            
                 "message" : errorCode.getStatus(200)

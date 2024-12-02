@@ -100,6 +100,8 @@ buildCommonJSON.taxRates = function(datas, action = 1)
             "academicSession" : academicSessionJSON,
             "taxType" : taxTypeJSON,
             "rate" : data.rate,
+            "applicableFrom" : commonFunction.getFormattedDate(data.applicableFrom, "yyyy-mm-dd"),
+            "applicableTo" : commonFunction.getFormattedDate(data.applicableTo, "yyyy-mm-dd"),
             "tableName" : data.tableName,
             "isActive" : data.isActive,
             "isExist" : data.isExist
@@ -382,7 +384,12 @@ buildCommonJSON.subjectGroupAllocations = function(datas, action = 1)
 
         subjectJSON = {
             "id" : data.subjectId,
-            "name" : data.subjectName
+            "name" : data.subjectName,
+            "totalSession" : data.totalSession,
+            "duration" : data.duration,
+            "hasPractical" : data.hasPractical,
+            "isMandatory" : data.isMandatory,
+            "subjectType" : {"id" : data.subjectTypeId, "name" : data.subjectTypeName}
         }
         
         //Final JSON
@@ -477,6 +484,7 @@ buildCommonJSON.feeStructures = function(datas, action = 1)
             "feeCategory" : feeCategoryJSON,
             "currency" : currencyJSON,
             "totalInstallment" : data.totalInstallment,
+            "rate" : data.rate || "0",
             "isActive" : data.isActive,
             "tableName" : data.tableName
         }
@@ -645,7 +653,9 @@ buildCommonJSON.feeStructureTotals = function(datas, action = 1)
         }
         taxRateJSON = {
             "id" : data.taxRateId,
-            "rate" : data.taxRate
+            "rate" : data.taxRate,
+            "applicableFrom" : commonFunction.getFormattedDate(data.taxApplicableFrom, "yyyy-mm-dd"),
+            "applicableTo" : commonFunction.getFormattedDate(data.taxApplicableTo, "yyyy-mm-dd")
         }
 
         feeStructureTaxRateJSON = {

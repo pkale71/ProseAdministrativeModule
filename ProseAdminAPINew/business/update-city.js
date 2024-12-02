@@ -48,8 +48,8 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                             cityExist = await dbBusiness.checkCityExist(cityId, countryId, stateRegionId, districtId);
                             let isExist = cityExist.length > 0 ? 1 : 0;
                             ////Check Duplicate City
-                            district = await dbBusiness.duplicateCity(name, countryId, stateRegionId, districtId, cityId);
-                            if(district.length == 0)
+                            city = await dbBusiness.duplicateCity(name, countryId, stateRegionId, districtId, cityId);
+                            if(city.length == 0)
                             {                    
                             ///update City
                                 let updateJSON = {

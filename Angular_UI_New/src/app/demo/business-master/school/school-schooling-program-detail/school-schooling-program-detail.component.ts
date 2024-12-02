@@ -36,7 +36,7 @@ export class SchoolSchoolingProgramDetailComponent {
   ngOnInit() 
   {
     //get Modal params
-    this.schoolSchoolingProgram = this.modalParams.schoolSchoolingProgram;
+    this.schoolSchoolingProgram = this.modalParams.schoolingProgramDetail;
   }
 
   showNotification(type: string, message: string): void 

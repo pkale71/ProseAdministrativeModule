@@ -27,12 +27,12 @@ export class SchoolSchoolingProgramEditComponent {
   isValidForm : boolean;
   editSchoolSchoolingProgramForm : FormGroup;
   academicSessionForm : FormGroup;
-  schoolingProgramForm : FormGroup;
   batchTypeForm : FormGroup;
   academicSessions : any[];
-  schoolingPrograms : any[];
+  schoolSchoolingProgram : any;
   curDate : string;
   schoolingCategoryId : number;
+  schoolUUID : string;
 
   constructor(private notifier: NotifierService, 
     private commonService : CommonService,
@@ -53,19 +53,20 @@ export class SchoolSchoolingProgramEditComponent {
 
   ngOnInit() 
   {
-    this.schoolingCategoryId = this.modalParams.schoolingCategoryId;
+    this.schoolUUID = this.modalParams.schoolUUID;
+    this.schoolSchoolingProgram = this.modalParams.schoolSchoolingProgram;
     this.batchTypeClicked = false;
     this.isValidForm = true;
     this.searchClicked = false;
     this.saveClicked = false;
     this.academicSessions = [];
-    this.schoolingPrograms = [];
     
     this.editSchoolSchoolingProgramForm = this.formbuilder.group({
-      uuid : ['', Validators.required],
-      school : this.formbuilder.group({ 'uuid' : ['', Validators.required]}),
+      id : ['', Validators.required],
+      school : this.formbuilder.group({ 'uuid' : [this.schoolUUID, Validators.required]}),
       academicSession : this.formbuilder.group({ 'id' : ['']}),
-      schoolingProgram : this.formbuilder.group({ 'id' : ['']}),
+      schoolingProgram : [this.schoolSchoolingProgram.schoolingProgram?.name, Validators.required],
+      schoolSchoolingProgram : this.formbuilder.group({ 'id' : [this.schoolSchoolingProgram.id, Validators.required]}),
       startDate : ['', Validators.required],
       endDate : ['', Validators.required],
       admissionStartDate : ['', Validators.required],
@@ -77,14 +78,10 @@ export class SchoolSchoolingProgramEditComponent {
       'academicSession' : ['', Validators.required]
     });
 
-    this.schoolingProgramForm = this.formbuilder.group({
-      'schoolingProgram' : ['', Validators.required]
-    });
-
     this.batchTypeForm = this.formbuilder.group({
       'batchTypes' : ['', Validators.required]
     });
-    this.pathFormValue(this.modalParams.schoolSchoolingProgram);
+    this.pathFormValue(this.modalParams.schoolingProgramDetail);
   }
 
   showNotification(type: string, message: string): void 
@@ -97,8 +94,6 @@ export class SchoolSchoolingProgramEditComponent {
   {
     this.editSchoolSchoolingProgramForm.patchValue(schoolSchoolingProgram);
     this.academicSessionForm.get("academicSession").setValue(schoolSchoolingProgram.academicSession.id);
-    this.schoolingProgramForm.get("schoolingProgram").setValue(schoolSchoolingProgram.schoolingProgram.id);
-    this.getSchoolingPrograms(this.schoolingCategoryId, schoolSchoolingProgram.schoolingProgram);
     this.getBatchTypes(this.academicSessionForm.get("academicSession").value, schoolSchoolingProgram.batchTypes, 'Active');
     let batchTypes : any = [];
     for(let j = 0; j<schoolSchoolingProgram.batchTypes.length; j++)
@@ -122,36 +117,6 @@ export class SchoolSchoolingProgramEditComponent {
       {
         this.academicSessions = [];
         this.academicSessions.unshift({ id : "", year : "Select Academic Session" });
-      }
-    }
-    catch(e)
-    {
-      this.showNotification("error", e);
-    }
-  }
-
-  async getSchoolingPrograms(schoolingCategoryId : number, schoolingProgram : any) 
-  {  
-    try
-    {
-      let response = await this.commonService.getSchoolingPrograms(schoolingCategoryId, 'Active').toPromise();
-      if (response.status_code == 200 && response.message == 'success') 
-      {
-        this.schoolingPrograms = response.schoolingPrograms;
-        this.schoolingPrograms.unshift({ id : '', name : "Select Schooling Program" });
-        if(schoolingProgram != "")
-        {
-          let filterSchoolingProgram = this.schoolingPrograms.filter(schoolProgram => schoolingProgram.id === schoolingProgram.id)
-          if(filterSchoolingProgram.length == 0)
-          {
-            this.schoolingPrograms.push(schoolingProgram);
-          }
-        }
-      }
-      else
-      {
-        this.schoolingPrograms = [];
-        this.schoolingPrograms.unshift({ id : "", name : "Select Schooling Program" });
       }
     }
     catch(e)
@@ -208,21 +173,20 @@ export class SchoolSchoolingProgramEditComponent {
   {
     if(!this.saveClicked)
     {
-      if(this.editSchoolSchoolingProgramForm.valid && this.academicSessionForm.valid && this.schoolingProgramForm.valid && this.batchTypeForm.valid)
+      if(this.editSchoolSchoolingProgramForm.valid && this.academicSessionForm.valid && this.batchTypeForm.valid)
       {
         this.isValidForm = true;
         this.saveClicked = true;
         try
         {
           this.editSchoolSchoolingProgramForm.controls["academicSession"].get("id").setValue(this.academicSessionForm.get("academicSession").value);
-          this.editSchoolSchoolingProgramForm.controls["schoolingProgram"].get("id").setValue(this.schoolingProgramForm.get("schoolingProgram").value);
           this.editSchoolSchoolingProgramForm.controls["batchTypeIds"].setValue(this.batchTypeForm.get("batchTypes").value.toString());
 
-          let response = await this.businessService.updateSchoolSchoolingProgram(this.editSchoolSchoolingProgramForm.value).toPromise();
+          let response = await this.businessService.updateSchoolSchoolingProgramValidity(this.editSchoolSchoolingProgramForm.value).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
-            this.showNotification("success", "Schooling Program Saved");
-            this.commonSharedService.schoolSchoolingProgramListObject.next({result : "success"});
+            this.showNotification("success", "Schooling Program Detail Saved");
+            this.commonSharedService.schoolSchoolingProgramDetailListObject.next({result : "success"});
             this.closeModal();
           }
         }

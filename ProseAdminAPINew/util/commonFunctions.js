@@ -217,27 +217,34 @@ commonFunction.sendMail = function (toEmail, fullName, emailBody)
     {
         const headers = 
         {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'API-key' : ''
         };
-        let data = 
-        {
-            "to":[{"email" : toEmail, "name" : fullName, "type" : "to"}],
-            "from_email" : "admin@proseedu.com",
-            "from_name" : "Admin",
-            "subject" : "Welcome to PROSE EDU",
-            "text" : emailBody,
-            "clientKey" : "prose-uCOgPCL5PkxL6JZmCTcZuyT47h9rYC"
-        }
+        let data = JSON.stringify(
+        {  
+            "sender":{  
+               "name":"Admin",
+               "email":"admin@proseedu.com"
+            },
+            "to":[  
+               {  
+                  "email":toEmail,
+                  "name":fullName
+               }
+            ],
+            "subject":"Welcome to PROSE EDU",
+            "htmlContent":`<html><head></head><body>${emailBody}</body></html>`
+        });
 
         return new Promise((resolve, reject) => 
         {
-            let url = 'https://mqm.proseedu.in/saveMailMaster';
+            let url = 'https://api.brevo.com/v3/smtp/email';
             axios.post(url, data, 
             {
                 headers: headers
             })
             .then(response1 => {
-                if (response1?.data?.status_code == 200) 
+                if (response1?.status == 201) 
                 {
                     resolve(true);
                 }

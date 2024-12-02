@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
-        <div class="card" >
-            <div class="card-header" style="padding: 10px 25px;">
+        <div class="card">
+            <div class="card-header">
                 <h5 style="margin-top: 0.8rem;"><i class="fa fa-plus"></i>&nbsp;Add Fee Structure&nbsp;</h5>
                 <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
                 (click)="back()">Back
@@ -9,415 +9,447 @@
             </div>
             <form [formGroup]="addFeeStructureForm" id="addFeeStructureForm" (ngSubmit)="saveFeeStructure()" autocomplete="off">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <form [formGroup]="schoolForm">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="school">School&nbsp;<span style="color: red;">*</span></label>
-                                    <select class="form-control"  required id="school" formControlName="school" (change)="getSchoolSchoolingPrograms(schoolForm.controls['school'].value, 'Active')"
-                                    [ngClass]="{'is-invalid': !schoolForm.controls['school'].valid && !isValidForm}">
-                                    <option value="{{school.uuid}}" *ngFor="let school of schools">{{school?.name}}</option>
-                                    </select>
-                                    <label style="color: red;"
-                                    *ngIf="schoolForm.controls['school'].hasError('required') && !isValidForm"
-                                    class="error jquery-validation-error small form-text"
-                                    >Please select school.</label>
-                                </div>
-                            </form>                  
-                        </div>
-                        <div class="col-md-3">
-                            <form [formGroup]="schoolingProgramForm">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="schoolingProgram">Schooling Program&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchoolingProgram"></i></label>
-                                    <select class="form-control"  required id="schoolingProgram" formControlName="schoolingProgram" 
-                                    [ngClass]="{'is-invalid': !schoolingProgramForm.controls['schoolingProgram'].valid && !isValidForm}">
-                                    <option value="{{sp.schoolingProgram?.id}}" *ngFor="let sp of schoolingPrograms">{{sp.schoolingProgram?.name}}</option>
-                                    </select>
-                                    <label style="color: red;"
-                                    *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
-                                    class="error jquery-validation-error small form-text"
-                                    >Please select schooling program.</label>
-                                </div>
-                            </form>                  
-                        </div>
-                        <div class="col-md-3">
-                            <form [formGroup]="academicSessionForm">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="academicSession">Academic Session&nbsp;<span style="color: red;">*</span></label>
-                                    <select class="form-control"  required id="academicSession" formControlName="academicSession" 
-                                    [ngClass]="{'is-invalid': !academicSessionForm.controls['academicSession'].valid && !isValidForm}">
-                                    <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession?.year}}</option>
-                                    </select>
-                                    <label style="color: red;"
-                                    *ngIf="academicSessionForm.controls['academicSession'].hasError('required') && !isValidForm"
-                                    class="error jquery-validation-error small form-text"
-                                    >Please select academic session.</label>
-                                </div>
-                            </form>                  
-                        </div>
-                        <div class="col-md-3">
-                            <form [formGroup]="batchYearForm">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="batchYear">Batch Year&nbsp;<span style="color: red;">*</span></label>
-                                    <select class="form-control"  required id="batchYear" formControlName="batchYear" 
-                                    [ngClass]="{'is-invalid': !batchYearForm.controls['batchYear'].valid && !isValidForm}">
-                                    <option value="{{batchYear.id}}" *ngFor="let batchYear of batchYears">{{batchYear?.batchYear}}</option>
-                                    </select>
-                                    <label style="color: red;"
-                                    *ngIf="batchYearForm.controls['batchYear'].hasError('required') && !isValidForm"
-                                    class="error jquery-validation-error small form-text"
-                                    >Please select batch year.</label>
-                                </div>
-                            </form>                  
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <form [formGroup]="syllabusForm">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="syllabus">Syllabus&nbsp;<span style="color: red;">*</span></label>
-                                    <select class="form-control"  required id="syllabus" formControlName="syllabus" (change)="getGradeCategories(syllabusForm.controls['syllabus'].value)"
-                                    [ngClass]="{'is-invalid': !syllabusForm.controls['syllabus'].valid && !isValidForm}">
-                                    <option value="{{syllabus.id}}" *ngFor="let syllabus of syllabuses">{{syllabus?.name}}</option>
-                                    </select>
-                                    <label style="color: red;"
-                                    *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
-                                    class="error jquery-validation-error small form-text"
-                                    >Please select syllabus.</label>
-                                </div>
-                            </form>                  
-                        </div>
-                        <div class="col-md-2">
-                            <form [formGroup]="gradeCategoryForm">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="gradeCategory">Grade Category&nbsp;<span style="color: red;">*</span></label>
-                                    <select class="form-control"  required id="gradeCategory" formControlName="gradeCategory" 
-                                    [ngClass]="{'is-invalid': !gradeCategoryForm.controls['gradeCategory'].valid && !isValidForm}">
-                                    <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory?.name}}</option>
-                                    </select>
-                                    <label style="color: red;"
-                                    *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
-                                    class="error jquery-validation-error small form-text"
-                                    >Please select grade category.</label>
-                                </div>
-                            </form>                  
-                        </div>
-                        <div class="col-md-2">
-                            <form [formGroup]="currencyForm">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="currency">Currency&nbsp;<span style="color: red;">*</span></label>
-                                    <select class="form-control"  required id="currency" formControlName="currency" 
-                                    [ngClass]="{'is-invalid': !currencyForm.controls['currency'].valid && !isValidForm}">
-                                    <option value="{{currency.id}}" *ngFor="let currency of currencies">{{currency?.name}}</option>
-                                    </select>
-                                    <label style="color: red;"
-                                    *ngIf="currencyForm.controls['currency'].hasError('required') && !isValidForm"
-                                    class="error jquery-validation-error small form-text"
-                                    >Please select currency.</label>
-                                </div>
-                            </form>                  
-                        </div>
-                        <div class="col-md-4">
-                            <form [formGroup]="feeCategoryForm">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="feeCategory">Fee Category&nbsp;<span style="color: red;">*</span></label>
-                                    <select class="form-control"  required id="feeCategory" formControlName="feeCategory" 
-                                    [ngClass]="{'is-invalid': !feeCategoryForm.controls['feeCategory'].valid && !isValidForm}">
-                                    <option value="{{feeCategory.id}}" *ngFor="let feeCategory of feeCategories">{{feeCategory?.name}}</option>
-                                    </select>
-                                    <label style="color: red;"
-                                    *ngIf="feeCategoryForm.controls['feeCategory'].hasError('required') && !isValidForm"
-                                    class="error jquery-validation-error small form-text"
-                                    >Please select fee Category.</label>
-                                </div>
-                            </form>                  
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="form-control-label" for="totalInstallment">Total Installment&nbsp;<span style="color: red;">*</span></label>
-                                <input class="form-control input-md" id="totalInstallment" type="text" required formControlName="totalInstallment" maxlength="2" (input)="addInstallments(addFeeStructureForm.controls['totalInstallment'].value)"
-                                [ngClass]="{'is-invalid': !addFeeStructureForm.controls['totalInstallment'].valid && !isValidForm}"/>
-                                <label style="color: red;"
-                                *ngIf="addFeeStructureForm.controls['totalInstallment'].hasError('required') && !isValidForm"
-                                class="error jquery-validation-error small form-text"
-                                >Please enter total installment.</label>
-                                <label style="color: red;"
-                                *ngIf="addFeeStructureForm.controls['totalInstallment'].hasError('pattern') && !isValidForm"
-                                class="error jquery-validation-error small form-text"
-                                >Please enter valid total installment.</label>
-                            </div>                
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="form-control-label" for="validityFrom">Validity From&nbsp;<span
-                                style="color: red;">*</span></label>
-                                <input class="form-control input-md" id="validityFrom" type="date" required formControlName="validityFrom" 
-                                [ngClass]="{'is-invalid': !addFeeStructureForm.controls['validityFrom'].valid && !isValidForm}" />
-                                <label style="color: red;" 
-                                *ngIf="addFeeStructureForm.controls['validityFrom'].hasError('required') && !isValidForm"
-                                class="error jquery-validation-error small form-text">Please enter your validity from.</label>
-                            </div>      
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="form-control-label" for="validityTo">Validity To&nbsp;<span
-                                style="color: red;">*</span></label>
-                                <input class="form-control input-md" id="validityTo" type="date" required formControlName="validityTo" 
-                                min="{{addFeeStructureForm.controls['validityFrom'].value}}"
-                                [ngClass]="{'is-invalid': !addFeeStructureForm.controls['validityTo'].valid && !isValidForm}" />
-                                <label style="color: red;" 
-                                *ngIf="addFeeStructureForm.controls['validityTo'].hasError('required') && !isValidForm"
-                                class="error jquery-validation-error small form-text">Please enter your validity to.</label>
-                            </div>      
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="form-control-label" for="taxApplicable">Tax Applicable&nbsp;<span style="color: red;">*</span></label>
-                                <select class="form-control"  required id="taxApplicable" formControlName="taxApplicable" (change)="isTaxApplicable(addFeeStructureForm.controls['taxApplicable'].value)"
-                                [ngClass]="{'is-invalid': !addFeeStructureForm.controls['taxApplicable'].valid && !isValidForm}">
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                                <label style="color: red;"
-                                *ngIf="addFeeStructureForm.controls['taxApplicable'].hasError('required') && !isValidForm"
-                                class="error jquery-validation-error small form-text"
-                                >Please select tax applicable.</label>
-                            </div>                
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <div class="card-header" style="padding: 10px 25px;">
-                                <h5><i class="fa fa-credit-card"></i>&nbsp;Fee Structure Installments&nbsp;<span style="color: red;">*</span></h5>
-                                <label style="color: red;">{{msgLabel[0]}}</label>
-                            </div>
-                            <div class="table-responsive" [ngStyle]="feeStructureInstallmentForm.length > 0 ? {'height': '300px', 'overflow': 'auto'} : {}">
-                                <table class="table align-middle mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Installment</th>
-                                            <th scope="col">Installment(%)</th>
-                                            <th scope="col">Due Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody *ngIf="feeStructureInstallmentForm.length > 0">
-                                        <tr *ngFor="let EnclosureDoc of feeStructureInstallmentForm let i=index" [formGroup]="feeStructureInstallmentForm[i]">  
-                                            <td>
-                                                <label class="text-wrap">
-                                                    {{feeStructureInstallmentForm[i].get("name").value}}
-                                                </label>
-                                            </td>
-                                            <td>
-                                                <input class="form-control" id="installmentPercent_{{i}}" type="text" required 
-                                                formControlName="installmentPercent" maxlength="5"
-                                                [ngClass]="{'is-invalid': !feeStructureInstallmentForm[i].controls['installmentPercent'].valid && !isValidForm1}"/>
+                    <ul class="nav nav-pills mb-3" ngbNav #nav1="ngbNav">
+                        <li class="nav-item" [ngbNavItem]="1">
+                            <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Fee Structure Info</a>
+                            <ng-template ngbNavContent>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <form [formGroup]="academicSessionForm">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="academicSession">Academic Session&nbsp;<span style="color: red;">*</span></label>
+                                                <select class="form-control"  required id="academicSession" formControlName="academicSession" 
+                                                [ngClass]="{'is-invalid': !academicSessionForm.controls['academicSession'].valid && !isValidForm}">
+                                                <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession?.year}}</option>
+                                                </select>
                                                 <label style="color: red;"
-                                                *ngIf="feeStructureInstallmentForm[i].controls['installmentPercent'].hasError('required') && !isValidForm1"
+                                                *ngIf="academicSessionForm.controls['academicSession'].hasError('required') && !isValidForm"
                                                 class="error jquery-validation-error small form-text"
-                                                >Please enter installment(%).</label>
+                                                >Please select academic session.</label>
+                                            </div>
+                                        </form>                  
+                                    </div>
+                                    <div class="col-md-3">
+                                        <form [formGroup]="schoolForm">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="school">School&nbsp;<span style="color: red;">*</span></label>
+                                                <select class="form-control"  required id="school" formControlName="school" (change)="getSchoolSchoolingPrograms(schoolForm.controls['school'].value, 'Active')"
+                                                [ngClass]="{'is-invalid': !schoolForm.controls['school'].valid && !isValidForm}">
+                                                <option value="{{school.uuid}}" *ngFor="let school of schools">{{school?.name}}</option>
+                                                </select>
                                                 <label style="color: red;"
-                                                *ngIf="feeStructureInstallmentForm[i].controls['installmentPercent'].hasError('pattern') && !isValidForm1"
+                                                *ngIf="schoolForm.controls['school'].hasError('required') && !isValidForm"
                                                 class="error jquery-validation-error small form-text"
-                                                >Please enter valid installment(%).</label>
-                                            </td>
-                                            <td>
-                                                <input class="form-control" id="dueDate_{{i}}" type="date" required formControlName="dueDate" 
-                                                [ngClass]="{'is-invalid': !feeStructureInstallmentForm[i].controls['dueDate'].valid && !isValidForm1}" />
-                                                <label style="color: red;" 
-                                                *ngIf="feeStructureInstallmentForm[i].controls['dueDate'].hasError('required') && !isValidForm1"
-                                                class="error jquery-validation-error small form-text">Please enter due date.</label>
-                                            </td>
-                                        </tr>
-                                        <tr *ngIf="feeStructureInstallmentForm.length == 0">
-                                            <td></td>
-                                            <td>No record(s) found</td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card-header" style="padding: 10px 25px;">
-                                <h5><i class="fa fa-credit-card"></i>&nbsp;Fee Types&nbsp;<span style="color: red;">*</span></h5>
-                                <label style="color: red;">{{msgLabel[1]}}</label>
-                                <div class="btn-group mb-2 me-2 float-end" ngbDropdown [placement]="'bottom-left'">
-                                    <button class="btn btn-rounded btn-primary btn-sm" ngbDropdownToggle type="button">
-                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                    </button>
-                                    <div ngbDropdownMenu>
-                                        <a href="javascript:" class="dropdown-item" (click)="addFeeType()">Add</a>
-                                        <a href="javascript:" class="dropdown-item" (click)="deleteFeeType()">Delete</a>
+                                                >Please select school.</label>
+                                            </div>
+                                        </form>                  
+                                    </div>
+                                    <div class="col-md-3">
+                                        <form [formGroup]="schoolingProgramForm">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="schoolingProgram">Schooling Program&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchoolingProgram"></i></label>
+                                                <select class="form-control"  required id="schoolingProgram" formControlName="schoolingProgram" 
+                                                [ngClass]="{'is-invalid': !schoolingProgramForm.controls['schoolingProgram'].valid && !isValidForm}">
+                                                <option value="{{sp.schoolingProgram?.id}}" *ngFor="let sp of schoolingPrograms">{{sp.schoolingProgram?.name}}</option>
+                                                </select>
+                                                <label style="color: red;"
+                                                *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
+                                                class="error jquery-validation-error small form-text"
+                                                >Please select schooling program.</label>
+                                            </div>
+                                        </form>                  
+                                    </div>
+                                    <div class="col-md-3">
+                                        <form [formGroup]="batchYearForm">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="batchYear">Batch Year&nbsp;<span style="color: red;">*</span></label>
+                                                <select class="form-control"  required id="batchYear" formControlName="batchYear" 
+                                                [ngClass]="{'is-invalid': !batchYearForm.controls['batchYear'].valid && !isValidForm}">
+                                                <option value="{{batchYear.id}}" *ngFor="let batchYear of batchYears">{{batchYear?.batchYear}}</option>
+                                                </select>
+                                                <label style="color: red;"
+                                                *ngIf="batchYearForm.controls['batchYear'].hasError('required') && !isValidForm"
+                                                class="error jquery-validation-error small form-text"
+                                                >Please select batch year.</label>
+                                            </div>
+                                        </form>                  
                                     </div>
                                 </div>
-                            </div>
-                            <div class="table-responsive" [ngStyle]="feeStructureFeeTypeForm.length > 0 ? {'height': '300px', 'overflow': 'auto'} : {}">
-                                <table class="table align-middle mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Sno</th>
-                                            <th scope="col">Fee Type</th>
-                                            <th scope="col">Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody *ngIf="feeStructureFeeTypeForm.length > 0">
-                                        <tr *ngFor="let EnclosureDoc of feeStructureFeeTypeForm let i=index" [formGroup]="feeStructureFeeTypeForm[i]">  
-                                            <td>
-                                                {{i+1}}
-                                            </td>
-                                            <td>
-                                                <select class="form-control"  required id="feeType_{{i}}" formControlName="feeTypeId" 
-                                                [ngClass]="{'is-invalid': !isValidForm2 && !feeStructureFeeTypeForm[i].controls['feeTypeId'].valid}" (change)="checkDuplicateFeeType(feeStructureFeeTypeForm[i].controls['feeTypeId'].value, i)">
-                                                <option value="{{feeType.id}}" *ngFor="let feeType of feeTypes;">{{feeType?.name}}</option>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <form [formGroup]="syllabusForm">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="syllabus">Syllabus&nbsp;<span style="color: red;">*</span></label>
+                                                <select class="form-control"  required id="syllabus" formControlName="syllabus" (change)="getGradeCategories(syllabusForm.controls['syllabus'].value)"
+                                                [ngClass]="{'is-invalid': !syllabusForm.controls['syllabus'].valid && !isValidForm}">
+                                                <option value="{{syllabus.id}}" *ngFor="let syllabus of syllabuses">{{syllabus?.name}}</option>
                                                 </select>
-                                                <div class="invalid-feedback" *ngIf="feeStructureFeeTypeForm[i].controls['feeTypeId'].hasError('required') && !isValidForm2">
-                                                    Please select fee type
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <input class="form-control" id="amount_{{i}}" type="text" required 
-                                                formControlName="amount" maxlength="11"
-                                                [ngClass]="{'is-invalid': !feeStructureFeeTypeForm[i].controls['amount'].valid && !isValidForm2}"/>
                                                 <label style="color: red;"
-                                                *ngIf="feeStructureFeeTypeForm[i].controls['amount'].hasError('required') && !isValidForm2"
+                                                *ngIf="syllabusForm.controls['syllabus'].hasError('required') && !isValidForm"
                                                 class="error jquery-validation-error small form-text"
-                                                >Please enter amount.</label>
+                                                >Please select syllabus.</label>
+                                            </div>
+                                        </form>                  
+                                    </div>
+                                    <div class="col-md-3">
+                                        <form [formGroup]="gradeCategoryForm">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="gradeCategory">Grade Category&nbsp;<span style="color: red;">*</span></label>
+                                                <select class="form-control"  required id="gradeCategory" formControlName="gradeCategory" 
+                                                [ngClass]="{'is-invalid': !gradeCategoryForm.controls['gradeCategory'].valid && !isValidForm}">
+                                                <option value="{{gradeCategory.id}}" *ngFor="let gradeCategory of gradeCategories">{{gradeCategory?.name}}</option>
+                                                </select>
                                                 <label style="color: red;"
-                                                *ngIf="feeStructureFeeTypeForm[i].controls['amount'].hasError('pattern') && !isValidForm2"
+                                                *ngIf="gradeCategoryForm.controls['gradeCategory'].hasError('required') && !isValidForm"
                                                 class="error jquery-validation-error small form-text"
-                                                >Please enter valid amount.</label>
-                                            </td>                                            
-                                        </tr>
-                                        <tr *ngIf="feeStructureFeeTypeForm.length == 0">
-                                            <td></td>
-                                            <td>No record(s) found</td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-5">
-                        <div class="col-md-6">
-                            <div class="card-header" style="padding: 10px 25px;">
-                                <h5><i class="fa fa-credit-card"></i>&nbsp;Discount Types</h5>
-                                <label style="color: red;">{{msgLabel[3]}}</label>
-                                <div class="btn-group mb-2 me-2 float-end" ngbDropdown [placement]="'bottom-left'">
-                                    <button class="btn btn-rounded btn-primary btn-sm" ngbDropdownToggle type="button">
-                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                    </button>
-                                    <div ngbDropdownMenu>
-                                        <a href="javascript:" class="dropdown-item" (click)="addDiscountType()">Add</a>
-                                        <a href="javascript:" class="dropdown-item" (click)="deleteDiscountType()">Delete</a>
+                                                >Please select grade category.</label>
+                                            </div>
+                                        </form>                  
+                                    </div>
+                                    <div class="col-md-3">
+                                        <form [formGroup]="currencyForm">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="currency">Currency&nbsp;<span style="color: red;">*</span></label>
+                                                <select class="form-control"  required id="currency" formControlName="currency" 
+                                                [ngClass]="{'is-invalid': !currencyForm.controls['currency'].valid && !isValidForm}">
+                                                <option value="{{currency.id}}" *ngFor="let currency of currencies">{{currency?.name}}</option>
+                                                </select>
+                                                <label style="color: red;"
+                                                *ngIf="currencyForm.controls['currency'].hasError('required') && !isValidForm"
+                                                class="error jquery-validation-error small form-text"
+                                                >Please select currency.</label>
+                                            </div>
+                                        </form>                  
+                                    </div>
+                                    <div class="col-md-3">
+                                        <form [formGroup]="feeCategoryForm">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="feeCategory">Fee Category&nbsp;<span style="color: red;">*</span></label>
+                                                <select class="form-control"  required id="feeCategory" formControlName="feeCategory" 
+                                                [ngClass]="{'is-invalid': !feeCategoryForm.controls['feeCategory'].valid && !isValidForm}">
+                                                <option value="{{feeCategory.id}}" *ngFor="let feeCategory of feeCategories">{{feeCategory?.name}}</option>
+                                                </select>
+                                                <label style="color: red;"
+                                                *ngIf="feeCategoryForm.controls['feeCategory'].hasError('required') && !isValidForm"
+                                                class="error jquery-validation-error small form-text"
+                                                >Please select fee Category.</label>
+                                            </div>
+                                        </form>                  
                                     </div>
                                 </div>
-                            </div>
-                            <div class="table-responsive" [ngStyle]="feeStructureDiscountTypeForm.length > 0 ? {'height': '300px', 'overflow': 'auto'} : {}">
-                                <table class="table align-middle mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Sno</th>
-                                            <th scope="col">Discount Type</th>
-                                            <th scope="col">Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody *ngIf="feeStructureDiscountTypeForm.length > 0">
-                                        <tr *ngFor="let EnclosureDoc of feeStructureDiscountTypeForm let i=index" [formGroup]="feeStructureDiscountTypeForm[i]">  
-                                            <td>
-                                                {{i+1}}
-                                            </td>
-                                            <td>
-                                                <select class="form-control" required id="discountType_{{i}}" formControlName="discountTypeId" 
-                                                [ngClass]="{'is-invalid': !isValidForm3 && !feeStructureDiscountTypeForm[i].controls['discountTypeId'].valid}" (change)="checkDuplicateDiscountType(feeStructureDiscountTypeForm[i].controls['discountTypeId'].value, i)">
-                                                <option value="{{discountType.id}}" *ngFor="let discountType of discountTypes;">{{discountType?.name}}</option>
-                                                </select>
-                                                <div class="invalid-feedback" *ngIf="feeStructureDiscountTypeForm[i].controls['discountTypeId'].hasError('required') && !isValidForm3">
-                                                    Please select discount type
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <input class="form-control" id="amount_{{i}}" type="text" required 
-                                                formControlName="amount" maxlength="11"
-                                                [ngClass]="{'is-invalid': !feeStructureDiscountTypeForm[i].controls['amount'].valid && !isValidForm3}"/>
-                                                <label style="color: red;"
-                                                *ngIf="feeStructureDiscountTypeForm[i].controls['amount'].hasError('required') && !isValidForm3"
-                                                class="error jquery-validation-error small form-text"
-                                                >Please enter amount.</label>
-                                                <label style="color: red;"
-                                                *ngIf="feeStructureDiscountTypeForm[i].controls['amount'].hasError('pattern') && !isValidForm3"
-                                                class="error jquery-validation-error small form-text"
-                                                >Please enter valid amount.</label>
-                                            </td>                                            
-                                        </tr>
-                                        <tr *ngIf="feeStructureDiscountTypeForm.length == 0">
-                                            <td></td>
-                                            <td>No record(s) found</td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-md-6" *ngIf="addFeeStructureForm.controls['taxApplicable'].value == 1">
-                            <div class="card-header" style="padding: 10px 25px;">
-                                <h5><i class="fa fa-credit-card"></i>&nbsp;Tax Rates&nbsp;<span style="color: red;" *ngIf="addFeeStructureForm.controls['taxApplicable'].value == 1">*</span></h5>
-                                <label style="color: red;">{{msgLabel[2]}}</label>
-                                <div class="btn-group mb-2 me-2 float-end" ngbDropdown [placement]="'bottom-left'">
-                                    <button class="btn btn-rounded btn-primary btn-sm" ngbDropdownToggle type="button">
-                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                    </button>
-                                    <div ngbDropdownMenu>
-                                        <a href="javascript:" class="dropdown-item" (click)="addTaxRate()">Add</a>
-                                        <a href="javascript:" class="dropdown-item" (click)="deleteTaxRate()">Delete</a>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="totalInstallment">Total Installment&nbsp;<span style="color: red;">*</span></label>
+                                            <input class="form-control input-md" id="totalInstallment" type="text" required formControlName="totalInstallment" maxlength="2" (input)="addInstallments(addFeeStructureForm.controls['totalInstallment'].value)"
+                                            [ngClass]="{'is-invalid': !addFeeStructureForm.controls['totalInstallment'].valid && !isValidForm}"/>
+                                            <label style="color: red;"
+                                            *ngIf="addFeeStructureForm.controls['totalInstallment'].hasError('required') && !isValidForm"
+                                            class="error jquery-validation-error small form-text"
+                                            >Please enter total installment.</label>
+                                            <label style="color: red;"
+                                            *ngIf="addFeeStructureForm.controls['totalInstallment'].hasError('pattern') && !isValidForm"
+                                            class="error jquery-validation-error small form-text"
+                                            >Please enter valid total installment.</label>
+                                        </div>                
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="validityFrom">Validity From&nbsp;<span
+                                            style="color: red;">*</span></label>
+                                            <input class="form-control input-md" id="validityFrom" type="date" required formControlName="validityFrom" 
+                                            [ngClass]="{'is-invalid': !addFeeStructureForm.controls['validityFrom'].valid && !isValidForm}" />
+                                            <label style="color: red;" 
+                                            *ngIf="addFeeStructureForm.controls['validityFrom'].hasError('required') && !isValidForm"
+                                            class="error jquery-validation-error small form-text">Please enter your validity from.</label>
+                                        </div>      
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="validityTo">Validity To&nbsp;<span
+                                            style="color: red;">*</span></label>
+                                            <input class="form-control input-md" id="validityTo" type="date" required formControlName="validityTo" 
+                                            min="{{addFeeStructureForm.controls['validityFrom'].value}}"
+                                            [ngClass]="{'is-invalid': !addFeeStructureForm.controls['validityTo'].valid && !isValidForm}" />
+                                            <label style="color: red;" 
+                                            *ngIf="addFeeStructureForm.controls['validityTo'].hasError('required') && !isValidForm"
+                                            class="error jquery-validation-error small form-text">Please enter your validity to.</label>
+                                        </div>      
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="taxApplicable">Tax Applicable&nbsp;<span style="color: red;">*</span></label>
+                                            <select class="form-control"  required id="taxApplicable" formControlName="taxApplicable" (change)="isTaxApplicable(addFeeStructureForm.controls['taxApplicable'].value)"
+                                            [ngClass]="{'is-invalid': !addFeeStructureForm.controls['taxApplicable'].valid && !isValidForm}">
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                            <label style="color: red;"
+                                            *ngIf="addFeeStructureForm.controls['taxApplicable'].hasError('required') && !isValidForm"
+                                            class="error jquery-validation-error small form-text"
+                                            >Please select tax applicable.</label>
+                                        </div>                
                                     </div>
                                 </div>
-                            </div>
-                            <div class="table-responsive" [ngStyle]="feeStructureTaxRateForm.length > 0 ? {'height': '300px', 'overflow': 'auto'} : {}">
-                                <table class="table align-middle mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Sno</th>
-                                            <th scope="col">Tax Type</th>
-                                            <th scope="col">Tax Rate</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody *ngIf="feeStructureTaxRateForm.length > 0">
-                                        <tr *ngFor="let EnclosureDoc of feeStructureTaxRateForm let i=index" [formGroup]="feeStructureTaxRateForm[i]">  
-                                            <td>
-                                                {{i+1}}
-                                            </td>
-                                            <td>
-                                                <select class="form-control"  required id="taxType_{{i}}" formControlName="taxTypeId" 
-                                                [ngClass]="{'is-invalid': !isValidForm4 && !feeStructureTaxRateForm[i].controls['taxTypeId'].valid}" (change)="getTaxRates(academicSessionForm.controls['academicSession'].value, feeStructureTaxRateForm[i].controls['taxTypeId'].value, 'Active', i)">
-                                                <option value="{{taxType.id}}" *ngFor="let taxType of taxTypes;">{{taxType?.name}}</option>
-                                                </select>
-                                                <div class="invalid-feedback" *ngIf="feeStructureTaxRateForm[i].controls['taxTypeId'].hasError('required') && !isValidForm4">
-                                                    Please select tax type
+                            </ng-template>
+                        </li>
+                        <li class="nav-item" [ngbNavItem]="2">
+                            <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Installments</a>
+                            <ng-template ngbNavContent>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card-header">
+                                            <h5><i class="fa fa-credit-card"></i>&nbsp;Fee Structure Installments&nbsp;<span style="color: red;">*</span></h5>
+                                            <label style="color: red;">{{msgLabel[0]}}</label>
+                                        </div>
+                                        <div class="table-responsive" [ngStyle]="feeStructureInstallmentForm.length > 0 ? {'height': '300px', 'overflow': 'auto'} : {}">
+                                            <table class="table align-middle mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Installment</th>
+                                                        <th scope="col">Installment(%)</th>
+                                                        <th scope="col">Due Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngIf="feeStructureInstallmentForm.length > 0">
+                                                    <tr *ngFor="let EnclosureDoc of feeStructureInstallmentForm let i=index" [formGroup]="feeStructureInstallmentForm[i]">  
+                                                        <td>
+                                                            <label class="text-wrap">
+                                                                {{feeStructureInstallmentForm[i].get("name").value}}
+                                                            </label>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" id="installmentPercent_{{i}}" type="text" required 
+                                                            formControlName="installmentPercent" maxlength="5"
+                                                            [ngClass]="{'is-invalid': !feeStructureInstallmentForm[i].controls['installmentPercent'].valid && !isValidForm1}"/>
+                                                            <label style="color: red;"
+                                                            *ngIf="feeStructureInstallmentForm[i].controls['installmentPercent'].hasError('required') && !isValidForm1"
+                                                            class="error jquery-validation-error small form-text"
+                                                            >Please enter installment(%).</label>
+                                                            <label style="color: red;"
+                                                            *ngIf="feeStructureInstallmentForm[i].controls['installmentPercent'].hasError('pattern') && !isValidForm1"
+                                                            class="error jquery-validation-error small form-text"
+                                                            >Please enter valid installment(%).</label>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" id="dueDate_{{i}}" type="date" required formControlName="dueDate" 
+                                                            [ngClass]="{'is-invalid': !feeStructureInstallmentForm[i].controls['dueDate'].valid && !isValidForm1}" />
+                                                            <label style="color: red;" 
+                                                            *ngIf="feeStructureInstallmentForm[i].controls['dueDate'].hasError('required') && !isValidForm1"
+                                                            class="error jquery-validation-error small form-text">Please enter due date.</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="feeStructureInstallmentForm.length == 0">
+                                                        <td></td>
+                                                        <td>No record(s) found</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li class="nav-item" [ngbNavItem]="3">
+                            <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Fee Types</a>
+                            <ng-template ngbNavContent>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card-header">
+                                            <h5><i class="fa fa-credit-card"></i>&nbsp;Fee Types&nbsp;<span style="color: red;">*</span></h5>
+                                            <label style="color: red;">{{msgLabel[1]}}</label>
+                                            <div class="btn-group mb-2 me-2 float-end" ngbDropdown [placement]="'bottom-left'">
+                                                <button class="btn btn-rounded btn-primary btn-sm" ngbDropdownToggle type="button">
+                                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                </button>
+                                                <div ngbDropdownMenu>
+                                                    <a href="javascript:" class="dropdown-item" (click)="addFeeType()">Add</a>
+                                                    <a href="javascript:" class="dropdown-item" (click)="deleteFeeType()">Delete</a>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <select class="form-control"  required id="taxRate_{{i}}" formControlName="taxRateId" 
-                                                [ngClass]="{'is-invalid': !isValidForm4 && !feeStructureTaxRateForm[i].controls['taxRateId'].valid}" (change)="checkDuplicateTaxRate(feeStructureTaxRateForm[i].controls['taxRateId'].value, i)">
-                                                <option value="{{taxRate.id}}" *ngFor="let taxRate of taxRates[i];">{{taxRate?.rate}}</option>
-                                                </select>
-                                                <div class="invalid-feedback" *ngIf="feeStructureTaxRateForm[i].controls['taxRateId'].hasError('required') && !isValidForm4">
-                                                    Please select tax rate
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive" [ngStyle]="feeStructureFeeTypeForm.length > 0 ? {'height': '300px', 'overflow': 'auto'} : {}">
+                                            <table class="table align-middle mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Sno</th>
+                                                        <th scope="col">Fee Type</th>
+                                                        <th scope="col">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngIf="feeStructureFeeTypeForm.length > 0">
+                                                    <tr *ngFor="let EnclosureDoc of feeStructureFeeTypeForm let i=index" [formGroup]="feeStructureFeeTypeForm[i]">  
+                                                        <td>
+                                                            {{i+1}}
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control"  required id="feeType_{{i}}" formControlName="feeTypeId" 
+                                                            [ngClass]="{'is-invalid': !isValidForm2 && !feeStructureFeeTypeForm[i].controls['feeTypeId'].valid}" (change)="checkDuplicateFeeType(feeStructureFeeTypeForm[i].controls['feeTypeId'].value, i)">
+                                                            <option value="{{feeType.id}}" *ngFor="let feeType of feeTypes;">{{feeType?.name}}</option>
+                                                            </select>
+                                                            <div class="invalid-feedback" *ngIf="feeStructureFeeTypeForm[i].controls['feeTypeId'].hasError('required') && !isValidForm2">
+                                                                Please select fee type
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" id="amount_{{i}}" type="text" required 
+                                                            formControlName="amount" maxlength="11"
+                                                            [ngClass]="{'is-invalid': !feeStructureFeeTypeForm[i].controls['amount'].valid && !isValidForm2}"/>
+                                                            <label style="color: red;"
+                                                            *ngIf="feeStructureFeeTypeForm[i].controls['amount'].hasError('required') && !isValidForm2"
+                                                            class="error jquery-validation-error small form-text"
+                                                            >Please enter amount.</label>
+                                                            <label style="color: red;"
+                                                            *ngIf="feeStructureFeeTypeForm[i].controls['amount'].hasError('pattern') && !isValidForm2"
+                                                            class="error jquery-validation-error small form-text"
+                                                            >Please enter valid amount.</label>
+                                                        </td>                                            
+                                                    </tr>
+                                                    <tr *ngIf="feeStructureFeeTypeForm.length == 0">
+                                                        <td></td>
+                                                        <td>No record(s) found</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li class="nav-item" [ngbNavItem]="4">
+                            <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Discount Types</a>
+                            <ng-template ngbNavContent>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card-header">
+                                            <h5><i class="fa fa-credit-card"></i>&nbsp;Discount Types</h5>
+                                            <label style="color: red;">{{msgLabel[3]}}</label>
+                                            <div class="btn-group mb-2 me-2 float-end" ngbDropdown [placement]="'bottom-left'">
+                                                <button class="btn btn-rounded btn-primary btn-sm" ngbDropdownToggle type="button">
+                                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                </button>
+                                                <div ngbDropdownMenu>
+                                                    <a href="javascript:" class="dropdown-item" (click)="addDiscountType()">Add</a>
+                                                    <a href="javascript:" class="dropdown-item" (click)="deleteDiscountType()">Delete</a>
                                                 </div>
-                                            </td>                                            
-                                        </tr>
-                                        <tr *ngIf="feeStructureTaxRateForm.length == 0">
-                                            <td></td>
-                                            <td>No record(s) found</td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>    
-                    </div>  
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive" [ngStyle]="feeStructureDiscountTypeForm.length > 0 ? {'height': '300px', 'overflow': 'auto'} : {}">
+                                            <table class="table align-middle mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Sno</th>
+                                                        <th scope="col">Discount Type</th>
+                                                        <th scope="col">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngIf="feeStructureDiscountTypeForm.length > 0">
+                                                    <tr *ngFor="let EnclosureDoc of feeStructureDiscountTypeForm let i=index" [formGroup]="feeStructureDiscountTypeForm[i]">  
+                                                        <td>
+                                                            {{i+1}}
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control" required id="discountType_{{i}}" formControlName="discountTypeId" 
+                                                            [ngClass]="{'is-invalid': !isValidForm3 && !feeStructureDiscountTypeForm[i].controls['discountTypeId'].valid}" (change)="checkDuplicateDiscountType(feeStructureDiscountTypeForm[i].controls['discountTypeId'].value, i)">
+                                                            <option value="{{discountType.id}}" *ngFor="let discountType of discountTypes;">{{discountType?.name}}</option>
+                                                            </select>
+                                                            <div class="invalid-feedback" *ngIf="feeStructureDiscountTypeForm[i].controls['discountTypeId'].hasError('required') && !isValidForm3">
+                                                                Please select discount type
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" id="amount_{{i}}" type="text" required 
+                                                            formControlName="amount" maxlength="11"
+                                                            [ngClass]="{'is-invalid': !feeStructureDiscountTypeForm[i].controls['amount'].valid && !isValidForm3}"/>
+                                                            <label style="color: red;"
+                                                            *ngIf="feeStructureDiscountTypeForm[i].controls['amount'].hasError('required') && !isValidForm3"
+                                                            class="error jquery-validation-error small form-text"
+                                                            >Please enter amount.</label>
+                                                            <label style="color: red;"
+                                                            *ngIf="feeStructureDiscountTypeForm[i].controls['amount'].hasError('pattern') && !isValidForm3"
+                                                            class="error jquery-validation-error small form-text"
+                                                            >Please enter valid amount.</label>
+                                                        </td>                                            
+                                                    </tr>
+                                                    <tr *ngIf="feeStructureDiscountTypeForm.length == 0">
+                                                        <td></td>
+                                                        <td>No record(s) found</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li class="nav-item" [ngbNavItem]="5" *ngIf="addFeeStructureForm.controls['taxApplicable'].value == 1">
+                            <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Tax Rates</a>
+                            <ng-template ngbNavContent>
+                                <div class="row">
+                                    <div class="col-md-12" *ngIf="addFeeStructureForm.controls['taxApplicable'].value == 1">
+                                        <div class="card-header">
+                                            <h5><i class="fa fa-credit-card"></i>&nbsp;Tax Rates&nbsp;<span style="color: red;" *ngIf="addFeeStructureForm.controls['taxApplicable'].value == 1">*</span></h5>
+                                            <label style="color: red;">{{msgLabel[2]}}</label>
+                                            <div class="btn-group mb-2 me-2 float-end" ngbDropdown [placement]="'bottom-left'">
+                                                <button class="btn btn-rounded btn-primary btn-sm" ngbDropdownToggle type="button">
+                                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                </button>
+                                                <div ngbDropdownMenu>
+                                                    <a href="javascript:" class="dropdown-item" (click)="addTaxRate()">Add</a>
+                                                    <a href="javascript:" class="dropdown-item" (click)="deleteTaxRate()">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive" [ngStyle]="feeStructureTaxRateForm.length > 0 ? {'height': '300px', 'overflow': 'auto'} : {}">
+                                            <table class="table align-middle mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Sno</th>
+                                                        <th scope="col">Tax Type</th>
+                                                        <th scope="col">Tax Rate</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngIf="feeStructureTaxRateForm.length > 0">
+                                                    <tr *ngFor="let EnclosureDoc of feeStructureTaxRateForm let i=index" [formGroup]="feeStructureTaxRateForm[i]">  
+                                                        <td>
+                                                            {{i+1}}
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control"  required id="taxType_{{i}}" formControlName="taxTypeId" 
+                                                            [ngClass]="{'is-invalid': !isValidForm4 && !feeStructureTaxRateForm[i].controls['taxTypeId'].valid}" (change)="getTaxRates(academicSessionForm.controls['academicSession'].value, feeStructureTaxRateForm[i].controls['taxTypeId'].value, 'Active', i)">
+                                                            <option value="{{taxType.id}}" *ngFor="let taxType of taxTypes;">{{taxType?.name}}</option>
+                                                            </select>
+                                                            <div class="invalid-feedback" *ngIf="feeStructureTaxRateForm[i].controls['taxTypeId'].hasError('required') && !isValidForm4">
+                                                                Please select tax type
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control"  required id="taxRate_{{i}}" formControlName="taxRateId" 
+                                                            [ngClass]="{'is-invalid': !isValidForm4 && !feeStructureTaxRateForm[i].controls['taxRateId'].valid}" (change)="checkDuplicateTaxRate(feeStructureTaxRateForm[i].controls['taxRateId'].value, i)">
+                                                            <option value="{{taxRate.id}}" *ngFor="let taxRate of taxRates[i];">{{taxRate?.rate}}</option>
+                                                            </select>
+                                                            <div class="invalid-feedback" *ngIf="feeStructureTaxRateForm[i].controls['taxRateId'].hasError('required') && !isValidForm4">
+                                                                Please select tax rate
+                                                            </div>
+                                                        </td>                                            
+                                                    </tr>
+                                                    <tr *ngIf="feeStructureTaxRateForm.length == 0">
+                                                        <td></td>
+                                                        <td>No record(s) found</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>    
+                                </div> 
+                            </ng-template> 
+                        </li>
+                    </ul>
+                    <div [ngbNavOutlet]="nav1" class="mt-2"></div>
                 </div>
                 <div class="card-footer float-end">
                     <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>

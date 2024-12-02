@@ -125,7 +125,6 @@ export class SubjectGroupAllocationAddComponent
         this.selectedSubjects = this.selectedSubjects + "," + event.target.value;
       }
     }
-    console.log(this.selectedSubjects)
   }
 
   async saveSubjectGroupAllocation()

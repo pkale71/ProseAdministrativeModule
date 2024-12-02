@@ -27,10 +27,12 @@ export class SchoolAddComponent
   searchClicked : boolean;
   saveClicked : boolean;
   isValidForm : boolean;
+  schoolingProgramClicked : boolean;
   addSchoolForm : FormGroup;
   countryForm : FormGroup;
   stateRegionForm : FormGroup;
   districtForm : FormGroup;
+  schoolingProgramForm : FormGroup;
   cityForm : FormGroup;
   schoolingGroupForm : FormGroup;
   schoolSubGroupForm : FormGroup;
@@ -44,6 +46,7 @@ export class SchoolAddComponent
   schoolSubGroups = [];
   schoolingCategories = [];
   deliveryModes = [];
+  schoolingPrograms : any[];
 
   constructor(private notifier: NotifierService, 
     private commonService : CommonService,
@@ -67,6 +70,7 @@ export class SchoolAddComponent
     this.searchClicked1 = false;
     this.searchClicked = false;
     this.saveClicked = false;
+    this.schoolingProgramClicked = false;
     this.countries = [];
     this.stateRegions = [];
     this.schoolingGroups = [];
@@ -74,6 +78,7 @@ export class SchoolAddComponent
     this.schoolingCategories = [];
     this.districts = [];
     this.cities = [];
+    this.schoolingPrograms = [];
 
     this.addSchoolForm = this.formbuilder.group({
       name : ['', Validators.required],
@@ -84,8 +89,8 @@ export class SchoolAddComponent
       landline2 : ['', [Validators.pattern('^[0-9]{10,15}$'), Validators.maxLength(15), Validators.minLength(10)]],
       pincode : ['', Validators.required],
       address : ['', Validators.required],
-      contractFrom : [''],
-      contractTo : [''],
+      contractFrom : ['', Validators.required],
+      contractTo : ['', Validators.required],
       website : ['', [
           Validators.pattern("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*?$")
           ]],
@@ -97,7 +102,12 @@ export class SchoolAddComponent
       schoolingCategory : this.formbuilder.group({ 'id' : ['']}),      
       schoolSubGroup : this.formbuilder.group({ 'id' : ['']}),
       deliveryMode : this.formbuilder.group({ 'id' : ['']}),
+      schoolingProgramIds : [''],
       logoFile : ['']
+    });
+
+    this.schoolingProgramForm = this.formbuilder.group({
+      'schoolingPrograms' : ['', Validators.required]
     });
 
     this.countryForm = this.formbuilder.group({
@@ -136,6 +146,39 @@ export class SchoolAddComponent
   {
       //type : default, info, success, warning, error
       this.notifier.notify(type, message);
+  }
+
+  async getSchoolingPrograms(schoolingCategoryId : number) 
+  {  
+    try
+    {
+      this.schoolingProgramClicked = true;
+      this.schoolingProgramForm.get('schoolingPrograms').reset();
+      let tempSchoolingPrograms : Array<IOption> = [];
+      let response = await this.commonService.getSchoolingPrograms(schoolingCategoryId, 'Active').toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
+      {
+        let schoolingPrograms : any[] = response.schoolingPrograms;
+        for(let i = 0; i < schoolingPrograms.length; i++)
+        {
+          tempSchoolingPrograms.push({
+              'value' : schoolingPrograms[i].id.toString(),
+              'label' : schoolingPrograms[i].name
+          });
+        }
+        this.schoolingPrograms = this.commonSharedService.prepareSelectOptions(tempSchoolingPrograms);
+        this.schoolingProgramClicked = false;
+      }
+      else
+      {
+        this.schoolingPrograms = [];
+        this.schoolingProgramClicked = false;
+      }
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+    }
   }
 
   //get delivery modes
@@ -415,6 +458,7 @@ export class SchoolAddComponent
     formData.append('schoolSubGroup', JSON.stringify({ 'id' : this.schoolSubGroupForm.get('schoolSubGroup').value}));
     formData.append('schoolingCategory', JSON.stringify({ 'id' : this.schoolingCategoryForm.get('schoolingCategory').value}));
     formData.append('deliveryMode', JSON.stringify({ 'id' : this.deliveryModeForm.get('deliveryMode').value}));
+    formData.append('schoolingProgramIds', this.schoolingProgramForm.get("schoolingPrograms").value.toString());
     if(this.addSchoolForm.get("logoFile").value != "")
     {
       formData.append('logoFile', this.addSchoolForm.get("logoFile").value);
@@ -430,7 +474,7 @@ export class SchoolAddComponent
   {
     if (!this.saveClicked) 
     {
-      if (this.addSchoolForm.valid && this.countryForm.valid && this.stateRegionForm.valid && this.districtForm.valid && this.cityForm.valid && this.schoolingGroupForm.valid && this.schoolSubGroupForm.valid && this.schoolingCategoryForm.valid && this.deliveryModeForm.valid) 
+      if (this.addSchoolForm.valid && this.countryForm.valid && this.stateRegionForm.valid && this.districtForm.valid && this.cityForm.valid && this.schoolingGroupForm.valid && this.schoolSubGroupForm.valid && this.schoolingCategoryForm.valid && this.deliveryModeForm.valid && this.schoolingProgramForm.valid) 
       {
         this.isValidForm = true;
         this.saveClicked = true;

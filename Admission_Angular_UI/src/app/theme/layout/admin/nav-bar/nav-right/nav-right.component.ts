@@ -85,7 +85,8 @@ export class NavRightComponent implements DoCheck {
       {
         localStorage.clear();
         this.showNotification("info", "Logout Successful");
-        window.open(this.commonSharedService.adminBaseUrl + '/auth/signin', "_self");
+        alert(this.commonSharedService.adminBaseUrl)
+        window.open(this.commonSharedService.adminBaseUrl + '/#/auth/signin', "_self");
       }
     }
     catch(e)

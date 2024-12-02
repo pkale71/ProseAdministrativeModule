@@ -238,7 +238,6 @@ export class SubjectAddComponent
                     this.addSubjectForm.get("syllabusIds").setValue(this.syllabusForm.get('syllabusIds').value.toString());
                     this.addSubjectForm.controls["subjectType"].get("id").setValue(this.subjectTypeForm.get('subjectType').value);
                    
-                    console.log(this.addSubjectForm.value);
                     let response = await this.commonService.saveSubject(this.addSubjectForm.value).toPromise();
                     if (response.status_code == 200 && response.message == 'success') 
                     {

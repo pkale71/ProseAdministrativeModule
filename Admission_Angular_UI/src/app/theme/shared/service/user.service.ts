@@ -23,8 +23,38 @@ export class UserService {
     }
 
     //user
-    getUsers(userGradeId : number, userCategoryId : number, action : string)
+    getModuleUsers(moduleId : string)
     {
-        return this.apiService.get('/user/getUsers/' + userGradeId + '/' + userCategoryId + '/' + action);
+        return this.apiAdminService.get('/user/getModuleUsers/' + moduleId);
+    }
+
+    getUser(uuid : string)
+    {
+        return this.apiAdminService.get('/user/getUser/' + uuid);
+    }
+
+    getUserModules(userUUID : string, action : string, moduleId : number)
+    {
+        return this.apiAdminService.get('/user/getUserModules/' + userUUID + '/' + action + '/' + moduleId);
+    }
+
+    updateUserModuleStatus(tempJSON: any)
+    {
+        return this.apiAdminService.post('/user/updateStatus', tempJSON);
+    }
+    
+    approveDenyUserModule(userModule : any)
+    {
+        return this.apiAdminService.post('/user/approveDenyUserModule', userModule);
+    }
+
+    approveDenyUser(user : any)
+    {
+        return this.apiAdminService.post('/user/approveDenyUser', user);
+    }
+
+    assignUserRoleTypeModule(assignUserRoleTypeModule)
+    {
+        return this.apiAdminService.post('/user/assignUserRoleTypeModule', assignUserRoleTypeModule);
     }
 }
