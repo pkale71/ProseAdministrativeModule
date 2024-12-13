@@ -3,6 +3,8 @@
       <div class="card">
         <div class="card-header">
           <h5 style="margin-top: 0.8rem;"><i class="fa fa-cubes"></i>&nbsp; Registrations &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+          <button type="button" class="btn btn-rounded btn-secondary float-end" style="margin-top: 0rem;"
+           (click)="generateBlankForm()">Generate Blank Form</button>
           <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
            (click)="addApplicationForm()">New Admission</button>
         </div>
@@ -75,7 +77,7 @@
                 <thead>
                   <tr>
                     <th>Sno</th>
-                    <th>Application number</th>
+                    <th class="text-wrap">Application/Enrollment Number</th>
                     <th>Student Name</th>
                     <th>Parent/Guardian Name</th>
                     <th>Grade</th>
@@ -87,7 +89,7 @@
                 <tbody>
                   <tr *ngFor="let applicationForm of applicationForms let i=index">
                     <td>{{i+1}}</td>
-                    <td>{{applicationForm?.applicationNumber}}</td>
+                    <td>{{applicationForm?.enrollmentNumber == '' ? applicationForm?.applicationNumber : applicationForm?.enrollmentNumber}}</td>
                     <td class="text-wrap">{{applicationForm?.studentName}}</td>
                     <td class="text-wrap">{{applicationForm?.parent?.name}}</td>
                     <td>{{applicationForm?.grade?.name}}</td>
@@ -98,7 +100,8 @@
                         </span>
                       </td>   
                       <td style="width:40px;text-align: right;">
-                        <i class="fa fa-arrow-right" (click)="proceedApplicationForm(applicationForm)"  title="Proceed" style="cursor: pointer;"></i>&nbsp;  
+                        <i class="fa fa-route" (click)="proceedApplicationForm(applicationForm)"  title="Proceed" style="cursor: pointer;" 
+                        *ngIf="(applicationForm.applicationStatus?.name != 'Enrolled/Renewed' && applicationForm.applicationStatus?.name != 'Rejected/Closed' && applicationForm.applicationStatus?.name != 'Withdrawn' && applicationForm.applicationStatus?.name != 'Opted For Exit' && applicationForm.applicationStatus?.name != 'Course Completed')"></i>&nbsp;  
                         <i class="fa fa-list" (click)="detailApplicationForm(applicationForm.uuid)"  title="Detail" style="cursor: pointer;"></i>
                       </td> 
                   </tr>

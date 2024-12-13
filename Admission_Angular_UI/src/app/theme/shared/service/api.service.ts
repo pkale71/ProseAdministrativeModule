@@ -15,6 +15,10 @@ export class ApiService {
       return this.http.get(environment.apiUrl + url, { responseType: 'blob' });
   }
 
+  getPostFile(url: string, data : string): any {
+    return this.http.post(environment.apiUrl + url, data, { responseType: 'blob' });
+    }
+
   post(url: string, data: string): any {
       return this.http.post(environment.apiUrl + url, data);
   }

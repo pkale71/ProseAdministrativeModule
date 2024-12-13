@@ -22,14 +22,35 @@ export class B2cApplicationDeatilComponent
 {
   uuid : string;
   applicationFor : string;
+  totalDue : number;
   studentProfileData : any;
   parentProfileData : any;
   subjectGroupData : any;
   feeStructureData : any;
+  sportProfileData : any;
+  undergoneEducationData : any;
+  undertakingDocument : any;
+  feePayments : any[];
   studentProfileClicked : boolean;
   parentProfileClicked : boolean;
   subjectGroupClicked : boolean;
   feeStructureClicked : boolean;
+  sportProfileClicked : boolean;
+  feePaymentClicked : boolean;
+  undergoneProfileClicked : boolean;
+  studentDocProfileClicked : boolean;
+  undertakingDocFiles : any[] = ["",""];
+  studentDocFiles : any[] = ["",""];
+  studentDocuments : any[];
+  saveUndertakingClicked : boolean[] = [false, false];
+  deleteUndertakingClicked : boolean[] = [false, false];
+  undertakingDocumentClicked : boolean;
+  downloadUndertakingClicked : boolean[] = [false, false];
+  saveStudentDocClicked : boolean[] = [];
+  deleteStudentDocClicked : boolean[] = [];
+  downloadStudentDocClicked : boolean[] = [];
+  studentDocClicked : boolean;
+  generateClicked : boolean[] = [false, false];
 
   constructor(private notifier: NotifierService, 
   public commonSharedService : CommonSharedService,
@@ -37,7 +58,8 @@ export class B2cApplicationDeatilComponent
   private admissionService : AdmissionService,
   private modalService: NgbModal, 
   private location : Location, 
-  private route: ActivatedRoute)
+  private route: ActivatedRoute, 
+  private router : Router)
   {
     this.uuid = this.route.params['value'].uuid;
     this.applicationFor = this.route.params['value'].applicationFor;
@@ -45,11 +67,24 @@ export class B2cApplicationDeatilComponent
     this.parentProfileClicked = false;
     this.subjectGroupClicked = false;
     this.feeStructureClicked = false;
+    this.sportProfileClicked = false;
+    this.undergoneProfileClicked = false;
+    this.studentDocProfileClicked = false;
+    this.undertakingDocumentClicked = false;
+    this.studentDocClicked = false;
+    this.studentDocuments = [];
+    this.feePayments = [];
+    this.feePaymentClicked = false;
 
     this.getApplicationStudentProfile(this.uuid);
     this.getApplicationParentProfile(this.uuid);
     this.getApplicationSubjectGroup(this.uuid);
     this.getApplicationFeeStructure(this.uuid);
+    this.getApplicationSportEngagement(this.uuid);
+    this.getApplicationUndergoneEducation(this.uuid);
+    this.getApplicationUndertakingDocument(this.uuid);
+    this.getApplicationStudentDocuments(this.uuid);
+    this.getApplicationFeePayments(this.uuid);
   }
   
   ngOnInit() 
@@ -116,18 +151,559 @@ export class B2cApplicationDeatilComponent
     let response = await this.admissionService.getApplicationFeeStructure(uuid).toPromise(); 
     if (response.status_code == 200 && response.message == 'success') 
     {
-        this.feeStructureData = response.feeStructure;
-        this.feeStructureClicked = false;
+      this.feeStructureData = response.feeStructure;
+      this.feeStructureClicked = false;
+      //Calculate Total Dues
+      this.totalDue = 0;
+      for(let i=0;i<this.feeStructureData?.installments.length;i++)
+      {
+        this.totalDue = this.totalDue + (this.feeStructureData?.installments[i]?.amount - this.feeStructureData?.installments[i]?.amountPaid);
+      }
     }
     else
     {
-        this.subjectGroupData = "";
+        this.feeStructureData = "";
         this.feeStructureClicked = false;
+    }
+  }
+
+  async getApplicationFeePayments(uuid : string) 
+  {
+    this.feePaymentClicked = true;
+    let response = await this.admissionService.getApplicationFeePayments(uuid).toPromise(); 
+    if (response.status_code == 200 && response.message == 'success') 
+    {
+        this.feePayments = response.feePayments;
+        this.feePaymentClicked = false;
+    }
+    else
+    {
+        this.feePayments = [];
+        this.feePaymentClicked = false;
+    }
+  }
+
+  async getApplicationSportEngagement(uuid : string) 
+  {
+    this.sportProfileClicked = true;
+    let response = await this.admissionService.getApplicationSportEngagement(uuid).toPromise(); 
+    if (response.status_code == 200 && response.message == 'success') 
+    {
+        this.sportProfileData = response.sportEngagment;
+        this.sportProfileClicked = false;
+    }
+    else
+    {
+        this.sportProfileData = "";
+        this.sportProfileClicked = false;
+    }
+  }
+
+  async getApplicationUndergoneEducation(uuid : string) 
+  {
+    this.undergoneProfileClicked = true;
+    let response = await this.admissionService.getApplicationUndergoneEducation(uuid).toPromise(); 
+    if (response.status_code == 200 && response.message == 'success') 
+    {
+        this.undergoneEducationData = response.undergoneEducation;
+        this.undergoneProfileClicked = false;
+    }
+    else
+    {
+        this.undergoneEducationData = "";
+        this.undergoneProfileClicked = false;
+    }
+  }
+
+  async getApplicationUndertakingDocument(uuid : string)
+  {
+    let response = await this.admissionService.getApplicationUndertakingDocument(uuid).toPromise(); 
+    if (response.status_code == 200 && response.message == 'success') 
+    {
+        this.undertakingDocument = response.undertakingDocument;
+    }
+    else
+    {
+        this.undertakingDocument = "";
+    }
+  }
+
+  async getApplicationStudentDocuments(uuid : string) 
+  {
+    this.studentDocClicked = true;
+    let response = await this.admissionService.getApplicationStudentDocuments(uuid).toPromise(); 
+    if (response.status_code == 200 && response.message == 'success') 
+    {
+        this.studentDocuments = response.studentDocuments;
+        this.studentDocClicked = false;
+    }
+    else
+    {
+        this.studentDocuments = [];
+        this.studentDocClicked = false;
+    }
+  }
+
+  undertakingfileChange(event : any, i : number)
+  {         
+    const file = event.target.files[0]; 
+    let fSize : number = parseFloat((file.size / 1024).toFixed(2));
+    if(file.type == 'image/png' || file.type == 'image/jpeg' || file.type == 'application/pdf')
+    {
+      if(fSize > 0)
+      {
+          this.undertakingDocFiles[i] = file;
+      }
+    }
+  }
+
+  async saveUndertakingDoc(i : number, docName : string)
+  {
+    try
+    {
+      if(this.undertakingDocFiles[i] != "")
+      {
+        this.saveUndertakingClicked[i] = true;
+        let formData = new FormData();
+        formData.append("application", JSON.stringify({"uuid" : this.uuid}));
+        formData.append("documentName", docName);
+        formData.append("documentFile", this.undertakingDocFiles[i])
+
+        let response = await this.admissionService.saveApplicationForm4(formData).toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+          this.showNotification('success', "Application Document Uploaded");
+          this.undertakingDocFiles[i] = "";
+          this.getApplicationUndertakingDocument(response.uuid);
+          this.saveUndertakingClicked[i] = false;
+        }
+        else
+        {
+          this.showNotification('error', "Application Document Not Saved");
+          this.saveUndertakingClicked[i] = false;
+        } 
+      }
+      else
+      {
+        this.showNotification('info', "Select (PDF, JPEG, PNG) File");
+      }
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+      this.saveUndertakingClicked[i] = false;
+    }
+  }
+
+  async deleteApplicationDoc(i : number, studentDocumentId : number, docName : string)
+  {
+    try
+    {    
+      Swal.fire({
+      customClass: {
+        container: 'my-Admission_Form'
+      },
+      title: 'Confirmation',
+      text: 'Are You Sure To Remove Uploaded Document?',
+      icon: 'warning',
+      allowOutsideClick: false,
+      showCloseButton: true,
+      showCancelButton: true 
+      }).then(async (willDelete) => {
+        if (willDelete.dismiss) 
+        {
+        } 
+        else 
+        {    
+          if(docName != "")
+          {
+            this.deleteUndertakingClicked[i] = true;
+          }
+          else
+          {
+            this.deleteStudentDocClicked[i] = true;
+          }
+          let jsonData = {
+            "application" : {"uuid" : this.uuid},
+            "documentName" : docName,
+            "applicationStudentDocument" : {"id" : (studentDocumentId > 0 ? studentDocumentId : "")}
+          }
+          
+          let response = await this.admissionService.deleteApplicationDoc(jsonData).toPromise();
+          if (response.status_code == 200 && response.message == 'success') 
+          {
+            if(docName != "")
+            {
+              this.showNotification('success', "Application Document Deleted");
+              this.getApplicationUndertakingDocument(this.uuid);
+              this.deleteUndertakingClicked[i] = false;
+            }
+            else
+            {
+              this.showNotification('success', "Student Document Deleted");
+              this.getApplicationStudentDocuments(this.uuid);
+              this.deleteStudentDocClicked[i] = false;
+            }
+          }
+          else
+          {
+            if(docName != "")
+            {
+              this.showNotification('error', "Application Document Not Deleted");
+              this.deleteUndertakingClicked[i] = false;
+            }
+            else
+            {
+              this.showNotification('error', "Student Document Not Deleted");
+              this.deleteStudentDocClicked[i] = false;
+            }
+          }
+        }
+      }); 
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+      if(docName != "")
+      {
+        this.deleteUndertakingClicked[i] = false;
+      }
+      else
+      {
+        this.deleteStudentDocClicked[i] = false;
+      }
+    }
+  }
+
+  async downloadApplicationDoc(i : number, studentDocumentId : number, docName : string, fileName : string)
+  {
+    try
+    {      
+      if(docName != "")
+      {
+        this.downloadUndertakingClicked[i] = true;
+      }
+      else
+      {
+        this.downloadStudentDocClicked[i] = true;
+      }
+      let jsonData = {
+        "application" : {"uuid" : this.uuid},
+        "documentName" : docName,
+        "applicationStudentDocument" : {"id" : (studentDocumentId > 0 ? studentDocumentId : "")}
+      }
+      
+      let response = await this.admissionService.downloadApplicationDoc(jsonData).toPromise();
+      if (response) 
+      {
+        this.commonSharedService.DirectFileDownload(response, fileName);
+        if(docName != "")
+        {
+          this.downloadUndertakingClicked[i] = false;
+          this.showNotification('success', "Application Document Download Completed");
+          this.getApplicationUndertakingDocument(this.uuid);
+        }
+        else
+        {
+          this.downloadStudentDocClicked[i] = false;
+          this.showNotification('success', "Student Document Download Completed");
+          this.getApplicationStudentDocuments(this.uuid);
+        }
+      }
+      else
+      {
+        if(docName != "")
+        {
+          this.showNotification('error', "Application Document Download Not Completed");
+          this.downloadUndertakingClicked[i] = false;
+        }
+        else
+        {
+          this.showNotification('error', "Student Document Download Not Completed");
+          this.downloadStudentDocClicked[i] = false;
+        }
+      } 
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+      if(docName != "")
+      {
+        this.downloadUndertakingClicked[i] = false;
+      }
+      else
+      {
+        this.downloadStudentDocClicked[i] = false;
+      }
+    }
+  }
+
+  studentfileChange(event : any, i : number)
+  {         
+    const file = event.target.files[0]; 
+    let fSize : number = parseFloat((file.size / 1024).toFixed(2));
+    if(file.type == 'image/png' || file.type == 'image/jpeg' || file.type == 'application/pdf')
+    {
+      if(fSize > 0)
+      {
+          this.studentDocFiles[i] = file;
+      }
+    }
+  }
+
+  async saveStudentDoc(i : number, studentDocumentId : number)
+  {
+    try
+    {
+      if(this.studentDocFiles[i] != "")
+      {
+        this.saveStudentDocClicked[i] = true;
+        let formData = new FormData();
+        formData.append("application", JSON.stringify({"uuid" : this.uuid}));
+        formData.append("studentDocument", JSON.stringify({"id" : studentDocumentId}));
+        formData.append("documentFile", this.studentDocFiles[i])
+
+        let response = await this.admissionService.saveApplicationStudentDocs(formData).toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+          this.showNotification('success', "Student Document Uploaded");
+          this.studentDocFiles[i] = "";
+          this.getApplicationStudentDocuments(this.uuid);
+          this.saveStudentDocClicked[i] = false;
+        }
+        else
+        {
+          this.showNotification('error', "Application Document Not Saved");
+          this.saveStudentDocClicked[i] = false;
+        } 
+      }
+      else
+      {
+        this.showNotification('info', "Select (PDF, JPEG, PNG) File");
+      }
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+      this.saveStudentDocClicked[i] = false;
+    }
+  }
+
+  async updateBankCharges(feePaymentId : number, amount : number)
+  {
+    Swal.fire({
+      title: '',
+      text: 'Bank Charges',
+      input: 'text', // Input type
+      inputPlaceholder: 'Bank Charges',
+      showCancelButton: true,
+      confirmButtonText: 'Submit',
+      cancelButtonText: 'Cancel',
+      inputAttributes: {
+        maxlength: '11', // Limit input length to 11 digits
+        inputmode: 'numeric' // Ensure numeric keyboard on mobile devices
+      },
+      preConfirm: (value) => {
+        return new Promise((resolve, reject) => {
+          if (!value) 
+          {
+            reject('Please Enter A Value!');
+          } 
+          else if (!/^\d+(\.\d{1,2})?$/.test(value)) 
+          {
+            reject('Enter A Valid Amount!');
+          } 
+          else if (value.replace('.', '').length > 11) 
+          {
+            reject('Value Must Not Exceed 11 Digits!');
+          } 
+          else if(parseFloat(value) > amount)
+          {
+            reject("Entered Bank Charges More Than Paid Amount !");
+          }
+          else 
+          {
+            resolve(value);
+          }
+        }).catch((err) => 
+        {
+          Swal.showValidationMessage(err); // Show validation message
+        });
+      }
+    }).then(async (result : any) => {
+      if (result.isConfirmed) 
+      {       
+        this.showNotification('info', "Processing...");
+        let jsonData = {
+          "application" : {"uuid" : this.uuid},
+          "feePayment" : {"id" : feePaymentId},
+          "amount" : result.value
+        }
+        let response = await this.admissionService.updateFeePaymentBankCharges(jsonData).toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+          this.showNotification('success', "Bank Charges Saved");
+          this.getApplicationFeePayments(this.uuid);
+        }
+        else
+        {
+          this.showNotification('error', "Bank Charges Not Saved");
+        } 
+      }
+    });
+  }
+
+  downloadReceipt(feePayment : any)
+  {
+    try
+    {
+      this.commonSharedService.generateReceiptPDF(this.studentProfileData.studentName, this.studentProfileData.grade.name, this.studentProfileData.enrollmentNumber, feePayment);
+    }
+    catch(e)
+    {
+      this.showNotification("error", e);
+    }
+  }
+
+  async downloadApplicationFormPDF()
+  {
+    this.generateClicked[0] = true;
+    this.showNotification('info', "Downloading Application Form");
+    let studentProfile = {
+      "applicationNumber" : this.studentProfileData?.applicationNumber,
+      "academicYear" : this.studentProfileData?.academicSession?.year,
+      "submission" : this.studentProfileData?.profileCompletion?.name == 'Admission Team' ? 'Ofline' : 'Online',
+      "name" : this.studentProfileData?.studentName,
+      "dob" : this.studentProfileData?.dob,
+      "gender" : this.studentProfileData?.gender?.name,
+      "nationality" : this.studentProfileData?.nationality,
+      "aadharNumber" : this.studentProfileData?.aadharNumber,
+      "passportNumber" : this.studentProfileData?.passportNumber,
+      "grade" : this.studentProfileData?.grade?.name,
+      "batchTime" : `${this.commonSharedService.convertTo12HourFormat(this.subjectGroupData?.batchType?.startTime)} - ${this.commonSharedService.convertTo12HourFormat(this.subjectGroupData?.batchType?.endTime)}`
+    };
+
+    let parentProfile = {
+      "name" : this.parentProfileData?.name,
+      "relationship" : this.parentProfileData?.relationship,
+      "mobile" : this.parentProfileData?.mobile,
+      "email" : this.parentProfileData?.email,
+      "address" : this.parentProfileData?.address,
+      "aadharNumber" : this.parentProfileData?.aadharNumber,
+      "panNumber" : this.parentProfileData?.panNumber,
+      "passportNumber" : this.parentProfileData?.passportNumber
+    };
+
+    let sportProfile = {
+      "sportName" : this.sportProfileData?.sportName || "",
+      "coachName" : this.sportProfileData?.businessPartner?.coach?.uuid ? this.sportProfileData?.businessPartner?.coach?.name : this.sportProfileData?.otherAcademyCoach,
+      "coachMobile" : this.sportProfileData?.businessPartner?.coach?.mobile || "",
+      "academyName" : this.sportProfileData?.businessPartner?.uuid ? this.sportProfileData?.businessPartner?.name : this.sportProfileData?.otherAcademyName,
+      "academyAddress" : this.sportProfileData?.businessPartner?.uuid ? this.sportProfileData?.businessPartner?.address : this.sportProfileData?.otherAcademyAddress
+    };
+    
+    let subjects : any[] = [];
+    for(let i=0;i<this.subjectGroupData?.subjects.length;i++)
+    {
+      subjects.push([(i + 1), this.subjectGroupData?.subjects[i].name])
+    }
+    try
+    {
+      let response = await this.commonService.getSchoolLogo(this.studentProfileData?.school?.uuid).toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
+      {
+        let logoBase64 = response.fileData;
+        this.commonSharedService.applicationFormPdfGeneration(logoBase64, studentProfile, parentProfile, sportProfile, subjects);
+        this.generateClicked[0] = false;
+        this.showNotification('success', "Download Completed");
+      }
+      else
+      {
+        this.commonSharedService.applicationFormPdfGeneration("", studentProfile, parentProfile, sportProfile, subjects);
+        this.generateClicked[0] = false;
+        this.showNotification('success', "Download Completed");
+      }      
+    }
+    catch(e)
+    {
+      this.commonSharedService.applicationFormPdfGeneration("", studentProfile, parentProfile, sportProfile, subjects);
+      this.generateClicked[0] = false;
+      this.showNotification('success', "Download Completed");
+    }
+  }
+
+  async downloadUndertakingFormPDF()
+  {
+    this.showNotification('info', "Downloading Undertaking Form");
+    this.generateClicked[1] = true;
+    let studentProfile = {
+      "applicationNumber" : this.studentProfileData?.applicationNumber,
+      "school" : `${this.studentProfileData?.school?.name} - ${this.studentProfileData?.schoolingProgram?.name}`,
+      "admissionDate" : this.studentProfileData?.admissionDate,
+      "academicYear" : this.studentProfileData?.academicSession?.year,
+      "submission" : this.studentProfileData?.profileCompletion?.name == 'Admission Team' ? 'Ofline' : 'Online',
+      "name" : this.studentProfileData?.studentName,
+      "dob" : this.studentProfileData?.dob,
+      "gender" : this.studentProfileData?.gender?.name,
+      "nationality" : this.studentProfileData?.nationality,
+      "aadharNumber" : this.studentProfileData?.aadharNumber,
+      "passportNumber" : this.studentProfileData?.passportNumber,
+      "grade" : this.studentProfileData?.grade?.name,
+      "batchTime" : `${this.commonSharedService.convertTo12HourFormat(this.subjectGroupData?.batchType?.startTime)} - ${this.commonSharedService.convertTo12HourFormat(this.subjectGroupData?.batchType?.endTime)}`
+    };
+
+    let parentProfile = {
+      "name" : this.parentProfileData?.name,
+      "relationship" : this.parentProfileData?.relationship,
+      "mobile" : this.parentProfileData?.mobile,
+      "email" : this.parentProfileData?.email,
+      "address" : this.parentProfileData?.address,
+      "aadharNumber" : this.parentProfileData?.aadharNumber,
+      "panNumber" : this.parentProfileData?.panNumber,
+      "passportNumber" : this.parentProfileData?.passportNumber
+    };
+    let batches : any[] = [];
+    try
+    {
+      let response1 = await this.commonService.getSchoolSchoolingProgramBatches(this.studentProfileData?.school?.uuid, this.studentProfileData?.schoolingProgram?.id, this.studentProfileData?.admissionDate).toPromise();
+      
+      if (response1.status_code == 200 && response1.message == 'success') 
+      {
+        ////////getBatches
+        let tempBatches : any[] = response1.schoolSchoolingProgramBatches;
+        let sno : number = 1;
+        tempBatches.forEach((batch) => {
+          let batchTime = `${this.commonSharedService.convertTo12HourFormat(batch.startTime)} - ${this.commonSharedService.convertTo12HourFormat(batch.endTime)}`;
+          batches.push([sno, batch.name, batchTime]);
+          sno++;
+        });
+        ////////////
+        let response = await this.commonService.getSchoolLogo(this.studentProfileData?.school?.uuid).toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+          let logoBase64 = response.fileData;
+          this.commonSharedService.undertakingFormPdfGeneration(logoBase64, studentProfile, parentProfile, batches);
+          this.generateClicked[1] = false;
+          this.showNotification('success', "Download Completed");
+        }
+        else
+        {
+          this.commonSharedService.undertakingFormPdfGeneration("", studentProfile, parentProfile, batches);
+          this.generateClicked[1] = false;
+          this.showNotification('success', "Download Completed");
+        }      
+      }
+    }
+    catch(e)
+    {
+      this.commonSharedService.undertakingFormPdfGeneration("", studentProfile, parentProfile, batches);
+      this.generateClicked[1] = false;
+      this.showNotification('error', e);
     }
   }
 
   back()
   {
-      this.location.back();
+    this.router.navigateByUrl("/b2cApplication/registrations");
   }
 }

@@ -54,6 +54,11 @@ export class AdmissionService {
     {
         return this.apiService.get('/admission/getParentUndertakings/' + profileCompletionId);
     }
+    
+    getPaymentMethods()
+    {
+        return this.apiService.get('/admission/getPaymentMethods');
+    }
 
     getApplicationStudents(academicSessionId : number)
     {
@@ -80,6 +85,16 @@ export class AdmissionService {
         return this.apiService.get('/admission/getApplicationSubjectGroup/' + uuid);
     }
 
+    getApplicationFeeStructure(uuid : string)
+    {
+        return this.apiService.get('/admission/getApplicationFeeStructure/' + uuid);
+    }
+
+    getApplicationSportEngagement(uuid : any)
+    {
+        return this.apiService.get('/admission/getApplicationSportEngagement/' + uuid);
+    }
+
     getApplicationUndergoneEducation(uuid : string)
     {
         return this.apiService.get('/admission/getApplicationUndergoneEducation/' + uuid);
@@ -95,11 +110,6 @@ export class AdmissionService {
         return this.apiService.get('/admission/getApplicationStudentDocuments/' + uuid);
     }
 
-    getApplicationFeeStructure(uuid : string)
-    {
-        return this.apiService.get('/admission/getApplicationFeeStructure/' + uuid);
-    }
-
     getApplicationFeePayments(uuid : string)
     {
         return this.apiService.get('/admission/getApplicationFeePayments/' + uuid);
@@ -113,5 +123,40 @@ export class AdmissionService {
     saveB2CApplicationForm2(applicationForm : any)
     {
         return this.apiService.post('/admission/saveB2CApplicationForm2', applicationForm);
+    }
+
+    saveB2CApplicationForm3(applicationForm : any)
+    {
+        return this.apiService.post('/admission/saveB2CApplicationForm3', applicationForm);
+    }
+
+    saveApplicationForm4(applicationForm : any)
+    {
+        return this.apiService.post('/admission/saveApplicationForm4', applicationForm);
+    }
+
+    saveB2CApplicationForm5(applicationForm : any)
+    {
+        return this.apiService.post('/admission/saveB2CApplicationForm5', applicationForm);
+    }
+
+    saveApplicationStudentDocs(studentDoc : any)
+    {
+        return this.apiService.post('/admission/saveApplicationStudentDocs', studentDoc);
+    }
+
+    deleteApplicationDoc(document : any)
+    {
+        return this.apiService.post('/admission/deleteApplicationDoc', document);
+    }
+
+    downloadApplicationDoc(document : any)
+    {
+        return this.apiService.getPostFile('/admission/downloadApplicationDoc', document);
+    }
+
+    updateFeePaymentBankCharges(feePayment : any)
+    {
+        return this.apiService.post('/admission/updateFeePaymentBankCharges', feePayment);
     }
 }

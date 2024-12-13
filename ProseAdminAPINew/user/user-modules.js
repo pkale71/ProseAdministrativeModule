@@ -18,7 +18,8 @@ module.exports = require('express').Router().get('/:userUUID/:optParam?*',async(
         let moduleId = '';
         let tempParams = req.params?.userUUID;
         req.params[0] = req.params['optParam'] ? '/' + req.params['optParam'] + req.params[0] : req.params[0];
-        tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);
+        tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);        
+        tempParams = tempParams.split("/");
         
         uuid = tempParams[0];
         if(tempParams.length == 2)

@@ -244,10 +244,27 @@ export class B2cApplicationListComponent
     {
       this.router.navigateByUrl("/b2cApplication/b2cApplicationStage2/add/" + applicationForm?.uuid);
     }
+    else if(applicationForm?.applicationStatus?.name == "Fee Configured" && applicationForm?.profileCompletion?.name != "Parent")
+    {
+      this.router.navigateByUrl("/b2cApplication/b2cApplicationStage3/add/" + applicationForm?.uuid);
+    }
+    else if(applicationForm?.applicationStatus?.name == "Submitted" && applicationForm?.profileCompletion?.name != "Parent")
+    {
+      this.router.navigateByUrl("/b2cApplication/b2cApplicationStage4/add/" + applicationForm?.uuid);
+    }
+    else if(applicationForm?.applicationStatus?.name == "Undertaking Accepted" && applicationForm?.profileCompletion?.name != "Parent")
+    {
+      this.router.navigateByUrl("/b2cApplication/b2cApplicationStage5/add/" + applicationForm?.uuid);
+    }
   }
 
   detailApplicationForm(applicationUUID : string)
   {
     this.router.navigateByUrl("/b2cApplication/detail/B2C/" + applicationUUID);
+  }
+
+  generateBlankForm()
+  {
+    this.router.navigateByUrl("/b2cApplication/blankForm");
   }
 }

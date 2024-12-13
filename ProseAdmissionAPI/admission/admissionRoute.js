@@ -36,6 +36,7 @@ admissionRoute.use('/saveB2BApplicationForm1', require('../util/validateToken.js
 admissionRoute.use('/saveB2BApplicationForm2', require('../util/validateToken.js'), require('./save-b2b-application-form-2.js'));
 admissionRoute.use('/deleteApplicationDoc', require('../util/validateToken.js'), require('./delete-application-doc.js'));
 admissionRoute.use('/downloadApplicationDoc', require('../util/validateToken.js'), require('./download-application-doc.js'));
+admissionRoute.use('/updateFeePaymentBankCharges', require('../util/validateToken.js'), require('./update-fee-payment-bank-charges.js'));
 
 admissionRoute.use('/',(req,res,next) => 
 {

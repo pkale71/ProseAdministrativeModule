@@ -40,6 +40,11 @@ export class CommonService {
         return this.apiAdminService.get('/business/getSchools/' + action + '/' + date);
     }
 
+    getSchoolLogo(uuid : string)
+    {
+        return this.apiAdminService.get('/business/getSchoolLogo/' + uuid);
+    }
+
     getSchoolSchoolingPrograms(schoolUUID : string, action : string, date : string)
     {
         return this.apiAdminService.get('/business/getSchoolSchoolingPrograms/' + schoolUUID + '/' + action + '/' + date);
@@ -83,6 +88,41 @@ export class CommonService {
     getTieUpSchools(action : string)
     {
         return this.apiAdminService.get('/business/getTieUpSchools/' + action);
+    }
+
+    getCountries(action : string) 
+    {
+        return this.apiAdminService.get('/business/getCountries/' + action);
+    }
+
+    getStateRegions(countryId : number, action : string) 
+    {
+        return this.apiAdminService.get('/business/getStateRegions/' + countryId + '/' + action);
+    }
+
+    getDistricts(countryId : number, stateRegionId : number, action : string) 
+    {
+        return this.apiAdminService.get('/business/getDistricts/' + countryId + '/' + stateRegionId + '/' + action);
+    }
+
+    getCities(countryId : number, stateRegionId : number, districtId : number, action : string) 
+    {
+        return this.apiAdminService.get('/business/getCities/' + countryId + '/' + stateRegionId + '/' + districtId + '/' + action);
+    }
+
+    getBusinessPartners(businessPartnerTypeId : any, action : string)
+    {
+        return this.apiAdminService.get('/business/getBusinessPartners/' + businessPartnerTypeId + '/' + action);
+    }
+
+    getBusinessPartner(uuid : string)
+    {
+        return this.apiAdminService.get('/business/getBusinessPartner/' + uuid);
+    }
+
+    getBusinessPartnerCoaches(uuid : string)
+    {
+        return this.apiAdminService.get('/business/getBusinessPartnerCoaches/' + uuid);
     }
 //////////    
     getAppBase(moduleId : number)

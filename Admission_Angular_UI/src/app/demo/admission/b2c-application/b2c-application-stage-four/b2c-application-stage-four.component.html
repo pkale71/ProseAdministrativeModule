@@ -1,1 +1,358 @@
-<p>b2c-application-stage-four works!</p>
+<div class="row">
+    <div class="col-sm-12">
+        <form [formGroup]="addApplicationForm4" id="addFeeStructureForm4" autocomplete="off">
+            <div class="card">
+                <div class="card-header">
+                    <h5 style="margin-top: 0.8rem;">Student Profile&nbsp;<span class="badge bg-info">
+                        {{studentProfileData?.applicationStatus?.name == 'Enrolled/Renewed' ? studentProfileData?.enrollmentNumber : studentProfileData?.applicationNumber}}
+                    </span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentProfileClicked"></i></h5>
+                    <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                    (click)="back()">Back
+                    </button>
+                    <div class="btn-group mb-2 mt-0.8rem me-2 float-end" ngbDropdown >
+                        <button class="btn btn-primary" ngbDropdownToggle type="button"><i class="fa fa-download"></i>&nbsp;Downloads</button>
+                        <div ngbDropdownMenu>
+                            <a class="dropdown-item" href="javascript:" (click)="downloadApplicationFormPDF()">Application Form</a>
+                            <a class="dropdown-item" href="javascript:" (click)="downloadUndertakingFormPDF()">Undertaking Form</a>
+                        </div>
+                    </div>
+                </div>            
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="studentName">Student Name</label>
+                            <label class="form-control input-md">{{studentProfileData?.studentName}}</label>                  
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="admissionDate">Admission Date</label>
+                            <label class="form-control input-md">{{studentProfileData?.admissionDate | date : "dd/MM/yyyy"}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="academicSession">Academic Session</label>
+                            <label class="form-control input-md">{{studentProfileData?.academicSession?.year}}</label>                  
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="school">School</label>
+                            <label class="form-control input-md">{{studentProfileData?.school?.name}}</label>    
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="schoolingProgram">Schooling Program</label>
+                            <label class="form-control input-md">{{studentProfileData?.schoolingProgram?.name}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="gender">Gender</label>
+                            <label class="form-control input-md">{{studentProfileData?.gender?.name}}</label>                  
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="dob">Date Of Birth</label>
+                            <label class="form-control input-md">{{(studentProfileData?.dob | date : "dd/MM/yyyy") || "----"}}</label>
+                        </div> 
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="nationality">Nationality</label>
+                            <label class="form-control input-md">{{studentProfileData?.nationality || "----"}}</label>
+                        </div> 
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="aadharNo">Aadhar Number</label>
+                            <label class="form-control input-md">{{studentProfileData?.aadharNumber || "----"}}</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="passportNo">Passport Number</label>
+                            <label class="form-control input-md">{{studentProfileData?.passportNumber || "----"}}</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="studyCenter">Study Center</label>
+                            <label class="form-control input-md">{{studentProfileData?.studyCenter?.name}}</label>
+                        </div>     
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="name">Syllabus</label>
+                            <label class="form-control input-md">{{studentProfileData?.syllabus?.name}}</label>    
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="gradeCategory">Grade Category</label>
+                            <label class="form-control input-md">{{studentProfileData?.gradeCategory?.name}}</label>
+                        </div>                          
+                    </div>  
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="grade">Grade</label>
+                            <label class="form-control input-md">{{studentProfileData?.grade?.name}}</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="profileCompletion">Profile Completion</label>
+                            <label class="form-control input-md">{{studentProfileData?.profileCompletion?.name}}</label>                
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="parentUndertaking">Parent Undertaking</label>
+                            <label class="form-control input-md">{{studentProfileData?.parentUndertaking?.name}}</label>
+                        </div>
+                    </div>
+                    <h5 class="mt-4">ParentProfile</h5>
+                    <div class="row mt-2">
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="name">Parent/Guardian Name</label>
+                            <label class="form-control input-md">{{parentProfileData?.name}}</label>    
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="email">Email</label>
+                            <label class="form-control input-md">{{parentProfileData?.email}}</label>                  
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="mobile">Mobile</label>
+                            <label class="form-control input-md">{{parentProfileData?.mobile}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="relationship">Relationship</label>
+                            <label class="form-control input-md">{{parentProfileData?.relationship}}</label>                  
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="aadharNumber">Aadhar Number</label>
+                            <label class="form-control input-md">{{parentProfileData?.aadharNumber || "----"}}</label>
+                        </div> 
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="passportNumber">Passport Number</label>
+                            <label class="form-control input-md">{{parentProfileData?.passportNumber || "----"}}</label>
+                        </div> 
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="panNumber">PAN Number</label>
+                            <label class="form-control input-md">{{parentProfileData?.panNumber || "----"}}</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <label class="form-control-label" for="address">Postal Address</label>
+                            <label class="form-control input-md">{{parentProfileData?.address || "----"}}</label>
+                        </div>                              
+                    </div>  
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="country">Country</label>
+                            <label class="form-control input-md">{{parentProfileData?.country?.name || "----"}}</label>
+                        </div> 
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="state">State/Region</label>
+                            <label class="form-control input-md">{{parentProfileData?.state?.name || "----"}}</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="district">District</label>
+                            <label class="form-control input-md">{{parentProfileData?.district?.name || "----"}}</label>                
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="city">City</label>
+                            <label class="form-control input-md">{{parentProfileData?.city?.name || "----"}}</label>
+                        </div> 
+                    </div>
+                    <hr>
+                    <h5 class="mt-4">Batch Time & Subject Offered</h5>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="name">Subject Group</label>
+                            <label class="form-control input-md">{{subjectGroupData?.name}}</label>    
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="email">Batch Time</label>
+                            <label class="form-control input-md">{{subjectGroupData?.batchType?.startTime | convert12HrsTimeFormat}} - {{subjectGroupData?.batchType?.endTime | convert12HrsTimeFormat}}</label>                  
+                        </div>
+                    </div>
+                    <h5 class="mt-4">Subjects Offered</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped row-border table-hover pt-1">
+                            <thead>
+                                <tr>
+                                    <th>Sno</th>
+                                    <th>Name</th>
+                                    <th>Subject Type</th>
+                                    <th>Is Mandatory</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let subject of subjectGroupData?.subjects let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{subject?.name}}</td>
+                                    <td>{{subject?.subjectType?.name}}</td>
+                                    <td>{{subject?.isMandatory == 1 ? 'Yes' : 'No'}}</td>
+                                </tr>
+                                <tr *ngIf="subjectGroupData?.subjects?.length == 0">
+                                    <td></td>
+                                    <td>No record(s) found</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+                    <h5>Sport Engagement</h5>
+                    <h6 *ngIf="sportProfileData?.isPracticingSport == 0">Child Not Practicing Any Sport.</h6>
+                    <div class="row mt-2" *ngIf="sportProfileData?.isPracticingSport == 1">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="engagementDate">Engagement Since</label>
+                            <label class="form-control input-md">{{sportProfileData?.engagementDate | date : "dd/MM/yyyy"}}</label>    
+                        </div>
+                        <div class="col-sm-5">
+                            <label class="form-control-label" for="academyName">Academy Name</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.name : sportProfileData?.otherAcademyName}}</label>                  
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-control-label" for="coach">Coach</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.coach?.uuid ? sportProfileData?.businessPartner?.coach?.name : sportProfileData?.otherAcademyCoach}}</label>                  
+                        </div>
+                    </div>
+                    <div class="row mt-2" *ngIf="sportProfileData?.isPracticingSport == 1">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="sportCountry">Country</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.country?.name : sportProfileData?.otherAcademyCountry?.name}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="sportState">State</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.state?.name : sportProfileData?.otherAcademyState?.name}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="sportDistrict">District</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.district?.name : sportProfileData?.otherAcademyDistrict?.name}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="sportCity">City</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.city?.name : sportProfileData?.otherAcademyCity?.name}}</label>                 
+                        </div>
+                    </div>
+                    <div class="row mt-2" *ngIf="sportProfileData?.isPracticingSport == 1">
+                        <div class="col-sm-12">
+                            <label class="form-control-label" for="sportAddress">Address</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.address : sportProfileData?.otherAcademyAddress}}</label>   
+                        </div>                            
+                    </div>
+                    <hr>
+                    <h5 class="mt-4">Previous Schooling</h5>
+                    <h6 *ngIf="undergoneEducationData?.studentUndergone == 'Home Schooling'">Student Studied Under Home Schooling Option</h6>
+                    <div class="row mt-2" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
+                        <div class="col-sm-5">
+                            <label class="form-control-label" for="undergoneSchool">School Name</label>
+                            <label class="form-control input-md">{{undergoneEducationData?.formalSchoolName}}</label>    
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-control-label" for="undergoneGrade">Grade</label>
+                            <label class="form-control input-md">{{undergoneEducationData?.grade?.name}}</label>    
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="undergoneSyllabus">Syllabus</label>
+                            <label class="form-control input-md">{{undergoneEducationData?.syllabus?.name}}</label>    
+                        </div>
+                    </div>
+                    <div class="row mt-2" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="undergoneMedium">Medium</label>
+                            <label class="form-control input-md">{{undergoneEducationData?.medium}}</label>    
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="undergoneYear">Last Academic Year</label>
+                            <label class="form-control input-md">{{undergoneEducationData?.lastAcademicYear}}</label>    
+                        </div>                                                    
+                    </div>
+                    <div class="row mt-2" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="sportCountry">Country</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.country?.name : sportProfileData?.otherAcademyCountry?.name}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="sportState">State</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.state?.name : sportProfileData?.otherAcademyState?.name}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="sportDistrict">District</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.district?.name : sportProfileData?.otherAcademyDistrict?.name}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="sportCity">City</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.city?.name : sportProfileData?.otherAcademyCity?.name}}</label>                 
+                        </div>
+                    </div>
+                    <div class="row mt-2" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="sportAddress">Address</label>
+                            <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.address : sportProfileData?.otherAcademyAddress}}</label>   
+                        </div>  
+                    </div>
+                    <hr>
+                    <h5 class="mt-4">Upload & Download Admission Documents</h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <tbody>
+                                <tr>  
+                                    <td>Admission Form</td>
+                                    <td>
+                                        <input type="file" id="undertakingDococFile1" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="undertakingfileChange($event, 0)"  class="form-control" *ngIf="undertakingDocument?.admissionFileName == ''">
+                                        <label *ngIf="undertakingDocument?.admissionFileName != ''">   
+                                            {{undertakingDocument?.admissionFileName}}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveUndertakingClicked[0] && undertakingDocument?.admissionFileName == ''" (click)="saveUndertakingDoc(0, 'Admission_Form')"><i class="fa fa-upload"></i>Upload </button>
+                                        
+                                        <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteUndertakingClicked[0] && undertakingDocument?.admissionFileName != ''" (click)="deleteApplicationDoc(0, 0,'Admission_Form')"><i class="fa fa-trash"></i>Delete </button>
+
+                                        <button type="button" class="btn btn-sm btn-rounded btn-secondary" *ngIf="!downloadUndertakingClicked[0] && undertakingDocument?.admissionFileName != ''" (click)="downloadApplicationDoc(0, 0,'Admission_Form', undertakingDocument?.admissionFileName)"><i class="fa fa-download"></i>Download</button>
+                                        
+                                        <button type="button" class="btn btn-sm btn-rounded btn-info" *ngIf="deleteUndertakingClicked[0] || saveUndertakingClicked[0] || downloadUndertakingClicked[0]" disabled><i class="fa fa-spin fa-spinner"></i>Processing...</button>
+                                    </td>
+                                </tr>
+                                <tr>  
+                                    <td>Parent Undertaking</td>
+                                    <td>
+                                        <input type="file" id="undertakingDococFile2" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="undertakingfileChange($event, 1)" class="form-control" *ngIf="undertakingDocument?.undertakingFileName == ''">
+                                        <label *ngIf="undertakingDocument?.undertakingFileName != ''">   
+                                            {{undertakingDocument?.undertakingFileName}}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveUndertakingClicked[1] && undertakingDocument?.undertakingFileName == ''" (click)="saveUndertakingDoc(1, 'Undertaking_Form')"><i class="fa fa-upload"></i>Upload </button>
+
+                                        <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteUndertakingClicked[1] && undertakingDocument?.undertakingFileName != ''" (click)="deleteApplicationDoc(1, 0, 'Undertaking_Form')"><i class="fa fa-trash"></i>Delete</button>
+
+                                        <button type="button" class="btn btn-sm btn-rounded btn-secondary" *ngIf="!downloadUndertakingClicked[1] && undertakingDocument?.undertakingFileName != ''" (click)="downloadApplicationDoc(1, 0, 'Undertaking_Form', undertakingDocument?.undertakingFileName)"><i class="fa fa-download"></i>Download</button>
+
+                                        <button type="button" class="btn btn-sm btn-rounded btn-info" *ngIf="deleteUndertakingClicked[1] || saveUndertakingClicked[1] || downloadUndertakingClicked[1]" disabled><i class="fa fa-spin fa-spinner"></i>Processing...</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+                    <h5 class="mt-4">Student Enclosures&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentDocClicked"></i></h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <tbody>
+                                <tr *ngFor="let studentDocument of studentDocuments let i=index">  
+                                    <td>{{i+1}}</td>
+                                    <td class="text-wrap" style="width: 25%;">{{studentDocument.name}}</td>
+                                    <td>
+                                        <input type="file" id="studentDoc_{{i}}" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="studentfileChange($event, i)"  class="form-control" *ngIf="studentDocument?.fileName == ''">
+                                        <label *ngIf="studentDocument?.fileName != ''">   
+                                            {{studentDocument?.fileName}}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveStudentDocClicked[i] && studentDocument?.fileName == ''" (click)="saveStudentDoc(i, studentDocument?.id)"><i class="fa fa-upload"></i>Upload </button>
+                                        
+                                        <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteStudentDocClicked[i] && studentDocument?.fileName != ''" (click)="deleteApplicationDoc(i, studentDocument?.id,'')"><i class="fa fa-trash"></i>Delete </button>
+
+                                        <button type="button" class="btn btn-sm btn-rounded btn-secondary" *ngIf="!downloadStudentDocClicked[i] && studentDocument?.fileName != ''" (click)="downloadApplicationDoc(i, studentDocument?.id,'', studentDocument?.fileName)"><i class="fa fa-download"></i>Download</button>
+                                        
+                                        <button type="button" class="btn btn-sm btn-rounded btn-info" *ngIf="deleteStudentDocClicked[i] || saveStudentDocClicked[i] || downloadStudentDocClicked[i]" disabled><i class="fa fa-spin fa-spinner"></i>Processing...</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

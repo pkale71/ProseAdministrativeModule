@@ -624,7 +624,7 @@ db.getApplicationStudentProfile = (uuid) =>
             gc.id AS gradeCategoryId, gc.name AS gradeCategoryName,
             g.id AS gradeId, g.name AS gradeName,
             aspc.id AS profileCompletionId, aspc.name AS profileCompletionName,
-            apu.id AS parentUndertakingId, apu.name AS parentUndertakingName,
+            apu.id AS parentUndertakingId, apu.name AS parentUndertakingName, 
             alst.id AS leadStudentTypeId, alst.name AS leadStudentTypeName,
             amlt.id AS marketLeadTypeId, amlt.name AS marketLeadTypeName,
             awim.id AS walkinModeId, awim.name AS walkinModeName,
@@ -748,12 +748,12 @@ db.getApplicationSportEngagement = (uuid) =>
     {
         try
         {
-            let sql = `SELECT aaf.engagement_since AS engagementDate, aaf.other_academy_name AS otherAcademyName, aaf.other_academy_address AS otherAcademyAddress, aaf.other_academy_coach AS otherAcademyCoach, 
+            let sql = `SELECT aaf.is_practicing_sport AS isPracticingSport, aaf.engagement_since AS engagementDate, aaf.other_academy_name AS otherAcademyName, aaf.other_academy_address AS otherAcademyAddress, aaf.other_academy_coach AS otherAcademyCoach, 
             cou.id AS otherAcademyCountryId, cou.name AS otherAcademyCountryName,
             sr.id AS otherAcademyStateId, sr.name AS otherAcademyStateName,
             d.id AS otherAcademyDistrictId, d.name AS otherAcademyDistrictName,
             c.id AS otherAcademyCityId, c.name AS otherAcademyCityName,
-            bp.uuid AS businessPartnerUUID, bp.name AS businessPartnerName, bp.address AS businessPartnerAddress, co.uuid AS coachUUID, co.name AS coachName, 
+            bp.uuid AS businessPartnerUUID, bp.name AS businessPartnerName, bp.address AS businessPartnerAddress, co.uuid AS coachUUID, co.name AS coachName, co.mobile AS coachMobile, 
             bpcou.id AS businessPartnerCountryId, bpcou.name AS businessPartnerCountryName,
             bpsr.id AS businessPartnerStateId, bpsr.name AS businessPartnerStateName,
             bpd.id AS businessPartnerDistrictId, bpd.name AS businessPartnerDistrictName,
@@ -831,7 +831,7 @@ db.getApplicationUndertakingDocument = (uuid) =>
     {
         try
         {
-            let sql = `SELECT aaf.undertaking_file_name AS undertakingFileName, aaf.undertaking_sign_file_name AS undertakingSignFileName, aaf.application_file_name AS applicationFileName
+            let sql = `SELECT aaf.undertaking_file_name AS undertakingFileName, aaf.undertaking_sign_file_name AS undertakingSignFileName, aaf.admission_file_name AS admissionFileName
             FROM admission_application_form aaf 
             WHERE aaf.uuid = '${uuid}'`
             
@@ -859,8 +859,9 @@ db.getApplicationStudentDocuments = (uuid) =>
         {
             let sql = `SELECT asd.id, asd.name, aasd.file_name AS fileName
             FROM admission_student_document asd
-            LEFT JOIN admission_application_student_docs aasd ON aasd.student_document_id = asd.id 
-            LEFT JOIN admission_application_form aaf ON aaf.id = aasd.application_form_id AND aaf.uuid = '${uuid}' ORDER BY asd.id`
+            LEFT JOIN admission_application_form aaf ON aaf.uuid = '${uuid}'
+            LEFT JOIN admission_application_student_docs aasd ON aasd.application_form_id = aaf.id AND aasd.student_document_id = asd.id 
+            ORDER BY asd.id`
             
             dbConn.query(sql, (error, result) => 
             {
@@ -1056,8 +1057,8 @@ db.getApplicationFeePayments = (uuid) =>
     {
         try
         {
-            let sql = `SELECT CONCAT(acs.year,'/GSP/',aafp.id) AS receiptNumber, 'Tuition Fee' AS paymentFor, aafp.payment_date AS paymentDate, aafp.amount, 
-            apm.id AS paymentMethodId, apm.name AS paymentMethodName, aafp.bank_reference AS bankReference
+            let sql = `SELECT aafp.id, CONCAT(acs.year,'/GSP/',aafp.id) AS receiptNumber, 'Tuition Fee' AS paymentFor, aafp.payment_date AS paymentDate, aafp.amount, aafp.bank_reference AS bankReference, aafp.bank_charges AS bankCharges,
+            apm.id AS paymentMethodId, apm.name AS paymentMethodName 
             FROM admission_application_fee_payment aafp
             LEFT JOIN admission_application_form aaf ON aaf.id = aafp.application_form_id 
             JOIN academic_session acs ON acs.id = aaf.academic_session_id
@@ -1086,7 +1087,7 @@ db.checkValidApplicationForm = (uuid, id, applicationFor) =>
     {
         try
         {
-            let sql = `SELECT aaf.id, aaf.application_number AS applicationNumber, aaf.enrollment_number AS enrollmentNumber, aaf.admission_date AS admissionDate, aaf.parent_id AS parentId, aaf.renewal_count AS renewalCount, aaf.undertaking_file_name AS undertakingFileName, aaf.application_file_name AS applicationFileName, 
+            let sql = `SELECT aaf.id, aaf.application_number AS applicationNumber, aaf.enrollment_number AS enrollmentNumber, aaf.admission_date AS admissionDate, aaf.parent_id AS parentId, aaf.renewal_count AS renewalCount, aaf.undertaking_file_name AS undertakingFileName, aaf.admission_file_name AS admissionFileName, 
             aafs.id AS applicationStatusId, aafs.name AS applicationStatusName
             FROM admission_application_form aaf 
             JOIN admission_application_form_status aafs ON aafs.id = aaf.application_form_status_id`;
@@ -1434,7 +1435,7 @@ db.updateB2CApplicationForm3 = (application) =>
     {
         try
         {
-            let sql = `UPDATE admission_application_form SET dob = '${application.dob}', nationality = '${application.nationality}', aadhar_number = '${application.aadharNumber}', passport_number = NULLIF('${application.passportNumber}', ''), business_partner_id = NULLIF('${application.businessPartnerId}', ''), business_partner_coach_id = NULLIF('${application.coachId}', ''), engagement_since = '${application.engagementDate}', other_academy_name = NULLIF('${application.otherAcademyName}', ''), other_academy_country_id = NULLIF('${application.otherAcademyCountryId}', ''), other_academy_state_id = NULLIF('${application.otherAcademyStateId}', ''), other_academy_district_id = NULLIF('${application.otherAcademyDistrictId}', ''), other_academy_city_id = NULLIF('${application.otherAcademyCityId}', ''), other_academy_address = NULLIF('${application.otherAcademyAddress}', ''), other_academy_coach = NULLIF('${application.otherAcademyCoach}', ''), student_undergone = '${application.studentUndergone}', formal_school_name = NULLIF('${application.formalSchoolName}', ''), formal_school_address = NULLIF('${application.formalSchoolAddress}', ''), formal_school_country_id = NULLIF('${application.formalCountryId}', ''), formal_school_state_id = NULLIF('${application.formalStateId}', ''), formal_school_district_id = NULLIF('${application.formalDistrictId}', ''),  formal_school_city_id = NULLIF('${application.formalCityId}', ''), formal_school_grade_id = NULLIF('${application.formalGradeId}', ''), formal_school_syllabus_id = NULLIF('${application.formalSyllabusId}', ''), formal_school_medium = NULLIF('${application.formalMedium}', ''), formal_school_last_academic_year = NULLIF('${application.formalLastAcademicYear}', ''), is_declaration_correct = ${application.declarationCorrect}, application_form_status_id = ${application.applicationStatusId}, submitted_on = NOW(), submitted_by_id = ${application.createdById} WHERE id = ${application.applicationFormId}`;
+            let sql = `UPDATE admission_application_form SET dob = '${application.dob}', nationality = '${application.nationality}', aadhar_number = '${application.aadharNumber}', passport_number = NULLIF('${application.passportNumber}', ''), is_practicing_sport = ${application.isPracticingSport}, business_partner_id = NULLIF('${application.businessPartnerId}', ''), business_partner_coach_id = NULLIF('${application.coachId}', ''), engagement_since = NULLIF('${application.engagementDate}', ''), other_academy_name = NULLIF('${application.otherAcademyName}', ''), other_academy_country_id = NULLIF('${application.otherAcademyCountryId}', ''), other_academy_state_id = NULLIF('${application.otherAcademyStateId}', ''), other_academy_district_id = NULLIF('${application.otherAcademyDistrictId}', ''), other_academy_city_id = NULLIF('${application.otherAcademyCityId}', ''), other_academy_address = NULLIF('${application.otherAcademyAddress}', ''), other_academy_coach = NULLIF('${application.otherAcademyCoach}', ''), student_undergone = '${application.studentUndergone}', formal_school_name = NULLIF('${application.formalSchoolName}', ''), formal_school_address = NULLIF('${application.formalSchoolAddress}', ''), formal_school_country_id = NULLIF('${application.formalCountryId}', ''), formal_school_state_id = NULLIF('${application.formalStateId}', ''), formal_school_district_id = NULLIF('${application.formalDistrictId}', ''),  formal_school_city_id = NULLIF('${application.formalCityId}', ''), formal_school_grade_id = NULLIF('${application.formalGradeId}', ''), formal_school_syllabus_id = NULLIF('${application.formalSyllabusId}', ''), formal_school_medium = NULLIF('${application.formalMedium}', ''), formal_school_last_academic_year = NULLIF('${application.formalLastAcademicYear}', ''), is_declaration_correct = ${application.declarationCorrect}, application_form_status_id = ${application.applicationStatusId}, submitted_on = NOW(), submitted_by_id = ${application.createdById} WHERE id = ${application.applicationFormId}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1468,9 +1469,9 @@ db.updateB2CApplicationForm4 = (application) =>
         try
         {
             let sql = "";
-            if(application.documentName == "Application_Form")
+            if(application.documentName == "Admission_Form")
             {
-                sql = `UPDATE admission_application_form SET application_file_name = '${application.fileName}' WHERE id = ${application.applicationFormId}`;
+                sql = `UPDATE admission_application_form SET admission_file_name = '${application.fileName}' WHERE id = ${application.applicationFormId}`;
             }
             else
             {
@@ -1484,7 +1485,7 @@ db.updateB2CApplicationForm4 = (application) =>
                 }
                 
         /////Get Admission Form Data
-                let sql1 = `SELECT uuid FROM admission_application_form WHERE id = ${application.applicationFormId} AND application_file_name IS NOT NULL AND undertaking_file_name IS NOT NULL`;
+                let sql1 = `SELECT uuid FROM admission_application_form WHERE id = ${application.applicationFormId} AND admission_file_name IS NOT NULL AND undertaking_file_name IS NOT NULL`;
                 dbConn.query(sql1, (error1, result1) => 
                 {
                     if(error1)
@@ -1523,8 +1524,8 @@ db.insertB2BApplicationForm1 = (application) =>
     {
         try
         {
-            let sql = `INSERT INTO admission_application_form (uuid, parent_undertaking_code, application_for, application_type_id, school_id, schooling_program_id, academic_session_id, batch_year_id, business_partner_id, engagement_since, business_partner_coach_id, sibling_type_id, last_academic_session_id, last_year_enrollment_id, current_academic_session_id, current_year_application_id, student_name, parent_id, gender_id, syllabus_id, grade_category_id, grade_id, subject_group_id, batch_type_id, student_profile_completion_id, parent_undertaking_id, admission_date, study_center_id, lead_student_type_id, market_lead_type_id, walkin_mode_id, application_form_status_id, registered_on, registered_by_id)
-            VALUES ('${application.uuid}', NULLIF('${application.parentUndertakingCode}', ''), '${application.applicationFor}', ${application.applicationTypeId}, ${application.schoolId}, ${application.schoolingProgramId}, ${application.academicSessionId}, ${application.batchYearId}, ${application.businessPartnerId}, '${application.engagementDate}', NULLIF('${application.coachId}', ''), NULLIF('${application.siblingTypeId}', ''), NULLIF('${application.lastAcademicSessionId}', ''), NULLIF('${application.lastYearEnrollmentId}', ''), NULLIF('${application.currentAcademicSessionId}', ''), NULLIF('${application.currentYearApplicationId}', ''), '${application.studentName}', NULLIF('${application.parentId}', ''), ${application.genderId}, ${application.syllabusId}, ${application.gradeCategoryId}, ${application.gradeId}, ${application.subjectGroupId}, ${application.batchTypeId}, ${application.studentProfileCompletionId}, ${application.parentUndertakingId}, '${application.admissionDate}', ${application.studyCenterId}, ${application.leadStudentTypeId}, ${application.marketLeadTypeId}, NULLIF('${application.walkInModeId}', ''), ${application.applicationStatusId}, NOW(), ${application.createdById})`;
+            let sql = `INSERT INTO admission_application_form (uuid, parent_undertaking_code, application_for, application_type_id, school_id, schooling_program_id, academic_session_id, batch_year_id, is_practicing_sport, business_partner_id, engagement_since, business_partner_coach_id, sibling_type_id, last_academic_session_id, last_year_enrollment_id, current_academic_session_id, current_year_application_id, student_name, parent_id, gender_id, syllabus_id, grade_category_id, grade_id, subject_group_id, batch_type_id, student_profile_completion_id, parent_undertaking_id, admission_date, study_center_id, lead_student_type_id, market_lead_type_id, walkin_mode_id, application_form_status_id, registered_on, registered_by_id)
+            VALUES ('${application.uuid}', NULLIF('${application.parentUndertakingCode}', ''), '${application.applicationFor}', ${application.applicationTypeId}, ${application.schoolId}, ${application.schoolingProgramId}, ${application.academicSessionId}, ${application.batchYearId}, ${application.isPracticingSport}, ${application.businessPartnerId}, '${application.engagementDate}', NULLIF('${application.coachId}', ''), NULLIF('${application.siblingTypeId}', ''), NULLIF('${application.lastAcademicSessionId}', ''), NULLIF('${application.lastYearEnrollmentId}', ''), NULLIF('${application.currentAcademicSessionId}', ''), NULLIF('${application.currentYearApplicationId}', ''), '${application.studentName}', NULLIF('${application.parentId}', ''), ${application.genderId}, ${application.syllabusId}, ${application.gradeCategoryId}, ${application.gradeId}, ${application.subjectGroupId}, ${application.batchTypeId}, ${application.studentProfileCompletionId}, ${application.parentUndertakingId}, '${application.admissionDate}', ${application.studyCenterId}, ${application.leadStudentTypeId}, ${application.marketLeadTypeId}, NULLIF('${application.walkInModeId}', ''), ${application.applicationStatusId}, NOW(), ${application.createdById})`;
         
             dbConn.query(sql, (error, result) => 
             {
@@ -1745,9 +1746,9 @@ db.deleteApplicationUndertakingDoc = (applicationFormId, documentName) =>
         try
         {
             let sql = "";
-            if(documentName == "Application_Form")
+            if(documentName == "Admission_Form")
             {
-                sql = `UPDATE admission_application_form SET application_file_name = NULL 
+                sql = `UPDATE admission_application_form SET admission_file_name = NULL 
                 WHERE id = ${applicationFormId}`;
             }
             else if(documentName == "Undertaking_Form")
@@ -1784,7 +1785,7 @@ db.checkApplicationFeeInstallmentExist = (applicationFormId, id) =>
     {
         try
         {
-            let sql = `SELECT id FROM admission_application_fee_installment WHERE application_form_id = ${applicationFormId} AND id = ${id}`;
+            let sql = `SELECT id FROM admission_application_fee_installment WHERE application_form_id = ${applicationFormId} AND FIND_IN_SET(id, '${id}') > 0`;
         
             dbConn.query(sql, (error, result) => 
             {
@@ -1808,7 +1809,7 @@ db.insertApplicationFeePayment = (feePayment) =>
     {
         try
         {
-            let sql = `INSERT INTO admission_application_fee_payment (application_form_id, amount, payment_date, payment_method_id, bank_reference, created_on, created_by_id) VALUES (${feePayment.applicationFormId}, ${feePayment.amount}, '${feePayment.paymentDate}', ${feePayment.paymentMethodId}, NULLIF('${feePayment.bankReference}', ''), NOW(), ${feePayment.createdById})`;
+            let sql = `INSERT INTO admission_application_fee_payment (application_form_id, amount, payment_date, payment_method_id, bank_reference, created_on, created_by_id) VALUES (${feePayment.applicationFormId}, ${feePayment.totalAmount}, '${feePayment.paymentDate}', ${feePayment.paymentMethodId}, NULLIF('${feePayment.bankReference}', ''), NOW(), ${feePayment.createdById})`;
                         
             dbConn.query(sql, (error, result) => 
             {
@@ -1816,15 +1817,30 @@ db.insertApplicationFeePayment = (feePayment) =>
                 {
                     return reject(error);
                 }
-                let sql1 = `UPDATE admission_application_fee_installment SET amount_paid = amount_paid + ${feePayment.amount} WHERE id = ${feePayment.feeInstallmentId}`;
-                dbConn.query(sql1, (error1, result1) => 
+                let sql1 = '';
+                for(let k=0;k<feePayment.feeInstallment.length;k++)
                 {
-                    if(error1)
+                    if(sql1 == "")
                     {
-                        return reject(error1);
+                        sql1 = `UPDATE admission_application_fee_installment SET amount_paid = amount_paid + ${feePayment.amounts[k]} WHERE id = ${feePayment.feeInstallment[k].id};`;
                     }
-                    return resolve(result);
-                });
+                    else
+                    {
+                        sql1 = sql1 + `UPDATE admission_application_fee_installment SET amount_paid = amount_paid + ${feePayment.amounts[k]} WHERE id = ${feePayment.feeInstallment[k].id};`
+                    }
+                }
+                
+                if(sql1 != "")
+                {
+                    dbConn.query(sql1, (error1, result1) => 
+                    {
+                        if(error1)
+                        {
+                            return reject(error1);
+                        }
+                        return resolve(result);
+                    });
+                }
             });
         }
         catch(e)
@@ -1841,6 +1857,29 @@ db.saveStudentEnrollment = (enrollment) =>
         try
         {
             let sql = `UPDATE admission_application_form SET enrollment_number = '${enrollment.enrollmentNumber}', application_form_status_id = ${enrollment.applicationStatusId}, enrolled_on = NOW(), enrolled_by_id = ${enrollment.createdById} WHERE id = ${enrollment.applicationFormId}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.updateFeePaymentBankCharges = (feePayment) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `UPDATE admission_application_fee_payment SET bank_charges = ${feePayment.amount} WHERE id = ${feePayment.feePaymentId} AND application_form_id = ${feePayment.applicationId}`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)

@@ -10,7 +10,7 @@
                 (click)="back()">Back
                 </button>
             </div>
-            <form [formGroup]="addApplicationForm2" id="addFeeStructureForm" (ngSubmit)="saveApplicationForm2()" autocomplete="off">
+            <form [formGroup]="addApplicationForm2" id="addFeeStructureForm2" (ngSubmit)="saveApplicationForm2()" autocomplete="off">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-3">
@@ -136,6 +136,10 @@
                                 *ngIf="addApplicationForm2.controls['otherDiscount'].hasError('required') && !isValidForm"
                                 class="error jquery-validation-error small form-text"
                                 >Please enter other discount.</label>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm2.controls['otherDiscount'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid other discount.</label>
                             </div>                
                         </div>
                         <div class="col-md-3">

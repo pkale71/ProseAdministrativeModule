@@ -35,6 +35,7 @@ let leadStudentTypeId;
 let marketLeadTypeId;
 let walkInModeId;
 let subjectIds;
+let isPracticingSport;
 let engagementDate;
 let businessPartnerUUID;
 let coachUUID;
@@ -75,9 +76,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.applicationType != undefined && reqData.school != undefined && reqData.schoolingProgram != undefined && reqData.academicSession != undefined && reqData.batchYear != undefined && reqData.siblingType != undefined && reqData.lastAcademicSession != undefined && reqData.lastYearEnrollment != undefined && reqData.currentAcademicSession != undefined && reqData.currentYearApplication != undefined && reqData.studentName != undefined && reqData.parentName != undefined && reqData.parentEmail != undefined && reqData.parentMobile != undefined && reqData.gender != undefined && reqData.studentRelationship != undefined && reqData.syllabus != undefined && reqData.gradeCategory != undefined && reqData.grade != undefined && reqData.subjectGroup != undefined && reqData.batchType != undefined && reqData.studentProfileCompletion != undefined && reqData.parentUndertaking != undefined && reqData.admissionDate != undefined && reqData.studyCenter != undefined && reqData.leadStudentType != undefined && reqData.marketLeadType != undefined && reqData.walkInMode != undefined && reqData.subjectIds != undefined && reqData.businessPartner != undefined && reqData.engagementDate != undefined && reqData.coach != undefined)
+        if(reqData.applicationType != undefined && reqData.school != undefined && reqData.schoolingProgram != undefined && reqData.academicSession != undefined && reqData.batchYear != undefined && reqData.siblingType != undefined && reqData.lastAcademicSession != undefined && reqData.lastYearEnrollment != undefined && reqData.currentAcademicSession != undefined && reqData.currentYearApplication != undefined && reqData.studentName != undefined && reqData.parentName != undefined && reqData.parentEmail != undefined && reqData.parentMobile != undefined && reqData.gender != undefined && reqData.studentRelationship != undefined && reqData.syllabus != undefined && reqData.gradeCategory != undefined && reqData.grade != undefined && reqData.subjectGroup != undefined && reqData.batchType != undefined && reqData.studentProfileCompletion != undefined && reqData.parentUndertaking != undefined && reqData.admissionDate != undefined && reqData.studyCenter != undefined && reqData.leadStudentType != undefined && reqData.marketLeadType != undefined && reqData.walkInMode != undefined && reqData.subjectIds != undefined && reqData.businessPartner != undefined && reqData.isPracticingSport != undefined && reqData.engagementDate != undefined && reqData.coach != undefined)
         {
-            if(reqData.applicationType.id != "" && reqData.school.uuid != "" && reqData.schoolingProgram.id != "" && reqData.academicSession.id != "" && reqData.batchYear.id != "" && reqData.studentName != "" && reqData.parentName != "" && reqData.parentEmail != "" && reqData.parentMobile != "" && reqData.gender.id != "" && reqData.studentRelationship != "" && reqData.syllabus.id != "" && reqData.gradeCategory.id != "" && reqData.grade.id != "" && reqData.subjectGroup.id != "" && reqData.batchType.id != "" && reqData.studentProfileCompletion.id != "" && reqData.parentUndertaking.id != "" && reqData.admissionDate != "" && reqData.studyCenter.uuid != "" && reqData.leadStudentType.id != "" && reqData.marketLeadType.id != "" && reqData.subjectIds != "" && reqData.businessPartner.uuid != "" && reqData.engagementDate != "")
+            if(reqData.applicationType.id != "" && reqData.school.uuid != "" && reqData.schoolingProgram.id != "" && reqData.academicSession.id != "" && reqData.batchYear.id != "" && reqData.studentName != "" && reqData.parentName != "" && reqData.parentEmail != "" && reqData.parentMobile != "" && reqData.gender.id != "" && reqData.studentRelationship != "" && reqData.syllabus.id != "" && reqData.gradeCategory.id != "" && reqData.grade.id != "" && reqData.subjectGroup.id != "" && reqData.batchType.id != "" && reqData.studentProfileCompletion.id != "" && reqData.parentUndertaking.id != "" && reqData.admissionDate != "" && reqData.studyCenter.uuid != "" && reqData.leadStudentType.id != "" && reqData.marketLeadType.id != "" && reqData.subjectIds != "" && reqData.businessPartner.uuid != "" && reqData.engagementDate != "" && reqData.isPracticingSport != "")
             {
                 applicationTypeId = commonFunction.validateNumber(reqData.applicationType.id);
                 schoolUUID = reqData.school.uuid;
@@ -108,6 +109,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 marketLeadTypeId = commonFunction.validateNumber(reqData.marketLeadType.id);
                 walkInModeId = commonFunction.validateNumber(reqData.walkInMode.id);
                 subjectIds = reqData.subjectIds;
+                isPracticingSport = commonFunction.validateNumber(reqData.isPracticingSport, 'Yes'),
                 businessPartnerUUID = reqData.businessPartner.uuid;
                 engagementDate = reqData.engagementDate;
                 coachUUID = reqData.coach.uuid;
@@ -561,6 +563,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         "marketLeadTypeId" : marketLeadTypeId,
                         "walkInModeId" : walkInModeId,
                         "subjectIds" : subjects,
+                        "isPracticingSport" : isPracticingSport,
                         "businessPartnerId" : businessPartner.id,
                         "engagementDate" : engagementDate,
                         "coachId" : coach ? coach.id : "",

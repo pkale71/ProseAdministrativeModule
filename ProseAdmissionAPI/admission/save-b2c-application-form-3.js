@@ -56,9 +56,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.application != undefined && reqData.dob != undefined && reqData.nationality != undefined && reqData.aadharNumber != undefined && reqData.passportNumber != undefined && reqData.parentAddress != undefined && reqData.parentCountry != undefined && reqData.parentState != undefined && reqData.parentDistrict != undefined && reqData.parentCity != undefined && reqData.parentAadharNumber != undefined && reqData.parentPassportNumber != undefined && reqData.parentPanNumber != undefined && reqData.engagementDate != undefined && reqData.businessPartner != undefined && reqData.coach != undefined && reqData.otherAcademyName != undefined && reqData.otherAcademyAddress != undefined && reqData.otherAcademyCountry != undefined && reqData.otherAcademyState != undefined && reqData.otherAcademyDistrict != undefined && reqData.otherAcademyCity != undefined && reqData.otherAcademyCoach != undefined && reqData.studentUndergone != undefined && reqData.formalSchoolName != undefined && reqData.formalSchoolAddress != undefined && reqData.formalCountry != undefined && reqData.formalState != undefined && reqData.formalDistrict != undefined && reqData.formalCity != undefined && reqData.formalSyllabus != undefined && reqData.formalGrade != undefined && reqData.formalMedium != undefined && reqData.formalLastAcademicYear != undefined && reqData.declarationCorrect != undefined)
+        if(reqData.application != undefined && reqData.dob != undefined && reqData.nationality != undefined && reqData.aadharNumber != undefined && reqData.passportNumber != undefined && reqData.parentAddress != undefined && reqData.parentCountry != undefined && reqData.parentState != undefined && reqData.parentDistrict != undefined && reqData.parentCity != undefined && reqData.parentAadharNumber != undefined && reqData.parentPassportNumber != undefined && reqData.parentPanNumber != undefined && reqData.isPracticingSport != undefined && reqData.engagementDate != undefined && reqData.businessPartner != undefined && reqData.coach != undefined && reqData.otherAcademyName != undefined && reqData.otherAcademyAddress != undefined && reqData.otherAcademyCountry != undefined && reqData.otherAcademyState != undefined && reqData.otherAcademyDistrict != undefined && reqData.otherAcademyCity != undefined && reqData.otherAcademyCoach != undefined && reqData.studentUndergone != undefined && reqData.formalSchoolName != undefined && reqData.formalSchoolAddress != undefined && reqData.formalCountry != undefined && reqData.formalState != undefined && reqData.formalDistrict != undefined && reqData.formalCity != undefined && reqData.formalSyllabus != undefined && reqData.formalGrade != undefined && reqData.formalMedium != undefined && reqData.formalLastAcademicYear != undefined && reqData.declarationCorrect != undefined)
         {
-            if(reqData.application.uuid != "" && reqData.dob != "" && reqData.nationality != "" && reqData.aadharNumber != "" && reqData.parentAddress != "" && reqData.parentCountry != "" && reqData.parentState != "" && reqData.parentDistrict != "" && reqData.parentCity != "" && reqData.parentAadharNumber != "" && reqData.engagementDate != "" && reqData.studentUndergone != "" && reqData.declarationCorrect != "")
+            if(reqData.application.uuid != "" && reqData.dob != "" && reqData.nationality != "" && reqData.aadharNumber != "" && reqData.parentAddress != "" && reqData.parentCountry != "" && reqData.parentState != "" && reqData.parentDistrict != "" && reqData.parentCity != "" && reqData.parentAadharNumber != "" && reqData.isPracticingSport != "" && reqData.studentUndergone != "" && reqData.declarationCorrect != "")
             {
                 applicationUUID = reqData.application.uuid;
                 dob = reqData.dob;
@@ -73,6 +73,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 parentAadharNumber = reqData.parentAadharNumber;
                 parentPassportNumber = reqData.parentPassportNumber;
                 parentPanNumber = reqData.parentPanNumber;
+                isPracticingSport = commonFunction.validateNumber(reqData.isPracticingSport, 'Yes'),
                 engagementDate = reqData.engagementDate;
                 businessPartnerUUID = reqData.businessPartner.uuid;
                 coachUUID = reqData.coach.uuid;
@@ -119,15 +120,18 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     });
                 }
 
-                if(!commonFunction.isValidDate(engagementDate))
+                if(engagementDate != "")
                 {
-                    res.status(500)
-                    return res.json({
-                        "status_code" : 500,
-                        "message" : "Invalid Engagement Date",
-                        "success" : false,
-                        "error" : errorCode.getStatus(500)
-                    });
+                    if(!commonFunction.isValidDate(engagementDate))
+                    {
+                        res.status(500)
+                        return res.json({
+                            "status_code" : 500,
+                            "message" : "Invalid Engagement Date",
+                            "success" : false,
+                            "error" : errorCode.getStatus(500)
+                        });
+                    }
                 }
 
                 if(businessPartnerUUID != "")
@@ -246,6 +250,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     "parentAadharNumber" : parentAadharNumber,
                     "parentPassportNumber" : parentPassportNumber,
                     "parentPanNumber" : parentPanNumber,
+                    "isPracticingSport" : isPracticingSport,
                     "engagementDate" : engagementDate,
                     "businessPartnerId" : businessPartner ? businessPartner.id : "",
                     "coachId" : coach ? coach.id : "",

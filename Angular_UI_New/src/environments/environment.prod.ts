@@ -1,5 +1,8 @@
 export const environment = {
   //appVersion: require('../../package.json').version,
   production: true,
-  apiUrl: 'http://prose.academy/api'
+////QA
+  // apiUrl: 'http://prose.academy/api'
+///Dev
+  apiUrl: 'http://proseschool.in/api'
 };

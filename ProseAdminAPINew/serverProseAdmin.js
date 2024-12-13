@@ -49,7 +49,7 @@ if(dbConn)
             else
             {
                 let sql0 = `SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'`
-                dbConn.query(sql,(error0, result0) => 
+                dbConn.query(sql0,(error0, result0) => 
                 {
                     console.log("Sql Mode : NO_ENGINE_SUBSTITUTION");
                     

@@ -25,6 +25,10 @@ import { B2cApplicationListComponent } from './demo/admission/b2c-application/b2
 import { B2cApplicationStageOneComponent } from './demo/admission/b2c-application/b2c-application-stage-one/b2c-application-stage-one.component';
 import { B2cApplicationDeatilComponent } from './demo/admission/b2c-application/b2c-application-deatil/b2c-application-deatil.component';
 import { B2cApplicationStageTwoComponent } from './demo/admission/b2c-application/b2c-application-stage-two/b2c-application-stage-two.component';
+import { B2cApplicationStageThreeComponent } from './demo/admission/b2c-application/b2c-application-stage-three/b2c-application-stage-three.component';
+import { B2cApplicationStageFourComponent } from './demo/admission/b2c-application/b2c-application-stage-four/b2c-application-stage-four.component';
+import { B2cApplicationStageFiveComponent } from './demo/admission/b2c-application/b2c-application-stage-five/b2c-application-stage-five.component';
+import { BlankAdmissionFormComponent } from './demo/admission/blank-admission-form/blank-admission-form.component';
 
 const routes: Routes = [
     {
@@ -118,6 +122,11 @@ const routes: Routes = [
                 canActivate: [AuthGuardService],
             },
             {
+                path: 'b2cApplication/blankForm',
+                loadComponent : () => BlankAdmissionFormComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
                 path: 'b2cApplication/registrations',
                 loadComponent : () => B2cApplicationListComponent,
                 canActivate: [AuthGuardService],
@@ -135,6 +144,21 @@ const routes: Routes = [
             {
                 path: 'b2cApplication/b2cApplicationStage2/add/:uuid',
                 loadComponent : () => B2cApplicationStageTwoComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'b2cApplication/b2cApplicationStage3/add/:uuid',
+                loadComponent : () => B2cApplicationStageThreeComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'b2cApplication/b2cApplicationStage4/add/:uuid',
+                loadComponent : () => B2cApplicationStageFourComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'b2cApplication/b2cApplicationStage5/add/:uuid',
+                loadComponent : () => B2cApplicationStageFiveComponent,
                 canActivate: [AuthGuardService],
             },
         ]

@@ -70,21 +70,21 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 let applicationNumber = (applicationForm[0].applicationNumber || "").toString().split("/").join("_");
                 let enrollmentNumber = (applicationForm[0].enrollmentNumber || "").toString().split("/").join("_");
 
-                if(applicationForm[0].applicationStatusName != 'Enrolled/Renewed' && documentName == "" && applicationStudentDocument?.length > 0)
+                if(applicationForm[0].enrollmentNumber == '' && documentName == "" && applicationStudentDocument?.length > 0)
                 {
                     let filePath = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber + "/" + applicationStudentDocument[0].fileName;
                     commonFunction.deleteFileByPath(filePath);
                 }
-                else if(applicationForm[0].applicationStatusName == 'Enrolled/Renewed' && documentName == "" && applicationStudentDocument?.length > 0)
+                else if(applicationForm[0].enrollmentNumber != '' && documentName == "" && applicationStudentDocument?.length > 0)
                 {
                     let filePath = commonFunction.getUploadFolder('EnrollmentDoc') + enrollmentNumber + "/" + applicationNumber + "/" + applicationStudentDocument[0].fileName;
                     commonFunction.deleteFileByPath(filePath);
                 }  
                 else if(documentName != "" && !applicationStudentDocument?.length)
                 {
-                    if(documentName == "Application_Form")
+                    if(documentName == "Admission_Form")
                     {
-                        let filePath = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber + "/" + applicationForm[0].applicationFileName;
+                        let filePath = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber + "/" + applicationForm[0].admissionFileName;
                         commonFunction.deleteFileByPath(filePath); 
                     }
                     else if(documentName == "Undertaking_Form")
@@ -96,7 +96,6 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 if(documentName == "" && applicationStudentDocument?.length > 0)
                 {
                     let deleteDocResult = await dbAdmission.deleteApplicationStudentDoc(applicationStudentDocument[0].id);
-                    
                     if(deleteDocResult.affectedRows > 0)
                     {
                         res.status(200)

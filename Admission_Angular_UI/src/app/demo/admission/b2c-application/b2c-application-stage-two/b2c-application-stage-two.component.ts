@@ -305,8 +305,6 @@ export class B2cApplicationStageTwoComponent
   {
     try
     {
-      alert(this.addApplicationForm2.valid)
-      console.log(this.addApplicationForm2.value)
       if(this.addApplicationForm2.valid && this.feeStructureForm.valid && !this.saveClicked)
       {
         this.isValidForm = true;

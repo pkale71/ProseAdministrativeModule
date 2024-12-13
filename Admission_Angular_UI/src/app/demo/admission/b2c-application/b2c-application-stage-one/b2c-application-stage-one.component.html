@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-12">
-        <form [formGroup]="addApplicationForm1" id="addFeeStructureForm" (ngSubmit)="saveApplicationForm1()" autocomplete="off">
+        <form [formGroup]="addApplicationForm1" id="addFeeStructureForm1" (ngSubmit)="saveApplicationForm1()" autocomplete="off">
             <div class="card">
                 <div class="card-header">
                     <h5 style="margin-top: 0.8rem;">Student Profile&nbsp;</h5>
@@ -277,7 +277,7 @@
                                 <div class="form-group">
                                     <label class="form-control-label" for="grade">Grade&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedGrade"></i></label>
                                     <select class="form-control"  id="grade" formControlName="grade" 
-                                    [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}">
+                                    [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}" (change)="getSubjectGroups(gradeCategoryForm.controls['gradeCategory'].value, gradeForm.controls['grade'].value, syllabusForm.controls['syllabus'].value)">
                                     <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade?.name}}</option>
                                     </select>
                                     <label style="color: red;"

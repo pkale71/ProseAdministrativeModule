@@ -542,7 +542,8 @@ buildCommonJSON.applicationSportEngagement = function(datas)
         
         coachJSON = {
             "uuid" : data.coachUUID,
-            "name" : data.coachName
+            "name" : data.coachName,
+            "mobile" : data.coachMobile
         };
 
         bpCountryJSON = {
@@ -598,6 +599,7 @@ buildCommonJSON.applicationSportEngagement = function(datas)
 
         //Final JSON
         let finalJSON = {
+            "isPracticingSport" : data.isPracticingSport || "0",
             "engagementDate" : commonFunction.getFormattedDate(data.engagementDate, "yyyy-mm-dd"),
             "businessPartner" : businessPartnerJSON,
             "otherAcademyName" : data.otherAcademyName || "",
@@ -668,6 +670,8 @@ buildCommonJSON.applicationUndergoneEducation = function(datas)
             "studentUndergone" : data.studentUndergone,
             "syllabus" : syllabusJSON,
             "grade" : gradeJSON,
+            "medium" : data.formalSchoolMedium,
+            "lastAcademicYear" : data.formalLastAcademicYear,
             "formalSchoolName" : data.formalSchoolName || "",
             "formalSchoolAddress" : data.formalSchoolAddress || "",
             "formalCountry" : formalCountryJSON,
@@ -691,7 +695,7 @@ buildCommonJSON.applicationUndertakingDocument = function(datas)
         let finalJSON = {
             "undertakingFileName" : data.undertakingFileName || "",
             "undertakingSignFileName" : data.undertakingSignFileName || "",
-            "applicationFileName" : data.applicationFileName || "",
+            "admissionFileName" : data.admissionFileName || "",
         }
         resultJSON = finalJSON;
     });
@@ -803,11 +807,14 @@ buildCommonJSON.applicationFeePayments = function(datas)
     { 
         //Final JSON
         let finalJSON = {
+            "id" : data.id,
             "receiptNumber" : data.receiptNumber,
             "paymentFor" : data.paymentFor,
             "paymentDate" : commonFunction.getFormattedDate(data.paymentDate, "yyyy-mm-dd"),
             "amount" : data.amount,
+            "inWords" : commonFunction.convertNumberToWords(data.amount) + " Only",
             "paymentMethod" : {"id" : data.paymentMethodId, "name" : data.paymentMethodName},
+            "bankCharges" : data.bankCharges,
             "bankReference" : data.bankReference || ""
         }
         resultJSON.push(finalJSON);

@@ -406,4 +406,57 @@ commonFunction.generateShortDescription = function(sentence)
     return `${meaningfulWords.join('_')}`;  
 }
 
+commonFunction.convertNumberToWords = function(amount)
+{
+    const ones = [
+      "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+      "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+      "Seventeen", "Eighteen", "Nineteen"
+    ];
+    const tens = [
+      "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+    ];
+    const thousands = ["", "Thousand"];
+  
+    if (amount === 0) return "Zero";
+  
+    let result = '';
+    let place = 0;
+  
+    while (amount > 0) {
+      if (amount % 1000 !== 0) {
+        result = commonFunction.convertBelowThousand(amount % 1000) + (thousands[place] ? ' ' + thousands[place] : '') + ' ' + result;
+      }
+      amount = Math.floor(amount / 1000);
+      place++;
+    }
+  
+    return result.trim();
+}
+  
+commonFunction.convertBelowThousand = function(amount)
+{
+    const ones = [
+      "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+      "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+      "Seventeen", "Eighteen", "Nineteen"
+    ];
+    const tens = [
+      "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+    ];
+  
+    let result = '';
+    if (amount >= 100) {
+      result += ones[Math.floor(amount / 100)] + ' Hundred ';
+      amount %= 100;
+    }
+    if (amount >= 20) {
+      result += tens[Math.floor(amount / 10)] + ' ';
+      amount %= 10;
+    }
+    result += ones[amount];
+  
+    return result.trim();
+}
+
 module.exports = commonFunction;

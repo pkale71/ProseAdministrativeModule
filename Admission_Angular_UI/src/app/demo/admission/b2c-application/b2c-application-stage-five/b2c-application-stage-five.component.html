@@ -1,1 +1,170 @@
-<p>b2c-application-stage-five works!</p>
+<div class="row">
+    <div class="col-sm-12">
+        <form [formGroup]="addApplicationForm5" id="addFeeStructureForm5" (ngSubmit)="saveApplicationForm5()" autocomplete="off">
+            <div class="card">
+                <div class="card-header">
+                    <h5 style="margin-top: 0.8rem;">Student Profile&nbsp;<span class="badge bg-info">
+                        {{studentProfileData?.applicationStatus?.name == 'Enrolled/Renewed' ? studentProfileData?.enrollmentNumber : studentProfileData?.applicationNumber}}
+                    </span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentProfileClicked"></i></h5>
+                    <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                    (click)="back()">Back
+                    </button>
+                </div>            
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="studentName">Student Name</label>
+                            <label class="form-control input-md">{{studentProfileData?.studentName}}</label>                  
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="admissionDate">Admission Date</label>
+                            <label class="form-control input-md">{{studentProfileData?.admissionDate | date : "dd/MM/yyyy"}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="academicSession">Academic Session</label>
+                            <label class="form-control input-md">{{studentProfileData?.academicSession?.year}}</label>                  
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="school">School</label>
+                            <label class="form-control input-md">{{studentProfileData?.school?.name}}</label>    
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="schoolingProgram">Schooling Program</label>
+                            <label class="form-control input-md">{{studentProfileData?.schoolingProgram?.name}}</label>                 
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="gender">Gender</label>
+                            <label class="form-control input-md">{{studentProfileData?.gender?.name}}</label>                  
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-4">
+                            <label class="form-control-label" for="name">Syllabus</label>
+                            <label class="form-control input-md">{{studentProfileData?.syllabus?.name}}</label>    
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-control-label" for="gradeCategory">Grade Category</label>
+                            <label class="form-control input-md">{{studentProfileData?.gradeCategory?.name}}</label>
+                        </div> 
+                        <div class="col-sm-4">
+                            <label class="form-control-label" for="grade">Grade</label>
+                            <label class="form-control input-md">{{studentProfileData?.grade?.name}}</label>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="name">Fee Structure</label>
+                            <label class="form-control input-md">{{feeStructureData?.feeCategory?.name}}</label>    
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="name">Is Having Instalments?</label>
+                            <label class="form-control input-md">{{feeStructureData?.installments?.length == 1 ? 'No' : 'Yes'}}</label>    
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="name">Payable Amount</label>
+                            <label class="form-control input-md">{{feeStructureData?.total?.grossAmount | number}}</label>    
+                        </div>
+                    </div>
+                    <h5 class="mt-4">Payment Details</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped row-border table-hover pt-1">
+                            <thead>
+                                <tr>
+                                    <th>Sno</th>
+                                    <th>Name</th>
+                                    <th>Rate(%)</th>
+                                    <th>Due Date</th>
+                                    <th>Amount</th>
+                                    <th>Amount Paid</th>
+                                    <th>Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let installment of feeStructureData?.installments let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{installment?.name}}</td>
+                                    <td>{{installment?.rate | number}}</td>
+                                    <td>{{installment?.dueDate | date : "dd/MM/yyyy"}}</td>
+                                    <td>{{installment?.amount | number}}</td>
+                                    <td>{{installment?.amountPaid | number}}</td>
+                                    <td>{{installment?.amount - installment?.amountPaid | number: '1.2-2'}}</td>
+                                </tr>
+                                <tr *ngIf="feeStructureData?.discountTypes?.length == 0">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>No record(s) found</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-3">
+                            <form [formGroup]="paymentMethodForm">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="paymentMethod">Payment Method&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="paymentMethodClicked"></i></label>
+                                    <select class="form-control"  required id="paymentMethod" formControlName="paymentMethod" (change)="checkPaymentMethod(paymentMethodForm.controls['paymentMethod'].value)"
+                                    [ngClass]="{'is-invalid': !paymentMethodForm.controls['paymentMethod'].valid && !isValidForm}">
+                                    <option value="{{paymentMethod.id}}" *ngFor="let paymentMethod of paymentMethods">{{paymentMethod?.name}}</option>
+                                    </select>
+                                    <label style="color: red;"
+                                    *ngIf="paymentMethodForm.controls['paymentMethod'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please select fee structure.</label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="bankReference">Bank Reference&nbsp;<span style="color: red;" *ngIf="paymentMethodForm.controls['paymentMethod'].value != 1 && paymentMethodForm.controls['paymentMethod'].value != ''">*</span></label>
+                                <input class="form-control input-md" id="bankReference" type="text" formControlName="bankReference" ngRequired="isOtherPaymentMethod"
+                                [ngClass]="{'is-invalid': !addApplicationForm5.controls['bankReference'].valid && !isValidForm}" [readonly]="!isOtherPaymentMethod"/>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm5.controls['bankReference'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter bank reference.</label>
+                            </div>  
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="paymentDate">Payment Date&nbsp;<span
+                                style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="paymentDate" type="date" required formControlName="paymentDate" 
+                                [ngClass]="{'is-invalid': !addApplicationForm5.controls['paymentDate'].valid && !isValidForm}" [max]="curDate"/>
+                                <label style="color: red;" 
+                                *ngIf="addApplicationForm5.controls['paymentDate'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text">Please enter payment date.</label>
+                            </div>      
+                        </div>   
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="totalAmount">Amount&nbsp;<span style="color: red;">*</span></label>
+                                <input class="form-control input-md" id="totalAmount" type="text" required  formControlName="totalAmount" (input)="feeAmountBifercation(addApplicationForm5.controls['totalAmount'].value)"
+                                [ngClass]="{'is-invalid': !addApplicationForm5.controls['totalAmount'].valid && !isValidForm}"/>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm5.controls['totalAmount'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter amount.</label>
+                                <label style="color: red;"
+                                *ngIf="addApplicationForm5.controls['totalAmount'].hasError('pattern') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please enter valid amount.</label>
+                            </div>                
+                        </div> 
+                    </div>
+                    <div class="card-footer float-end">
+                        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+                        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+                            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+                    

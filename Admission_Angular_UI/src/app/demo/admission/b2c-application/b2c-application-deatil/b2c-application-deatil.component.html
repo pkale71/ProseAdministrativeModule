@@ -11,6 +11,13 @@
                     </span>
                     <button type="button" class="btn btn-rounded btn-black float-end" style="margin-top: 0rem;"
                     (click)="back()">Back</button>
+                    <div class="btn-group mb-2 mt-0.8rem me-2 float-end" ngbDropdown >
+                        <button class="btn btn-primary" ngbDropdownToggle type="button"><i class="fa fa-download"></i>&nbsp;Downloads</button>
+                        <div ngbDropdownMenu>
+                            <a class="dropdown-item" href="javascript:" (click)="downloadApplicationFormPDF()">Application Form</a>
+                            <a class="dropdown-item" href="javascript:" (click)="downloadUndertakingFormPDF()">Undertaking Form</a>
+                        </div>
+                    </div>
                 </h5>
                 <ul class="nav nav-pills" ngbNav #nav="ngbNav">
                     <li class="nav-item" [ngbNavItem]="1">
@@ -181,7 +188,7 @@
                                     <label class="form-control input-md">{{parentProfileData?.panNumber || "----"}}</label>
                                 </div>
                                 <div class="col-sm-9">
-                                    <label class="form-control-label" for="address">Address</label>
+                                    <label class="form-control-label" for="address">Postal Address</label>
                                     <label class="form-control input-md">{{parentProfileData?.address || "----"}}</label>
                                 </div>                              
                             </div>  
@@ -236,7 +243,7 @@
                                             <td>{{subject?.subjectType?.name}}</td>
                                             <td>{{subject?.isMandatory == 1 ? 'Yes' : 'No'}}</td>
                                         </tr>
-                                        <tr *ngIf="subjects?.length == 0">
+                                        <tr *ngIf="subjectGroupData?.subjects?.length == 0">
                                             <td></td>
                                             <td>No record(s) found</td>
                                             <td></td>
@@ -323,16 +330,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let installment of feeStructureData?.installments let i=index" >
+                                        <tr *ngFor="let installment of feeStructureData?.installments let i=index">
                                             <td>{{i+1}}</td>
                                             <td>{{installment?.name}}</td>
                                             <td>{{installment?.rate | number}}</td>
                                             <td>{{installment?.dueDate | date : "dd/MM/yyyy"}}</td>
                                             <td>{{installment?.amount | number}}</td>
                                             <td>{{installment?.amountPaid | number}}</td>
-                                            <td>{{installment?.amount - installment?.amountPaid | number: '1.2-2'}}</td>
+                                            <td>{{(installment?.amount - installment?.amountPaid) | number: '1.2-2'}}</td>
                                         </tr>
-                                        <tr *ngIf="feeStructureData?.discountTypes?.length == 0">
+                                        <tr *ngIf="feeStructureData?.installments?.length > 0">
+                                            <td style="text-align: right;" colspan="6">Total Due : </td>
+                                            <td>{{totalDue | number: '1.2-2'}}</td>
+                                        </tr>
+                                        <tr *ngIf="feeStructureData?.installments?.length == 0">
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -377,6 +388,223 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <h5 class="mt-4">Payments&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="feePaymentClicked"></i></h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped row-border table-hover pt-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Sno</th>
+                                            <th>Receipt No</th>
+                                            <th>Payment For</th>
+                                            <th>Payment Date</th>
+                                            <th>Payment Method</th>
+                                            <th>Bank Reference</th>
+                                            <th>Bank Charges</th>
+                                            <th>Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let feePayment of feePayments let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{feePayment?.receiptNumber}}</td>
+                                            <td>{{feePayment?.paymentFor}}</td>
+                                            <td>{{feePayment?.paymentDate | date : "dd/MM/yyyy"}}</td>
+                                            <td>{{feePayment?.paymentMethod?.name}}</td>
+                                            <td>{{feePayment?.bankReference}}</td>
+                                            <td>{{feePayment?.bankCharges | number: '1.2-2'}}&nbsp;<i class="fa fa-edit" style="cursor: pointer;" (click)="updateBankCharges(feePayment?.id, feePayment?.amount)" *ngIf="feePayment?.paymentMethod?.name != 'Cash'"></i></td>
+                                            <td>{{feePayment?.amount | number: '1.2-2'}}</td>
+                                            <td><i class="fa fa-file-pdf" title="Print Receipt" style="cursor: pointer;" (click)="downloadReceipt(feePayment)"></i></td>
+                                        </tr>
+                                        <tr *ngIf="feePayments?.length == 0">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>No record(s) found</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="5" *ngIf="sportProfileData != ''">
+                        <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                        Sport Engagement & Previous Schooling&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="sportProfileClicked"></i>
+                        </a>
+                        <ng-template ngbNavContent>
+                            <h5>Sport Engagement</h5>
+                            <h6 *ngIf="sportProfileData?.isPracticingSport == 0">Child Not Practicing Any Sport.</h6>
+                            <div class="row mt-4" *ngIf="sportProfileData?.isPracticingSport == 1">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="engagementDate">Engagement Since</label>
+                                    <label class="form-control input-md">{{sportProfileData?.engagementDate | date : "dd/MM/yyyy"}}</label>    
+                                </div>
+                                <div class="col-sm-5">
+                                    <label class="form-control-label" for="academyName">Academy Name</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.name : sportProfileData?.otherAcademyName}}</label>                  
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="coach">Coach</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.coach?.uuid ? sportProfileData?.businessPartner?.coach?.name : sportProfileData?.otherAcademyCoach}}</label>                  
+                                </div>
+                            </div>
+                            <div class="row mt-2" *ngIf="sportProfileData?.isPracticingSport == 1">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="sportCountry">Country</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.country?.name : sportProfileData?.otherAcademyCountry?.name}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="sportState">State</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.state?.name : sportProfileData?.otherAcademyState?.name}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="sportDistrict">District</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.district?.name : sportProfileData?.otherAcademyDistrict?.name}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="sportCity">City</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.city?.name : sportProfileData?.otherAcademyCity?.name}}</label>                 
+                                </div>
+                            </div>
+                            <div class="row mt-2" *ngIf="sportProfileData?.isPracticingSport == 1">
+                                <div class="col-sm-12">
+                                    <label class="form-control-label" for="sportAddress">Address</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.address : sportProfileData?.otherAcademyAddress}}</label>   
+                                </div>                            
+                            </div>
+                            <hr>
+                            <h5 class="mt-4">Previous Schooling</h5>
+                            <h6 *ngIf="undergoneEducationData?.studentUndergone == 'Home Schooling'">Student Studied Under Home Schooling Option</h6>
+                            <div class="row mt-4" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
+                                <div class="col-sm-5">
+                                    <label class="form-control-label" for="undergoneSchool">School Name</label>
+                                    <label class="form-control input-md">{{undergoneEducationData?.formalSchoolName}}</label>    
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="undergoneGrade">Grade</label>
+                                    <label class="form-control input-md">{{undergoneEducationData?.grade?.name}}</label>    
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="undergoneSyllabus">Syllabus</label>
+                                    <label class="form-control input-md">{{undergoneEducationData?.syllabus?.name}}</label>    
+                                </div>
+                            </div>
+                            <div class="row mt-2" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="undergoneMedium">Medium</label>
+                                    <label class="form-control input-md">{{undergoneEducationData?.medium}}</label>    
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="undergoneYear">Last Academic Year</label>
+                                    <label class="form-control input-md">{{undergoneEducationData?.lastAcademicYear}}</label>    
+                                </div>
+                                                            
+                            </div>
+                            <div class="row mt-2" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="sportCountry">Country</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.country?.name : sportProfileData?.otherAcademyCountry?.name}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="sportState">State</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.state?.name : sportProfileData?.otherAcademyState?.name}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="sportDistrict">District</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.district?.name : sportProfileData?.otherAcademyDistrict?.name}}</label>                 
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="sportCity">City</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.city?.name : sportProfileData?.otherAcademyCity?.name}}</label>                 
+                                </div>
+                            </div>
+                            <div class="row mt-2" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="sportAddress">Address</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.address : sportProfileData?.otherAcademyAddress}}</label>   
+                                </div>  
+                            </div>                            
+                        </ng-template>
+                    </li>
+                    <li class="nav-item" [ngbNavItem]="6" *ngIf="(undertakingDocument?.admissionFileName != '' && undertakingDocument?.undertakingFileName != '') || studentProfileData?.applicationStatus?.name == 'Undertaking Accepted'">
+                        <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                        Undertaking & Student Documents&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentDocProfileClicked"></i>
+                        </a>
+                        <ng-template ngbNavContent>
+                            <h5>Undertaking Documents</h5>
+                            <div class="table-responsive">
+                                <table class="table align-middle mb-0">
+                                    <tbody>
+                                        <tr>  
+                                            <td>Admission Form</td>
+                                            <td>
+                                                <input type="file" id="undertakingDococFile1" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="undertakingfileChange($event, 0)"  class="form-control" *ngIf="undertakingDocument?.admissionFileName == ''">
+                                                <label *ngIf="undertakingDocument?.admissionFileName != ''">   
+                                                    {{undertakingDocument?.admissionFileName}}
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveUndertakingClicked[0] && undertakingDocument?.admissionFileName == ''" (click)="saveUndertakingDoc(0, 'Admission_Form')"><i class="fa fa-upload"></i>Upload </button>
+                                                
+                                                <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteUndertakingClicked[0] && studentProfileData?.applicationStatus?.name != 'Enrolled/Renewed' && undertakingDocument?.admissionFileName != ''" (click)="deleteApplicationDoc(0, 0,'Admission_Form')"><i class="fa fa-trash"></i>Delete </button>
+        
+                                                <button type="button" class="btn btn-sm btn-rounded btn-secondary" *ngIf="!downloadUndertakingClicked[0] && undertakingDocument?.admissionFileName != ''" (click)="downloadApplicationDoc(0, 0,'Admission_Form', undertakingDocument?.admissionFileName)"><i class="fa fa-download"></i>Download</button>
+                                                
+                                                <button type="button" class="btn btn-sm btn-rounded btn-info" *ngIf="deleteUndertakingClicked[0] || saveUndertakingClicked[0] || downloadUndertakingClicked[0]" disabled><i class="fa fa-spin fa-spinner"></i>Processing...</button>
+                                            </td>
+                                        </tr>
+                                        <tr>  
+                                            <td>Parent Undertaking</td>
+                                            <td>
+                                                <input type="file" id="undertakingDococFile2" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="undertakingfileChange($event, 1)" class="form-control" *ngIf="undertakingDocument?.undertakingFileName == ''">
+                                                <label *ngIf="undertakingDocument?.undertakingFileName != ''">   
+                                                    {{undertakingDocument?.undertakingFileName}}
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveUndertakingClicked[1] && undertakingDocument?.undertakingFileName == ''" (click)="saveUndertakingDoc(1, 'Undertaking_Form')"><i class="fa fa-upload"></i>Upload </button>
+        
+                                                <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteUndertakingClicked[1] && studentProfileData?.applicationStatus?.name != 'Enrolled/Renewed' && undertakingDocument?.undertakingFileName != ''" (click)="deleteApplicationDoc(1, 0, 'Undertaking_Form')"><i class="fa fa-trash"></i>Delete</button>
+        
+                                                <button type="button" class="btn btn-sm btn-rounded btn-secondary" *ngIf="!downloadUndertakingClicked[1] && undertakingDocument?.undertakingFileName != ''" (click)="downloadApplicationDoc(1, 0, 'Undertaking_Form', undertakingDocument?.undertakingFileName)"><i class="fa fa-download"></i>Download</button>
+        
+                                                <button type="button" class="btn btn-sm btn-rounded btn-info" *ngIf="deleteUndertakingClicked[1] || saveUndertakingClicked[1] || downloadUndertakingClicked[1]" disabled><i class="fa fa-spin fa-spinner"></i>Processing...</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <hr>
+                            <h5 class="mt-4">Student Enclosures&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentDocClicked"></i></h5>
+                            <div class="table-responsive">
+                                <table class="table align-middle mb-0">
+                                    <tbody>
+                                        <tr *ngFor="let studentDocument of studentDocuments let i=index">  
+                                            <td>{{i+1}}</td>
+                                            <td class="text-wrap" style="width: 25%;">{{studentDocument.name}}</td>
+                                            <td>
+                                                <input type="file" id="studentDoc_{{i}}" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="studentfileChange($event, i)"  class="form-control" *ngIf="studentDocument?.fileName == ''">
+                                                <label *ngIf="studentDocument?.fileName != ''">   
+                                                    {{studentDocument?.fileName}}
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveStudentDocClicked[i] && studentDocument?.fileName == ''" (click)="saveStudentDoc(i, studentDocument?.id)"><i class="fa fa-upload"></i>Upload </button>
+                                                
+                                                <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteStudentDocClicked[i] && studentDocument?.fileName != ''" (click)="deleteApplicationDoc(i, studentDocument?.id,'')"><i class="fa fa-trash"></i>Delete </button>
+
+                                                <button type="button" class="btn btn-sm btn-rounded btn-secondary" *ngIf="!downloadStudentDocClicked[i] && studentDocument?.fileName != ''" (click)="downloadApplicationDoc(i, studentDocument?.id,'', studentDocument?.fileName)"><i class="fa fa-download"></i>Download</button>
+                                                
+                                                <button type="button" class="btn btn-sm btn-rounded btn-info" *ngIf="deleteStudentDocClicked[i] || saveStudentDocClicked[i] || downloadStudentDocClicked[i]" disabled><i class="fa fa-spin fa-spinner"></i>Processing...</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>                            
                         </ng-template>
                     </li>
                 </ul>
