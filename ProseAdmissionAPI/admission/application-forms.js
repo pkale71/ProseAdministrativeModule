@@ -9,6 +9,7 @@ let applicationFor;
 let schoolUUID;
 let schoolingProgramId;
 let academicSessionId;
+let studyCenterUUID;
 let statusId;
 //
 let applicationForms;
@@ -17,6 +18,9 @@ module.exports = require('express').Router().get('/:applicationFor/:schoolUUID/:
 {
     try
     {
+        studyCenterUUID = "";
+        statusId = '';
+
         let tempParams = req.params?.applicationFor + "/" + req.params?.schoolUUID + "/" + req.params?.schoolingProgramId + "/" + req.params?.academicSessionId;
         req.params[0] = req.params['optParam'] ? '/' + req.params['optParam'] + req.params[0] : req.params[0];
         tempParams = tempParams + (req.params[0].toString().indexOf("/") == -1 ? ("/" + req.params[0]) : req.params[0]);
@@ -51,10 +55,19 @@ module.exports = require('express').Router().get('/:applicationFor/:schoolUUID/:
             schoolUUID = tempParams[1];
             schoolingProgramId = commonFunction.validateNumber(tempParams[2]);
             academicSessionId = commonFunction.validateNumber(tempParams[3]);
-            statusId = commonFunction.validateNumber(tempParams[4]);
+            studyCenterUUID = tempParams[4];
+        }
+        else if(tempParams.length == 6)
+        {
+            applicationFor = tempParams[0];
+            schoolUUID = tempParams[1];
+            schoolingProgramId = commonFunction.validateNumber(tempParams[2]);
+            academicSessionId = commonFunction.validateNumber(tempParams[3]);
+            studyCenterUUID = tempParams[4];
+            statusId = commonFunction.validateNumber(tempParams[5]);
         }
         
-        applicationForms = await dbAdmission.getApplicationForms(applicationFor, schoolUUID, schoolingProgramId, academicSessionId, statusId);
+        applicationForms = await dbAdmission.getApplicationForms(applicationFor, schoolUUID, schoolingProgramId, academicSessionId, studyCenterUUID, statusId);
         if(applicationForms.length >= 0)
         {
             res.status(200)

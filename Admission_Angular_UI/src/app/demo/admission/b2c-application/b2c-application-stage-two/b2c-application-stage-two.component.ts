@@ -208,16 +208,6 @@ export class B2cApplicationStageTwoComponent
     let tempFeeStructure = this.feeStructures.filter(fs=>fs.uuid == uuid);
     if(tempFeeStructure.length > 0)
     {
-      let taxApplicable = "";
-      if(tempFeeStructure[0].taxApplicable == 1)
-      {
-        taxApplicable = tempFeeStructure[0].rate + "%";
-      }
-      else
-      {
-        taxApplicable = 'No';
-      }
-      this.addApplicationForm2.get("taxApplicable").setValue(taxApplicable);
       this.addApplicationForm2.get("installments").setValue(tempFeeStructure[0].totalInstallment > 1 ? 'Yes' : 'No');
       this.addApplicationForm2.get("grossAmount").setValue("");
     }
@@ -233,6 +223,16 @@ export class B2cApplicationStageTwoComponent
         if(this.feeStructure != "")
         {
           this.feeStructure = response.feeStructure;
+          let taxApplicable = "";
+          if(this.feeStructure.taxApplicable == 1)
+          {
+            taxApplicable = this.feeStructure.rate + "%";
+          }
+          else
+          {
+            taxApplicable = 'No';
+          }
+          this.addApplicationForm2.get("taxApplicable").setValue(taxApplicable);
           this.addApplicationForm2.get("grossAmount").setValue(this.feeStructure.totals[0].grossAmount);
           this.addApplicationForm2.get("otherDiscount").setValue("0");
           this.generateFeeStructureCalc();

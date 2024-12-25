@@ -10,6 +10,8 @@ import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AdmissionService } from 'src/app/theme/shared/service/admission.service';
+import { StudentProfileEditComponent } from '../../student-profile-edit/student-profile-edit.component';
+import { ParentProfileEditComponent } from '../../parent-profile-edit/parent-profile-edit.component';
 
 @Component({
   selector: 'app-b2c-application-deatil',
@@ -22,7 +24,13 @@ export class B2cApplicationDeatilComponent
 {
   uuid : string;
   applicationFor : string;
-  totalDue : number;
+  totalAmount : number = 0;
+  totalPaid : number = 0;
+  totalDue : number = 0;
+  totalPayments : number = 0;
+  totalBankCharges : number = 0;
+  totalFeeTypes : number = 0;
+  totalDiscountTypes : number = 0;
   studentProfileData : any;
   parentProfileData : any;
   subjectGroupData : any;
@@ -97,6 +105,18 @@ export class B2cApplicationDeatilComponent
       this.notifier.notify(type, message);
   }
 
+  public updateProfileResult:any = this.commonSharedService.updateProfileObject.subscribe(res =>
+  {
+    if(res.result == "success" && res.action == "Student")
+    {
+      this.getApplicationStudentProfile(this.uuid);
+    }
+    else if(res.result == "success" && res.action == "Parent")
+    {
+      this.getApplicationParentProfile(this.uuid);
+    }
+  })
+
   async getApplicationStudentProfile(uuid : string) 
   {
     this.studentProfileClicked = true;
@@ -148,16 +168,32 @@ export class B2cApplicationDeatilComponent
   async getApplicationFeeStructure(uuid : string) 
   {
     this.feeStructureClicked = true;
+    this.totalAmount = 0;
+    this.totalPaid = 0;
+    this.totalDue = 0;
     let response = await this.admissionService.getApplicationFeeStructure(uuid).toPromise(); 
     if (response.status_code == 200 && response.message == 'success') 
     {
       this.feeStructureData = response.feeStructure;
       this.feeStructureClicked = false;
       //Calculate Total Dues
-      this.totalDue = 0;
       for(let i=0;i<this.feeStructureData?.installments.length;i++)
       {
-        this.totalDue = this.totalDue + (this.feeStructureData?.installments[i]?.amount - this.feeStructureData?.installments[i]?.amountPaid);
+        this.totalAmount = this.totalAmount + parseFloat(this.feeStructureData?.installments[i]?.amount);
+        this.totalPaid = this.totalPaid + parseFloat(this.feeStructureData?.installments[i]?.amountPaid);
+        this.totalDue = this.totalDue + (parseFloat(this.feeStructureData?.installments[i]?.amount) - parseFloat(this.feeStructureData?.installments[i]?.amountPaid));
+      }
+
+      //Calculate Total Fee Types
+      for(let i=0;i<this.feeStructureData?.feeTypes.length;i++)
+      {
+        this.totalFeeTypes = this.totalFeeTypes + parseFloat(this.feeStructureData?.feeTypes[i]?.amount);
+      }
+
+      //Calculate Total Discount Types
+      for(let i=0;i<this.feeStructureData?.discountTypes.length;i++)
+      {
+        this.totalDiscountTypes = this.totalDiscountTypes + parseFloat(this.feeStructureData?.discountTypes[i]?.amount);
       }
     }
     else
@@ -170,10 +206,18 @@ export class B2cApplicationDeatilComponent
   async getApplicationFeePayments(uuid : string) 
   {
     this.feePaymentClicked = true;
+    this.totalBankCharges = 0;
+    this.totalPayments = 0;
     let response = await this.admissionService.getApplicationFeePayments(uuid).toPromise(); 
     if (response.status_code == 200 && response.message == 'success') 
     {
         this.feePayments = response.feePayments;
+        //Calculate Total Payments And Bank Charges
+        for(let i=0;i<this.feePayments.length;i++)
+        {
+          this.totalBankCharges = this.totalBankCharges + parseFloat(this.feePayments[i]?.bankCharges);
+          this.totalPayments = this.totalPayments + parseFloat(this.feePayments[i]?.amount);
+        }
         this.feePaymentClicked = false;
     }
     else
@@ -247,41 +291,59 @@ export class B2cApplicationDeatilComponent
   undertakingfileChange(event : any, i : number)
   {         
     const file = event.target.files[0]; 
-    let fSize : number = parseFloat((file.size / 1024).toFixed(2));
-    if(file.type == 'image/png' || file.type == 'image/jpeg' || file.type == 'application/pdf')
+    if(file != "")
     {
-      if(fSize > 0)
+      let fSize : number = parseFloat((file.size / 1024).toFixed(2));
+      if(file.type == 'image/png' || file.type == 'image/jpeg' || file.type == 'application/pdf')
       {
-          this.undertakingDocFiles[i] = file;
+        if(fSize > 0)
+        {
+            this.undertakingDocFiles[i] = file;
+        }
       }
     }
   }
 
-  async saveUndertakingDoc(i : number, docName : string)
+  async saveUndertakingDoc(i : number, studentDocumentId : number, docName : string)
   {
     try
     {
       if(this.undertakingDocFiles[i] != "")
       {
         this.saveUndertakingClicked[i] = true;
-        let formData = new FormData();
-        formData.append("application", JSON.stringify({"uuid" : this.uuid}));
-        formData.append("documentName", docName);
-        formData.append("documentFile", this.undertakingDocFiles[i])
-
-        let response = await this.admissionService.saveApplicationForm4(formData).toPromise();
+        let jsonData = {
+          "application" : {"uuid" : this.uuid},
+          "documentName" : docName,
+          "applicationStudentDocument" : {"id" : (studentDocumentId > 0 ? studentDocumentId : "")}
+        }
+        
+        let response = await this.admissionService.deleteApplicationDoc(jsonData).toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-          this.showNotification('success', "Application Document Uploaded");
-          this.undertakingDocFiles[i] = "";
-          this.getApplicationUndertakingDocument(response.uuid);
-          this.saveUndertakingClicked[i] = false;
+          let formData = new FormData();
+          formData.append("application", JSON.stringify({"uuid" : this.uuid}));
+          formData.append("documentName", docName);
+          formData.append("documentFile", this.undertakingDocFiles[i])
+
+          let response = await this.admissionService.saveApplicationForm4(formData).toPromise();
+          if (response.status_code == 200 && response.message == 'success') 
+          {
+            this.showNotification('success', "Application Document Uploaded");
+            this.undertakingDocFiles[i] = "";
+            this.getApplicationUndertakingDocument(response.uuid);
+            this.saveUndertakingClicked[i] = false;
+          }
+          else
+          {
+            this.showNotification('error', "Application Document Not Saved");
+            this.saveUndertakingClicked[i] = false;
+          } 
         }
         else
         {
-          this.showNotification('error', "Application Document Not Saved");
+          this.showNotification('error', "Old Application Document Not Deleted");
           this.saveUndertakingClicked[i] = false;
-        } 
+        }
       }
       else
       {
@@ -441,12 +503,15 @@ export class B2cApplicationDeatilComponent
   studentfileChange(event : any, i : number)
   {         
     const file = event.target.files[0]; 
-    let fSize : number = parseFloat((file.size / 1024).toFixed(2));
-    if(file.type == 'image/png' || file.type == 'image/jpeg' || file.type == 'application/pdf')
+    if(file != "")
     {
-      if(fSize > 0)
+      let fSize : number = parseFloat((file.size / 1024).toFixed(2));
+      if(file.type == 'image/png' || file.type == 'image/jpeg' || file.type == 'application/pdf')
       {
-          this.studentDocFiles[i] = file;
+        if(fSize > 0)
+        {
+            this.studentDocFiles[i] = file;
+        }
       }
     }
   }
@@ -595,9 +660,9 @@ export class B2cApplicationDeatilComponent
     };
 
     let sportProfile = {
-      "sportName" : this.sportProfileData?.sportName || "",
+      "sportName" : this.sportProfileData?.businessPartner?.coach?.uuid ? this.sportProfileData?.businessPartner?.coach?.businessVerticalType?.name : this.sportProfileData?.otherAcademySport,
       "coachName" : this.sportProfileData?.businessPartner?.coach?.uuid ? this.sportProfileData?.businessPartner?.coach?.name : this.sportProfileData?.otherAcademyCoach,
-      "coachMobile" : this.sportProfileData?.businessPartner?.coach?.mobile || "",
+      "coachMobile" : this.sportProfileData?.businessPartner?.coach?.uuid ? this.sportProfileData?.businessPartner?.coach?.mobile : this.sportProfileData?.otherAcademyCoachMobile,
       "academyName" : this.sportProfileData?.businessPartner?.uuid ? this.sportProfileData?.businessPartner?.name : this.sportProfileData?.otherAcademyName,
       "academyAddress" : this.sportProfileData?.businessPartner?.uuid ? this.sportProfileData?.businessPartner?.address : this.sportProfileData?.otherAcademyAddress
     };
@@ -702,8 +767,52 @@ export class B2cApplicationDeatilComponent
     }
   }
 
+  updateStudentProfile()
+  {
+    let profileData = {
+      "application" : {"uuid" : this.uuid},
+      "studentName" : this.studentProfileData?.studentName,
+      "dob" : this.studentProfileData?.dob,
+      "gender" : {"id" : this.studentProfileData?.gender?.id},
+      "nationality" : this.studentProfileData?.nationality,
+      "aadharNumber" : this.studentProfileData?.aadharNumber,
+      "passportNumber" : this.studentProfileData?.passportNumber
+    }
+    const dialogRef = this.modalService.open(StudentProfileEditComponent, 
+    { 
+      size: 'lg', backdrop: 'static' 
+    });
+    dialogRef.componentInstance.modalParams = {studentProfile : profileData};
+  }
+
+  updateParentProfile()
+  {
+    let profileData = {
+      "id" : this.parentProfileData?.id,
+      "name" : this.parentProfileData?.name,
+      "email" : this.parentProfileData?.email,
+      "mobile" : this.parentProfileData?.mobile,
+      "relationship" : this.parentProfileData?.relationship,
+      "aadharNumber" : this.parentProfileData?.aadharNumber,
+      "passportNumber" : this.parentProfileData?.passportNumber,
+      "panNumber" : this.parentProfileData?.panNumber,
+      "address" : this.parentProfileData?.address,
+      "country" : this.parentProfileData?.country,
+      "state" : this.parentProfileData?.state,
+      "district" : this.parentProfileData?.district,
+      "city" : this.parentProfileData?.city,
+      "pincode" : this.parentProfileData?.pincode
+    }
+    
+    const dialogRef = this.modalService.open(ParentProfileEditComponent, 
+    { 
+      size: 'lg', backdrop: 'static' 
+    });
+    dialogRef.componentInstance.modalParams = {parentProfile : profileData};
+  }
+
   back()
   {
-    this.router.navigateByUrl("/b2cApplication/registrations");
+    this.router.navigateByUrl("/b2cApplication/admissions");
   }
 }

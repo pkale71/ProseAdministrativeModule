@@ -240,7 +240,7 @@ buildBusinessJSON.coaches = function(datas, action = 1)
             "uuid" : data.uuid,
             "code" : data.code,
             "name" : data.name,
-            "email" : data.email,
+            "email" : data.email || "",
             "mobile" : data.mobile,
             "isActive" : data.isActive,
             "tableName" : data.tableName ? data.tableName : '',

@@ -177,6 +177,7 @@ buildCommonJSON.applicationForms = function(datas, action = 1)
     let applicationTypeJSON = [];
     let siblingTypeJSON = [];
     let applicationStatusJSON = [];
+    let studyCenterJSON = [];
     let parentJSON = [];
 
     datas.forEach((data) => 
@@ -185,6 +186,7 @@ buildCommonJSON.applicationForms = function(datas, action = 1)
         siblingTypeJSON = [];
         applicationStatusJSON = [];
         parentJSON = [];
+        studyCenterJSON = [];
                 
         applicationTypeJSON = {
             "id" : data.applicationTypeId,
@@ -200,6 +202,10 @@ buildCommonJSON.applicationForms = function(datas, action = 1)
             "mobile" : data.parentMobile,
             "email" : data.parentEmail
         };
+        studyCenterJSON = {
+            "uuid" : data.studyCenterUUID,
+            "name" : data.studyCenterName
+        };
         applicationStatusJSON = {
             "id" : data.applicationStatusId,
             "name" : data.applicationStatusName
@@ -213,6 +219,7 @@ buildCommonJSON.applicationForms = function(datas, action = 1)
             "admissionDate" : commonFunction.getFormattedDate(data.admissionDate, "yyyy-mm-dd"),
             "studentName" : data.studentName,
             "parent" : parentJSON,
+            "studyCenter" : studyCenterJSON,
             "profileCompletion" : {"id" : data.profileCompletionId, "name" : data.profileCompletionName},
             "grade" : {"id" : data.gradeId, "name" : data.gradeName},
             "applicationType" : applicationTypeJSON,
@@ -455,7 +462,8 @@ buildCommonJSON.parentProfile = function(datas)
             "country" : countryJSON,
             "state" : stateJSON,
             "district" : districtJSON,
-            "city" : cityJSON
+            "city" : cityJSON,
+            "pincode" : data.parentPincode
         }
         resultJSON = finalJSON;
     });
@@ -543,7 +551,9 @@ buildCommonJSON.applicationSportEngagement = function(datas)
         coachJSON = {
             "uuid" : data.coachUUID,
             "name" : data.coachName,
-            "mobile" : data.coachMobile
+            "mobile" : data.coachMobile,
+            "email" : data.coachEmail || "",
+            "businessVerticalType" : {"id" : data.businessVerticalTypeid || "", "name" : data.businessVerticalTypeName || ""}
         };
 
         bpCountryJSON = {
@@ -605,6 +615,9 @@ buildCommonJSON.applicationSportEngagement = function(datas)
             "otherAcademyName" : data.otherAcademyName || "",
             "otherAcademyAddress" : data.otherAcademyAddress || "",
             "otherAcademyCoach" : data.otherAcademyCoach || "",
+            "otherAcademySport" : data.otherAcademySport || "",
+            "otherAcademyCoachEmail" : data.otherAcademyCoachEmail || "",
+            "otherAcademyCoachMobile" : data.otherAcademyCoachMobile || "",
             "otherAcademyCountry" : otherCountryJSON,
             "otherAcademyState" : otherStateJSON,
             "otherAcademyDistrict" : otherDistrictJSON,

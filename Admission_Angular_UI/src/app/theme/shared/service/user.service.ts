@@ -57,4 +57,39 @@ export class UserService {
     {
         return this.apiAdminService.post('/user/assignUserRoleTypeModule', assignUserRoleTypeModule);
     }
+
+    getUserSchoolSchoolingPrograms(userUUID : string, moduleId : number)
+    {
+        return this.apiAdminService.get('/user/getUserSchoolSchoolingPrograms/' + userUUID + '/' + moduleId);
+    }
+
+    saveUserSchoolSchoolingPrograms(tempJSON: any)
+    {
+        return this.apiAdminService.post('/user/saveUserSchoolSchoolingPrograms', tempJSON);
+    }
+
+    deleteUserSchool(tempJSON: any)
+    {
+        return this.apiAdminService.post('/user/deleteUserSchool', tempJSON);
+    }
+
+    deleteUserSchoolSchoolingProgram(tempJSON: any)
+    {
+        return this.apiAdminService.post('/user/deleteUserSchoolSchoolingProgram', tempJSON);
+    }
+
+    getUserStudyCenters(userUUID : string, moduleId : number)
+    {
+        return this.apiAdminService.get('/user/getUserStudyCenters/' + userUUID + '/' + moduleId);
+    }
+
+    saveUserStudyCenters(tempJSON: any)
+    {
+        return this.apiAdminService.post('/user/saveUserStudyCenters', tempJSON);
+    }
+
+    deleteUserStudyCenter(tempJSON: any)
+    {
+        return this.apiAdminService.post('/user/deleteUserStudyCenter', tempJSON);
+    }
 }

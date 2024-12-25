@@ -305,6 +305,7 @@ export class SubjectGroupEditComponent
             if (response.status_code == 200 && response.message == 'success') 
             {
                 this.showNotification("success", "Subject Group Combination Saved");
+                this.activeModal.close(); 
                 this.router.navigateByUrl("/admissionMaster/subjectGroup/detail/" + this.subjectGroup.id);
             }
           }

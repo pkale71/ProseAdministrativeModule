@@ -205,19 +205,21 @@ export class FeeStructureListComponent
   {
     try
     {
-        this.searchClickedSyllabus = true;
-        let response = await this.commonService.getSyllabuses(gradeCategoryId, action).toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
-        {
-            this.syllabuses = response.syllabuses;
-            this.syllabuses.unshift({ id : "", name : "Select Syllabus" });
-            this.searchClickedSyllabus = false;
-        }
-        else
-        {
-            this.syllabuses.unshift({ id : "", name : "Select Syllabus" });
-            this.searchClickedSyllabus = false;
-        }
+      this.syllabusForm.get("syllabus").setValue("");
+      this.gradeCategoryForm.get("gradeCategory").setValue("");
+      this.searchClickedSyllabus = true;
+      let response = await this.commonService.getSyllabuses(gradeCategoryId, action).toPromise();
+      if (response.status_code == 200 && response.message == 'success') 
+      {
+          this.syllabuses = response.syllabuses;
+          this.syllabuses.unshift({ id : "", name : "Select Syllabus" });
+          this.searchClickedSyllabus = false;
+      }
+      else
+      {
+          this.syllabuses.unshift({ id : "", name : "Select Syllabus" });
+          this.searchClickedSyllabus = false;
+      }
     }
     catch(e)
     {
@@ -235,9 +237,12 @@ export class FeeStructureListComponent
     {
       this.gradeCategories = [];
       this.gradeCategories = filterGradeCategories[0].gradeCategories;
-      if (!this.gradeCategories.some(gradeCategory => gradeCategory.id === "")) 
+      if(this.gradeCategories.length > 0)
       {
-        this.gradeCategories.unshift({ id: "", name: "Select Grade Category" });
+        if (!this.gradeCategories.some(gradeCategory => gradeCategory.id === "")) 
+        {
+          this.gradeCategories.unshift({ id: "", name: "Select Grade Category" });
+        }
       }
       this.searchClickedGradeCategory = false;
       

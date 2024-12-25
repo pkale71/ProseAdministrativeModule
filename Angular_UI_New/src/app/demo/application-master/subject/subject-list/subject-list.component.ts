@@ -74,7 +74,10 @@ export class SubjectListComponent {
     public gradeAddResult:any = this.commonSharedService.subjectListObject.subscribe(res =>{
         if(res.result == "success")
         {
-            this.getSubjects(res.gradeCategoryId, res.gradeId, res.syllabusId, 'All');
+            this.gradeForm.get("grade").setValue(res.response.gradeId);
+            this.getSyllabuses(res.response.gradeCategoryId);
+            this.syllabusForm.get("syllabus").setValue(res.response.syllabusId);
+            this.getSubjects(res.response.gradeCategoryId, res.response.gradeId, res.response.syllabusId, 'All');
         }
     })
 

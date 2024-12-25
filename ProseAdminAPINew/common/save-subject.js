@@ -6,7 +6,7 @@ let errorCode = new errorCodes();
 //variable
 let name;
 let gradeCategoryId;
-let gradeId;
+let gradeIds;
 let syllabusIds;
 let applicableFromYearId;
 let totalSession;
@@ -29,13 +29,13 @@ module.exports = require('express').Router().post('/', async(req, res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.gradeCategory != undefined && reqData.grade != undefined && reqData.syllabusIds != undefined && reqData.applicableFromYear != undefined && reqData.subjectType != undefined && reqData.totalSession != undefined && reqData.sessionDuration != undefined && reqData.hasPractical != undefined && reqData.isMandatory != undefined)
+        if(reqData.name != undefined && reqData.gradeCategory != undefined && reqData.gradeIds != undefined && reqData.syllabusIds != undefined && reqData.applicableFromYear != undefined && reqData.subjectType != undefined && reqData.totalSession != undefined && reqData.sessionDuration != undefined && reqData.hasPractical != undefined && reqData.isMandatory != undefined)
         {
-            if(reqData.name != '' && reqData.gradeCategory.id != '' && reqData.grade.id != '' && reqData.syllabusIds.id != '' && reqData.applicableFromYear.id != '' && reqData.subjectType.id != '' && reqData.totalSession != '' && reqData.sessionDuration != '' && reqData.hasPractical != '' && reqData.isMandatory != '')
+            if(reqData.name != '' && reqData.gradeCategory.id != '' && reqData.gradeIds != '' && reqData.syllabusIds.id != '' && reqData.applicableFromYear.id != '' && reqData.subjectType.id != '' && reqData.totalSession != '' && reqData.sessionDuration != '' && parseInt(reqData.hasPractical) >= 0 && parseInt(reqData.isMandatory) >= 0)
             {
                 name = reqData.name;
                 gradeCategoryId = commonFunction.validateNumber(reqData.gradeCategory.id);
-                gradeId = commonFunction.validateNumber(reqData.grade.id);
+                gradeIds = reqData.gradeIds;
                 syllabusIds = reqData.syllabusIds;
                 applicableFromYearId = commonFunction.validateNumber(reqData.applicableFromYear.id);
                 subjectTypeId = commonFunction.validateNumber(reqData.subjectType.id);
@@ -53,8 +53,9 @@ module.exports = require('express').Router().post('/', async(req, res) =>
                     if(gradeCategory.length == 1)
                     {
                         // check grade exist
-                        grade = await dbCommon.getGrade(gradeId);
-                        if(grade.length == 1)
+                        let gradeArray = gradeIds.toString().split(",");   
+                        grade = await dbCommon.getGrade(gradeIds);
+                        if(grade.length == gradeArray.length)
                         {
                             // check syllabus exist
                             syllabus = await dbCommon.getSyllabus(syllabusIds);
@@ -66,14 +67,14 @@ module.exports = require('express').Router().post('/', async(req, res) =>
                                 if(applicableFromYear.length == 1)
                                 {
                                     // check duplicate subject
-                                    subject = await dbCommon.duplicateSubject(gradeCategoryId, gradeId, syllabusIds, name, '')
+                                    subject = await dbCommon.duplicateSubject(gradeCategoryId, gradeIds, syllabusIds, name, '')
                                 
                                     if(subject.length == 0)
                                     {
                                         // insert syllabus
                                         let insertJSON = {
                                             "gradeCategoryId" : gradeCategoryId,
-                                            "gradeId" : gradeId,
+                                            "gradeIds" : gradeIds,
                                             "subjectTypeId" : subjectTypeId,
                                             "syllabusIds" : syllabusIds,
                                             "applicableFromYearId" : applicableFromYearId,

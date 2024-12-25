@@ -48,7 +48,7 @@ export class CoachAddComponent
         this.coachForm = this.formbuilder.group({
             uuid: [''],
             name: ['', [Validators.required]],
-            email: ['', [Validators.required, Validators.email]],
+            email: ['', [Validators.email]],
             mobile : ['', [Validators.required, Validators.pattern('^[0-9]{10,15}'), Validators.minLength(10), Validators.maxLength(15)]],
             businessVertical: this.formbuilder.group({ "id" : [''] }),
             businessVerticalType: this.formbuilder.group({ "id" : [''] }),

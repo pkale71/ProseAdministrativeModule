@@ -27,6 +27,13 @@ userRoute.use('/getOnBoardingLink', require('./user-on-boarding-link.js'));
 userRoute.use('/saveOnBoardingLink', require('../util/validateToken.js'), require('./save-on-boarding-link.js'));
 userRoute.use('/sendOnBoardingLink', require('../util/validateToken.js'), require('./send-user-on-boarding-link.js'));
 userRoute.use('/deleteOnBoardingLink', require('../util/validateToken.js'), require('./delete-user-on-boarding-link.js'));
+userRoute.use('/getUserSchoolSchoolingPrograms', require('../util/validateToken.js'), require('./user-school-schooling-programs.js'));
+userRoute.use('/saveUserSchoolSchoolingPrograms', require('../util/validateToken.js'), require('./save-user-school-schooling-program.js'));
+userRoute.use('/deleteUserSchool', require('../util/validateToken.js'), require('./delete-user-school.js'));
+userRoute.use('/deleteUserSchoolSchoolingProgram', require('../util/validateToken.js'), require('./delete-user-school-schooling-program.js'));
+userRoute.use('/getUserStudyCenters', require('../util/validateToken.js'), require('./user-study-centers.js'));
+userRoute.use('/saveUserStudyCenters', require('../util/validateToken.js'), require('./save-user-study-center.js'));
+userRoute.use('/deleteUserStudyCenter', require('../util/validateToken.js'), require('./delete-user-study-center.js'));
 
 userRoute.use('/',(req,res,next) => 
 {

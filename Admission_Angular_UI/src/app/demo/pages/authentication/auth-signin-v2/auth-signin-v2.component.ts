@@ -61,7 +61,7 @@ export default class AuthSigninV2Component implements OnInit {
             if (response1.status_code == 200 && response1.message == 'success') 
             {
                 this.commonSharedService.adminBaseUrl = response1.appBase.uiUrl;
-                
+                localStorage.setItem("adminBaseUrl", response1.appBase.uiUrl);  
                 if(this.commonSharedService.adminBaseUrl != "")
                 {
                     let response = await this.userService.authenticateUser(this.loginForm.value).toPromise();

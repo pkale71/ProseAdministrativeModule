@@ -8,7 +8,7 @@
                 <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
                 (click)="back()">Back</button>
             </div>
-            <div class="card" *ngIf = "user?.userGrade?.code != 'MOADM' || user?.userGrade?.code != 'MOUSR' ">
+            <div class="card">
                 <div class="card-header">
                     <h4>User Info&nbsp;<i class="fa fa-spin fa-spinner" *ngIf = "searchClicked"></i></h4>
                 </div>
@@ -98,6 +98,7 @@
                                             <td style="width:40px; text-align: right;">
                                                 <i class="fa fa-user-tag" (click)="approveUserModule(userModule)" title="Approve/Deny" style="cursor: pointer;"></i>&nbsp;
                                                 <i class="fa fa-check" (click)="assignUserTypeRole(userModule)" title="Assign Role/Type" style="cursor: pointer;"></i>&nbsp;
+                                                <i class="fa fa-search" (click)="moduleAccessibility(userModule)" title="Module Accessibility" style="cursor: pointer;" *ngIf="userModule.userRole?.name != null && userModule.userType?.name != null"></i>
                                             </td>
                                         </tr>
                                         <tr *ngIf="userModules.length == 0">

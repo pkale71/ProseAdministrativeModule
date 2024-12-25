@@ -14,6 +14,7 @@ let parentCountryId;
 let parentStateId;
 let parentDistrictId;
 let parentCityId;
+let parentPinCode;
 let parentAadharNumber;
 let parentPassportNumber;
 let parentPanNumber;
@@ -27,6 +28,9 @@ let otherAcademyStateId;
 let otherAcademyDistrictId;
 let otherAcademyCityId;
 let otherAcademyCoach;
+let otherAcademySportName;
+let otherAcademyCoachEmail;
+let otherAcademyCoachMobile;
 let studentUndergone;
 let formalSchoolName;
 let formalSchoolAddress;
@@ -56,9 +60,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.application != undefined && reqData.dob != undefined && reqData.nationality != undefined && reqData.aadharNumber != undefined && reqData.passportNumber != undefined && reqData.parentAddress != undefined && reqData.parentCountry != undefined && reqData.parentState != undefined && reqData.parentDistrict != undefined && reqData.parentCity != undefined && reqData.parentAadharNumber != undefined && reqData.parentPassportNumber != undefined && reqData.parentPanNumber != undefined && reqData.isPracticingSport != undefined && reqData.engagementDate != undefined && reqData.businessPartner != undefined && reqData.coach != undefined && reqData.otherAcademyName != undefined && reqData.otherAcademyAddress != undefined && reqData.otherAcademyCountry != undefined && reqData.otherAcademyState != undefined && reqData.otherAcademyDistrict != undefined && reqData.otherAcademyCity != undefined && reqData.otherAcademyCoach != undefined && reqData.studentUndergone != undefined && reqData.formalSchoolName != undefined && reqData.formalSchoolAddress != undefined && reqData.formalCountry != undefined && reqData.formalState != undefined && reqData.formalDistrict != undefined && reqData.formalCity != undefined && reqData.formalSyllabus != undefined && reqData.formalGrade != undefined && reqData.formalMedium != undefined && reqData.formalLastAcademicYear != undefined && reqData.declarationCorrect != undefined)
+        if(reqData.application != undefined && reqData.dob != undefined && reqData.nationality != undefined && reqData.aadharNumber != undefined && reqData.passportNumber != undefined && reqData.parentAddress != undefined && reqData.parentCountry != undefined && reqData.parentState != undefined && reqData.parentDistrict != undefined && reqData.parentCity != undefined && reqData.parentPinCode != undefined && reqData.parentAadharNumber != undefined && reqData.parentPassportNumber != undefined && reqData.parentPanNumber != undefined && reqData.isPracticingSport != undefined && reqData.engagementDate != undefined && reqData.businessPartner != undefined && reqData.coach != undefined && reqData.otherAcademyName != undefined && reqData.otherAcademyAddress != undefined && reqData.otherAcademyCountry != undefined && reqData.otherAcademyState != undefined && reqData.otherAcademyDistrict != undefined && reqData.otherAcademyCity != undefined && reqData.otherAcademyCoach != undefined && reqData.otherAcademySportName != undefined && reqData.otherAcademyCoachEmail != undefined && reqData.otherAcademyCoachMobile != undefined && reqData.studentUndergone != undefined && reqData.formalSchoolName != undefined && reqData.formalSchoolAddress != undefined && reqData.formalCountry != undefined && reqData.formalState != undefined && reqData.formalDistrict != undefined && reqData.formalCity != undefined && reqData.formalSyllabus != undefined && reqData.formalGrade != undefined && reqData.formalMedium != undefined && reqData.formalLastAcademicYear != undefined && reqData.declarationCorrect != undefined)
         {
-            if(reqData.application.uuid != "" && reqData.dob != "" && reqData.nationality != "" && reqData.aadharNumber != "" && reqData.parentAddress != "" && reqData.parentCountry != "" && reqData.parentState != "" && reqData.parentDistrict != "" && reqData.parentCity != "" && reqData.parentAadharNumber != "" && reqData.isPracticingSport != "" && reqData.studentUndergone != "" && reqData.declarationCorrect != "")
+            if(reqData.application.uuid != "" && reqData.dob != "" && reqData.nationality != "" && reqData.aadharNumber != "" && reqData.parentAddress != "" && reqData.parentCountry != "" && reqData.parentState != "" && reqData.parentDistrict != "" && reqData.parentCity != "" && reqData.parentPinCode != "" && reqData.parentAadharNumber != "" && reqData.isPracticingSport != "" && reqData.studentUndergone != "" && reqData.declarationCorrect != "")
             {
                 applicationUUID = reqData.application.uuid;
                 dob = reqData.dob;
@@ -70,6 +74,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 parentStateId = commonFunction.validateNumber(reqData.parentState.id);
                 parentDistrictId = commonFunction.validateNumber(reqData.parentDistrict.id);
                 parentCityId = commonFunction.validateNumber(reqData.parentCity.id);
+                parentPinCode = reqData.parentPinCode;
                 parentAadharNumber = reqData.parentAadharNumber;
                 parentPassportNumber = reqData.parentPassportNumber;
                 parentPanNumber = reqData.parentPanNumber;
@@ -84,6 +89,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 otherAcademyDistrictId = reqData.otherAcademyDistrict.id;
                 otherAcademyCityId = reqData.otherAcademyCity.id;
                 otherAcademyCoach = reqData.otherAcademyCoach;
+                otherAcademySportName = reqData.otherAcademySportName;
+                otherAcademyCoachEmail = reqData.otherAcademyCoachEmail;
+                otherAcademyCoachMobile = reqData.otherAcademyCoachMobile;
                 studentUndergone = reqData.studentUndergone;
                 formalSchoolName = reqData.formalSchoolName;
                 formalSchoolAddress = reqData.formalSchoolAddress;
@@ -247,6 +255,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     "parentStateId" : parentStateId,
                     "parentDistrictId" : parentDistrictId,
                     "parentCityId" : parentCityId,
+                    "parentPinCode" : parentPinCode,
                     "parentAadharNumber" : parentAadharNumber,
                     "parentPassportNumber" : parentPassportNumber,
                     "parentPanNumber" : parentPanNumber,
@@ -261,6 +270,9 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                     "otherAcademyDistrictId" : otherAcademyDistrictId,
                     "otherAcademyCityId" : otherAcademyCityId,
                     "otherAcademyCoach" : otherAcademyCoach,
+                    "otherAcademySportName" : otherAcademySportName,
+                    "otherAcademyCoachEmail" : otherAcademyCoachEmail,
+                    "otherAcademyCoachMobile" : otherAcademyCoachMobile,
                     "studentUndergone" : studentUndergone,
                     "formalSchoolName" : formalSchoolName,
                     "formalSchoolAddress" : formalSchoolAddress,

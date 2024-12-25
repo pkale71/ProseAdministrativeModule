@@ -131,9 +131,7 @@
                       </td>   
                       <td style="width:40px;text-align: right;">
                           <i class="fa fa-list" (click)="detailFeeStructure(feeStructure.uuid)"  title="Detail" style="cursor: pointer;"></i>&nbsp;
-                          <i class="fa fa-trash-alt" (click)="deleteFeeStructure(feeStructure.uuid)"  title="Delete" style="cursor: pointer;"></i>
-                          <!-- *ngIf="feeStructure.isExist == 0"
-                            *ngIf="feeStructure.isExist == 0" -->
+                          <i class="fa fa-trash-alt" (click)="deleteFeeStructure(feeStructure.uuid)"  title="Delete" style="cursor: pointer;" *ngIf="feeStructure.isExist == 0"></i>
                       </td>
                   </tr>
                   <tr *ngIf="feeStructures.length == 0">

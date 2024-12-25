@@ -168,14 +168,24 @@ const NavigationItems = [
                 ]
             },
             {
-                id: 'b2cRegistrations',
-                title: 'B2C Registrations',
+                id: 'b2cAdmissions',
+                title: 'B2C Admissions',
                 type: 'item',
                 classes: 'nav-item',
-                url: '/b2cApplication/registrations',
+                url: '/b2cApplication/admissions',
                 param: "",
                 userTypeCode: ['ADMTM'],
                 icon: 'feather icon-umbrella'
+            },
+            {
+                id: 'feeCollections',
+                title: 'Fee Collections',
+                type: 'item',
+                classes: 'nav-item',
+                url: '/feeCollections',
+                param: "",
+                userTypeCode: ['ADMTM'],
+                icon: 'feather icon-briefcase'
             },
         ]            
     }

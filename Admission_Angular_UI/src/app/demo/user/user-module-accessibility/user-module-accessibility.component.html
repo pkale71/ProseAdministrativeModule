@@ -1,0 +1,230 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card" >
+            <div class="card-header">
+                <h5 style="margin-top: 0.8rem;"><i class="fa fa-user"></i>&nbsp;User&nbsp;
+                <!-- <span [ngClass]="user.active?'badge bg-success':'badge bg-danger'"> Active : {{user.active?'Yes':'No'}}</span> -->
+                </h5>
+                <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
+                (click)="back()">Back</button>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>User Info&nbsp;<i class="fa fa-spin fa-spinner" *ngIf = "searchClicked"></i></h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="fullName">Name</label>
+                                <label class="form-control input-md">{{user?.fullName}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="email">Email</label>
+                                <label class="form-control input-md">{{user?.email}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="mobile">Mobile</label>
+                                <label class="form-control input-md">{{user?.mobile}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="form-control-label" for="gender">Gender</label>
+                                <label class="form-control input-md">{{user?.gender}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="userGrade">Grade</label>
+                                <label class="form-control input-md">{{user?.userGrade?.name}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label" for="userCategory">Category</label>
+                                <label class="form-control input-md">{{user?.userCategory?.id != "" ? user?.userCategory?.name : '----'}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="module">Module</label>
+                                <label class="form-control input-md">{{userModule?.module?.name}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="userRole">Role</label>
+                                <label class="form-control input-md">{{userModule?.userRole?.name}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="userRole">Type</label>
+                                <label class="form-control input-md">{{userModule?.userType?.name}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="isApproved">Is Approved</label>
+                                <label class="form-control input-md">{{userModule?.isModuleAdminApproved ? 'Yes' : 'No'}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row" *ngIf="userModule?.userType?.code != 'ADMGN' && userModule?.userType?.code != 'PTRCO'">
+                        <div class="col-md-12">
+                            <ul class="nav nav-pills col-sm-12" ngbNav #nav="ngbNav">
+                                <li class="nav-item" [ngbNavItem]="1">
+                                    <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                                    School & Schooling Programs&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="userSchoolSchoolingProgramClicked"></i>
+                                    </a>
+                                    <ng-template ngbNavContent>   
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <form [formGroup]="schoolForm">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label" for="school">School&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="schoolClicked"></i></label>
+                                                        <select class="form-control"  required id="school" formControlName="school" (change)="getSchoolSchoolingPrograms(schoolForm.controls['school'].value, '')"
+                                                        [ngClass]="{'is-invalid': !schoolForm.controls['school'].valid && !isValidForm}">
+                                                        <option value="{{school.uuid}}" *ngFor="let school of schools">{{school?.name}}</option>
+                                                        </select>
+                                                        <label style="color: red;"
+                                                        *ngIf="schoolForm.controls['school'].hasError('required') && !isValidForm"
+                                                        class="error jquery-validation-error small form-text"
+                                                        >Please select school.</label>
+                                                    </div>
+                                                </form>                
+                                            </div>
+                                            <div class="col-md-5">
+                                                <form [formGroup]="schoolingProgramForm">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label" for="schoolingPrograms">Schooling Program&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="schoolingProgramClicked"></i></label>
+                                                        <ng-select id="schoolingProgram" required (click)="checkAllSchoolingProgram()"
+                                                        formControlName="schoolingProgram" [options]="schoolingPrograms" [multiple]="true"
+                                                        [ngClass]="!schoolingProgramForm.controls['schoolingProgram'].valid && !isValidForm ? ['ng select', 'is-invalid'] : ['ng-select']">
+                                                        </ng-select>
+                                                        <label style="color: red;"
+                                                        *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
+                                                        class="error jquery-validation-error small form-text"
+                                                        >Please select schooling program.</label>
+                                                    </div>
+                                                </form>                
+                                            </div>                         
+                                            <div class="col-md-3">
+                                                <br>
+                                                <button type="button" class="btn btn-rounded btn-primary" *ngIf="!schoolAssignClicked" 
+                                                (click)="saveUserSchoolSchoolingPrograms()"><i class="fa fa-save"></i>&nbsp;Assign</button>
+                                                <button type="button" class="btn btn-rounded btn-primary" *ngIf="schoolAssignClicked">
+                                                <i class="fa fa-spin fa-spinner"></i>&nbsp;Assigning...</button>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive mt-4">
+                                            <table datatable id="tblUserSchool" class="table table-striped row-border table-hover pt-10">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sno</th>
+                                                        <th>School</th>
+                                                        <th>Schooling Programs</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let userSchoolSchoolingProgram of userSchoolSchoolingPrograms let i=index">
+                                                        <td>{{i+1}}</td>
+                                                        <td>
+                                                            <span class="badge bg-primary">
+                                                                {{userSchoolSchoolingProgram?.school?.name}}&nbsp;
+                                                                <i class="fa fa-trash" (click)="deleteUserSchool(uuid, moduleId, userSchoolSchoolingProgram?.school?.uuid)" title="Delete" style="color:red;cursor: pointer;"></i>
+                                                            </span>
+
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-primary" style="margin-right: 10px;" *ngFor="let schoolingProgram of userSchoolSchoolingProgram?.schoolingPrograms">{{schoolingProgram?.name}}&nbsp;
+                                                            <i class="fa fa-trash" (click)="deleteUserSchoolingProgram(uuid, moduleId, userSchoolSchoolingProgram?.school?.uuid, schoolingProgram?.id)" title="Delete" style="color:red;cursor: pointer;"></i>
+
+                                                            </span>
+                                                        </td>                                                
+                                                    </tr>
+                                                    <tr *ngIf="userSchoolSchoolingPrograms.length == 0">
+                                                        <td></td>
+                                                        <td>No record(s) found</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </ng-template>
+                                </li>
+                                <li class="nav-item" [ngbNavItem]="2">
+                                    <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                                    Study Centers&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="userStudyCenterClicked"></i>
+                                    </a>
+                                    <ng-template ngbNavContent>   
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <form [formGroup]="studyCenterForm">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label" for="studyCenter">Study Centers&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studyCenterClicked"></i></label>
+                                                        <ng-select id="studyCenters" required (click)="checkAllStudyCenter()"
+                                                        formControlName="studyCenter" [options]="studyCenters" [multiple]="true"
+                                                        [ngClass]="!studyCenterForm.controls['studyCenter'].valid && !isValidForm1 ? ['ng select', 'is-invalid'] : ['ng-select']">
+                                                        </ng-select>
+                                                        <label style="color: red;"
+                                                        *ngIf="studyCenterForm.controls['studyCenter'].hasError('required') && !isValidForm1"
+                                                        class="error jquery-validation-error small form-text"
+                                                        >Please select study center.</label>
+                                                    </div>
+                                                </form>                
+                                            </div>                        
+                                            <div class="col-md-3">
+                                                <br>
+                                                <button type="button" class="btn btn-rounded btn-primary" *ngIf="!studyCenterAssignClicked" 
+                                                (click)="saveUserStudyCenters()"><i class="fa fa-save"></i>&nbsp;Assign</button>
+                                                <button type="button" class="btn btn-rounded btn-primary" *ngIf="studyCenterAssignClicked">
+                                                <i class="fa fa-spin fa-spinner"></i>&nbsp;Assigning...</button>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive mt-4">
+                                            <table datatable id="tblUserStudyCenter" class="table table-striped row-border table-hover pt-10">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sno</th>
+                                                        <th>Study Center</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let userStudyCenter of userStudyCenters let i=index">
+                                                        <td>{{i+1}}</td>
+                                                        <td>{{userStudyCenter?.studyCenter?.name}}</td>
+                                                        <td>
+                                                            <i class="fa fa-trash" (click)="deleteUserStudyCenter(uuid, moduleId, userStudyCenter?.studyCenter?.uuid)" title="Delete" style="cursor: pointer;"></i>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="userStudyCenters.length == 0">
+                                                        <td></td>
+                                                        <td>No record(s) found</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </ng-template>
+                                </li>
+                            </ul>
+                            <div [ngbNavOutlet]="nav"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

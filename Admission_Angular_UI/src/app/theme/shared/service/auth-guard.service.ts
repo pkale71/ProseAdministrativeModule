@@ -11,7 +11,7 @@ export class AuthGuardService implements CanActivate
     {
         if (!this.commonSharedService.loginUser || !localStorage.getItem('user'))
         {
-            window.open(this.commonSharedService.adminBaseUrl + '/auth/signin', "_self");
+            window.open(this.commonSharedService.adminBaseUrl + '/#/auth/signin', "_self");
             return false;
         }
         return true;

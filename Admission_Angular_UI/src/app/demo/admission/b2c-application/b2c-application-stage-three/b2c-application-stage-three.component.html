@@ -77,6 +77,7 @@
                             </div>                
                         </div>
                     </div>
+                    <hr>
                     <h5 class="mt-4">Parent Profile&nbsp;</h5>
                     <div class="row">
                         <div class="row mt-2">
@@ -176,6 +177,25 @@
                         <div class="row mt-2">
                             <div class="col-md-3">
                                 <div class="form-group">
+                                    <label class="form-control-label" for="parentPinCode">Pin/Zip Code&nbsp;<span style="color: red;">*</span></label>
+                                    <input class="form-control input-md" id="parentPinCode" type="text" formControlName="parentPinCode" 
+                                    [ngClass]="{'is-invalid': !addApplicationForm3.controls['parentPinCode'].valid && !isValidForm}" minlength="5" maxlength="6"/>
+                                    <label style="color: red;"
+                                    *ngIf="addApplicationForm3.controls['parentPinCode'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please enter pinCode.</label>
+                                    <label style="color: red;"
+                                    *ngIf="addApplicationForm3.controls['parentPinCode'].hasError('pattern') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please enter valid pinCode.</label>
+                                    <label style="color: red;"
+                                    *ngIf="addApplicationForm3.controls['parentPinCode'].hasError('minlength') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Pan number should be 5 digits long.</label>
+                                </div>                
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
                                     <label class="form-control-label" for="parentAadharNumber">Aadhar Number&nbsp;<span style="color: red;">*</span></label>
                                     <input class="form-control input-md" id="parentAadharNumber" type="text" required  formControlName="parentAadharNumber" 
                                     [ngClass]="{'is-invalid': !addApplicationForm3.controls['parentAadharNumber'].valid && !isValidForm}" minlength="12" maxlength="12"/>
@@ -224,6 +244,7 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
                     <h5 class="mt-4">Student Sport Engagement&nbsp;</h5>
                     <h6 class="mt-2">
                         <div class="checkbox">
@@ -372,7 +393,51 @@
                                     >Please enter coach.</label>
                                 </div>      
                             </div>
+                            <div class="col-md-4" *ngIf="addApplicationForm3.controls['isPracticingSport'].value == '1'">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="otherAcademySport">Sport Name&nbsp;<span style="color: red;" *ngIf="addApplicationForm3.controls['isPracticingSport'].value == '1'">*</span></label>
+                                    <input class="form-control input-md" id="otherAcademySport" type="text" formControlName="otherAcademySport" [ngRequired]="addApplicationForm3.controls['isPracticingSport'].value == 1"
+                                    [ngClass]="{'is-invalid': !addApplicationForm3.controls['otherAcademySport'].valid && !isValidForm}" maxlength="150"/>
+                                    <label style="color: red;"
+                                    *ngIf="addApplicationForm3.controls['otherAcademySport'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please enter sport.</label>
+                                </div>      
+                            </div>
                         </div>
+                        <div class="row mt-2" *ngIf="addApplicationForm3.controls['isPracticingSport'].value == '1'">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="otherAcademyCoachEmail">Coach Email</label>
+                                    <input class="form-control input-md" id="otherAcademyCoachEmail" type="text" formControlName="otherAcademyCoachEmail" 
+                                    [ngClass]="{'is-invalid': !addApplicationForm3.controls['otherAcademyCoachEmail'].valid && !isValidForm}" maxlength="150"/>
+                                    <label style="color: red;"
+                                    *ngIf="addApplicationForm3.controls['otherAcademyCoachEmail'].hasError('email') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please enter valid email.</label>
+                                </div>       
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="otherAcademyCoachMobile">Coach Mobile&nbsp;<span style="color: red;" *ngIf="addApplicationForm3.controls['isPracticingSport'].value == '1'">*</span></label>
+                                    <input class="form-control input-md" id="otherAcademyCoachMobile" type="text" formControlName="otherAcademyCoachMobile" [ngRequired]="addApplicationForm3.controls['isPracticingSport'].value == '1'"
+                                    [ngClass]="{'is-invalid': !addApplicationForm3.controls['otherAcademyCoachMobile'].valid && !isValidForm}" minlength="10" maxlength="15"/>
+                                    <label style="color: red;"
+                                    *ngIf="addApplicationForm3.controls['otherAcademyCoachMobile'].hasError('required') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please enter mobile.</label>
+                                    <label style="color: red;"
+                                    *ngIf="addApplicationForm3.controls['otherAcademyCoachMobile'].hasError('minlength') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Mobile number should be 10 to 15 digits long</label>
+                                    <label style="color: red;"
+                                    *ngIf="addApplicationForm3.controls['otherAcademyCoachMobile'].hasError('pattern') && !isValidForm"
+                                    class="error jquery-validation-error small form-text"
+                                    >Please enter valid mobile number</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
                         <h5 class="mt-4">Previous Education Details&nbsp;</h5>
                         <div class="row mt-2">
                             <div class="col-md-6">
@@ -534,6 +599,7 @@
                                 </div>      
                             </div>
                         </div>
+                        <hr>
                         <h5 class="mt-4">Documents to be Submitted During Admission&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentDocumentClicked"></i></h5>
                         <div class="table-responsive">
                             <table class="table table-striped row-border table-hover pt-1">
@@ -555,6 +621,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <hr>
                         <h5 class="mt-4">Declaration by the Parent</h5>
                         <label>
                             <ol type="1">
@@ -587,8 +654,7 @@
                                 </li>
                                 <li>I hereby declare that all the information furnished in this application are true and correct.</li>
                             </ol>
-                        </label>
-                        
+                        </label>                        
                     </div>
                     <div class="card-footer float-end">
                         <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>

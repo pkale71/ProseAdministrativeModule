@@ -30,9 +30,9 @@ module.exports = require('express').Router().post('/', async(req, res) =>
         let reqData = commonFunction.trimSpaces(req.body);
         let authData = reqData.authData;
         
-        if(reqData.name != undefined && reqData.gradeCategory != undefined && reqData.grade != undefined && reqData.syllabus != undefined && reqData.applicableFromYear != undefined && reqData.subjectType != undefined && reqData.totalSession != undefined && reqData.sessionDuration != undefined && reqData.hasPractical != undefined && reqData.isMandatory != undefined)
+        if(reqData.id != undefined && reqData.name != undefined && reqData.gradeCategory != undefined && reqData.grade != undefined && reqData.syllabus != undefined && reqData.applicableFromYear != undefined && reqData.subjectType != undefined && reqData.totalSession != undefined && reqData.sessionDuration != undefined && reqData.hasPractical != undefined && reqData.isMandatory != undefined)
         {
-            if(reqData.name != '' && reqData.gradeCategory.id != '' && reqData.grade.id != '' && reqData.syllabus.id != '' && reqData.applicableFromYear.id != '' && reqData.subjectType.id != '' && reqData.totalSession != '' && reqData.sessionDuration != '' && reqData.hasPractical != '' && reqData.isMandatory != '')
+            if(reqData.id != '' && reqData.name != '' && reqData.gradeCategory.id != '' && reqData.grade.id != '' && reqData.syllabus.id != '' && reqData.applicableFromYear.id != '' && reqData.subjectType.id != '' && reqData.totalSession != '' && reqData.sessionDuration != '' && parseInt(reqData.hasPractical) >= 0 && parseInt(reqData.isMandatory) >= 0)
             {
                 subjectId = commonFunction.validateNumber(reqData.id);
                 name = reqData.name;

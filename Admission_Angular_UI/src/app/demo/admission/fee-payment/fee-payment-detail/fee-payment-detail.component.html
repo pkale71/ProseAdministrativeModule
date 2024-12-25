@@ -1,0 +1,318 @@
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h5 style="margin-top: 0.8rem;">Fee Collection Detail &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentProfileClicked || feeStructureClicked || feePaymentClicked"></i>
+            </h5>
+            <button type="button" class="btn btn-rounded btn-black float-end" style="margin-top: 0rem;" (click)="back()">Back</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="form-control-label" for="name">Student Name</label>
+                    <label class="form-control input-md">{{studentProfileData?.studentName}}</label>    
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-control-label" for="enrollmentNumber">Enrollment Number</label>
+                    <label class="form-control input-md">{{studentProfileData?.enrollmentNumber}}</label>                  
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-control-label" for="academicSession">Academic Session</label>
+                    <label class="form-control input-md">{{studentProfileData?.academicSession?.year}}</label>                  
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-6">
+                    <label class="form-control-label" for="school">School</label>
+                    <label class="form-control input-md">{{studentProfileData?.school?.name}}</label>    
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-control-label" for="schoolingProgram">Schooling Program</label>
+                    <label class="form-control input-md">{{studentProfileData?.schoolingProgram?.name}}</label>                  
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-3">
+                    <label class="form-control-label" for="admissionDate">Admission Date</label>
+                    <label class="form-control input-md">{{studentProfileData?.admissionDate | date : "dd/MM/yyyy"}}</label>    
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-control-label" for="syllabus">Syllabus</label>
+                    <label class="form-control input-md">{{studentProfileData?.syllabus?.name}}</label>    
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-control-label" for="gradeCategory">Grade Category</label>
+                    <label class="form-control input-md">{{studentProfileData?.gradeCategory?.name}}</label>
+                </div>  
+                <div class="col-sm-3">
+                    <label class="form-control-label" for="grade">Grade</label>
+                    <label class="form-control input-md">{{studentProfileData?.grade?.name}}</label>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-6">
+                    <label class="form-control-label" for="name">Fee Structure</label>
+                    <label class="form-control input-md">{{feeStructureData?.feeCategory?.name}}</label>    
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-control-label" for="installments">Is Having Instalments?</label>
+                    <label class="form-control input-md">{{feeStructureData?.installments.length == 1 ? 'No' : 'Yes'}}</label>    
+                </div>
+            </div>
+            <hr>
+            <div class="row mt-4">
+                <div class="col-sm-6">                    
+                    <h5>Fee Types</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped row-border table-hover pt-1">
+                            <thead>
+                                <tr>
+                                    <th>Sno</th>
+                                    <th>Name</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let feeType of feeStructureData?.feeTypes let i=index" >
+                                    <td>{{i+1}}</td>
+                                    <td>{{feeType?.name}}</td>
+                                    <td class="text-end">{{feeType?.amount | number}}</td>
+                                </tr>
+                                <tr *ngIf="feeStructureData?.feeTypes?.length > 0">
+                                    <td>&nbsp;</td>
+                                    <td><h5>Totals : </h5></td>
+                                    <td class="text-end"><h5>{{totalFeeTypes | number: '1.2-2'}}</h5></td>
+                                </tr>
+                                <tr *ngIf="feeStructureData?.feeTypes?.length == 0">
+                                    <td></td>
+                                    <td>No record(s) found</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <h5>Discount Types</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped row-border table-hover pt-1">
+                            <thead>
+                                <tr>
+                                    <th>Sno</th>
+                                    <th>Name</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let discountType of feeStructureData?.discountTypes let i=index" >
+                                    <td>{{i+1}}</td>
+                                    <td>{{discountType?.name}}</td>
+                                    <td class="text-end">{{discountType?.amount | number}}</td>
+                                </tr>
+                                <tr *ngIf="feeStructureData?.discountTypes?.length > 0">
+                                    <td>&nbsp;</td>
+                                    <td><h5>Totals : </h5></td>
+                                    <td class="text-end"><h5>{{totalDiscountTypes | number: '1.2-2'}}</h5></td>
+                                </tr>
+                                <tr *ngIf="feeStructureData?.discountTypes?.length == 0">
+                                    <td></td>
+                                    <td>No record(s) found</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <h5 class="mt-4">Installments</h5>
+            <div class="table-responsive">
+                <table class="table table-striped row-border table-hover pt-1">
+                    <thead>
+                        <tr>
+                            <th>Sno</th>
+                            <th>Name</th>
+                            <th>Rate(%)</th>
+                            <th>Due Date</th>
+                            <th class="text-end">Amount</th>
+                            <th class="text-end">Amount Paid</th>
+                            <th class="text-end">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let installment of feeStructureData?.installments let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{installment?.name}}</td>
+                            <td>{{installment?.rate | number}}</td>
+                            <td>{{installment?.dueDate | date : "dd/MM/yyyy"}}</td>
+                            <td class="text-end">{{installment?.amount | number}}</td>
+                            <td class="text-end">{{installment?.amountPaid | number}}</td>
+                            <td class="text-end">{{(installment?.amount - installment?.amountPaid) | number: '1.2-2'}}</td>
+                        </tr>
+                        <tr *ngIf="feeStructureData?.installments?.length > 0">
+                            <td style="text-align: right;" colspan="4"><h5>Totals : </h5></td>
+                            <td class="text-end"><h5>{{totalAmount | number: '1.2-2'}}</h5></td>
+                            <td class="text-end"><h5>{{totalPaid | number: '1.2-2'}}</h5></td>
+                            <td class="text-end"><h5>{{totalDue | number: '1.2-2'}}</h5></td>
+                        </tr>
+                        <tr *ngIf="feeStructureData?.installments?.length == 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>No record(s) found</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h5 class="mt-4">Fee Summary</h5>
+            <div class="table-responsive">
+                <table class="table table-striped row-border table-hover pt-1">
+                    <thead>
+                        <tr>
+                            <th class="text-end">Total Amount</th>
+                            <th class="text-end">Total Discount</th>
+                            <th class="text-end">Net Amount</th>
+                            <th *ngIf="feeStructureData?.total?.taxAmount > 0">Tax Rate</th>
+                            <th class="text-end" *ngIf="feeStructureData?.total?.taxAmount > 0">Tax Amount</th>
+                            <th class="text-end">Gross Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-end">{{feeStructureData?.total?.totalAmount | number}}</td>
+                            <td class="text-end">{{feeStructureData?.total?.totalDiscount | number}}</td>
+                            <td class="text-end">{{feeStructureData?.total?.netAmount | number}}</td>
+                            <td *ngIf="feeStructureData?.total?.taxAmount > 0">{{feeStructureData?.total?.taxType}} - {{feeStructureData?.total?.taxRate}}%</td>
+                            <td class="text-end" *ngIf="feeStructureData?.total?.taxAmount > 0">{{feeStructureData?.total?.taxAmount | number}}</td>
+                            <td class="text-end">{{feeStructureData?.total?.grossAmount | number}}</td>
+                        </tr>
+                        <tr *ngIf="feeStructureData?.total?.length == 0">
+                            <td></td>
+                            <td></td>
+                            <td *ngIf="feeStructureData?.total?.taxAmount > 0"></td>
+                            <td *ngIf="feeStructureData?.total?.taxAmount > 0"></td>
+                            <td>No record(s) found</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <h5 class="mt-4">Payments&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="feePaymentClicked"></i></h5>
+            <div class="table-responsive">
+                <table class="table table-striped row-border table-hover pt-1">
+                    <thead>
+                        <tr>
+                            <th>Sno</th>
+                            <th>Receipt No</th>
+                            <th>Payment For</th>
+                            <th>Payment Date</th>
+                            <th>Payment Method</th>
+                            <th>Bank Reference</th>
+                            <th class="text-end">Bank Charges</th>
+                            <th class="text-end">Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let feePayment of feePayments let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{feePayment?.receiptNumber}}</td>
+                            <td>{{feePayment?.paymentFor}}</td>
+                            <td>{{feePayment?.paymentDate | date : "dd/MM/yyyy"}}</td>
+                            <td>{{feePayment?.paymentMethod?.name}}</td>
+                            <td>{{feePayment?.bankReference}}</td>
+                            <td class="text-end">{{feePayment?.bankCharges | number: '1.2-2'}}&nbsp;<i class="fa fa-edit" style="cursor: pointer;" (click)="updateBankCharges(feePayment?.id, feePayment?.amount)" *ngIf="feePayment?.paymentMethod?.name != 'Cash'"></i></td>
+                            <td class="text-end">{{feePayment?.amount | number: '1.2-2'}}</td>
+                            <td><i class="fa fa-file-pdf" title="Print Receipt" style="cursor: pointer;" (click)="downloadReceipt(feePayment)"></i></td>
+                        </tr>
+                        <tr *ngIf="feePayments?.length > 0">
+                            <td colspan="5"></td>
+                            <td><h5>Totals : </h5></td>
+                            <td class="text-end"><h5>{{totalBankCharges | number: '1.2-2'}}</h5></td>
+                            <td class="text-end"><h5>{{totalPayments | number: '1.2-2'}}</h5></td>
+                            <td></td>
+                        </tr>
+                        <tr *ngIf="feePayments?.length == 0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>No record(s) found</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <form [formGroup]="feePaymentForm" (ngSubmit)="saveFeePayment()" *ngIf="totalDue > 0">
+                <div class="row mt-2">
+                    <div class="col-md-3">
+                        <form [formGroup]="paymentMethodForm">
+                            <div class="form-group">
+                                <label class="form-control-label" for="paymentMethod">Payment Method&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="paymentMethodClicked"></i></label>
+                                <select class="form-control"  required id="paymentMethod" formControlName="paymentMethod" (change)="checkPaymentMethod(paymentMethodForm.controls['paymentMethod'].value)"
+                                [ngClass]="{'is-invalid': !paymentMethodForm.controls['paymentMethod'].valid && !isValidForm}">
+                                <option value="{{paymentMethod.id}}" *ngFor="let paymentMethod of paymentMethods">{{paymentMethod?.name}}</option>
+                                </select>
+                                <label style="color: red;"
+                                *ngIf="paymentMethodForm.controls['paymentMethod'].hasError('required') && !isValidForm"
+                                class="error jquery-validation-error small form-text"
+                                >Please select fee structure.</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-control-label" for="bankReference">Bank Reference&nbsp;<span style="color: red;" *ngIf="paymentMethodForm.controls['paymentMethod'].value != 1 && paymentMethodForm.controls['paymentMethod'].value != ''">*</span></label>
+                            <input class="form-control input-md" id="bankReference" type="text" formControlName="bankReference" ngRequired="isOtherPaymentMethod"
+                            [ngClass]="{'is-invalid': !feePaymentForm.controls['bankReference'].valid && !isValidForm}" [readonly]="!isOtherPaymentMethod"/>
+                            <label style="color: red;"
+                            *ngIf="feePaymentForm.controls['bankReference'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please enter bank reference.</label>
+                        </div>  
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-control-label" for="paymentDate">Payment Date&nbsp;<span
+                            style="color: red;">*</span></label>
+                            <input class="form-control input-md" id="paymentDate" type="date" required formControlName="paymentDate" 
+                            [ngClass]="{'is-invalid': !feePaymentForm.controls['paymentDate'].valid && !isValidForm}" [max]="curDate"/>
+                            <label style="color: red;" 
+                            *ngIf="feePaymentForm.controls['paymentDate'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text">Please enter payment date.</label>
+                        </div>      
+                    </div>   
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-control-label" for="totalAmount">Amount&nbsp;<span style="color: red;">*</span></label>
+                            <input class="form-control input-md" id="totalAmount" type="text" required  formControlName="totalAmount" (input)="feeAmountBifercation(feePaymentForm.controls['totalAmount'].value)"
+                            [ngClass]="{'is-invalid': !feePaymentForm.controls['totalAmount'].valid && !isValidForm}"/>
+                            <label style="color: red;"
+                            *ngIf="feePaymentForm.controls['totalAmount'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please enter amount.</label>
+                            <label style="color: red;"
+                            *ngIf="feePaymentForm.controls['totalAmount'].hasError('pattern') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please enter valid amount.</label>
+                        </div>                
+                    </div> 
+                </div>
+                <div class="row mt-2 float-end">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+                        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+                            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

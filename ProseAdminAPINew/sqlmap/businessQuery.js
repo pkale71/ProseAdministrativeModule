@@ -1052,7 +1052,7 @@ db.insertCoach = (coach) =>
         try
         {
             let sql = `INSERT INTO coach (uuid, code, name, email, mobile, business_vertical_type_id, created_on, created_by_id)
-            VALUES('${coach.uuid}', '${coach.code}', '${coach.name}', '${coach.email}', '${coach.mobile}', ${coach.businessVerticalTypeId}, NOW(), ${coach.createdById})`;
+            VALUES('${coach.uuid}', '${coach.code}', '${coach.name}', NULLIF('${coach.email}', ''), '${coach.mobile}', ${coach.businessVerticalTypeId}, NOW(), ${coach.createdById})`;
             
             dbConn.query(sql, (error, result) => 
             {
@@ -1100,7 +1100,7 @@ db.updateCoach = (coach) =>
     {
         try
         {
-            let sql = `UPDATE coach SET name = '${coach.name}', email = '${coach.email}', mobile = '${coach.mobile}', business_vertical_type_id = ${coach.businessVerticalTypeId}, updated_on = NOW(), 
+            let sql = `UPDATE coach SET name = '${coach.name}', email = NULLIF('${coach.email}', ''), mobile = '${coach.mobile}', business_vertical_type_id = ${coach.businessVerticalTypeId}, updated_on = NOW(), 
             updated_by_id = ${coach.createdById} 
             WHERE uuid = '${coach.uuid}'`;
             
@@ -3656,7 +3656,7 @@ db.getStudyCenters = (studyCenterTypeId, action) =>
     })
 };
 
-db.getStudyCenter = (uuid) => 
+db.getStudyCenter = (uuids) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -3681,7 +3681,7 @@ db.getStudyCenter = (uuid) =>
             JOIN district d ON d.id = sc.district_id 
             JOIN city ct ON ct.id = sc.city_id 
             LEFT JOIN study_center_agreement_history scah ON scah.id = sc.current_agreement_history_id
-            WHERE sc.uuid = '${uuid}'`;
+            WHERE FIND_IN_SET(sc.uuid, '${uuids}') > 0`;
 
             dbConn.query(sql, (error, result) => 
             {

@@ -65,9 +65,9 @@ export class AdmissionService {
         return this.apiService.get('/admission/getApplicationStudents/' + academicSessionId);
     }
 
-    getApplicationForms(applicationFor : string, schoolUUID : string, schoolingProgramId : number, academicSessionId : number, applicationFormStatusId : number)
+    getApplicationForms(applicationFor : string, schoolUUID : string, schoolingProgramId : number, academicSessionId : number, studyCenterUUID : string, applicationFormStatusId : number)
     {
-        return this.apiService.get('/admission/getApplicationForms/' + applicationFor + '/' + schoolUUID + '/' + schoolingProgramId + '/' + academicSessionId + '/' + applicationFormStatusId);
+        return this.apiService.get('/admission/getApplicationForms/' + applicationFor + '/' + schoolUUID + '/' + schoolingProgramId + '/' + academicSessionId + '/' + studyCenterUUID + '/' + applicationFormStatusId);
     }
 
     getApplicationStudentProfile(uuid : string)
@@ -158,5 +158,20 @@ export class AdmissionService {
     updateFeePaymentBankCharges(feePayment : any)
     {
         return this.apiService.post('/admission/updateFeePaymentBankCharges', feePayment);
+    }
+
+    updateStudentProfile(profile : any)
+    {
+        return this.apiService.post('/admission/updateStudentProfile', profile);
+    }
+
+    updateParentProfile(profile : any)
+    {
+        return this.apiService.post('/admission/updateParentProfile', profile);
+    }
+
+    saveFeePayment(feePayment : any)
+    {
+        return this.apiService.post('/admission/saveFeePayment', feePayment);
     }
 }

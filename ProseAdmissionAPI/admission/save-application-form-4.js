@@ -77,13 +77,15 @@ module.exports = require('express').Router().post('/',async(req,res) =>
 
                 ///////Save Application Docs File
                 let fileName = "";
+                let applicationNumber = applicationForm[0].applicationNumber;
+                let enrollmentNumber = applicationForm[0].enrollmentNumber || "";
                 if(req.files.length > 0)
                 {
                     if(applicationForm[0].renewalCount > 0)
                     {
                         documentName = documentName + "_" + applicationForm[0].renewalCount;
                     }
-                    fileName = await saveApplicationDocs(req.files[0], applicationForm[0].applicationNumber, documentName);
+                    fileName = await saveApplicationDocs(req.files[0], applicationNumber, enrollmentNumber, documentName);
             ///Remove Files
                     commonFunction.deleteFiles(req.files);
                 }      
@@ -176,7 +178,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
     }
 });
 
-async function saveApplicationDocs(file, applicationNumber, documentName) 
+async function saveApplicationDocs(file, applicationNumber, enrollmentNumber, documentName) 
 {
     let savedFc = 0;    
     try 
@@ -185,7 +187,16 @@ async function saveApplicationDocs(file, applicationNumber, documentName)
         {            
             // File Upload
             applicationNumber = applicationNumber.split("/").join("_");
-            let destiRootFolder = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber;
+            enrollmentNumber = enrollmentNumber.split("/").join("_");
+            let destiRootFolder = '';
+            if(enrollmentNumber == '')
+            {
+                destiRootFolder = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber;
+            }
+            else
+            {
+                destiRootFolder = commonFunction.getUploadFolder('EnrollmentDoc') + enrollmentNumber + "/" + applicationNumber;
+            }
             let fileExt = file.originalname.split('.').pop();
             let sourcePath = file.path;
             let destiFileName = `${documentName}.${fileExt}`;
@@ -203,7 +214,6 @@ async function saveApplicationDocs(file, applicationNumber, documentName)
     } 
     catch (e) 
     {
-        console.log(e)
         return "";
     }
 

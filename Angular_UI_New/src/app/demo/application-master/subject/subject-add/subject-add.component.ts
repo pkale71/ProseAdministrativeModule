@@ -27,7 +27,7 @@ export class SubjectAddComponent
     subjectTypeForm : FormGroup;
     academicSessions : any[];
     gradeCategories : any[];
-    grades: any[];
+    grades: Array<IOption>;
     subjectTypes : any[];
     syllabuses : Array<IOption>;
     isValidForm: boolean;
@@ -62,7 +62,7 @@ export class SubjectAddComponent
             subjectType : this.formbuilder.group({ 'id': [''] }),
             applicableFromYear : this.formbuilder.group({ 'id': [''] }),
             gradeCategory : this.formbuilder.group({ 'id': [''] }),
-            grade : this.formbuilder.group({ 'id' : [''] }),
+            gradeIds : [''],
             syllabusIds : [''],
             totalSession: ['', [Validators.required, Validators.pattern('^[0-9]{1,3}')]],
             sessionDuration: ['', [Validators.required, Validators.pattern('^[0-9]{1,3}')]],
@@ -77,7 +77,7 @@ export class SubjectAddComponent
             "gradeCategory" : ['', Validators.required]
         });
         this.gradeForm = this.formbuilder.group({
-            "grade" : ['', Validators.required]
+            "gradeIds" : ['', Validators.required]
         });
         this.syllabusForm = this.formbuilder.group({
             'syllabusIds' : ['', Validators.required]
@@ -157,15 +157,28 @@ export class SubjectAddComponent
     {  
         try 
         {
+            this.syllabusForm.reset();
+            this.gradeForm.reset();
             let gradeCategoryId = this.gradeCategoryForm.get("gradeCategory").value;
             if(gradeCategoryId != undefined && gradeCategoryId != "")
             {
+        ///Get syllabus based on grade category
+                this.getSyllabuses(gradeCategoryId);
+        ///////
                 this.gradeClicked = true;
                 let response = await this.commonService.getGrades(gradeCategoryId, 'Active').toPromise();
                 if (response.status_code == 200 && response.message == 'success') 
                 {
-                    this.grades = response.grades;
-                    this.grades.unshift({ id: "", name: "Select Grade" });
+                    let grades = response.grades;
+                    let tempGrades : Array<IOption> = [];
+                    for(let i = 0; i < grades.length; i++)
+                    {
+                        tempGrades.push({
+                            'value' : grades[i].id.toString(),
+                            'label' : grades[i].name
+                        });
+                    }
+                    this.grades = this.commonSharedService.prepareSelectOptions(tempGrades);
                     this.gradeClicked = false;
                 }
                 else
@@ -233,7 +246,7 @@ export class SubjectAddComponent
                 try
                 {
                     this.addSubjectForm.controls["gradeCategory"].get("id").setValue(this.gradeCategoryForm.get('gradeCategory').value);
-                    this.addSubjectForm.controls["grade"].get("id").setValue(this.gradeForm.get('grade').value);
+                    this.addSubjectForm.get("gradeIds").setValue(this.gradeForm.get('gradeIds').value.toString());
                     this.addSubjectForm.controls["applicableFromYear"].get("id").setValue(this.academicSessionForm.get('applicableFromYear').value);
                     this.addSubjectForm.get("syllabusIds").setValue(this.syllabusForm.get('syllabusIds').value.toString());
                     this.addSubjectForm.controls["subjectType"].get("id").setValue(this.subjectTypeForm.get('subjectType').value);
@@ -246,8 +259,8 @@ export class SubjectAddComponent
                             result : "success",
                             response : {
                                 gradeCategoryId : this.gradeCategoryForm.get('gradeCategory').value,
-                                gradeId : this.gradeForm.get('grade').value,
-                                syllabusId : this.syllabusForm.get('syllabusIds').value,
+                                gradeId : 0,
+                                syllabusId : 0,
                             }
                         });
                         this.closeModal();

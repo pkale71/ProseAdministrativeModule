@@ -1,0 +1,103 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="studentProfileEditModal"><i class="fa fa-edit"></i>&nbsp;Edit Student Profile</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="updateStudentProfileForm" id="updateStudentProfileForm" (ngSubmit)="saveStudentProfile()" autocomplete="off">
+    <div class="modal-body"> 
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="studentName">Student Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="studentName" type="text" required 
+                    formControlName="studentName" maxlength="50"
+                    [ngClass]="{'is-invalid': !updateStudentProfileForm.controls['studentName'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="updateStudentProfileForm.controls['studentName'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter student name.</label>
+                </div>                
+            </div>
+            <div class="col-md-2">   
+                <form [formGroup]="genderForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="gender">Gender &nbsp;<span style="color: red;">*</span></label>
+                        <select class="form-control" required id="gender" formControlName="gender">
+                            <option value="{{gender.id}}" *ngFor="let gender of genders">{{gender.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="genderForm.controls['gender'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select gender.</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="dob">Date Of Birth&nbsp;<span
+                    style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="dob" type="date" required formControlName="dob" 
+                    [ngClass]="{'is-invalid': !updateStudentProfileForm.controls['dob'].valid && !isValidForm}" [max]="curDate"/>
+                    <label style="color: red;" 
+                    *ngIf="updateStudentProfileForm.controls['dob'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text">Please enter birth date.</label>
+                </div>      
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="nationality">Nationality&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="nationality" type="text" required 
+                    formControlName="nationality" maxlength="50"
+                    [ngClass]="{'is-invalid': !updateStudentProfileForm.controls['nationality'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="updateStudentProfileForm.controls['nationality'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter nationality.</label>
+                </div>        
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="aadharNumber">Aadhar Number&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="aadharNumber" type="text" required  formControlName="aadharNumber" 
+                    [ngClass]="{'is-invalid': !updateStudentProfileForm.controls['aadharNumber'].valid && !isValidForm}" minlength="12" maxlength="12"/>
+                    <label style="color: red;"
+                    *ngIf="updateStudentProfileForm.controls['aadharNumber'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter aadhar number.</label>
+                    <label style="color: red;"
+                    *ngIf="updateStudentProfileForm.controls['aadharNumber'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid aadhar number.</label>
+                    <label style="color: red;"
+                    *ngIf="updateStudentProfileForm.controls['aadharNumber'].hasError('minlength') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Aadhar number should be 12 number long.</label>
+                </div>                
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="passportNumber">Passport Number</label>
+                    <input class="form-control input-md" id="passportNumber" type="text" formControlName="passportNumber" 
+                    [ngClass]="{'is-invalid': !updateStudentProfileForm.controls['passportNumber'].valid && !isValidForm}" maxlength="10"/>
+                    <label style="color: red;"
+                    *ngIf="updateStudentProfileForm.controls['passportNumber'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter passport number.</label>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

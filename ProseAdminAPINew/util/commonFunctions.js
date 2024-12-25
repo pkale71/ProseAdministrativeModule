@@ -161,7 +161,7 @@ commonFunction.getUploadFolder = function(uploadIn)
 {
     //After uploads Folder
     let folderPath = '';
-    let baseDir = process.cwd();
+    let baseDir = global.baseDir;
     if(uploadIn == 'UserDoc')
     {       
         folderPath = baseDir + "/uploads/user-docs/";

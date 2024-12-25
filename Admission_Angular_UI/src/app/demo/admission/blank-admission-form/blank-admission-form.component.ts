@@ -10,6 +10,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import moment from 'moment';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { UserService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-blank-admission-form',
@@ -39,6 +40,7 @@ export class BlankAdmissionFormComponent
   syllabuses : any[];
   subjectGroups : any[];
   subjectGroupAllocations : any[];
+  masterSchools : any[];
   isValidForm : boolean;
   generateClicked : boolean;
   searchClickedSchool : boolean;
@@ -50,9 +52,13 @@ export class BlankAdmissionFormComponent
   searchClickedSubject : boolean;
   curDate : string;
   logoBase64 : string;
+  userTypeCode : string;
+  loginUserUUID : string;
+  moduleId : number;
 
   constructor(private notifier: NotifierService, 
   private activatedRoute: ActivatedRoute,
+  private userService : UserService,
   private commonService: CommonService, 
   private admissionService : AdmissionService,
   public commonSharedService : CommonSharedService,
@@ -68,6 +74,7 @@ export class BlankAdmissionFormComponent
     this.syllabuses = [];
     this.subjectGroups = [];
     this.subjectGroupAllocations = [];
+    this.masterSchools = [];
     this.searchClickedAcademicSession = false;
     this.searchClickedSchool = false;
     this.searchClickedSchoolingProgram = false;
@@ -78,6 +85,9 @@ export class BlankAdmissionFormComponent
     this.searchClickedSubject = false;
     this.generateClicked = false;
     this.curDate = moment(new Date()).format('YYYY-MM-DD');
+    this.userTypeCode = this.commonSharedService.loginUser?.userModule?.userType.code;
+    this.loginUserUUID = this.commonSharedService.loginUser?.uuid;
+    this.moduleId = this.commonSharedService.loginUser?.userModule?.module?.id;
   }
 
   ngOnInit() 
@@ -160,12 +170,30 @@ export class BlankAdmissionFormComponent
     try
     {
         this.searchClickedSchool = true;
-        let response = await this.commonService.getSchools("Active", date).toPromise();
+        let response : any = "";
+        if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+        {
+          response = await this.userService.getUserSchoolSchoolingPrograms(this.loginUserUUID, this.moduleId).toPromise();
+        }
+        else
+        {
+          response = await this.commonService.getSchools('Active', "").toPromise();
+        }
         if (response.status_code == 200 && response.message == 'success') 
         {
+          if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+          {
+            this.masterSchools = response.userSchoolSchoolingPrograms;
+            this.schools = this.masterSchools.map(function(item) {
+              return { uuid : item.school.uuid, name : item.school.name };
+            });
+          }
+          else
+          {
             this.schools = response.schools;
-            this.schools.unshift({ uuid : "", name : "Select School" });
-            this.searchClickedSchool = false;
+          }
+          this.schools.unshift({ uuid : "", name : "Select School" });
+          this.searchClickedSchool = false;
         }
         else
         {
@@ -185,18 +213,34 @@ export class BlankAdmissionFormComponent
     try
     {
         this.searchClickedSchoolingProgram = true;
+        this.schoolingPrograms = [];
         this.schoolingProgramForm.get("schoolingProgram").setValue("");
-        let response = await this.commonService.getSchoolSchoolingPrograms(schoolUUID, 'Active', date).toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
+        if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
         {
-            this.schoolingPrograms = response.schoolSchoolingPrograms;
-            this.schoolingPrograms.unshift({schoolingProgram : { id : "", name : "Select Schooling Program" }});
-            this.searchClickedSchoolingProgram = false;
+          let filterSchool : any = this.masterSchools.filter(x => x.school.uuid == schoolUUID);
+          if(filterSchool.length > 0)
+          {
+            this.schoolingPrograms = filterSchool[0].schoolingPrograms;
+            this.schoolingPrograms.unshift({id : "", name : "Select Schooling Program"});
+          }
+          this.searchClickedSchoolingProgram = false;
         }
         else
         {
-            this.schoolingPrograms.unshift({schoolingProgram : { id : "", name : "Select Schooling Program" }});
+          let response = await this.commonService.getSchoolSchoolingPrograms(schoolUUID, 'Active', '').toPromise();
+          if (response.status_code == 200 && response.message == 'success') 
+          {
+            response.schoolSchoolingPrograms.forEach(element => {
+              this.schoolingPrograms.push({id : element.schoolingProgram.id, name : element.schoolingProgram.name });
+            });
+            this.schoolingPrograms.unshift({id : "", name : "Select Schooling Program"});
             this.searchClickedSchoolingProgram = false;
+          }
+          else
+          {
+            this.schoolingPrograms.unshift({ id : "", name : "Select Schooling Program" });
+            this.searchClickedSchoolingProgram = false;
+          }
         }
     }
     catch(e)
@@ -402,7 +446,7 @@ export class BlankAdmissionFormComponent
     let issuerName = this.blankAdmissionForm.get("issuerName").value;
     let academicYear = this.academicSessions.filter(acs=>acs.id == this.academicSessionForm.get("academicSession").value)[0]?.year;
     let schoolName = this.schools.filter(school=>school.uuid == this.schoolForm.get("school").value)[0]?.name;
-    let schoolingProgram = this.schoolingPrograms.filter(sp=>sp.schoolingProgram.id == this.schoolingProgramForm.get("schoolingProgram").value)[0]?.schoolingProgram?.name;
+    let schoolingProgram = this.schoolingPrograms.filter(sp=>sp.id == this.schoolingProgramForm.get("schoolingProgram").value)[0]?.name;
     let syllabus = this.syllabuses.filter(syllabus=>syllabus.id == this.syllabusForm.get("syllabus").value)[0]?.name;
     let gradeCategory = this.gradeCategories.filter(gradeCategory=>gradeCategory.id == this.gradeCategoryForm.get("gradeCategory").value)[0]?.name;
     let grade = this.grades.filter(grade=>grade.id == this.gradeForm.get("grade").value)[0]?.name;

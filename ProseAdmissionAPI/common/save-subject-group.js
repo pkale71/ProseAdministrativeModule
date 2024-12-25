@@ -37,7 +37,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 subjectIds = reqData.subjects;
                 
                 //check duplicate subject group   
-                subjectGroup = await dbCommon.duplicateSubjectGroup(groupName, "");
+                subjectGroup = await dbCommon.duplicateSubjectGroup(groupName, "", gradeId);
                 if(subjectGroup.length > 0)
                 {
                     res.status(500)

@@ -2,7 +2,7 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header">
-          <h5 style="margin-top: 0.8rem;"><i class="fa fa-cubes"></i>&nbsp; Registrations &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-cubes"></i>&nbsp; Admissions &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
           <button type="button" class="btn btn-rounded btn-secondary float-end" style="margin-top: 0rem;"
            (click)="generateBlankForm()">Generate Blank Form</button>
           <button type="button" class="btn btn-rounded btn-primary float-end" style="margin-top: 0rem;"
@@ -25,7 +25,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <form [formGroup]="schoolForm">
                         <div class="form-group">
                             <label class="form-control-label" for="school">School &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchool"></i></label>
@@ -39,12 +39,12 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-5">
                     <form [formGroup]="schoolingProgramForm">
                         <div class="form-group">
                             <label class="form-control-label" for="schoolingProgram">Schooling Program &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchoolingProgram"></i></label>
                             <select class="form-control" required id="schoolingProgram" formControlName="schoolingProgram">
-                                <option value="{{sp.schoolingProgram?.id}}" *ngFor="let sp of schoolingPrograms">{{sp.schoolingProgram?.name}}</option>
+                                <option value="{{sp?.id}}" *ngFor="let sp of schoolingPrograms">{{sp?.name}}</option>
                             </select>
                             <label style="color: red;"
                             *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
@@ -53,24 +53,35 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-md-3">
-                    <form [formGroup]="applicationStatusForm">
-                        <div class="form-group">
-                            <label class="form-control-label" for="applicationStatus">Application Status &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedStatus"></i></label>
-                            <select class="form-control" id="applicationStatus" formControlName="applicationStatus">
-                                <option value="{{applicationStatus.id}}" *ngFor="let applicationStatus of applicationStatuses">{{applicationStatus.name}}</option>
-                            </select>
-                        </div>
-                    </form>
-                </div> 
             </div>
             <div class="row">
-                <div class="col-md-12 text-end">
-                    <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
-                    (click)="getApplicationForms()"><i class="fa fa-search"></i>&nbsp;Search</button>
-                    <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
-                    <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
-                </div>
+              <div class="col-md-4">
+                <form [formGroup]="studyCenterForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="studyCenter">Study Center &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedStudyCenter"></i></label>
+                        <select class="form-control" id="studyCenter" formControlName="studyCenter">
+                            <option value="{{studyCenter.uuid}}" *ngFor="let studyCenter of studyCenters">{{studyCenter.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div>
+              <div class="col-md-3">
+                <form [formGroup]="applicationStatusForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="applicationStatus">Application Status &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedStatus"></i></label>
+                        <select class="form-control" id="applicationStatus" formControlName="applicationStatus">
+                            <option value="{{applicationStatus.id}}" *ngFor="let applicationStatus of applicationStatuses">{{applicationStatus.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div> 
+              <div class="col-md-5">
+                  <br>
+                  <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
+                  (click)="getApplicationForms()"><i class="fa fa-search"></i>&nbsp;Search</button>
+                  <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                  <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+              </div>
             </div>
             <div class="table-responsive">
               <table datatable id="tblApplicationForm" class="table table-striped row-border table-hover pt-10">
@@ -78,8 +89,8 @@
                   <tr>
                     <th>Sno</th>
                     <th class="text-wrap">Application/Enrollment Number</th>
-                    <th>Student Name</th>
-                    <th>Parent/Guardian Name</th>
+                    <th>Study Center</th>
+                    <th>Student Name</th>                    
                     <th>Grade</th>
                     <th>Mobile</th>
                     <th>Status</th>
@@ -90,8 +101,8 @@
                   <tr *ngFor="let applicationForm of applicationForms let i=index">
                     <td>{{i+1}}</td>
                     <td>{{applicationForm?.enrollmentNumber == '' ? applicationForm?.applicationNumber : applicationForm?.enrollmentNumber}}</td>
+                    <td class="text-wrap">{{applicationForm?.studyCenter?.name}}</td>
                     <td class="text-wrap">{{applicationForm?.studentName}}</td>
-                    <td class="text-wrap">{{applicationForm?.parent?.name}}</td>
                     <td>{{applicationForm?.grade?.name}}</td>
                     <td>{{applicationForm?.parent?.mobile}}</td>
                     <td>

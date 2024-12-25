@@ -30,7 +30,8 @@ export class UserDetailComponent
     userUUID : any; 
     userModules : any[];
 
-    constructor(private notifier: NotifierService, 
+    constructor(private router : Router,
+    private notifier: NotifierService, 
     private commonService : CommonService,
     private userService : UserService,
     private formbuilder: FormBuilder,
@@ -86,24 +87,24 @@ export class UserDetailComponent
     // get user module
     async getUserModules(userUUID : string, action : string, moduleId : number) 
     {
-    this.searchClicked = true;
-    let response = await this.userService.getUserModules(userUUID, action, moduleId).toPromise();
-    if (response.status_code == 200 && response.message == 'success') 
-    {
-        $('#tblUserModule').DataTable().destroy();
-        this.userModules = response.userModules;
-        setTimeout(function(){
-            $('#tblUserModule').DataTable();
-        },800);
-        this.searchClicked = false;
-        this.modalService.dismissAll();
-    }
-    else
-    {
-        this.userModules = [];
-        this.searchClicked = false;
-        this.modalService.dismissAll();
-    }
+        this.searchClicked = true;
+        let response = await this.userService.getUserModules(userUUID, action, moduleId).toPromise();
+        if (response.status_code == 200 && response.message == 'success') 
+        {
+            $('#tblUserModule').DataTable().destroy();
+            this.userModules = response.userModules;
+            setTimeout(function(){
+                $('#tblUserModule').DataTable();
+            },800);
+            this.searchClicked = false;
+            this.modalService.dismissAll();
+        }
+        else
+        {
+            this.userModules = [];
+            this.searchClicked = false;
+            this.modalService.dismissAll();
+        }
     }
 
     updateStatus(userModule : any)
@@ -174,6 +175,11 @@ export class UserDetailComponent
             size: 'sm', backdrop: 'static' 
         });
         dialogRef.componentInstance.modalParams = params;
+    }
+
+    moduleAccessibility(userModule : any)
+    {
+        this.router.navigateByUrl("/user/accessibility/" + this.uuid + "/" + userModule.module.id);
     }
 
     back()

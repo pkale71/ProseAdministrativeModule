@@ -19,6 +19,11 @@
                 </div>            
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-rounded btn-primary float-end" (click)="updateStudentProfile()">Update Profile</button>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-6">
                             <label class="form-control-label" for="studentName">Student Name</label>
                             <label class="form-control input-md">{{studentProfileData?.studentName}}</label>                  
@@ -37,16 +42,16 @@
                             <label class="form-control-label" for="school">School</label>
                             <label class="form-control input-md">{{studentProfileData?.school?.name}}</label>    
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <label class="form-control-label" for="schoolingProgram">Schooling Program</label>
                             <label class="form-control input-md">{{studentProfileData?.schoolingProgram?.name}}</label>                 
                         </div>
+                    </div>
+                    <div class="row mt-2">
                         <div class="col-sm-3">
                             <label class="form-control-label" for="gender">Gender</label>
                             <label class="form-control input-md">{{studentProfileData?.gender?.name}}</label>                  
                         </div>
-                    </div>
-                    <div class="row mt-2">
                         <div class="col-sm-3">
                             <label class="form-control-label" for="dob">Date Of Birth</label>
                             <label class="form-control input-md">{{(studentProfileData?.dob | date : "dd/MM/yyyy") || "----"}}</label>
@@ -59,12 +64,12 @@
                             <label class="form-control-label" for="aadharNo">Aadhar Number</label>
                             <label class="form-control input-md">{{studentProfileData?.aadharNumber || "----"}}</label>
                         </div>
+                    </div>
+                    <div class="row mt-2">
                         <div class="col-sm-3">
                             <label class="form-control-label" for="passportNo">Passport Number</label>
                             <label class="form-control input-md">{{studentProfileData?.passportNumber || "----"}}</label>
                         </div>
-                    </div>
-                    <div class="row mt-2">
                         <div class="col-sm-6">
                             <label class="form-control-label" for="studyCenter">Study Center</label>
                             <label class="form-control input-md">{{studentProfileData?.studyCenter?.name}}</label>
@@ -72,13 +77,13 @@
                         <div class="col-sm-3">
                             <label class="form-control-label" for="name">Syllabus</label>
                             <label class="form-control input-md">{{studentProfileData?.syllabus?.name}}</label>    
-                        </div>
+                        </div>                         
+                    </div>  
+                    <div class="row mt-2">
                         <div class="col-sm-3">
                             <label class="form-control-label" for="gradeCategory">Grade Category</label>
                             <label class="form-control input-md">{{studentProfileData?.gradeCategory?.name}}</label>
-                        </div>                          
-                    </div>  
-                    <div class="row mt-2">
+                        </div> 
                         <div class="col-sm-3">
                             <label class="form-control-label" for="grade">Grade</label>
                             <label class="form-control input-md">{{studentProfileData?.grade?.name}}</label>
@@ -92,7 +97,16 @@
                             <label class="form-control input-md">{{studentProfileData?.parentUndertaking?.name}}</label>
                         </div>
                     </div>
-                    <h5 class="mt-4">ParentProfile</h5>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h5 class="mt-2">Parent Profile</h5>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-rounded btn-primary float-end" (click)="updateParentProfile()">Update Profile</button>
+                        </div>
+                    </div>
+                    <hr style="margin-top: 10px;">
                     <div class="row mt-2">
                         <div class="col-sm-6">
                             <label class="form-control-label" for="name">Parent/Guardian Name</label>
@@ -149,8 +163,15 @@
                             <label class="form-control input-md">{{parentProfileData?.city?.name || "----"}}</label>
                         </div> 
                     </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="pincode">Pin/Zip Code</label>
+                            <label class="form-control input-md">{{parentProfileData?.pincode || "----"}}</label>
+                        </div> 
+                    </div>
                     <hr>
                     <h5 class="mt-4">Batch Time & Subject Offered</h5>
+                    <hr>
                     <div class="row">
                         <div class="col-sm-3">
                             <label class="form-control-label" for="name">Subject Group</label>
@@ -161,6 +182,7 @@
                             <label class="form-control input-md">{{subjectGroupData?.batchType?.startTime | convert12HrsTimeFormat}} - {{subjectGroupData?.batchType?.endTime | convert12HrsTimeFormat}}</label>                  
                         </div>
                     </div>
+                    <hr>
                     <h5 class="mt-4">Subjects Offered</h5>
                     <div class="table-responsive">
                         <table class="table table-striped row-border table-hover pt-1">
@@ -190,6 +212,7 @@
                     </div>
                     <hr>
                     <h5>Sport Engagement</h5>
+                    <hr>
                     <h6 *ngIf="sportProfileData?.isPracticingSport == 0">Child Not Practicing Any Sport.</h6>
                     <div class="row mt-2" *ngIf="sportProfileData?.isPracticingSport == 1">
                         <div class="col-sm-3">
@@ -231,6 +254,7 @@
                     </div>
                     <hr>
                     <h5 class="mt-4">Previous Schooling</h5>
+                    <hr>
                     <h6 *ngIf="undergoneEducationData?.studentUndergone == 'Home Schooling'">Student Studied Under Home Schooling Option</h6>
                     <div class="row mt-2" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
                         <div class="col-sm-5">
@@ -282,6 +306,7 @@
                     </div>
                     <hr>
                     <h5 class="mt-4">Upload & Download Admission Documents</h5>
+                    <hr>
                     <div class="table-responsive">
                         <table class="table align-middle mb-0">
                             <tbody>
@@ -326,6 +351,7 @@
                     </div>
                     <hr>
                     <h5 class="mt-4">Student Enclosures&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentDocClicked"></i></h5>
+                    <hr>
                     <div class="table-responsive">
                         <table class="table align-middle mb-0">
                             <tbody>
@@ -350,6 +376,10 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <hr>
+                    <div class="card-footer float-end">
+                        <button type="button" class="btn btn-rounded btn-primary" (click)="back()">Close</button>
                     </div>
                 </div>
             </div>

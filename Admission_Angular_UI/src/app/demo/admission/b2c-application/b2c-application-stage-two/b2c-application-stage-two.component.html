@@ -13,9 +13,9 @@
             <form [formGroup]="addApplicationForm2" id="addFeeStructureForm2" (ngSubmit)="saveApplicationForm2()" autocomplete="off">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <label class="form-control-label" for="applicationType">Application Type</label>
-                            <label class="form-control input-md">{{studentProfileData?.applicationType?.name}}</label>    
+                        <div class="col-sm-6">
+                            <label class="form-control-label" for="studentName">Student Name</label>
+                            <label class="form-control input-md">{{studentProfileData?.studentName}}</label>                  
                         </div>
                         <div class="col-sm-3">
                             <label class="form-control-label" for="admissionDate">Admission Date</label>
@@ -25,10 +25,6 @@
                             <label class="form-control-label" for="academicSession">Academic Session</label>
                             <label class="form-control input-md">{{studentProfileData?.academicSession?.year}}</label>                  
                         </div>
-                        <div class="col-sm-3">
-                            <label class="form-control-label" for="batchYear">Batch Year</label>
-                            <label class="form-control input-md">{{studentProfileData?.academicSession?.batchYear}}</label>                  
-                        </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-sm-6">
@@ -36,15 +32,11 @@
                             <label class="form-control input-md">{{studentProfileData?.school?.name}}</label>    
                         </div>
                         <div class="col-sm-6">
-                            <label class="form-control-label" for="studentName">Student Name</label>
-                            <label class="form-control input-md">{{studentProfileData?.studentName}}</label>                  
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-sm-3">
                             <label class="form-control-label" for="schoolingProgram">Schooling Program</label>
                             <label class="form-control input-md">{{studentProfileData?.schoolingProgram?.name}}</label>                 
                         </div>
+                    </div>
+                    <div class="row mt-2">                        
                         <div class="col-sm-3">
                             <label class="form-control-label" for="gender">Gender</label>
                             <label class="form-control input-md">{{studentProfileData?.gender?.name}}</label>                  
@@ -57,12 +49,12 @@
                             <label class="form-control-label" for="nationality">Nationality</label>
                             <label class="form-control input-md">{{studentProfileData?.nationality || "----"}}</label>
                         </div> 
-                    </div>
-                    <div class="row mt-2">
                         <div class="col-sm-3">
                             <label class="form-control-label" for="aadharNo">Aadhar Number</label>
                             <label class="form-control input-md">{{studentProfileData?.aadharNumber || "----"}}</label>
                         </div>
+                    </div>
+                    <div class="row mt-2">                        
                         <div class="col-sm-3">
                             <label class="form-control-label" for="passportNo">Passport Number</label>
                             <label class="form-control input-md">{{studentProfileData?.passportNumber || "----"}}</label>
@@ -70,7 +62,11 @@
                         <div class="col-sm-6">
                             <label class="form-control-label" for="studyCenter">Study Center</label>
                             <label class="form-control input-md">{{studentProfileData?.studyCenter?.name}}</label>
-                        </div>                              
+                        </div>   
+                        <div class="col-sm-3">
+                            <label class="form-control-label" for="syllabus">Syllabus</label>
+                            <label class="form-control input-md">{{studentProfileData?.syllabus?.name}}</label>
+                        </div>                            
                     </div>  
                     <div class="row mt-2">
                         <div class="col-sm-3">
@@ -82,6 +78,7 @@
                             <label class="form-control input-md">{{studentProfileData?.grade?.name}}</label>
                         </div>
                     </div>
+                    <hr>
                     <div class="row mt-4">
                         <div class="col-md-12">
                             <h5>Configure Fee Structure & Tie-up School</h5>
@@ -156,7 +153,7 @@
                         <div class="col-md-6">
                             <form [formGroup]="tieupSchoolForm">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="tieupSchool">Tie-Up School&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="tieupSchoolClicked"></i></label>
+                                    <label class="form-control-label" for="tieupSchool">Tie-Up School&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="tieupSchoolClicked"></i></label>
                                     <select class="form-control"  required id="tieupSchool" formControlName="tieupSchool" 
                                     [ngClass]="{'is-invalid': !tieupSchoolForm.controls['tieupSchool'].valid && !isValidForm}">
                                     <option value="{{tieupSchool.uuid}}" *ngFor="let tieupSchool of tieupSchools">{{tieupSchool?.name}}</option>
@@ -169,11 +166,13 @@
                             </form>                  
                         </div>
                     </div>
+                    <hr *ngIf="feeStructure">
                     <div class="row mt-4" *ngIf="feeStructure">
                         <div class="col-md-12">
                             <h5>Fee Structure Detail</h5>
                         </div>
                     </div>
+                    <hr *ngIf="feeStructure">
                     <div class="row mt-4" *ngIf="feeStructure">
                         <div class="col-md-6">
                             <h5>Fee Type</h5>
@@ -183,14 +182,14 @@
                                         <tr>
                                             <th>Sno</th>
                                             <th>Name</th>
-                                            <th>Amount</th>
+                                            <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let feeType of feeTypes let i=index" >
                                             <td>{{i+1}}</td>
                                             <td>{{feeType?.feeType?.name}}</td>
-                                            <td>{{feeType?.amount | number}}</td>
+                                            <td class="text-end">{{feeType?.amount | number}}</td>
                                         </tr>
                                         <tr *ngIf="feeTypes.length == 0">
                                             <td></td>
@@ -209,14 +208,14 @@
                                         <tr>
                                             <th>Sno</th>
                                             <th>Name</th>
-                                            <th>Amount</th>
+                                            <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let discountType of discountTypes let i=index" >
                                             <td>{{i+1}}</td>
                                             <td>{{discountType?.discountType?.name}}</td>
-                                            <td>{{discountType?.amount | number}}</td>
+                                            <td class="text-end">{{discountType?.amount | number}}</td>
                                         </tr>
                                         <tr *ngIf="discountTypes.length == 0">
                                             <td></td>
@@ -228,6 +227,7 @@
                             </div>
                         </div>
                     </div>
+                    <hr *ngIf="feeStructure">
                     <div class="row mt-4" *ngIf="feeStructure">
                         <div class="col-md-12">
                             <h5>Installments</h5>
@@ -238,7 +238,7 @@
                                             <th>Installment</th>
                                             <th>Installment(%)</th>
                                             <th>Due Date</th>
-                                            <th>Amount</th>
+                                            <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -246,7 +246,7 @@
                                             <td>{{feeInstallment?.name}}</td>
                                             <td>{{feeInstallment?.installmentRate}}%</td>
                                             <td>{{feeInstallment?.dueDate | date : "dd/MM/yyyy"}}</td>
-                                            <td>{{feeInstallment?.amount | number: '1.2-2'}}</td>
+                                            <td class="text-end">{{feeInstallment?.amount | number: '1.2-2'}}</td>
                                         </tr>
                                         <tr *ngIf="feeInstallments.length == 0">
                                             <td></td>
@@ -259,6 +259,7 @@
                             </div>
                         </div>
                     </div>
+                    <hr *ngIf="feeStructure">
                     <div class="row mt-4" *ngIf="feeStructure">
                         <div class="col-md-12">
                             <h5>Total</h5>
@@ -266,26 +267,26 @@
                                 <table class="table table-striped row-border table-hover pt-1">
                                     <thead>
                                         <tr>
-                                            <th>Total Amount</th>
-                                            <th>Total Discount</th>
-                                            <th>Net Amount</th>
+                                            <th class="text-end">Total Amount</th>
+                                            <th class="text-end">Total Discount</th>
+                                            <th class="text-end">Net Amount</th>
                                             <th *ngIf="feeStructure?.taxApplicable == 1">Tax Rate</th>
                                             <th *ngIf="feeStructure?.taxApplicable == 1">Applicable From</th>
                                             <th *ngIf="feeStructure?.taxApplicable == 1">Applicable To</th>
-                                            <th *ngIf="feeStructure?.taxApplicable == 1">Tax Amount</th>
-                                            <th>Gross Amount</th>
+                                            <th class="text-end" *ngIf="feeStructure?.taxApplicable == 1">Tax Amount</th>
+                                            <th class="text-end">Gross Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{{feeTotal?.totalAmount | number}}</td>
-                                            <td>{{feeTotal?.totalDiscount | number}}</td>
-                                            <td>{{feeTotal?.netAmount | number}}</td>
+                                            <td class="text-end">{{feeTotal?.totalAmount | number}}</td>
+                                            <td class="text-end">{{feeTotal?.totalDiscount | number}}</td>
+                                            <td class="text-end">{{feeTotal?.netAmount | number}}</td>
                                             <td *ngIf="feeStructure?.taxApplicable == 1">{{feeTotal?.taxType?.name}} - {{feeTotal?.taxRate?.rate}}%</td>
                                             <td *ngIf="feeStructure?.taxApplicable == 1">{{feeTotal?.taxRate?.applicableFrom | date : "dd/MM/yyyy"}}</td>
                                             <td *ngIf="feeStructure?.taxApplicable == 1">{{feeTotal?.taxRate?.applicableTo | date : "dd/MM/yyyy"}}</td>
-                                            <td *ngIf="feeStructure?.taxApplicable == 1">{{feeTotal?.taxAmount | number}}</td>
-                                            <td>{{feeTotal?.grossAmount | number}}</td>
+                                            <td class="text-end" *ngIf="feeStructure?.taxApplicable == 1">{{feeTotal?.taxAmount | number}}</td>
+                                            <td class="text-end">{{feeTotal?.grossAmount | number}}</td>
                                         </tr>
                                         <tr *ngIf="feeTotal?.length == 0">
                                             <td></td>

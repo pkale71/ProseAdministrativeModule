@@ -8,6 +8,7 @@ import { AdmissionService } from 'src/app/theme/shared/service/admission.service
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import moment from 'moment';
+import { UserService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-b2c-application-stage-one',
@@ -40,6 +41,7 @@ export class B2cApplicationStageOneComponent
   walkinModeForm : FormGroup;
   applicationTypes : any[];
   schools : any[];
+  masterSchools : any[];
   schoolingPrograms : any[];
   academicSessions : any[];
   siblingTypes : any[];
@@ -85,9 +87,13 @@ export class B2cApplicationStageOneComponent
   isWalkInMode : boolean;
   curDate : string;
   saveClicked : boolean;
+  userTypeCode : string;
+  loginUserUUID : string;
+  moduleId : number;
 
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
+    private userService: UserService,
     private commonService: CommonService, 
     private admissionService : AdmissionService,
     public commonSharedService : CommonSharedService,
@@ -96,6 +102,7 @@ export class B2cApplicationStageOneComponent
     private location : Location)
   {
     this.schools = [];
+    this.masterSchools = [];
     this.schoolingPrograms = [];
     this.academicSessions = [];
     this.applicationTypes = [];
@@ -137,6 +144,9 @@ export class B2cApplicationStageOneComponent
     this.isWalkInMode = false;
     this.saveClicked = false;
     this.curDate = moment(new Date()).format('YYYY-MM-DD');
+    this.userTypeCode = this.commonSharedService.loginUser?.userModule?.userType.code;
+    this.loginUserUUID = this.commonSharedService.loginUser?.uuid;
+    this.moduleId = this.commonSharedService.loginUser?.userModule?.module?.id;
   }
 
   ngOnInit() 
@@ -233,7 +243,7 @@ export class B2cApplicationStageOneComponent
     this.getApplicationTypes();
     this.getSiblingTypes();
     this.getGenders();
-    this.getGradeCategories();
+    this.getSyllabuses(0);
     this.getStudentProfileCompletions();
     this.getStudyCenters();
     this.getLeadStudentTypes();
@@ -334,19 +344,21 @@ export class B2cApplicationStageOneComponent
     }
   }
 
-  async getGradeCategories() 
+  async getGradeCategories(syllabusId : number) 
   {  
     try
     {
-      let response = await this.commonService.getGradeCategories('Active').toPromise();
-      if (response.status_code == 200 && response.message == 'success') 
+      this.gradeCategoryForm.get("gradeCategory").setValue("");
+      this.gradeCategories = [];
+      if(this.syllabuses.length > 0 && syllabusId > 0)
       {
-        this.gradeCategories = response.gradeCategories;
-        this.gradeCategories.unshift({id : "", name : "Select Grade Category"});
-      }
-      else
-      {
-        this.gradeCategories = [];
+        let filterSyllabuses : any[] = this.syllabuses.filter(syllabus=>syllabus.id == syllabusId);
+        
+        if(filterSyllabuses.length > 0)
+        {
+          this.gradeCategories = filterSyllabuses[0].gradeCategories;
+          this.gradeCategories.unshift({"id" : "", "name" : "Select Grade Category"});
+        }
       }
     }
     catch(e)
@@ -360,8 +372,6 @@ export class B2cApplicationStageOneComponent
   {  
     try
     {
-      //////Get Syllabuses
-      this.getSyllabuses(gradeCategoryId);
       //////////
       this.gradeForm.get("grade").setValue("");
       this.searchClickedGrade = true;
@@ -548,12 +558,30 @@ export class B2cApplicationStageOneComponent
     try
     {
         this.searchClickedSchool = true;
-        let response = await this.commonService.getSchools("Active", date).toPromise();
+        let response : any = "";
+        if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+        {
+          response = await this.userService.getUserSchoolSchoolingPrograms(this.loginUserUUID, this.moduleId).toPromise();
+        }
+        else
+        {
+          response = await this.commonService.getSchools('Active', "").toPromise();
+        }
         if (response.status_code == 200 && response.message == 'success') 
         {
+          if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+          {
+            this.masterSchools = response.userSchoolSchoolingPrograms;
+            this.schools = this.masterSchools.map(function(item) {
+              return { uuid : item.school.uuid, name : item.school.name };
+            });
+          }
+          else
+          {
             this.schools = response.schools;
-            this.schools.unshift({ uuid : "", name : "Select School" });
-            this.searchClickedSchool = false;
+          }
+          this.schools.unshift({ uuid : "", name : "Select School" });
+          this.searchClickedSchool = false;
         }
         else
         {
@@ -573,18 +601,34 @@ export class B2cApplicationStageOneComponent
     try
     {
         this.searchClickedSchoolingProgram = true;
+        this.schoolingPrograms = [];
         this.schoolingProgramForm.get("schoolingProgram").setValue("");
-        let response = await this.commonService.getSchoolSchoolingPrograms(schoolUUID, 'Active', date).toPromise();
-        if (response.status_code == 200 && response.message == 'success') 
+        if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
         {
-            this.schoolingPrograms = response.schoolSchoolingPrograms;
-            this.schoolingPrograms.unshift({schoolingProgram : { id : "", name : "Select Schooling Program" }});
-            this.searchClickedSchoolingProgram = false;
+          let filterSchool : any = this.masterSchools.filter(x => x.school.uuid == schoolUUID);
+          if(filterSchool.length > 0)
+          {
+            this.schoolingPrograms = filterSchool[0].schoolingPrograms;
+            this.schoolingPrograms.unshift({id : "", name : "Select Schooling Program"});
+          }
+          this.searchClickedSchoolingProgram = false;
         }
         else
         {
-            this.schoolingPrograms.unshift({schoolingProgram : { id : "", name : "Select Schooling Program" }});
+          let response = await this.commonService.getSchoolSchoolingPrograms(schoolUUID, 'Active', '').toPromise();
+          if (response.status_code == 200 && response.message == 'success') 
+          {
+            response.schoolSchoolingPrograms.forEach(element => {
+              this.schoolingPrograms.push({id : element.schoolingProgram.id, name : element.schoolingProgram.name });
+            });
+            this.schoolingPrograms.unshift({ id : "", name : "Select Schooling Program" });
             this.searchClickedSchoolingProgram = false;
+          }
+          else
+          {
+            this.schoolingPrograms.unshift({ id : "", name : "Select Schooling Program" });
+            this.searchClickedSchoolingProgram = false;
+          }
         }
     }
     catch(e)
@@ -628,7 +672,7 @@ export class B2cApplicationStageOneComponent
       let response = await this.commonService.getAcademicSessions().toPromise();
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.academicSessions = response.academicSessions.filter(academicSession => academicSession.isCurrent = 1);
+        this.academicSessions = response.academicSessions.filter(academicSession => academicSession.isCurrentSession === 1);
         this.masterAcademicSessions = response.academicSessions;
         this.searchClickedAcademicSession = false;
         if(this.academicSessions.length > 0)
@@ -709,7 +753,7 @@ export class B2cApplicationStageOneComponent
     if(siblingTypeId == 1)
     {
       this.isLastAdmission = true;
-      this.lastAcademicSessions = this.masterAcademicSessions.filter(academicSession => academicSession.isCurrent != 1);
+      this.lastAcademicSessions = this.masterAcademicSessions.filter(academicSession => academicSession.isCurrentSession != 1);
       this.lastAcademicSessions.unshift({"id" : "", "year" : "Select Last Academic Year"});
       this.lastAcademicSessionForm.get("lastAcademicSession").setValue("");
       this.addApplicationForm1.get("lastEnrollment").setValue("");        
@@ -719,7 +763,7 @@ export class B2cApplicationStageOneComponent
     else
     {
       this.isLastAdmission = false
-      this.lastAcademicSessions = this.masterAcademicSessions.filter(academicSession => academicSession.isCurrent == 1);
+      this.lastAcademicSessions = this.masterAcademicSessions.filter(academicSession => academicSession.isCurrentSession == 1);
       this.lastAcademicSessions.unshift({"id" : "", "year" : "Select Current Academic Year"});
       this.lastAcademicSessionForm.get("lastAcademicSession").setValue("");
       this.addApplicationForm1.get("lastEnrollment").setValue("");        
@@ -808,10 +852,27 @@ export class B2cApplicationStageOneComponent
     try
     {
       this.searchClickedStudyCenter = true;
-      let response = await this.commonService.getStudyCenters(0, 'Active').toPromise();
+      let response : any = "";
+      if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+      {
+        response = await this.userService.getUserStudyCenters(this.loginUserUUID, this.moduleId).toPromise();
+      }
+      else
+      {
+        response = await this.commonService.getStudyCenters(0, 'Active').toPromise();
+      }
       if (response.status_code == 200 && response.message == 'success') 
       {
-        this.studyCenters = response.studyCenters;
+        if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+        {
+          response.userStudyCenters.forEach(element => {
+            this.studyCenters.push({uuid : element.studyCenter.uuid, name : element.studyCenter.name });
+          });
+        }
+        else
+        {
+          this.studyCenters = response.studyCenters;
+        }
         this.studyCenters.unshift({uuid : "", name : "Select Study Center"});
         this.searchClickedStudyCenter = false;
       }
@@ -1001,6 +1062,13 @@ export class B2cApplicationStageOneComponent
           let response = await this.admissionService.saveB2CApplicationForm1(dataJSON).toPromise();
           if (response.status_code == 200 && response.message == 'success') 
           {
+            ////Manage Filter Option To Local Storage
+              localStorage.setItem("schoolUUID", this.schoolForm.get("school").value);
+              localStorage.setItem("schoolingProgramId", this.schoolingProgramForm.get("schoolingProgram").value);
+              localStorage.setItem("academicSessionId", this.academicSessionForm.get("academicSession").value);
+              localStorage.setItem("studyCenterUUID", this.studyCenterForm.get("studyCenter").value);
+              localStorage.setItem("applicationStatusId", "");
+            //////////
             this.showNotification('success', "Application Form Details Saved");
             this.router.navigateByUrl("/b2cApplication/detail/B2C/" + response.uuid);
             this.saveClicked = false;

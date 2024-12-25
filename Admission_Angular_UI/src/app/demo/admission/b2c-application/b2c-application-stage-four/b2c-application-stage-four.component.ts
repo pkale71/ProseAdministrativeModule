@@ -11,7 +11,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 
 // third party
 import Swal from 'sweetalert2';
-import moment from 'moment';
+import { StudentProfileEditComponent } from '../../student-profile-edit/student-profile-edit.component';
+import { ParentProfileEditComponent } from '../../parent-profile-edit/parent-profile-edit.component';
 
 @Component({
   selector: 'app-b2c-application-stage-four',
@@ -89,6 +90,18 @@ export class B2cApplicationStageFourComponent
       //type : default, info, success, warning, error
       this.notifier.notify(type, message);
   }
+
+  public updateProfileResult:any = this.commonSharedService.updateProfileObject.subscribe(res =>
+  {
+    if(res.result == "success" && res.action == "Student")
+    {
+      this.getApplicationStudentProfile(this.uuid);
+    }
+    else if(res.result == "success" && res.action == "Parent")
+    {
+      this.getApplicationParentProfile(this.uuid);
+    }
+  })
 
   async getApplicationStudentProfile(uuid : string) 
   {
@@ -459,9 +472,9 @@ export class B2cApplicationStageFourComponent
     };
 
     let sportProfile = {
-      "sportName" : this.sportProfileData?.sportName || "",
+      "sportName" : this.sportProfileData?.businessPartner?.coach?.uuid ? this.sportProfileData?.businessPartner?.coach?.businessVerticalType?.name : this.sportProfileData?.otherAcademySport,
       "coachName" : this.sportProfileData?.businessPartner?.coach?.uuid ? this.sportProfileData?.businessPartner?.coach?.name : this.sportProfileData?.otherAcademyCoach,
-      "coachMobile" : this.sportProfileData?.businessPartner?.coach?.mobile || "",
+      "coachMobile" : this.sportProfileData?.businessPartner?.coach?.uuid ? this.sportProfileData?.businessPartner?.coach?.mobile : this.sportProfileData?.otherAcademyCoachMobile,
       "academyName" : this.sportProfileData?.businessPartner?.uuid ? this.sportProfileData?.businessPartner?.name : this.sportProfileData?.otherAcademyName,
       "academyAddress" : this.sportProfileData?.businessPartner?.uuid ? this.sportProfileData?.businessPartner?.address : this.sportProfileData?.otherAcademyAddress
     };
@@ -567,8 +580,52 @@ export class B2cApplicationStageFourComponent
     }
   }
 
+  updateStudentProfile()
+  {
+    let profileData = {
+      "application" : {"uuid" : this.uuid},
+      "studentName" : this.studentProfileData?.studentName,
+      "dob" : this.studentProfileData?.dob,
+      "gender" : {"id" : this.studentProfileData?.gender?.id},
+      "nationality" : this.studentProfileData?.nationality,
+      "aadharNumber" : this.studentProfileData?.aadharNumber,
+      "passportNumber" : this.studentProfileData?.passportNumber
+    }
+    const dialogRef = this.modalService.open(StudentProfileEditComponent, 
+    { 
+      size: 'lg', backdrop: 'static' 
+    });
+    dialogRef.componentInstance.modalParams = {studentProfile : profileData};
+  }
+
+  updateParentProfile()
+  {
+    let profileData = {
+      "id" : this.parentProfileData?.id,
+      "name" : this.parentProfileData?.name,
+      "email" : this.parentProfileData?.email,
+      "mobile" : this.parentProfileData?.mobile,
+      "relationship" : this.parentProfileData?.relationship,
+      "aadharNumber" : this.parentProfileData?.aadharNumber,
+      "passportNumber" : this.parentProfileData?.passportNumber,
+      "panNumber" : this.parentProfileData?.panNumber,
+      "address" : this.parentProfileData?.address,
+      "country" : this.parentProfileData?.country,
+      "state" : this.parentProfileData?.state,
+      "district" : this.parentProfileData?.district,
+      "city" : this.parentProfileData?.city,
+      "pincode" : this.parentProfileData?.pincode
+    }
+    
+    const dialogRef = this.modalService.open(ParentProfileEditComponent, 
+    { 
+      size: 'lg', backdrop: 'static' 
+    });
+    dialogRef.componentInstance.modalParams = {parentProfile : profileData};
+  }
+
   back()
   {
-    this.router.navigateByUrl("/b2cApplication/registrations");
+    this.router.navigateByUrl("/b2cApplication/admissions");
   }
 }

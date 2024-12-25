@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -40,6 +40,7 @@ export class FeeStructureAddComponent
   searchClickedBatchYear : boolean;
   searchClickedSchoolingProgram : boolean;
   searchClickedTaxRate : boolean;
+  isSingleInstallment : boolean;
   isValidForm : boolean;
   isValidForm1 : boolean;
   isValidForm2 : boolean;
@@ -59,6 +60,7 @@ export class FeeStructureAddComponent
   taxTypes : any[];
   taxRates : any[][];
   msgLabel : string[] = ['','','',''];
+  activeTab : number = 1;
 
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
@@ -66,7 +68,8 @@ export class FeeStructureAddComponent
     public commonSharedService : CommonSharedService,
     private formbuilder: FormBuilder,
     private router : Router,
-    private location : Location)
+    private location : Location, 
+    private cdr: ChangeDetectorRef)
   {
     this.schools = [];
     this.academicSessions = [];
@@ -97,6 +100,7 @@ export class FeeStructureAddComponent
     this.searchClickedGradeCategory = false;
     this.searchClickedSchoolingProgram = false;
     this.searchClickedTaxRate = false;
+    this.isSingleInstallment = false;
     this.isValidForm = true;
     this.isValidForm1 = true;
     this.isValidForm2 = true;
@@ -465,7 +469,7 @@ export class FeeStructureAddComponent
       let name = this.commonSharedService.getOrdinal((i+1), "Installment");
       this.feeStructureInstallmentForm[i] = this.formbuilder.group({
           name : new FormControl(name, Validators.required),
-          installmentPercent : new FormControl('', [Validators.required, Validators.pattern('^[0-9.]{1,5}$')]),
+          installmentPercent : new FormControl(totalInstallment == 1 ? '100' : '', [Validators.required, Validators.pattern('^[0-9.]{1,5}$')]),
           dueDate : new FormControl('', Validators.required)
       })
     }
@@ -651,9 +655,60 @@ export class FeeStructureAddComponent
     return isValid;
   }
 
+  checkFeeInstallments(feeCategoryId : number)
+  {
+    if(feeCategoryId > 0)
+    {
+      let filterFeeCategory = this.feeCategories.filter(feeCategory=>feeCategory.id == feeCategoryId);
+      
+      if(filterFeeCategory.length > 0)
+      {
+        if(filterFeeCategory[0]?.availingInstallment == 0)
+        {
+          this.addFeeStructureForm.get("totalInstallment").setValue("1");
+          this.addFeeStructureForm.get("totalInstallment").disable();
+          
+          this.addInstallments(1);
+          this.isSingleInstallment = true;
+        }
+        else
+        {
+          this.addFeeStructureForm.get("totalInstallment").setValue("");
+          this.addFeeStructureForm.get("totalInstallment").enable();
+          this.feeStructureInstallmentForm = [];
+          this.isSingleInstallment = false;
+        }
+      }
+      else
+      {
+        this.isSingleInstallment = false;
+        this.feeStructureInstallmentForm = [];
+        this.addFeeStructureForm.get("totalInstallment").enable();
+        this.addFeeStructureForm.get("totalInstallment").setValue("");
+      }
+      
+    }
+    else
+    {
+      this.isSingleInstallment = false;
+      this.feeStructureInstallmentForm = [];
+      this.addFeeStructureForm.get("totalInstallment").setValue("");
+    }
+  }
+
   createFinalJSON()
   {
-    let tempJSON = this.addFeeStructureForm.value;
+    let tempJSON : any = "";
+    if(this.addFeeStructureForm.get("totalInstallment").disabled)
+    {
+      this.addFeeStructureForm.get("totalInstallment").enable();
+      tempJSON = this.addFeeStructureForm.value;
+      this.addFeeStructureForm.get("totalInstallment").disable();
+    }
+    else
+    {
+      tempJSON = this.addFeeStructureForm.value;
+    }
     tempJSON.school.uuid = this.schoolForm.get("school").value;
     tempJSON.schoolingProgram.id = this.schoolingProgramForm.get("schoolingProgram").value;
     tempJSON.academicSession.id = this.academicSessionForm.get("academicSession").value;
@@ -763,6 +818,20 @@ export class FeeStructureAddComponent
         this.isValidForm = false;
         this.saveClicked = false;
       }
+    }
+  }
+
+  setActiveTab(nav1 :any, action : string)
+  {
+    if(action == 'Next')
+    {
+      this.activeTab++;
+      nav1.select(this.activeTab);
+    }
+    else
+    {
+      this.activeTab--;
+      nav1.select(this.activeTab);
     }
   }
 

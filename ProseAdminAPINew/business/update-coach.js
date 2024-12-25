@@ -22,7 +22,7 @@ module.exports = require('express').Router().post('/',async(req,res) =>
         
         if(reqData.uuid != undefined && reqData.name != undefined && reqData.email != undefined && reqData.mobile != undefined && reqData.businessVerticalType != undefined)
         {
-            if(reqData.uuid != "" && reqData.name != "" && reqData.email != "" && reqData.mobile != "" && reqData.businessVerticalType.id != "")
+            if(reqData.uuid != "" && reqData.name != "" && reqData.mobile != "" && reqData.businessVerticalType.id != "")
             {
                 uuid = reqData.uuid;
                 name = reqData.name;

@@ -30,11 +30,13 @@ export class CommonSharedService
     public subjectGroupAllocationListObject = new Subject<any>();
     public feeStructureListObject = new Subject<any>();
     public userModulesListObject = new Subject<any>();
+    public updateProfileObject = new Subject<any>();
 
     constructor() 
     { 
         this.baseUrl = location.origin;
         this.loginUser = JSON.parse(localStorage.getItem('user'));
+        this.adminBaseUrl = localStorage.getItem('adminBaseUrl');
     }
 
     public confirmPasswordValidator(controlName: string, matchingControlName: string)

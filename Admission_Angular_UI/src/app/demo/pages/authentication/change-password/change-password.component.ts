@@ -74,7 +74,7 @@ export class ChangePasswordComponent {
               {
                 localStorage.clear();
                 this.closeModal();
-                window.open(this.commonSharedService.adminBaseUrl + '/auth/signin', "_self");
+                window.open(this.commonSharedService.adminBaseUrl + '/#/auth/signin', "_self");
               }
             }
           }

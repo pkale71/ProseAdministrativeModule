@@ -1,0 +1,229 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="parentProfileEditModal"><i class="fa fa-edit"></i>&nbsp;Edit Parent/Guardian Profile</h5>
+    <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+    (click)="closeModal()"
+    ></button>
+</div>
+<form [formGroup]="updateParentProfileForm" id="updateParentProfileForm" (ngSubmit)="saveParentProfile()" autocomplete="off">
+    <div class="modal-body"> 
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Parent/Guardian Name&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="name" type="text" required 
+                    formControlName="name" maxlength="50"
+                    [ngClass]="{'is-invalid': !updateParentProfileForm.controls['name'].valid && !isValidForm}"/>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['name'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter name.</label>
+                </div>                
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="relationship">Relationship With Student&nbsp;<span style="color: red;">*</span></label>
+                    <select class="form-control"  id="relationship" formControlName="relationship" 
+                    [ngClass]="{'is-invalid': !updateParentProfileForm.controls['relationship'].valid && !isValidForm}">
+                    <option value="">Select Relationship</option>
+                    <option value="Father">Father</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Guardian">Guardian</option>
+                    </select>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['relationship'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please select relationship.</label>
+                </div>                 
+            </div> 
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-control-label" for="email">Email&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="email" type="email" required  formControlName="email" 
+                    [ngClass]="{'is-invalid': !updateParentProfileForm.controls['email'].valid && !isValidForm}" maxlength="150"/>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['email'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter parent email.</label>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['email'].hasError('email') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid parent email.</label>
+                </div>                
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="mobile">Parent/Guardian Mobile&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="mobile" type="text" required  formControlName="mobile"
+                    [ngClass]="{'is-invalid': !updateParentProfileForm.controls['mobile'].valid && !isValidForm}" maxlength="15" minlength="10"/>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['mobile'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter mobile.</label>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['mobile'].hasError('minlength') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Mobile number should be 10 to 15 digits long</label>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['mobile'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid mobile number</label>
+                </div>                
+            </div>
+            <div class="col-md-9">
+                <div class="form-group">
+                    <label class="form-control-label" for="address">Postal Address&nbsp;<span
+                    style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="address" type="text" required  formControlName="address" 
+                    [ngClass]="{'is-invalid': !updateParentProfileForm.controls['address'].valid && !isValidForm}" maxlength="250"/>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['address'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter postal address.</label>
+                </div>      
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-3">
+                <form [formGroup]="parentCountryForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="parentCountry">Country&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="parentCountryClicked"></i></label>
+                        <select class="form-control"  required id="parentCountry" formControlName="parentCountry" (change)="getStateRegions('Active', parentCountryForm.controls['parentCountry'].value, 0, '')"
+                        [ngClass]="{'is-invalid': !parentCountryForm.controls['parentCountry'].valid && !isValidForm}">
+                        <option value="{{country.id}}" *ngFor="let country of parentCountries">{{country?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="parentCountryForm.controls['parentCountry'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select country.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-3">
+                <form [formGroup]="parentStateForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="parentState">State/Region&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="parentStateClicked"></i></label>
+                        <select class="form-control"  required id="parentState" formControlName="parentState" (change)="getDistricts('Active', parentCountryForm.controls['parentCountry'].value, parentStateForm.controls['parentState'].value, 0, '')"
+                        [ngClass]="{'is-invalid': !parentStateForm.controls['parentState'].valid && !isValidForm}">
+                        <option value="{{stateRegion.id}}" *ngFor="let stateRegion of parentStates">{{stateRegion?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="parentStateForm.controls['parentState'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select state/region.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-3">
+                <form [formGroup]="parentDistrictForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="parentDistrict">District&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="parentDistrictClicked"></i></label>
+                        <select class="form-control"  required id="parentDistrict" formControlName="parentDistrict" (change)="getCities('Active', parentCountryForm.controls['parentCountry'].value, parentStateForm.controls['parentState'].value, parentDistrictForm.controls['parentDistrict'].value, 0, '')"
+                        [ngClass]="{'is-invalid': !parentDistrictForm.controls['parentDistrict'].valid && !isValidForm}">
+                        <option value="{{district.id}}" *ngFor="let district of parentDistricts">{{district?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="parentDistrictForm.controls['parentDistrict'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select district.</label>
+                    </div>
+                </form>                
+            </div> 
+            <div class="col-md-3">
+                <form [formGroup]="parentCityForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="parentCity">City&nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="parentCityClicked"></i></label>
+                        <select class="form-control"  required id="parentCity" formControlName="parentCity"
+                        [ngClass]="{'is-invalid': !parentCityForm.controls['parentCity'].valid && !isValidForm}">
+                        <option value="{{city.id}}" *ngFor="let city of parentCities">{{city?.name}}</option>
+                        </select>
+                        <label style="color: red;"
+                        *ngIf="parentCityForm.controls['parentCity'].hasError('required') && !isValidForm"
+                        class="error jquery-validation-error small form-text"
+                        >Please select city.</label>
+                    </div>
+                </form>                
+            </div> 
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="pincode">Pin/Zip Code</label>
+                    <input class="form-control input-md" id="pincode" type="text" formControlName="pincode" 
+                    [ngClass]="{'is-invalid': !updateParentProfileForm.controls['pincode'].valid && !isValidForm}" minlength="5" maxlength="6"/>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['pincode'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter pincode.</label>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['pincode'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid pincode.</label>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['pincode'].hasError('minlength') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Pan number should be 5 digits long.</label>
+                </div>                
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="aadharNumber">Aadhar Number&nbsp;<span style="color: red;">*</span></label>
+                    <input class="form-control input-md" id="aadharNumber" type="text" required  formControlName="aadharNumber" 
+                    [ngClass]="{'is-invalid': !updateParentProfileForm.controls['aadharNumber'].valid && !isValidForm}" minlength="12" maxlength="12"/>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['aadharNumber'].hasError('required') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter aadhar number.</label>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['aadharNumber'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid aadhar number.</label>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['aadharNumber'].hasError('minlength') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Aadhar number should be 12 digit long.</label>
+                </div>                
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="panNumber">Pan Number</label>
+                    <input class="form-control input-md" id="panNumber" type="text" formControlName="panNumber" [ngClass]="{'is-invalid': !updateParentProfileForm.controls['panNumber'].valid && !isValidForm}" minlength="10" maxlength="10"/>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['panNumber'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid pan number.</label>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['panNumber'].hasError('minlength') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Pan number should be 10 character long.</label>
+                </div>                
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="form-control-label" for="passportNumber">Passport Number</label>
+                    <input class="form-control input-md" id="passportNumber" type="text" formControlName="passportNumber" 
+                    [ngClass]="{'is-invalid': !updateParentProfileForm.controls['passportNumber'].valid && !isValidForm}" minlength="8" maxlength="10"/>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['passportNumber'].hasError('pattern') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Please enter valid passport number.</label>
+                    <label style="color: red;"
+                    *ngIf="updateParentProfileForm.controls['passportNumber'].hasError('minlength') && !isValidForm"
+                    class="error jquery-validation-error small form-text"
+                    >Pan number should be 8 character long.</label>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-rounded btn-secondary" data-bs-dismiss="modal" (click)="closeModal()"> Close </button>
+        <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+        <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
+            <i class="fa fa-spin fa-spinner"></i>Saving...</button>
+    </div>
+</form>

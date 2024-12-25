@@ -210,6 +210,7 @@ export class B2cApplicationStageThreeComponent
       aadharNumber : ['', [Validators.required, Validators.pattern('^[0-9]{12,12}$'), Validators.minLength(12)]],
       passportNumber : [''],
       parentAddress : ['', Validators.required],
+      parentPinCode : ['', [Validators.required, Validators.pattern('^[0-9]{5,6}$'), Validators.minLength(6)]],
       parentAadharNumber : ['', [Validators.required, Validators.pattern('^[0-9]{12,12}$'), Validators.minLength(12)]],
       parentPassportNumber : ['', [Validators.minLength(8), Validators.minLength(10)]],
       parentPanNumber : ['', [Validators.pattern("^[a-zA-Z]{5}[0-9]{4}[A-Za-z]{1}$"), Validators.minLength(10)]],
@@ -218,6 +219,9 @@ export class B2cApplicationStageThreeComponent
       otherAcademyName : [''],
       academyAddress : [''],
       otherAcademyCoach : [''],
+      otherAcademySport : [''],
+      otherAcademyCoachEmail : ['', Validators.email],
+      otherAcademyCoachMobile : ['', [Validators.pattern('^[0-9]{10,15}$'), Validators.maxLength(15), Validators.minLength(10)]],
       studentUndergone : ['Home Schooling', Validators.required],
       formalSchoolName : [''],
       formalAddress : [''],
@@ -847,11 +851,19 @@ export class B2cApplicationStageThreeComponent
       this.sportCityForm.controls['sportCity'].enable();
       this.addApplicationForm3.controls['academyAddress'].enable();
       this.addApplicationForm3.controls['otherAcademyCoach'].enable();
+      this.addApplicationForm3.controls['otherAcademySport'].enable();
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].enable();
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].enable();
       this.addApplicationForm3.controls['otherAcademyName'].setValue("");
       this.addApplicationForm3.controls['otherAcademyName'].addValidators(Validators.required);
       this.addApplicationForm3.controls['academyAddress'].setValue("");
       this.addApplicationForm3.controls['otherAcademyCoach'].setValue("");
       this.addApplicationForm3.controls['otherAcademyCoach'].addValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademySport'].setValue("");
+      this.addApplicationForm3.controls['otherAcademySport'].addValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].setValue("");
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].addValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].setValue("");
       this.addApplicationForm3.get("engagementDate").setValue("");
       this.businessPartnerForm.get("businessPartner").setValue("");
       this.sportCountryForm.get("sportCountry").setValue("");
@@ -883,11 +895,19 @@ export class B2cApplicationStageThreeComponent
       this.sportCityForm.controls['sportCity'].disable();
       this.addApplicationForm3.controls['academyAddress'].disable();
       this.addApplicationForm3.controls['otherAcademyCoach'].disable();
+      this.addApplicationForm3.controls['otherAcademySport'].disable();
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].disable();
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].disable();
       this.addApplicationForm3.controls['otherAcademyName'].setValue("");
       this.addApplicationForm3.controls['otherAcademyName'].addValidators(Validators.required);
       this.addApplicationForm3.controls['academyAddress'].setValue("");
       this.addApplicationForm3.controls['otherAcademyCoach'].setValue("");
       this.addApplicationForm3.controls['otherAcademyCoach'].addValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademySport'].setValue("");
+      this.addApplicationForm3.controls['otherAcademySport'].addValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].setValue("");
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].addValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].setValue("");
       this.addApplicationForm3.get("engagementDate").setValue("");
       this.businessPartnerForm.get("businessPartner").setValue("");
       this.sportCountryForm.get("sportCountry").setValue("");
@@ -910,7 +930,11 @@ export class B2cApplicationStageThreeComponent
       this.addApplicationForm3.controls['otherAcademyName'].setValue("");
       this.addApplicationForm3.controls['otherAcademyName'].removeValidators(Validators.required);
       this.addApplicationForm3.controls['academyAddress'].setValue("");
-
+      this.addApplicationForm3.controls['otherAcademyCoach'].setValue("");
+      this.addApplicationForm3.controls['otherAcademySport'].setValue("");
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].setValue("");
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].setValue("");
+      
       this.sportCountryForm.controls['sportCountry'].addValidators(Validators.required);
       this.sportCountryForm.controls['sportCountry'].updateValueAndValidity();
       this.sportStateForm.controls['sportState'].addValidators(Validators.required);
@@ -919,6 +943,7 @@ export class B2cApplicationStageThreeComponent
       this.sportDistrictForm.controls['sportDistrict'].updateValueAndValidity();
       this.sportCityForm.controls['sportCity'].addValidators(Validators.required);
       this.sportCityForm.controls['sportCity'].updateValueAndValidity();
+      
       
   //////Get Coaches
       this.getBusinessPartnerCoaches(uuid);
@@ -992,6 +1017,14 @@ export class B2cApplicationStageThreeComponent
       this.sportCityForm.controls['sportCity'].setValue("");
       this.addApplicationForm3.controls['academyAddress'].setValue("");
       this.addApplicationForm3.controls['otherAcademyName'].addValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademyCoach'].setValue("");
+      this.addApplicationForm3.controls['otherAcademyCoach'].enable();
+      this.addApplicationForm3.controls['otherAcademySport'].setValue("");
+      this.addApplicationForm3.controls['otherAcademySport'].enable();
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].setValue("");
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].enable();
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].setValue("");
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].enable();
 
       this.sportCountryForm.controls['sportCountry'].addValidators(Validators.required);
       this.sportCountryForm.controls['sportCountry'].updateValueAndValidity();
@@ -1013,17 +1046,51 @@ export class B2cApplicationStageThreeComponent
   {
     if(uuid == "")
     {
-      this.addApplicationForm3.controls['otherAcademyCoach'].enable();
-      this.addApplicationForm3.controls['otherAcademyCoach'].setValue("");
       this.addApplicationForm3.controls['otherAcademyCoach'].addValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademySport'].addValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].addValidators(Validators.required);
+      this.addApplicationForm3.updateValueAndValidity();
+
+      this.addApplicationForm3.controls['otherAcademyCoach'].enable();
+      this.addApplicationForm3.controls['otherAcademySport'].enable();
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].enable();
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].enable();
+
+      this.addApplicationForm3.controls['otherAcademyCoach'].setValue("");      
+      this.addApplicationForm3.controls['otherAcademySport'].setValue("");      
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].setValue("");      
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].setValue("");
     }
     else
     {
-      this.addApplicationForm3.controls['otherAcademyCoach'].disable();
-      this.addApplicationForm3.controls['otherAcademyCoach'].setValue("");
       this.addApplicationForm3.controls['otherAcademyCoach'].removeValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademySport'].removeValidators(Validators.required);
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].removeValidators(Validators.required);
+
+      this.addApplicationForm3.controls['otherAcademyCoach'].disable();
+      this.addApplicationForm3.controls['otherAcademySport'].disable();
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].disable();
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].disable();
+
+      this.addApplicationForm3.controls['otherAcademyCoach'].setValue("");      
+      this.addApplicationForm3.controls['otherAcademySport'].setValue("");      
+      this.addApplicationForm3.controls['otherAcademyCoachMobile'].setValue("");      
+      this.addApplicationForm3.controls['otherAcademyCoachEmail'].setValue("");
+  ////Fetch Sport Name
+      let filterCoach = this.businessPartnerCoaches.filter(bc=>bc.coach.uuid === uuid);
+      if(filterCoach.length > 0)
+      {
+        this.addApplicationForm3.controls['otherAcademySport'].setValue(filterCoach[0].businessVerticalType?.name);
+        this.addApplicationForm3.controls['otherAcademyCoachMobile'].setValue(filterCoach[0].coach.mobile);
+        this.addApplicationForm3.controls['otherAcademyCoachEmail'].setValue(filterCoach[0].coach.email);
+      }
+      else
+      {
+        this.addApplicationForm3.controls['otherAcademySport'].setValue("");
+        this.addApplicationForm3.controls['otherAcademyCoachMobile'].setValue("");
+        this.addApplicationForm3.controls['otherAcademyCoachEmail'].setValue("");
+      }
     }
-    this.addApplicationForm3.updateValueAndValidity();
   }
 
   applyFormalRequired(name : string)
@@ -1103,6 +1170,7 @@ export class B2cApplicationStageThreeComponent
       "aadharNumber" : this.addApplicationForm3.get("aadharNumber").value,
       "passportNumber" : this.addApplicationForm3.get("passportNumber").value || "",
       "parentAddress" : this.addApplicationForm3.get("parentAddress").value,
+      "parentPinCode" : this.addApplicationForm3.get("parentPinCode").value,
       "parentAadharNumber" : this.addApplicationForm3.get("parentAadharNumber").value,
       "parentPassportNumber" : this.addApplicationForm3.get("parentPassportNumber").value || "",
       "parentPanNumber" : this.addApplicationForm3.get("parentPanNumber").value || "",
@@ -1121,6 +1189,9 @@ export class B2cApplicationStageThreeComponent
       "otherAcademyDistrict" : {"id" : (this.businessPartnerForm.get("businessPartner").value == '' ? this.sportDistrictForm.get("sportDistrict").value : "")},
       "otherAcademyCity" : {"id" : (this.businessPartnerForm.get("businessPartner").value == '' ? this.sportCityForm.get("sportCity").value : "")},
       "otherAcademyCoach" : this.addApplicationForm3.get("otherAcademyCoach").value || "",
+      "otherAcademySportName" : (this.coachForm.get("coach").value == "" ? this.addApplicationForm3.get("otherAcademySport").value : ""),
+      "otherAcademyCoachEmail" : (this.coachForm.get("coach").value == "" ? this.addApplicationForm3.get("otherAcademyCoachEmail").value : ""),
+      "otherAcademyCoachMobile" : (this.coachForm.get("coach").value == "" ? this.addApplicationForm3.get("otherAcademyCoachMobile").value : ""),     
       "studentUndergone" : this.addApplicationForm3.get("studentUndergone").value,
       "formalSchoolName" : (this.addApplicationForm3.get("studentUndergone").value == 'Formal Education' ? this.addApplicationForm3.get("formalSchoolName").value : ""),
       "formalSchoolAddress" : (this.addApplicationForm3.get("studentUndergone").value == 'Formal Education' ? this.addApplicationForm3.get("formalAddress").value : ""),
@@ -1160,7 +1231,6 @@ export class B2cApplicationStageThreeComponent
         this.isValidForm = true;
         this.saveClicked = true;
         let dataJSON = this.prepareDataJSON();
-      
         if(this.addApplicationForm3.get("isPracticingSport")?.value == "0")
         {
           this.addApplicationForm3.controls["engagementDate"].disable();

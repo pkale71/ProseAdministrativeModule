@@ -206,4 +206,81 @@ buildUserJSON.userOnBoarding = function(datas, action = 1)
     return resultJSON;
 }
 
+buildUserJSON.userSchoolSchoolingPrograms = function(datas)
+{
+    let resultJSON = [];
+    let schoolJSON = [];
+    let moduleJSON = [];
+    let schoolingProgramJSON = [];
+
+    datas.forEach((data) => 
+    {
+        schoolJSON = [];
+        schoolingProgramJSON = [];
+        moduleJSON = [];
+
+        schoolJSON = {
+            "uuid" : data.schoolUUID,
+            "name" : data.schoolName
+        }
+        
+        moduleJSON = {
+            "id" : data.moduleId,
+            "name" : data.moduleName
+        }
+        
+        let schoolingProgramIds = data.schoolingProgramIds.split(",");
+        let schoolingProgramNames = data.schoolingProgramNames.split(",");
+        for(let i=0;i<schoolingProgramIds.length;i++)
+        {
+            schoolingProgramJSON.push({
+                "id" : schoolingProgramIds[i],
+                "name" : schoolingProgramNames[i]
+            });
+        }
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "module" : moduleJSON,
+            "school" : schoolJSON,
+            "schoolingPrograms" : schoolingProgramJSON
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
+buildUserJSON.userStudyCenters = function(datas)
+{
+    let resultJSON = [];
+    let studyCenterJSON = [];
+    let moduleJSON = [];
+
+    datas.forEach((data) => 
+    {
+        studyCenterJSON = [];
+        moduleJSON = [];
+
+        studyCenterJSON = {
+            "uuid" : data.studyCenterUUID,
+            "name" : data.studyCenterName
+        }
+        
+        moduleJSON = {
+            "id" : data.moduleId,
+            "name" : data.moduleName
+        }
+/////Final JSON
+        let finalJSON = {
+            "id" : data.id,
+            "module" : moduleJSON,
+            "studyCenter" : studyCenterJSON
+        }
+        resultJSON.push(finalJSON);
+    });
+
+    return resultJSON;
+}
+
 module.exports = buildUserJSON;

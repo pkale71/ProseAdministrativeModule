@@ -1527,7 +1527,7 @@ db.getGrades = (gradeCategoryId, action) =>
     })
 }; 
 
-db.getGrade = (id) => 
+db.getGrade = (ids) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -1535,7 +1535,7 @@ db.getGrade = (id) =>
         {
             let sql = `SELECT g.id
             FROM grade g 
-            WHERE g.id = ${id}`;
+            WHERE FIND_IN_SET(g.id, '${ids}') > 0`;
             dbConn.query(sql, (error, result) => 
             {
                 if(error)
@@ -1835,7 +1835,7 @@ db.getSubjectByIds = (ids) =>
     })
 };
 
-db.duplicateSubject = (gradeCategoryId, gradeId, syllabusId, name, id) =>
+db.duplicateSubject = (gradeCategoryId, gradeIds, syllabusId, name, id) =>
 {
     return new Promise((resolve,reject) => 
     {
@@ -1843,8 +1843,7 @@ db.duplicateSubject = (gradeCategoryId, gradeId, syllabusId, name, id) =>
         {
             let sql = "";
             sql = `SELECT sub.id FROM subject sub JOIN syllabus s ON s.id = sub.syllabus_id
-            WHERE sub.grade_category_id = ${gradeCategoryId} AND sub.grade_id = ${gradeId} AND
-            FIND_IN_SET(sub.syllabus_id, '${syllabusId}') > 0 AND sub.name = '${name}'`;
+            WHERE sub.grade_category_id = ${gradeCategoryId} AND FIND_IN_SET(sub.grade_id, '${gradeIds}') > 0 AND FIND_IN_SET(sub.syllabus_id, '${syllabusId}') > 0 AND sub.name = '${name}'`;
 
             if(id != "")
             {
@@ -1900,18 +1899,22 @@ db.insertSubject = (subject) =>
     {
         try
         {
+            let gradeArray = (subject.gradeIds).toString().split(",");
             let syllabusArray = (subject.syllabusIds).toString().split(",");
+            
             let sqlValues = "";
-            for(let i=0; i<syllabusArray.length; i++)
+            for(let k=0; k<gradeArray.length; k++)
             {
-                if(sqlValues == '')
+                for(let i=0; i<syllabusArray.length; i++)
                 {
-                    sqlValues = `('${subject.name}', '${syllabusArray[i].toString().trim()}', ${subject.gradeCategoryId}, ${subject.gradeId}, ${subject.applicableFromYearId}, ${subject.subjectTypeId}, ${subject.totalSession}, ${subject.sessionDuration}, ${subject.hasPractical}, ${subject.isMandatory}, NOW(), ${subject.createdById})`;
-                }
-                else
-                {
-                    sqlValues = sqlValues + `,('${subject.name}', '${syllabusArray[i].toString().trim()}', 
-                    ${subject.gradeCategoryId}, ${subject.gradeId}, ${subject.applicableFromYearId}, ${subject.subjectTypeId}, ${subject.totalSession}, ${subject.sessionDuration}, ${subject.hasPractical}, ${subject.isMandatory}, NOW(), ${subject.createdById})`;
+                    if(sqlValues == '')
+                    {
+                        sqlValues = `('${subject.name}', '${syllabusArray[i].toString().trim()}', ${subject.gradeCategoryId}, '${gradeArray[k].toString().trim()}', ${subject.applicableFromYearId}, ${subject.subjectTypeId}, ${subject.totalSession}, ${subject.sessionDuration}, ${subject.hasPractical}, ${subject.isMandatory}, NOW(), ${subject.createdById})`;
+                    }
+                    else
+                    {
+                        sqlValues = sqlValues + `,('${subject.name}', '${syllabusArray[i].toString().trim()}', ${subject.gradeCategoryId}, '${gradeArray[k].toString().trim()}', ${subject.applicableFromYearId}, ${subject.subjectTypeId}, ${subject.totalSession}, ${subject.sessionDuration}, ${subject.hasPractical}, ${subject.isMandatory}, NOW(), ${subject.createdById})`;
+                    }
                 }
             }
             let sql = `INSERT INTO subject (name, syllabus_id, grade_category_id, grade_id,  applicable_from_year_id, subject_type_id, total_session, session_duration, has_practical, is_mandatory, created_on, created_by_id)

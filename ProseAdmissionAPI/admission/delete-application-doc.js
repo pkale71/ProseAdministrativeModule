@@ -38,19 +38,19 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                         "error" : errorCode.getStatus(500)
                     });
                 }
-                else
-                {
-                    if(applicationForm[0].applicationStatusName == 'Enrolled/Renewed' && documentName != "")
-                    {
-                        res.status(500)
-                        return res.json({
-                            "status_code" : 500,
-                            "message" : "Student Already Enrolled/Renewed, So File Cannot Be Deleted",
-                            "success" : false,
-                            "error" : errorCode.getStatus(500)
-                        });
-                    }
-                }
+                // else
+                // {
+                //     if(applicationForm[0].applicationStatusName == 'Enrolled/Renewed' && documentName != "")
+                //     {
+                //         res.status(500)
+                //         return res.json({
+                //             "status_code" : 500,
+                //             "message" : "Student Already Enrolled/Renewed, So File Cannot Be Deleted",
+                //             "success" : false,
+                //             "error" : errorCode.getStatus(500)
+                //         });
+                //     }
+                // }
 
                 if(applicationStudentDocumentId != "")
                 {
@@ -70,12 +70,12 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 let applicationNumber = (applicationForm[0].applicationNumber || "").toString().split("/").join("_");
                 let enrollmentNumber = (applicationForm[0].enrollmentNumber || "").toString().split("/").join("_");
 
-                if(applicationForm[0].enrollmentNumber == '' && documentName == "" && applicationStudentDocument?.length > 0)
+                if(enrollmentNumber == '' && documentName == "" && applicationStudentDocument?.length > 0)
                 {
                     let filePath = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber + "/" + applicationStudentDocument[0].fileName;
                     commonFunction.deleteFileByPath(filePath);
                 }
-                else if(applicationForm[0].enrollmentNumber != '' && documentName == "" && applicationStudentDocument?.length > 0)
+                else if(enrollmentNumber != '' && documentName == "" && applicationStudentDocument?.length > 0)
                 {
                     let filePath = commonFunction.getUploadFolder('EnrollmentDoc') + enrollmentNumber + "/" + applicationNumber + "/" + applicationStudentDocument[0].fileName;
                     commonFunction.deleteFileByPath(filePath);
@@ -84,13 +84,29 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 {
                     if(documentName == "Admission_Form")
                     {
-                        let filePath = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber + "/" + applicationForm[0].admissionFileName;
-                        commonFunction.deleteFileByPath(filePath); 
+                        if(enrollmentNumber == '')
+                        {
+                            let filePath = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber + "/" + applicationForm[0].admissionFileName;
+                            commonFunction.deleteFileByPath(filePath); 
+                        }
+                        else
+                        {
+                            let filePath = commonFunction.getUploadFolder('EnrollmentDoc') + enrollmentNumber + "/" + applicationNumber + "/" + applicationForm[0].admissionFileName;
+                            commonFunction.deleteFileByPath(filePath); 
+                        }
                     }
                     else if(documentName == "Undertaking_Form")
                     {
-                        let filePath = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber + "/" + applicationForm[0].undertakingFileName;
-                        commonFunction.deleteFileByPath(filePath); 
+                        if(enrollmentNumber == '')
+                        {
+                            let filePath = commonFunction.getUploadFolder('ApplicationDoc') + applicationNumber + "/" + applicationForm[0].undertakingFileName;
+                            commonFunction.deleteFileByPath(filePath); 
+                        }
+                        else
+                        {
+                            let filePath = commonFunction.getUploadFolder('EnrollmentDoc') + enrollmentNumber + "/" + applicationNumber + "/" + applicationForm[0].undertakingFileName;
+                            commonFunction.deleteFileByPath(filePath); 
+                        }
                     }                                   
                 }
                 if(documentName == "" && applicationStudentDocument?.length > 0)

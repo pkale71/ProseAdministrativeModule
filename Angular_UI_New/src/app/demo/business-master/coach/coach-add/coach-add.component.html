@@ -29,9 +29,9 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="form-control-label" for="email">Email&nbsp;<span style="color: red;">*</span></label>
-                    <input class="form-control input-md" id="email" type="text" required 
-                    formControlName="email" maxlength="100"
+                    <label class="form-control-label" for="email">Email</label>
+                    <input class="form-control input-md" id="email" type="text"  
+                    formControlName="email" maxlength="150"
                     [ngClass]="{'is-invalid': !coachForm.controls['email'].valid && !isValidForm}"
                     />
                     <label style="color: red;"

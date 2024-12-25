@@ -29,6 +29,9 @@ import { B2cApplicationStageThreeComponent } from './demo/admission/b2c-applicat
 import { B2cApplicationStageFourComponent } from './demo/admission/b2c-application/b2c-application-stage-four/b2c-application-stage-four.component';
 import { B2cApplicationStageFiveComponent } from './demo/admission/b2c-application/b2c-application-stage-five/b2c-application-stage-five.component';
 import { BlankAdmissionFormComponent } from './demo/admission/blank-admission-form/blank-admission-form.component';
+import { UserModuleAccessibilityComponent } from './demo/user/user-module-accessibility/user-module-accessibility.component';
+import { FeePaymentListComponent } from './demo/admission/fee-payment/fee-payment-list/fee-payment-list.component';
+import { FeePaymentDetailComponent } from './demo/admission/fee-payment/fee-payment-detail/fee-payment-detail.component';
 
 const routes: Routes = [
     {
@@ -54,6 +57,11 @@ const routes: Routes = [
             {
                 path: 'user/detail/:uuid',
                 loadComponent : () => UserDetailComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'user/accessibility/:uuid/:moduleId',
+                loadComponent : () => UserModuleAccessibilityComponent,
                 canActivate: [AuthGuardService],
             },
             {
@@ -127,7 +135,7 @@ const routes: Routes = [
                 canActivate: [AuthGuardService],
             },
             {
-                path: 'b2cApplication/registrations',
+                path: 'b2cApplication/admissions',
                 loadComponent : () => B2cApplicationListComponent,
                 canActivate: [AuthGuardService],
             },
@@ -159,6 +167,16 @@ const routes: Routes = [
             {
                 path: 'b2cApplication/b2cApplicationStage5/add/:uuid',
                 loadComponent : () => B2cApplicationStageFiveComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'feeCollections',
+                loadComponent : () => FeePaymentListComponent,
+                canActivate: [AuthGuardService],
+            },
+            {
+                path: 'feeCollection/detail/:uuid',
+                loadComponent : () => FeePaymentDetailComponent,
                 canActivate: [AuthGuardService],
             },
         ]

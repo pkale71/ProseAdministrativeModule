@@ -305,10 +305,10 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 }
 
                 //check duplicate parent
-                parent = await dbAdmission.checkDuplicateParentEmailMobile(parentEmail, 'Email');
+                parent = await dbAdmission.checkDuplicateParentEmailMobile(parentEmail, 'Email', '');
                 if(parent.length == 0)
                 {
-                    parent = await dbAdmission.checkDuplicateParentEmailMobile(parentMobile, 'Mobile');
+                    parent = await dbAdmission.checkDuplicateParentEmailMobile(parentMobile, 'Mobile', '');
                     if(parent.length == 1)
                     {
                         parentId = parent[0].id;

@@ -290,8 +290,8 @@ export class SubjectEditComponent {
                             result: "success",
                             response : {
                                 gradeCategoryId : this.gradeCategoryForm.get('gradeCategory').value,
-                                gradeId : this.gradeForm.get('grade').value,
-                                syllabusId : this.syllabusForm.get('syllabus').value,
+                                gradeId : 0,
+                                syllabusId : 0,
                             }
                          });
                         this.closeModal();

@@ -1122,4 +1122,346 @@ db.deleteUserOnBoarding = (id) =>
     })
 };
 
+db.getUserSchoolSchoolingPrograms = (userUUID, moduleId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT ussp.id, sch.uuid AS schoolUUID, sch.name AS schoolName, 
+            m.id AS moduleId, m.name AS moduleName, 
+            GROUP_CONCAT(sp.id) AS schoolingProgramIds, GROUP_CONCAT(sp.name) AS schoolingProgramNames 
+            FROM user_school_schooling_programs ussp
+            JOIN user u ON u.id = ussp.user_id
+            JOIN module m ON m.id = ussp.module_id
+            JOIN school sch ON sch.id = ussp.school_id
+            JOIN schooling_program sp ON sp.id = ussp.schooling_program_id
+            WHERE u.uuid = '${userUUID}' AND ussp.module_id = ${moduleId}
+            GROUP BY sch.id
+            ORDER BY sch.name`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }    
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertUserSchoolSchoolingPrograms = (user) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sqlParams = "";
+            let sql = "";
+            
+            if(user.schoolingProgramIds != "0")
+            {
+                let schoolingProgramIdArray = user.schoolingProgramIds.toString().split(",");
+                for(let i=0;i<schoolingProgramIdArray.length;i++)
+                {
+                    if(sqlParams == '')
+                    {
+                        sqlParams = `(${user.userId}, ${user.moduleId}, ${user.schoolId}, ${schoolingProgramIdArray[i]}, NOW(),  ${user.createdById})`;
+                    }
+                    else
+                    {
+                        sqlParams = sqlParams + `, (${user.userId}, ${user.moduleId}, ${user.schoolId}, ${schoolingProgramIdArray[i]}, NOW(),  ${user.createdById})`;
+                    }
+                }
+            
+                sql = `INSERT INTO user_school_schooling_programs (user_id, module_id, school_id, schooling_program_id, assigned_on, assigned_by_id) VALUES ${sqlParams}`;
+
+                dbConn.query(sql, (error, result) => 
+                {
+                    if(error)
+                    {
+                        return reject(error);
+                    } 
+                    return resolve(result);
+                });
+            }
+            else if(user.schoolingProgramIds == "0")
+            {
+                let sql1 = `DELETE FROM user_school_schooling_programs WHERE user_id = ${user.userId} AND school_id = ${user.schoolId} AND module_id = ${user.moduleId}`;
+                dbConn.query(sql1, (error1, result1) => 
+                {
+                    if(error1)
+                    {
+                        return reject(error1);
+                    } 
+
+                    sql = `INSERT INTO user_school_schooling_programs (user_id, module_id, school_id, schooling_program_id, assigned_on, assigned_by_id) 
+                    SELECT ${user.userId} AS user_id, ${user.moduleId} AS module_id, ${user.schoolId} AS school_id, schooling_program_id, NOW() AS assigned_on, ${user.createdById} AS assigned_by_id FROM school_schooling_program_detail WHERE school_id = ${user.schoolId} AND is_active = 1`;
+                    dbConn.query(sql, (error, result) => 
+                    {
+                        if(error)
+                        {
+                            return reject(error);
+                        }  
+
+                        let sql2 = `ALTER TABLE user_school_schooling_programs AUTO_INCREMENT = ${result.insertId + 1}`;
+                        dbConn.query(sql2, (error2, result2) => 
+                        {
+                            if(error2)
+                            {
+                                return reject(error2);
+                            }  
+                            return resolve(result);                            
+                        });
+                    });
+                });
+            }
+            
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteUserSchool = (user) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM user_school_schooling_programs WHERE user_id = ${user.userId} AND school_id = ${user.schoolId} AND module_id = ${user.moduleId}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                } 
+                return resolve(result);
+            });            
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteUserSchoolSchoolingProgram = (user) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM user_school_schooling_programs WHERE user_id = ${user.userId} AND school_id = ${user.schoolId} AND schooling_program_id = ${user.schoolingProgramId} AND module_id = ${user.moduleId}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                } 
+                return resolve(result);
+            });            
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.userSchoolSchoolingProgramsExist = (userId, moduleId, schoolId, schoolingProgramIds) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT id FROM user_school_schooling_programs WHERE user_id = ${userId} AND module_id = ${moduleId} AND school_id = ${schoolId} AND FIND_IN_SET(schooling_program_id, '${schoolingProgramIds}') > 0`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }    
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.getUserStudyCenters = (userUUID, moduleId) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `SELECT usc.id, sc.uuid AS studyCenterUUID, sc.name AS studyCenterName,
+            m.id AS moduleId, m.name AS moduleName
+            FROM user_study_centers usc
+            JOIN user u ON u.id = usc.user_id
+            JOIN module m ON m.id = usc.module_id
+            JOIN study_center sc ON sc.id = usc.study_center_id
+            WHERE u.uuid = '${userUUID}' AND usc.module_id = ${moduleId}
+            ORDER BY sc.name`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }    
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.insertUserStudyCenters = (user) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sqlParams = "";
+            let sql = "";
+            
+            if(user.studyCenters.length > 0)
+            {
+                for(let i=0;i<user.studyCenters.length;i++)
+                {
+                    if(sqlParams == '')
+                    {
+                        sqlParams = `(${user.userId}, ${user.moduleId}, ${user.studyCenters[i].id}, NOW(),  ${user.createdById})`;
+                    }
+                    else
+                    {
+                        sqlParams = sqlParams + `, (${user.userId}, ${user.moduleId}, ${user.studyCenters[i].id}, NOW(),  ${user.createdById})`;
+                    }
+                }
+            
+                sql = `INSERT INTO user_study_centers (user_id, module_id, study_center_id, assigned_on, assigned_by_id) VALUES ${sqlParams}`;
+
+                dbConn.query(sql, (error, result) => 
+                {
+                    if(error)
+                    {
+                        return reject(error);
+                    } 
+                    return resolve(result);
+                });
+            }
+            else if(user.studyCenters.length == 0)
+            {
+                let sql1 = `DELETE FROM user_study_centers WHERE user_id = ${user.userId} AND module_id = ${user.moduleId}`;
+                dbConn.query(sql1, (error1, result1) => 
+                {
+                    if(error1)
+                    {
+                        return reject(error1);
+                    } 
+                    sql = `INSERT INTO user_study_centers (user_id, module_id, study_center_id, assigned_on, assigned_by_id) 
+                    SELECT ${user.userId} AS user_id, ${user.moduleId} AS module_id, id AS study_center_id, NOW() AS assigned_on, ${user.createdById} AS assigned_by_id FROM study_center WHERE is_active = 1`;
+    
+                    dbConn.query(sql, (error, result) => 
+                    {
+                        if(error)
+                        {
+                            return reject(error);
+                        }  
+
+                        let sql2 = `ALTER TABLE user_study_centers AUTO_INCREMENT = ${result.insertId + 1}`;
+                        dbConn.query(sql2, (error2, result2) => 
+                        {
+                            if(error2)
+                            {
+                                return reject(error2);
+                            }  
+                            return resolve(result);                            
+                        });
+                    });
+                });
+            }
+            
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.deleteUserStudyCenter = (user) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let sql = `DELETE FROM user_study_centers WHERE user_id = ${user.userId} AND study_center_id = ${user.studyCenterId} AND module_id = ${user.moduleId}`;
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                } 
+                return resolve(result);
+            });            
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
+db.userStudyCentersExist = (userId, moduleId, studyCenters) => 
+{
+    return new Promise((resolve, reject) => 
+    {
+        try
+        {
+            let studyCenterIds = "";
+            studyCenters.forEach(studyCenter => {
+                if(studyCenterIds == "")
+                {
+                    studyCenterIds = studyCenter.id;
+                }
+                else
+                {
+                    studyCenterIds = studyCenterIds + "," + studyCenter.id;
+                }
+            });
+            let sql = `SELECT id FROM user_study_centers WHERE user_id = ${userId} AND module_id = ${moduleId} AND FIND_IN_SET(study_center_id, '${studyCenterIds}') > 0`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }    
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    })
+};
+
 module.exports = db

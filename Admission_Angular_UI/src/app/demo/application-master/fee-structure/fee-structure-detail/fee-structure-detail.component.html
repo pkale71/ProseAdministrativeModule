@@ -87,7 +87,7 @@
                                                     <th>Installment</th>
                                                     <th>Installment(%)</th>
                                                     <th>Due Date</th>
-                                                    <th>Amount</th>
+                                                    <th class="text-end">Amount</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -95,7 +95,7 @@
                                                     <td>{{feeInstallment?.name}}</td>
                                                     <td>{{feeInstallment?.installmentRate}}%</td>
                                                     <td>{{feeInstallment?.dueDate | date : "dd/MM/yyyy"}}</td>
-                                                    <td>{{(feeStructureTotal?.grossAmount * feeInstallment?.installmentRate)/100 | number: '1.2-2'}}</td>
+                                                    <td class="text-end">{{(feeStructureTotal?.grossAmount * feeInstallment?.installmentRate)/100 | number: '1.2-2'}}</td>
                                                 </tr>
                                                 <tr *ngIf="feeInstallments.length == 0">
                                                     <td></td>
@@ -120,14 +120,14 @@
                                         <tr>
                                             <th>Sno</th>
                                             <th>Name</th>
-                                            <th>Amount</th>
+                                            <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let feeStructureFeeType of feeStructureFeeTypes let i=index" >
                                             <td>{{i+1}}</td>
                                             <td>{{feeStructureFeeType?.feeType?.name}}</td>
-                                            <td>{{feeStructureFeeType?.amount | number}}</td>
+                                            <td class="text-end">{{feeStructureFeeType?.amount | number}}</td>
                                         </tr>
                                         <tr *ngIf="feeStructureFeeTypes.length == 0">
                                             <td></td>
@@ -148,14 +148,14 @@
                                         <tr>
                                             <th>Sno</th>
                                             <th>Name</th>
-                                            <th>Amount</th>
+                                            <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let feeStructureDiscountType of feeStructureDiscountTypes let i=index" >
                                             <td>{{i+1}}</td>
                                             <td>{{feeStructureDiscountType?.discountType?.name}}</td>
-                                            <td>{{feeStructureDiscountType?.amount | number}}</td>
+                                            <td class="text-end">{{feeStructureDiscountType?.amount | number}}</td>
                                         </tr>
                                         <tr *ngIf="feeStructureDiscountTypes.length == 0">
                                             <td></td>
@@ -167,54 +167,55 @@
                             </div>
                         </ng-template>
                     </li>
-                    <li class="nav-item" [ngbNavItem]="5">
-                        <a class="nav-link text-uppercase" aria-controls="feeStructureTotals" aria-selected="true" ngbNavLink>Totals</a>
-                        <ng-template ngbNavContent>
-                            <div class="table-responsive">
-                                <table class="table table-striped row-border table-hover pt-1">
-                                    <thead>
-                                        <tr>
-                                            <th>Sno</th>
-                                            <th>Total Amount</th>
-                                            <th>Total Discount</th>
-                                            <th>Net Amount</th>
-                                            <th *ngIf="feeStructure?.taxApplicable == 1">Tax Rate</th>
-                                            <th *ngIf="feeStructure?.taxApplicable == 1">Applicable From</th>
-                                            <th *ngIf="feeStructure?.taxApplicable == 1">Applicable To</th>
-                                            <th *ngIf="feeStructure?.taxApplicable == 1">Tax Amount</th>
-                                            <th>Gross Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let feeStructureTotal of feeStructureTotals let i=index">
-                                            <td>{{i+1}}</td>
-                                            <td>{{feeStructureTotal?.totalAmount | number}}</td>
-                                            <td>{{feeStructureTotal?.totalDiscount | number}}</td>
-                                            <td>{{feeStructureTotal?.netAmount | number}}</td>
-                                            <td *ngIf="feeStructure?.taxApplicable == 1">{{feeStructureTotal?.taxType?.name}} - {{feeStructureTotal?.taxRate?.rate}}%</td>
-                                            <td *ngIf="feeStructure?.taxApplicable == 1">{{feeStructureTotal?.taxRate?.applicableFrom | date : "dd/MM/yyyy"}}</td>
-                                            <td *ngIf="feeStructure?.taxApplicable == 1">{{feeStructureTotal?.taxRate?.applicableTo | date : "dd/MM/yyyy"}}</td>
-                                            <td *ngIf="feeStructure?.taxApplicable == 1">{{feeStructureTotal?.taxAmount | number}}</td>
-                                            <td>{{feeStructureTotal?.grossAmount | number}}</td>
-                                        </tr>
-                                        <tr *ngIf="feeStructureTotals.length == 0">
-                                            <td></td>
-                                            <td></td>
-                                            <td *ngIf="feeStructure?.taxApplicable == 1"></td>
-                                            <td *ngIf="feeStructure?.taxApplicable == 1"></td>
-                                            <td *ngIf="feeStructure?.taxApplicable == 1"></td>
-                                            <td *ngIf="feeStructure?.taxApplicable == 1"></td>
-                                            <td>No record(s) found</td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </ng-template>
-                    </li>
                 </ul>
                 <div [ngbNavOutlet]="nav"></div>
+                <hr>
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        <h5>Fee Summary</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped row-border table-hover pt-1">
+                                <thead>
+                                    <tr>
+                                        <th>Sno</th>
+                                        <th class="text-end">Total Amount</th>
+                                        <th class="text-end">Total Discount</th>
+                                        <th class="text-end">Net Amount</th>
+                                        <th *ngIf="feeStructure?.taxApplicable == 1">Tax Rate</th>
+                                        <th *ngIf="feeStructure?.taxApplicable == 1">Applicable From</th>
+                                        <th *ngIf="feeStructure?.taxApplicable == 1">Applicable To</th>
+                                        <th class="text-end" *ngIf="feeStructure?.taxApplicable == 1">Tax Amount</th>
+                                        <th class="text-end">Gross Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let feeStructureTotal of feeStructureTotals let i=index">
+                                        <td>{{i+1}}</td>
+                                        <td class="text-end">{{feeStructureTotal?.totalAmount | number}}</td>
+                                        <td class="text-end">{{feeStructureTotal?.totalDiscount | number}}</td>
+                                        <td class="text-end">{{feeStructureTotal?.netAmount | number}}</td>
+                                        <td *ngIf="feeStructure?.taxApplicable == 1">{{feeStructureTotal?.taxType?.name}} - {{feeStructureTotal?.taxRate?.rate}}%</td>
+                                        <td *ngIf="feeStructure?.taxApplicable == 1">{{feeStructureTotal?.taxRate?.applicableFrom | date : "dd/MM/yyyy"}}</td>
+                                        <td *ngIf="feeStructure?.taxApplicable == 1">{{feeStructureTotal?.taxRate?.applicableTo | date : "dd/MM/yyyy"}}</td>
+                                        <td class="text-end" *ngIf="feeStructure?.taxApplicable == 1">{{feeStructureTotal?.taxAmount | number}}</td>
+                                        <td class="text-end">{{feeStructureTotal?.grossAmount | number}}</td>
+                                    </tr>
+                                    <tr *ngIf="feeStructureTotals.length == 0">
+                                        <td></td>
+                                        <td></td>
+                                        <td *ngIf="feeStructure?.taxApplicable == 1"></td>
+                                        <td *ngIf="feeStructure?.taxApplicable == 1"></td>
+                                        <td *ngIf="feeStructure?.taxApplicable == 1"></td>
+                                        <td *ngIf="feeStructure?.taxApplicable == 1"></td>
+                                        <td>No record(s) found</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

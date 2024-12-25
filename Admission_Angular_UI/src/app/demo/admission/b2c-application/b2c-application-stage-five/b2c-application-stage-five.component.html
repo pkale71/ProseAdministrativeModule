@@ -30,25 +30,25 @@
                             <label class="form-control-label" for="school">School</label>
                             <label class="form-control input-md">{{studentProfileData?.school?.name}}</label>    
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <label class="form-control-label" for="schoolingProgram">Schooling Program</label>
                             <label class="form-control input-md">{{studentProfileData?.schoolingProgram?.name}}</label>                 
                         </div>
+                    </div>
+                    <div class="row mt-2">
                         <div class="col-sm-3">
                             <label class="form-control-label" for="gender">Gender</label>
                             <label class="form-control input-md">{{studentProfileData?.gender?.name}}</label>                  
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label class="form-control-label" for="name">Syllabus</label>
                             <label class="form-control input-md">{{studentProfileData?.syllabus?.name}}</label>    
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label class="form-control-label" for="gradeCategory">Grade Category</label>
                             <label class="form-control input-md">{{studentProfileData?.gradeCategory?.name}}</label>
                         </div> 
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label class="form-control-label" for="grade">Grade</label>
                             <label class="form-control input-md">{{studentProfileData?.grade?.name}}</label>
                         </div>
@@ -67,7 +67,9 @@
                             <label class="form-control input-md">{{feeStructureData?.total?.grossAmount | number}}</label>    
                         </div>
                     </div>
+                    <hr>
                     <h5 class="mt-4">Payment Details</h5>
+                    <hr>
                     <div class="table-responsive">
                         <table class="table table-striped row-border table-hover pt-1">
                             <thead>

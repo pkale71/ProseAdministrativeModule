@@ -28,23 +28,22 @@
                     </div>
                 </form>                
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <form [formGroup]="gradeForm">
                     <div class="form-group">
                         <label class="form-control-label" for="grade">Grade &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="gradeClicked"></i></label>
-                        <select class="form-control"  required id="grade" formControlName="grade"
-                        [ngClass]="{'is-invalid': !gradeForm.controls['grade'].valid && !isValidForm}" (change) = "getSyllabuses(gradeCategoryForm.controls['gradeCategory'].value)"
-                          >
-                        <option value="{{grade.id}}" *ngFor="let grade of grades">{{grade?.name}}</option>
-                        </select>
+                        <ng-select id="gradeIds" required
+                        formControlName="gradeIds" [options]="grades" [multiple]="true"
+                        [ngClass]="!gradeForm.controls['gradeIds'].valid && !isValidForm ? ['ng select', 'is-invalid'] : ['ng-select']">
+                        </ng-select>
                         <label style="color: red;"
-                        *ngIf="gradeForm.controls['grade'].hasError('required') && !isValidForm"
+                        *ngIf="gradeForm.controls['gradeIds'].hasError('required') && !isValidForm"
                         class="error jquery-validation-error small form-text"
                         >Please select grade.</label>
                     </div>
                 </form>                
             </div>             
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <form [formGroup]="syllabusForm">
                     <div class="form-group">
                         <label class="form-control-label" for="syllabusIds">Syllabus &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="syllabusClicked"></i></label>                        

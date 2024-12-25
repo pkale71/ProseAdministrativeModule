@@ -23,40 +23,40 @@ module.exports = require('express').Router().post('/',async(req,res) =>
                 if(feeStructure.length == 1)
                 {
                     id = feeStructure[0].id;
-                // feeStructure = await dbCommon.checkTaxTypeExist(id);
-                // if(feeStructure.length == 0)
-                // {
-                    let updateFeeStructureResult = await dbCommon.deleteFeeStructure(id);
-                    if(updateFeeStructureResult[4].affectedRows > 0)
+                    feeStructure = await dbCommon.checkFeeStructureExist(id);
+                    if(feeStructure.length == 0)
                     {
-                        res.status(200)
-                        return res.json({
-                            "status_code" : 200,
-                            "success" : true,                            
-                            "message" : errorCode.getStatus(200)
-                        });
+                        let updateFeeStructureResult = await dbCommon.deleteFeeStructure(id);
+                        if(updateFeeStructureResult[4].affectedRows > 0)
+                        {
+                            res.status(200)
+                            return res.json({
+                                "status_code" : 200,
+                                "success" : true,                            
+                                "message" : errorCode.getStatus(200)
+                            });
+                        }
+                        else
+                        {
+                            res.status(500)
+                            return res.json({
+                                "status_code" : 500,
+                                "message" : "Fee Structure Already Deleted",
+                                "success" : false,
+                                "error" : errorCode.getStatus(500),
+                            });
+                        }
                     }
                     else
                     {
                         res.status(500)
                         return res.json({
                             "status_code" : 500,
-                            "message" : "Fee Structure Already Deleted",
+                            "message" : "Fee Structure Currently In Use",
                             "success" : false,
                             "error" : errorCode.getStatus(500),
                         });
                     }
-                // }
-                // else
-                // {
-                //     res.status(500)
-                //     return res.json({
-                //         "status_code" : 500,
-                //         "message" : "Fee Structure Currently In Use",
-                //         "success" : false,
-                //         "error" : errorCode.getStatus(500),
-                //     });
-                // }
                 }
                 else
                 {

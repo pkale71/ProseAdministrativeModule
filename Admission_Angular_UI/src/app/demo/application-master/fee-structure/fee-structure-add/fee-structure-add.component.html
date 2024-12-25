@@ -9,8 +9,8 @@
             </div>
             <form [formGroup]="addFeeStructureForm" id="addFeeStructureForm" (ngSubmit)="saveFeeStructure()" autocomplete="off">
                 <div class="card-body">
-                    <ul class="nav nav-pills mb-3" ngbNav #nav1="ngbNav">
-                        <li class="nav-item" [ngbNavItem]="1">
+                    <ul class="nav nav-pills mb-3" ngbNav #nav1="ngbNav" [(activeId)]="activeTab">
+                        <li class="nav-item" [ngbNavItem]="1" [disabled]="true">
                             <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Fee Structure Info</a>
                             <ng-template ngbNavContent>
                                 <div class="row">
@@ -125,7 +125,7 @@
                                         <form [formGroup]="feeCategoryForm">
                                             <div class="form-group">
                                                 <label class="form-control-label" for="feeCategory">Fee Category&nbsp;<span style="color: red;">*</span></label>
-                                                <select class="form-control"  required id="feeCategory" formControlName="feeCategory" 
+                                                <select class="form-control"  required id="feeCategory" formControlName="feeCategory" (change)="checkFeeInstallments(feeCategoryForm.controls['feeCategory'].value)"
                                                 [ngClass]="{'is-invalid': !feeCategoryForm.controls['feeCategory'].valid && !isValidForm}">
                                                 <option value="{{feeCategory.id}}" *ngFor="let feeCategory of feeCategories">{{feeCategory?.name}}</option>
                                                 </select>
@@ -141,7 +141,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-control-label" for="totalInstallment">Total Installment&nbsp;<span style="color: red;">*</span></label>
-                                            <input class="form-control input-md" id="totalInstallment" type="text" required formControlName="totalInstallment" maxlength="2" (input)="addInstallments(addFeeStructureForm.controls['totalInstallment'].value)"
+                                            <input class="form-control input-md" id="totalInstallment" type="text" required formControlName="totalInstallment" maxlength="2" (input)="addInstallments(addFeeStructureForm.controls['totalInstallment'].value)" 
                                             [ngClass]="{'is-invalid': !addFeeStructureForm.controls['totalInstallment'].valid && !isValidForm}"/>
                                             <label style="color: red;"
                                             *ngIf="addFeeStructureForm.controls['totalInstallment'].hasError('required') && !isValidForm"
@@ -193,7 +193,7 @@
                                 </div>
                             </ng-template>
                         </li>
-                        <li class="nav-item" [ngbNavItem]="2">
+                        <li class="nav-item" [ngbNavItem]="2" [disabled]="true">
                             <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Installments</a>
                             <ng-template ngbNavContent>
                                 <div class="row">
@@ -251,7 +251,7 @@
                                 </div>
                             </ng-template>
                         </li>
-                        <li class="nav-item" [ngbNavItem]="3">
+                        <li class="nav-item" [ngbNavItem]="3" [disabled]="true">
                             <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Fee Types</a>
                             <ng-template ngbNavContent>
                                 <div class="row">
@@ -318,7 +318,7 @@
                                 </div>
                             </ng-template>
                         </li>
-                        <li class="nav-item" [ngbNavItem]="4">
+                        <li class="nav-item" [ngbNavItem]="4" [disabled]="true">
                             <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Discount Types</a>
                             <ng-template ngbNavContent>
                                 <div class="row">
@@ -385,7 +385,7 @@
                                 </div>
                             </ng-template>
                         </li>
-                        <li class="nav-item" [ngbNavItem]="5" *ngIf="addFeeStructureForm.controls['taxApplicable'].value == 1">
+                        <li class="nav-item" [ngbNavItem]="5" *ngIf="addFeeStructureForm.controls['taxApplicable'].value == 1" [disabled]="true">
                             <a class="nav-link" ngbNavLink aria-controls="pills-home" aria-selected="true">Tax Rates</a>
                             <ng-template ngbNavContent>
                                 <div class="row">
@@ -452,7 +452,9 @@
                     <div [ngbNavOutlet]="nav1" class="mt-2"></div>
                 </div>
                 <div class="card-footer float-end">
-                    <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked"><i class="fa fa-save"></i>Save </button>
+                    <button type="button" class="btn btn-rounded btn-secondary" *ngIf="activeTab != 1" (click)="setActiveTab(nav1, 'Prev')"><i class="fa fa-arrow-left"></i>Prev </button>
+                    <button type="button" class="btn btn-rounded btn-secondary" *ngIf="addFeeStructureForm.controls['taxApplicable'].value == 1 ? activeTab != 5 : activeTab != 4" (click)="setActiveTab(nav1, 'Next')"><i class="fa fa-arrow-right"></i>Next </button>
+                    <button type="submit" class="btn btn-rounded btn-success" *ngIf="!saveClicked && (addFeeStructureForm.controls['taxApplicable'].value == 1 ? activeTab == 5 : activeTab == 4)"><i class="fa fa-save"></i>Save </button>
                     <button type="button" class="btn btn-rounded btn-success" disabled="true" *ngIf="saveClicked">
                         <i class="fa fa-spin fa-spinner"></i>Saving...</button>
                 </div>

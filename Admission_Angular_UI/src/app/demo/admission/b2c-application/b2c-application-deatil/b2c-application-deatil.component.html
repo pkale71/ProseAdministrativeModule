@@ -19,12 +19,14 @@
                         </div>
                     </div>
                 </h5>
-                <ul class="nav nav-pills" ngbNav #nav="ngbNav">
+                <ul class="nav nav-pills col-sm-12" ngbNav #nav="ngbNav">
                     <li class="nav-item" [ngbNavItem]="1">
                         <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
-                        Student Profile&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentProfileClicked"></i>
+                        Admission & Student Profile&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="studentProfileClicked"></i>
                         </a>
                         <ng-template ngbNavContent>
+                            <h5>Admission Information</h5>
+                            <hr>
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label class="form-control-label" for="applicationType">Application Type</label>
@@ -75,43 +77,15 @@
                                     <label class="form-control input-md">{{studentProfileData?.school?.name}}</label>    
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-control-label" for="studentName">Student Name</label>
-                                    <label class="form-control input-md">{{studentProfileData?.studentName}}</label>                  
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col-sm-3">
                                     <label class="form-control-label" for="schoolingProgram">Schooling Program</label>
                                     <label class="form-control input-md">{{studentProfileData?.schoolingProgram?.name}}</label>                 
                                 </div>
-                                <div class="col-sm-3">
-                                    <label class="form-control-label" for="gender">Gender</label>
-                                    <label class="form-control input-md">{{studentProfileData?.gender?.name}}</label>                  
-                                </div>
-                                <div class="col-sm-3">
-                                    <label class="form-control-label" for="dob">Date Of Birth</label>
-                                    <label class="form-control input-md">{{(studentProfileData?.dob | date : "dd/MM/yyyy") || "----"}}</label>
-                                </div> 
-                                <div class="col-sm-3">
-                                    <label class="form-control-label" for="nationality">Nationality</label>
-                                    <label class="form-control input-md">{{studentProfileData?.nationality || "----"}}</label>
-                                </div> 
                             </div>
                             <div class="row mt-2">
-                                <div class="col-sm-3">
-                                    <label class="form-control-label" for="aadharNo">Aadhar Number</label>
-                                    <label class="form-control input-md">{{studentProfileData?.aadharNumber || "----"}}</label>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label class="form-control-label" for="passportNo">Passport Number</label>
-                                    <label class="form-control input-md">{{studentProfileData?.passportNumber || "----"}}</label>
-                                </div> 
                                 <div class="col-sm-6">
                                     <label class="form-control-label" for="studyCenter">Study Center</label>
                                     <label class="form-control input-md">{{studentProfileData?.studyCenter?.name}}</label>
-                                </div>                              
-                            </div>  
-                            <div class="row mt-2">
+                                </div> 
                                 <div class="col-sm-3">
                                     <label class="form-control-label" for="name">Syllabus</label>
                                     <label class="form-control input-md">{{studentProfileData?.syllabus?.name}}</label>    
@@ -119,7 +93,9 @@
                                 <div class="col-sm-3">
                                     <label class="form-control-label" for="gradeCategory">Grade Category</label>
                                     <label class="form-control input-md">{{studentProfileData?.gradeCategory?.name}}</label>
-                                </div> 
+                                </div>                                 
+                            </div>
+                            <div class="row mt-2">
                                 <div class="col-sm-3">
                                     <label class="form-control-label" for="grade">Grade</label>
                                     <label class="form-control input-md">{{studentProfileData?.grade?.name}}</label>
@@ -128,12 +104,53 @@
                                     <label class="form-control-label" for="profileCompletion">Profile Completion</label>
                                     <label class="form-control input-md">{{studentProfileData?.profileCompletion?.name}}</label>                
                                 </div>
-                            </div>
-                            <div class="row mt-2">
                                 <div class="col-sm-3">
                                     <label class="form-control-label" for="parentUndertaking">Parent Undertaking</label>
                                     <label class="form-control input-md">{{studentProfileData?.parentUndertaking?.name}}</label>
                                 </div> 
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h5 class="mt-2">Student Profile</h5>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-rounded btn-primary float-end" (click)="updateStudentProfile()">Update Profile</button>
+                                </div>
+                            </div>
+                            <hr style="margin-top: 10px;">
+                            <div class="row mt-2">
+                                <div class="col-sm-6">
+                                    <label class="form-control-label" for="studentName">Student Name</label>
+                                    <label class="form-control input-md">{{studentProfileData?.studentName}}</label>                  
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="gender">Gender</label>
+                                    <label class="form-control input-md">{{studentProfileData?.gender?.name}}</label>                  
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="dob">Date Of Birth</label>
+                                    <label class="form-control input-md">{{(studentProfileData?.dob | date : "dd/MM/yyyy") || "----"}}</label>
+                                </div>                                 
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="nationality">Nationality</label>
+                                    <label class="form-control input-md">{{studentProfileData?.nationality || "----"}}</label>
+                                </div> 
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="aadharNo">Aadhar Number</label>
+                                    <label class="form-control input-md">{{studentProfileData?.aadharNumber || "----"}}</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="passportNo">Passport Number</label>
+                                    <label class="form-control input-md">{{studentProfileData?.passportNumber || "----"}}</label>
+                                </div>                                                              
+                            </div>  
+                            <hr>
+                            <h5 class="mt-4">Lead Information</h5>
+                            <hr>
+                            <div class="row mt-2">
                                 <div class="col-sm-3">
                                     <label class="form-control-label" for="leadStudentType">Lead Student Type</label>
                                     <label class="form-control input-md">{{studentProfileData?.leadStudentType?.name}}</label>
@@ -150,10 +167,15 @@
                         </ng-template>
                     </li>
                     <li class="nav-item" [ngbNavItem]="2">
-                        <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>      
+                        <a class="nav-link text-uppercase" aria-controls="home" aria-selected="true" ngbNavLink>     
                         Parent Profile&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="parentProfileClicked"></i>
                         </a>
                         <ng-template ngbNavContent>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button type="button" class="btn btn-rounded btn-primary float-end" (click)="updateParentProfile()">Update Profile</button>
+                                </div>
+                            </div>
                             <div class="row mt-2">
                                 <div class="col-sm-6">
                                     <label class="form-control-label" for="name">Parent/Guardian Name</label>
@@ -210,6 +232,12 @@
                                     <label class="form-control input-md">{{parentProfileData?.city?.name || "----"}}</label>
                                 </div> 
                             </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-3">
+                                    <label class="form-control-label" for="pincode">Pin/Zip Code</label>
+                                    <label class="form-control input-md">{{parentProfileData?.pincode || "----"}}</label>
+                                </div> 
+                            </div>
                         </ng-template>
                     </li>
                     <li class="nav-item" [ngbNavItem]="3">
@@ -225,6 +253,7 @@
                                     <label class="form-control input-md">{{subjectGroupData?.batchType?.startTime | convert12HrsTimeFormat}} - {{subjectGroupData?.batchType?.endTime | convert12HrsTimeFormat}}</label>                  
                                 </div>
                             </div>
+                            <hr>
                             <h5 class="mt-4">Subjects Offered</h5>
                             <div class="table-responsive">
                                 <table class="table table-striped row-border table-hover pt-1">
@@ -267,6 +296,7 @@
                                     <label class="form-control input-md">{{studentProfileData?.tieupSchool?.name || "----"}}</label>                  
                                 </div>
                             </div>
+                            <hr>
                             <h5 class="mt-4">Fee Types</h5>
                             <div class="table-responsive">
                                 <table class="table table-striped row-border table-hover pt-1">
@@ -274,14 +304,19 @@
                                         <tr>
                                             <th>Sno</th>
                                             <th>Name</th>
-                                            <th>Amount</th>
+                                            <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let feeType of feeStructureData?.feeTypes let i=index" >
                                             <td>{{i+1}}</td>
                                             <td>{{feeType?.name}}</td>
-                                            <td>{{feeType?.amount | number}}</td>
+                                            <td class="text-end">{{feeType?.amount | number}}</td>
+                                        </tr>
+                                        <tr *ngIf="feeStructureData?.feeTypes?.length > 0">
+                                            <td>&nbsp;</td>
+                                            <td><h5>Totals : </h5></td>
+                                            <td class="text-end"><h5>{{totalFeeTypes | number: '1.2-2'}}</h5></td>
                                         </tr>
                                         <tr *ngIf="feeStructureData?.feeTypes?.length == 0">
                                             <td></td>
@@ -291,6 +326,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <hr>
                             <h5 class="mt-4">Discount Types</h5>
                             <div class="table-responsive">
                                 <table class="table table-striped row-border table-hover pt-1">
@@ -298,14 +334,19 @@
                                         <tr>
                                             <th>Sno</th>
                                             <th>Name</th>
-                                            <th>Amount</th>
+                                            <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let discountType of feeStructureData?.discountTypes let i=index" >
                                             <td>{{i+1}}</td>
                                             <td>{{discountType?.name}}</td>
-                                            <td>{{discountType?.amount | number}}</td>
+                                            <td class="text-end">{{discountType?.amount | number}}</td>
+                                        </tr>
+                                        <tr *ngIf="feeStructureData?.discountTypes?.length > 0">
+                                            <td>&nbsp;</td>
+                                            <td><h5>Totals : </h5></td>
+                                            <td class="text-end"><h5>{{totalDiscountTypes | number: '1.2-2'}}</h5></td>
                                         </tr>
                                         <tr *ngIf="feeStructureData?.discountTypes?.length == 0">
                                             <td></td>
@@ -315,6 +356,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <hr>
                             <h5 class="mt-4">Installments</h5>
                             <div class="table-responsive">
                                 <table class="table table-striped row-border table-hover pt-1">
@@ -324,9 +366,9 @@
                                             <th>Name</th>
                                             <th>Rate(%)</th>
                                             <th>Due Date</th>
-                                            <th>Amount</th>
-                                            <th>Amount Paid</th>
-                                            <th>Balance</th>
+                                            <th class="text-end">Amount</th>
+                                            <th class="text-end">Amount Paid</th>
+                                            <th class="text-end">Balance</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -335,13 +377,15 @@
                                             <td>{{installment?.name}}</td>
                                             <td>{{installment?.rate | number}}</td>
                                             <td>{{installment?.dueDate | date : "dd/MM/yyyy"}}</td>
-                                            <td>{{installment?.amount | number}}</td>
-                                            <td>{{installment?.amountPaid | number}}</td>
-                                            <td>{{(installment?.amount - installment?.amountPaid) | number: '1.2-2'}}</td>
+                                            <td class="text-end">{{installment?.amount | number}}</td>
+                                            <td class="text-end">{{installment?.amountPaid | number}}</td>
+                                            <td class="text-end">{{(installment?.amount - installment?.amountPaid) | number: '1.2-2'}}</td>
                                         </tr>
                                         <tr *ngIf="feeStructureData?.installments?.length > 0">
-                                            <td style="text-align: right;" colspan="6">Total Due : </td>
-                                            <td>{{totalDue | number: '1.2-2'}}</td>
+                                            <td style="text-align: right;" colspan="4"><h5>Totals : </h5></td>
+                                            <td class="text-end"><h5>{{totalAmount | number: '1.2-2'}}</h5></td>
+                                            <td class="text-end"><h5>{{totalPaid | number: '1.2-2'}}</h5></td>
+                                            <td class="text-end"><h5>{{totalDue | number: '1.2-2'}}</h5></td>
                                         </tr>
                                         <tr *ngIf="feeStructureData?.installments?.length == 0">
                                             <td></td>
@@ -355,39 +399,41 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <h5 class="mt-4">Total</h5>
+                            <hr>
+                            <h5 class="mt-4">Fee Summary</h5>
                             <div class="table-responsive">
                                 <table class="table table-striped row-border table-hover pt-1">
                                     <thead>
                                         <tr>
-                                            <th>Total Amount</th>
-                                            <th>Total Discount</th>
-                                            <th>Net Amount</th>
-                                            <th *ngIf="feeStructureData?.taxApplicable == 1">Tax Rate</th>
-                                            <th *ngIf="feeStructureData?.taxApplicable == 1">Tax Amount</th>
-                                            <th>Gross Amount</th>
+                                            <th class="text-end">Total Amount</th>
+                                            <th class="text-end">Total Discount</th>
+                                            <th class="text-end">Net Amount</th>
+                                            <th *ngIf="feeStructureData?.total?.taxAmount > 0">Tax Rate</th>
+                                            <th class="text-end" *ngIf="feeStructureData?.total?.taxAmount > 0">Tax Amount</th>
+                                            <th class="text-end">Gross Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{{feeStructureData?.total?.totalAmount | number}}</td>
-                                            <td>{{feeStructureData?.total?.totalDiscount | number}}</td>
-                                            <td>{{feeStructureData?.total?.netAmount | number}}</td>
-                                            <td *ngIf="feeStructureData?.taxApplicable == 1">{{feeStructureData?.total?.taxType?.name}} - {{feeStructureData?.total?.taxRate?.rate}}%</td>
-                                            <td *ngIf="feeStructureData?.taxApplicable == 1">{{feeStructureData?.total?.taxAmount | number}}</td>
-                                            <td>{{feeStructureData?.total?.grossAmount | number}}</td>
+                                            <td class="text-end">{{feeStructureData?.total?.totalAmount | number}}</td>
+                                            <td class="text-end">{{feeStructureData?.total?.totalDiscount | number}}</td>
+                                            <td class="text-end">{{feeStructureData?.total?.netAmount | number}}</td>
+                                            <td *ngIf="feeStructureData?.total?.taxAmount > 0">{{feeStructureData?.total?.taxType}} - {{feeStructureData?.total?.taxRate}}%</td>
+                                            <td class="text-end" *ngIf="feeStructureData?.total?.taxAmount > 0">{{feeStructureData?.total?.taxAmount | number}}</td>
+                                            <td class="text-end">{{feeStructureData?.total?.grossAmount | number}}</td>
                                         </tr>
                                         <tr *ngIf="feeStructureData?.total?.length == 0">
                                             <td></td>
                                             <td></td>
-                                            <td *ngIf="feeStructureData?.taxApplicable == 1"></td>
-                                            <td *ngIf="feeStructureData?.taxApplicable == 1"></td>
+                                            <td *ngIf="feeStructureData?.total?.taxAmount > 0"></td>
+                                            <td *ngIf="feeStructureData?.total?.taxAmount > 0"></td>
                                             <td>No record(s) found</td>
                                             <td></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+                            <hr>
                             <h5 class="mt-4">Payments&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="feePaymentClicked"></i></h5>
                             <div class="table-responsive">
                                 <table class="table table-striped row-border table-hover pt-1">
@@ -399,8 +445,8 @@
                                             <th>Payment Date</th>
                                             <th>Payment Method</th>
                                             <th>Bank Reference</th>
-                                            <th>Bank Charges</th>
-                                            <th>Amount</th>
+                                            <th class="text-end">Bank Charges</th>
+                                            <th class="text-end">Amount</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -412,9 +458,16 @@
                                             <td>{{feePayment?.paymentDate | date : "dd/MM/yyyy"}}</td>
                                             <td>{{feePayment?.paymentMethod?.name}}</td>
                                             <td>{{feePayment?.bankReference}}</td>
-                                            <td>{{feePayment?.bankCharges | number: '1.2-2'}}&nbsp;<i class="fa fa-edit" style="cursor: pointer;" (click)="updateBankCharges(feePayment?.id, feePayment?.amount)" *ngIf="feePayment?.paymentMethod?.name != 'Cash'"></i></td>
-                                            <td>{{feePayment?.amount | number: '1.2-2'}}</td>
+                                            <td class="text-end">{{feePayment?.bankCharges | number: '1.2-2'}}&nbsp;<i class="fa fa-edit" style="cursor: pointer;" (click)="updateBankCharges(feePayment?.id, feePayment?.amount)" *ngIf="feePayment?.paymentMethod?.name != 'Cash'"></i></td>
+                                            <td class="text-end">{{feePayment?.amount | number: '1.2-2'}}</td>
                                             <td><i class="fa fa-file-pdf" title="Print Receipt" style="cursor: pointer;" (click)="downloadReceipt(feePayment)"></i></td>
+                                        </tr>
+                                        <tr *ngIf="feePayments?.length > 0">
+                                            <td colspan="5"></td>
+                                            <td><h5>Totals : </h5></td>
+                                            <td class="text-end"><h5>{{totalBankCharges | number: '1.2-2'}}</h5></td>
+                                            <td class="text-end"><h5>{{totalPayments | number: '1.2-2'}}</h5></td>
+                                            <td></td>
                                         </tr>
                                         <tr *ngIf="feePayments?.length == 0">
                                             <td></td>
@@ -437,6 +490,7 @@
                         </a>
                         <ng-template ngbNavContent>
                             <h5>Sport Engagement</h5>
+                            <hr>
                             <h6 *ngIf="sportProfileData?.isPracticingSport == 0">Child Not Practicing Any Sport.</h6>
                             <div class="row mt-4" *ngIf="sportProfileData?.isPracticingSport == 1">
                                 <div class="col-sm-3">
@@ -448,8 +502,8 @@
                                     <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.name : sportProfileData?.otherAcademyName}}</label>                  
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="form-control-label" for="coach">Coach</label>
-                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.coach?.uuid ? sportProfileData?.businessPartner?.coach?.name : sportProfileData?.otherAcademyCoach}}</label>                  
+                                    <label class="form-control-label" for="sport">Sport Name</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.coach?.uuid ? sportProfileData?.businessPartner?.coach?.businessVerticalType?.name : sportProfileData?.otherAcademySport}}</label>                  
                                 </div>
                             </div>
                             <div class="row mt-2" *ngIf="sportProfileData?.isPracticingSport == 1">
@@ -476,8 +530,23 @@
                                     <label class="form-control input-md">{{sportProfileData?.businessPartner?.uuid ? sportProfileData?.businessPartner?.address : sportProfileData?.otherAcademyAddress}}</label>   
                                 </div>                            
                             </div>
+                            <div class="row mt-2" *ngIf="sportProfileData?.isPracticingSport == 1">
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="coach">Coach Name</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.coach?.uuid ? sportProfileData?.businessPartner?.coach?.name : sportProfileData?.otherAcademyCoach}}</label>                  
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="coachEmail">Coach Email</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.coach?.uuid ? (sportProfileData?.businessPartner?.coach?.email || "----") : (sportProfileData?.otherAcademyCoachEmail || "----")}}</label>                  
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-control-label" for="coachMobile">Coach Mobile</label>
+                                    <label class="form-control input-md">{{sportProfileData?.businessPartner?.coach?.uuid ? sportProfileData?.businessPartner?.coach?.mobile : sportProfileData?.otherAcademyCoachMobile}}</label>                  
+                                </div>
+                            </div>
                             <hr>
                             <h5 class="mt-4">Previous Schooling</h5>
+                            <hr>
                             <h6 *ngIf="undergoneEducationData?.studentUndergone == 'Home Schooling'">Student Studied Under Home Schooling Option</h6>
                             <div class="row mt-4" *ngIf="undergoneEducationData?.studentUndergone == 'Formal Education'">
                                 <div class="col-sm-5">
@@ -540,17 +609,20 @@
                                 <table class="table align-middle mb-0">
                                     <tbody>
                                         <tr>  
-                                            <td>Admission Form</td>
                                             <td>
-                                                <input type="file" id="undertakingDococFile1" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="undertakingfileChange($event, 0)"  class="form-control" *ngIf="undertakingDocument?.admissionFileName == ''">
-                                                <label *ngIf="undertakingDocument?.admissionFileName != ''">   
-                                                    {{undertakingDocument?.admissionFileName}}
-                                                </label>
+                                                Admission Form<br>
+                                                <span class="badge bg-success" *ngIf="undertakingDocument?.admissionFileName != ''">Uploaded</span>
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveUndertakingClicked[0] && undertakingDocument?.admissionFileName == ''" (click)="saveUndertakingDoc(0, 'Admission_Form')"><i class="fa fa-upload"></i>Upload </button>
+                                                <input type="file" id="undertakingDococFile1" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="undertakingfileChange($event, 0)"  class="form-control">
+                                                <!-- <label *ngIf="undertakingDocument?.admissionFileName != ''">   
+                                                    {{undertakingDocument?.admissionFileName}}
+                                                </label> -->
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveUndertakingClicked[0]" (click)="saveUndertakingDoc(0, 0, 'Admission_Form')"><i class="fa fa-upload"></i>Upload </button>
                                                 
-                                                <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteUndertakingClicked[0] && studentProfileData?.applicationStatus?.name != 'Enrolled/Renewed' && undertakingDocument?.admissionFileName != ''" (click)="deleteApplicationDoc(0, 0,'Admission_Form')"><i class="fa fa-trash"></i>Delete </button>
+                                                <!-- <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteUndertakingClicked[0] && studentProfileData?.applicationStatus?.name != 'Enrolled/Renewed' && undertakingDocument?.admissionFileName != ''" (click)="deleteApplicationDoc(0, 0,'Admission_Form')"><i class="fa fa-trash"></i>Delete </button> -->
         
                                                 <button type="button" class="btn btn-sm btn-rounded btn-secondary" *ngIf="!downloadUndertakingClicked[0] && undertakingDocument?.admissionFileName != ''" (click)="downloadApplicationDoc(0, 0,'Admission_Form', undertakingDocument?.admissionFileName)"><i class="fa fa-download"></i>Download</button>
                                                 
@@ -558,17 +630,17 @@
                                             </td>
                                         </tr>
                                         <tr>  
-                                            <td>Parent Undertaking</td>
                                             <td>
-                                                <input type="file" id="undertakingDococFile2" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="undertakingfileChange($event, 1)" class="form-control" *ngIf="undertakingDocument?.undertakingFileName == ''">
-                                                <label *ngIf="undertakingDocument?.undertakingFileName != ''">   
-                                                    {{undertakingDocument?.undertakingFileName}}
-                                                </label>
+                                                Parent Undertaking<br>
+                                                <span class="badge bg-success" *ngIf="undertakingDocument?.undertakingFileName != ''">Uploaded</span>
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveUndertakingClicked[1] && undertakingDocument?.undertakingFileName == ''" (click)="saveUndertakingDoc(1, 'Undertaking_Form')"><i class="fa fa-upload"></i>Upload </button>
+                                                <input type="file" id="undertakingDococFile2" [multiple]="false" [accept]="'image/png, image/jpeg, application/pdf'" (change)="undertakingfileChange($event, 1)" class="form-control">
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-rounded btn-success" *ngIf="!saveUndertakingClicked[1]" (click)="saveUndertakingDoc(1, 0, 'Undertaking_Form')"><i class="fa fa-upload"></i>Upload </button>
         
-                                                <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteUndertakingClicked[1] && studentProfileData?.applicationStatus?.name != 'Enrolled/Renewed' && undertakingDocument?.undertakingFileName != ''" (click)="deleteApplicationDoc(1, 0, 'Undertaking_Form')"><i class="fa fa-trash"></i>Delete</button>
+                                                <!-- <button type="button" class="btn btn-sm btn-rounded btn-danger" *ngIf="!deleteUndertakingClicked[1] && studentProfileData?.applicationStatus?.name != 'Enrolled/Renewed' && undertakingDocument?.undertakingFileName != ''" (click)="deleteApplicationDoc(1, 0, 'Undertaking_Form')"><i class="fa fa-trash"></i>Delete</button> -->
         
                                                 <button type="button" class="btn btn-sm btn-rounded btn-secondary" *ngIf="!downloadUndertakingClicked[1] && undertakingDocument?.undertakingFileName != ''" (click)="downloadApplicationDoc(1, 0, 'Undertaking_Form', undertakingDocument?.undertakingFileName)"><i class="fa fa-download"></i>Download</button>
         

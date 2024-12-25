@@ -272,7 +272,7 @@ export class B2cApplicationStageFiveComponent
   {
     try
     {
-      if(this.addApplicationForm5.valid && this.paymentMethodForm.valid)
+      if(this.addApplicationForm5.valid && this.paymentMethodForm.valid && !this.saveClicked)
       {
         if(parseFloat(this.addApplicationForm5.get("totalAmount").value) == 0)
         {
@@ -316,6 +316,6 @@ export class B2cApplicationStageFiveComponent
 
   back()
   {
-    this.router.navigateByUrl("/b2cApplication/registrations");
+    this.router.navigateByUrl("/b2cApplication/admissions");
   }
 }

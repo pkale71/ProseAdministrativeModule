@@ -486,7 +486,8 @@ buildCommonJSON.feeStructures = function(datas, action = 1)
             "totalInstallment" : data.totalInstallment,
             "rate" : data.rate || "0",
             "isActive" : data.isActive,
-            "tableName" : data.tableName
+            "tableName" : data.tableName,
+            "isExist" : data.isExist
         }
         if(action == 1)
         {

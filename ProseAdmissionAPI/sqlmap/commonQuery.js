@@ -1979,7 +1979,7 @@ db.getSubjectGroup = (id) =>
     })
 };
 
-db.duplicateSubjectGroup = (name, id) => 
+db.duplicateSubjectGroup = (name, id, gradeId) => 
 {
     return new Promise((resolve, reject) => 
     {
@@ -1987,7 +1987,7 @@ db.duplicateSubjectGroup = (name, id) =>
         {
             let sql = `SELECT asg.id, asg.group_name, asg.is_active AS isActive
             FROM admission_subject_group asg 
-            WHERE asg.group_name = '${name}'`;
+            WHERE asg.group_name = '${name}' AND grade_id = ${gradeId}`;
             if(id != "")
             {
                 sql = sql + ` AND asg.id != ${id}`;
@@ -2272,7 +2272,7 @@ db.getFeeStructures = (schoolUUID, schoolingProgramId, academicSessionId, batchY
         {
             let filters = "";
             let sql = `SELECT afs.id, afs.uuid, afs.total_installment AS totalInstallment, afs.validity_from AS validityFrom, afs.validity_to AS validityTo, 
-            afs.tax_applicable AS taxApplicable, afs.is_active AS isActive, 'admission_fee_structure' AS tableName, 
+            afs.tax_applicable AS taxApplicable, afs.is_active AS isActive, 'admission_fee_structure' AS tableName, COUNT(aaf.id) AS isExist,
             sch.uuid AS schoolUUID, sch.name AS schoolName,
             sp.id AS schoolingProgramId, sp.name AS schoolingProgramName,
             bas.id AS batchYearId, bas.batch_year AS batchYear,
@@ -2289,7 +2289,8 @@ db.getFeeStructures = (schoolUUID, schoolingProgramId, academicSessionId, batchY
             JOIN syllabus s ON s.id = afs.syllabus_id
             JOIN grade_category gc ON gc.id = afs.grade_category_id
             JOIN admission_fee_category afc ON afc.id = afs.fee_category_id
-            JOIN admission_currency acur ON acur.id = afs.currency_id`;
+            JOIN admission_currency acur ON acur.id = afs.currency_id 
+            LEFT JOIN admission_application_form aaf ON aaf.fee_structure_id = afs.id`;
             
             if(schoolUUID != '')
             {
@@ -2400,7 +2401,7 @@ db.getFeeStructures = (schoolUUID, schoolingProgramId, academicSessionId, batchY
     });
 };
 
-db.getFeeStructure = (uuid, date) =>
+db.getFeeStructure = (uuid, date = '') =>
 {
     return new Promise((resolve, reject) =>
     {
@@ -2435,6 +2436,30 @@ db.getFeeStructure = (uuid, date) =>
                 AND '${date}' BETWEEN atr.applicable_from AND atr.applicable_to))`
             }
             sql = sql + ` GROUP BY afs.id`;
+
+            dbConn.query(sql, (error, result) => 
+            {
+                if(error)
+                {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        }
+        catch(e)
+        {
+            throw e;
+        }
+    });
+};
+
+db.checkFeeStructureExist = (id) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let sql = `SELECT aaf.id FROM admission_application_form aaf WHERE aaf.fee_structure_id = ${id}`;
 
             dbConn.query(sql, (error, result) => 
             {

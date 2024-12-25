@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NotifierService } from 'angular-notifier';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { CommonSharedService } from 'src/app/theme/shared/service/common-shared.service';
 import { CommonService } from 'src/app/theme/shared/service/common.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdmissionService } from 'src/app/theme/shared/service/admission.service';
+import { UserService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-b2c-application-list',
@@ -22,20 +23,28 @@ export class B2cApplicationListComponent
   schoolingProgramForm : FormGroup;
   academicSessionForm : FormGroup;
   applicationStatusForm : FormGroup;
+  studyCenterForm : FormGroup;
   isValidForm : boolean;
   searchClicked : boolean;
   searchClickedSchool : boolean;
   searchClickedSchoolingProgram : boolean;
   searchClickedAcademicSession : boolean;
   searchClickedStatus : boolean;
+  searchClickedStudyCenter : boolean;
   schools : any[];
+  masterSchools : any[];
   schoolingPrograms : any[];
   academicSessions : any[];
   applicationForms : any[];
   applicationStatuses : any[];
+  studyCenters : any[];
+  userTypeCode : string;
+  loginUserUUID : string;
+  moduleId : number;
 
   constructor(private notifier: NotifierService, 
     private activatedRoute: ActivatedRoute,
+    private userService : UserService,
     private commonService: CommonService, 
     private admissionService : AdmissionService,
     public commonSharedService : CommonSharedService,
@@ -43,10 +52,15 @@ export class B2cApplicationListComponent
     private router : Router)
   {
     this.schools = [];
+    this.masterSchools = [];
     this.schoolingPrograms = [];
     this.academicSessions = [];
     this.applicationForms = [];
     this.applicationStatuses = [];
+    this.studyCenters = [];
+    this.userTypeCode = this.commonSharedService.loginUser?.userModule?.userType.code;
+    this.loginUserUUID = this.commonSharedService.loginUser?.uuid;
+    this.moduleId = this.commonSharedService.loginUser?.userModule?.module?.id;
   }
 
   ngOnInit() 
@@ -56,27 +70,64 @@ export class B2cApplicationListComponent
     this.searchClickedSchool = false;
     this.searchClickedSchoolingProgram = false;
     this.searchClickedStatus = false;
+    this.searchClickedStudyCenter = false;
     this.isValidForm = true;
 
     this.schoolForm = this.formbuilder.group({
-      school:['']
+      school:['', Validators.required]
     });
 
     this.schoolingProgramForm = this.formbuilder.group({
-      schoolingProgram:['']
+      schoolingProgram:['', Validators.required]
     });
 
     this.academicSessionForm = this.formbuilder.group({
-      academicSession:['']
+      academicSession:['', Validators.required]
     });
 
     this.applicationStatusForm = this.formbuilder.group({
       applicationStatus:['']
     });
 
+    this.studyCenterForm = this.formbuilder.group({
+      studyCenter:['']
+    });
+
     this.getAcademicSessions();
-    this.getSchools('All');
+    this.getStudyCenters();
     this.getApplicationStatuses();
+////Check Filter Option From Local Storage
+    if(localStorage.getItem("academicSessionId") != "" && localStorage.getItem("academicSessionId") != null)
+    {
+      this.academicSessionForm.get("academicSession").setValue(localStorage.getItem("academicSessionId") || "");
+    }
+    if(localStorage.getItem("schoolUUID") != "" && localStorage.getItem("schoolUUID") != null)
+    {
+      this.schoolForm.get("school").setValue(localStorage.getItem("schoolUUID") || "");
+      this.getSchools('All', localStorage.getItem("schoolUUID"));
+    }
+    else
+    {
+      this.getSchools('All', '');
+    }
+    if(localStorage.getItem("schoolingProgramId") != "" && localStorage.getItem("schoolingProgramId") != null)
+    {
+      this.getSchoolSchoolingPrograms(localStorage.getItem("schoolUUID"), 'All', localStorage.getItem("schoolingProgramId") || '');
+      this.schoolingProgramForm.get("schoolingProgram").setValue(localStorage.getItem("schoolingProgramId") || "");
+    }
+    if(localStorage.getItem("studyCenterUUID") != "" && localStorage.getItem("studyCenterUUID") != null)
+    {
+      this.studyCenterForm.get("studyCenter").setValue(localStorage.getItem("studyCenterUUID") || "");
+    }
+    if(localStorage.getItem("applicationStatusId") != "" && localStorage.getItem("applicationStatusId") != null)
+    {
+      this.applicationStatusForm.get("applicationStatus").setValue(localStorage.getItem("applicationStatusId") || "");
+    }  
+/////
+    if(localStorage.getItem("academicSessionId") != "" && localStorage.getItem("schoolUUID") != "" && localStorage.getItem("schoolingProgramId") != "")
+    {
+      this.getApplicationForms();
+    }
   }
 
   showNotification(type: string, message: string): void 
@@ -85,17 +136,39 @@ export class B2cApplicationListComponent
     this.notifier.notify(type, message);
   }
 
-  async getSchools(action : string) 
+  async getSchools(action : string, selSchoolUUID : string) 
   {
     try
     {
         this.searchClickedSchool = true;
-        let response = await this.commonService.getSchools(action, "").toPromise();
+        let response : any = "";
+        if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+        {
+          response = await this.userService.getUserSchoolSchoolingPrograms(this.loginUserUUID, this.moduleId).toPromise();
+        }
+        else
+        {
+          response = await this.commonService.getSchools(action, "").toPromise();
+        }
         if (response.status_code == 200 && response.message == 'success') 
         {
+          if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+          {
+            this.masterSchools = response.userSchoolSchoolingPrograms;
+            this.schools = this.masterSchools.map(function(item) {
+              return { uuid : item.school.uuid, name : item.school.name };
+            });
+          }
+          else
+          {
             this.schools = response.schools;
-            this.schools.unshift({ uuid : "", name : "Select School" });
-            this.searchClickedSchool = false;
+          }
+          this.schools.unshift({ uuid : "", name : "Select School" });
+          if(selSchoolUUID != "")
+          {
+            this.getSchoolSchoolingPrograms(selSchoolUUID, 'All', localStorage.getItem("schoolingProgramId"));
+          }
+          this.searchClickedSchool = false;
         }
         else
         {
@@ -110,24 +183,46 @@ export class B2cApplicationListComponent
     }
   }
 
-  async getSchoolSchoolingPrograms(schoolUUID : string, action : string) 
+  async getSchoolSchoolingPrograms(schoolUUID : string, action : string, selId : string = '') 
   {
     try
     {
-        this.searchClickedSchoolingProgram = true;
+      this.searchClickedSchoolingProgram = true;
+      this.schoolingPrograms = [];
+      
+      if(selId == "")
+      {
         this.schoolingProgramForm.get("schoolingProgram").setValue("");
+      }
+
+      if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+      {
+        let filterSchool : any = this.masterSchools.filter(x => x.school.uuid == schoolUUID);
+        if(filterSchool.length > 0)
+        {
+          this.schoolingPrograms = filterSchool[0].schoolingPrograms;
+          this.schoolingPrograms.unshift({id : "", name : "Select Schooling Program" });
+        }
+        this.searchClickedSchoolingProgram = false;
+      }
+      else
+      {
         let response = await this.commonService.getSchoolSchoolingPrograms(schoolUUID, action, "").toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
-            this.schoolingPrograms = response.schoolSchoolingPrograms;
-            this.schoolingPrograms.unshift({schoolingProgram : { id : "", name : "Select Schooling Program" }});
-            this.searchClickedSchoolingProgram = false;
+          response.schoolSchoolingPrograms.forEach(element => {
+            this.schoolingPrograms.push({id : element.schoolingProgram.id, name : element.schoolingProgram.name });
+          });
+          
+          this.schoolingPrograms.unshift({ id : "", name : "Select Schooling Program" });
+          this.searchClickedSchoolingProgram = false;
         }
         else
         {
-            this.schoolingPrograms.unshift({ uuid : "", name : "Select Schooling Program" });
+            this.schoolingPrograms.unshift({ id : "", name : "Select Schooling Program" });
             this.searchClickedSchoolingProgram = false;
         }
+      }        
     }
     catch(e)
     {
@@ -163,6 +258,49 @@ export class B2cApplicationListComponent
     }
   }
 
+  async getStudyCenters() 
+  {  
+    try
+    {
+      this.searchClickedStudyCenter = true;
+      let response : any = "";
+      if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+      {
+        response = await this.userService.getUserStudyCenters(this.loginUserUUID, this.moduleId).toPromise();
+      }
+      else
+      {
+        response = await this.commonService.getStudyCenters(0, 'Active').toPromise();
+      }
+      if (response.status_code == 200 && response.message == 'success') 
+      {
+        if(this.userTypeCode != "ADMGN" && this.userTypeCode != "PTRCO")
+        {
+          response.userStudyCenters.forEach(element => {
+            this.studyCenters.push({uuid : element.studyCenter.uuid, name : element.studyCenter.name });
+          });
+        }
+        else
+        {
+          this.studyCenters = response.studyCenters;
+        }
+        this.studyCenters.unshift({uuid : "", name : "Select Study Center"});
+        this.searchClickedStudyCenter = false;
+      }
+      else
+      {
+        this.studyCenters = [];
+        this.searchClickedStudyCenter = false;
+      }
+    }
+    catch(e)
+    {
+      this.studyCenters = [];
+      this.showNotification("error", e);
+      this.searchClickedStudyCenter = false;
+    }
+  }
+
   async getApplicationStatuses() 
   {  
     try
@@ -191,7 +329,7 @@ export class B2cApplicationListComponent
   }
 
   async getApplicationForms() 
-  {  
+  { 
     if(this.schoolForm.valid && this.schoolingProgramForm.valid && this.academicSessionForm.valid)
     {
       try
@@ -199,11 +337,18 @@ export class B2cApplicationListComponent
         let schoolUUID = this.schoolForm.get("school").value;
         let schoolingProgramId = this.schoolingProgramForm.get("schoolingProgram").value;
         let academicSessionId = this.academicSessionForm.get("academicSession").value;
+        let studyCenterUUID = this.studyCenterForm.get("studyCenter").value;
         let applicationStatusId = this.applicationStatusForm.get("applicationStatus").value;
-
+    ////Manage Filter Option To Local Storage
+        localStorage.setItem("schoolUUID", schoolUUID);
+        localStorage.setItem("schoolingProgramId", schoolingProgramId);
+        localStorage.setItem("academicSessionId", academicSessionId);
+        localStorage.setItem("studyCenterUUID", studyCenterUUID);
+        localStorage.setItem("applicationStatusId", applicationStatusId);
+    ///////
         this.isValidForm = true;
         this.searchClicked = true;
-        let response = await this.admissionService.getApplicationForms('B2C', schoolUUID, schoolingProgramId, academicSessionId, applicationStatusId).toPromise();
+        let response = await this.admissionService.getApplicationForms('B2C', schoolUUID, schoolingProgramId, academicSessionId, studyCenterUUID, applicationStatusId).toPromise();
         if (response.status_code == 200 && response.message == 'success') 
         {
           $('#tblApplicationForm').DataTable().destroy();

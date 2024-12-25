@@ -1,0 +1,113 @@
+<div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 style="margin-top: 0.8rem;"><i class="fa fa-wallet"></i>&nbsp; Fee Collections &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClicked"></i></h5>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <form [formGroup]="academicSessionForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="academicSession">Academic Session &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedAcademicSession"></i></label>
+                            <select class="form-control" required id="academicSession" formControlName="academicSession">
+                                <option value="{{academicSession.id}}" *ngFor="let academicSession of academicSessions">{{academicSession.year}}</option>
+                            </select>
+                            <label style="color: red;"
+                            *ngIf="academicSessionForm.controls['academicSession'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select academic session.</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <form [formGroup]="schoolForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="school">School &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchool"></i></label>
+                            <select class="form-control" required id="school" formControlName="school" (change)="getSchoolSchoolingPrograms(schoolForm.controls['school'].value, 'All')">
+                                <option value="{{school?.uuid}}" *ngFor="let school of schools">{{school?.name}}</option>
+                            </select>
+                            <label style="color: red;"
+                            *ngIf="schoolForm.controls['school'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select school.</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-5">
+                    <form [formGroup]="schoolingProgramForm">
+                        <div class="form-group">
+                            <label class="form-control-label" for="schoolingProgram">Schooling Program &nbsp;<span style="color: red;">*</span>&nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedSchoolingProgram"></i></label>
+                            <select class="form-control" required id="schoolingProgram" formControlName="schoolingProgram">
+                                <option value="{{sp?.id}}" *ngFor="let sp of schoolingPrograms">{{sp?.name}}</option>
+                            </select>
+                            <label style="color: red;"
+                            *ngIf="schoolingProgramForm.controls['schoolingProgram'].hasError('required') && !isValidForm"
+                            class="error jquery-validation-error small form-text"
+                            >Please select schooling program.</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <form [formGroup]="studyCenterForm">
+                    <div class="form-group">
+                        <label class="form-control-label" for="studyCenter">Study Center &nbsp;<i class="fa fa-spin fa-spinner" *ngIf="searchClickedStudyCenter"></i></label>
+                        <select class="form-control" id="studyCenter" formControlName="studyCenter">
+                            <option value="{{studyCenter.uuid}}" *ngFor="let studyCenter of studyCenters">{{studyCenter.name}}</option>
+                        </select>
+                    </div>
+                </form>
+              </div>
+              <div class="col-md-8">
+                  <br>
+                  <button type="button" class="btn btn-rounded btn-primary" *ngIf="!searchClicked" 
+                  (click)="getApplicationForms()"><i class="fa fa-search"></i>&nbsp;Search</button>
+                  <button type="button" class="btn btn-rounded btn-primary" *ngIf="searchClicked">
+                  <i class="fa fa-spin fa-spinner"></i>&nbsp;Searching...</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table datatable id="tblApplicationForm" class="table table-striped row-border table-hover pt-10">
+                <thead>
+                  <tr>
+                    <th>Sno</th>
+                    <th>Enrollment Number</th>
+                    <th>Study Center</th>
+                    <th>Student Name</th>
+                    <th>Mobile</th>
+                    <th>Grade</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let applicationForm of applicationForms let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{applicationForm?.enrollmentNumber}}</td>
+                    <td class="text-wrap">{{applicationForm?.studyCenter?.name}}</td>
+                    <td class="text-wrap">{{applicationForm?.studentName}}</td>
+                    <td>{{applicationForm?.parent?.mobile}}</td>
+                    <td>{{applicationForm?.grade?.name}}</td>                    
+                    <td style="width:40px;text-align: right;">  
+                        <i class="fa fa-list" (click)="detailFeePayment(applicationForm.uuid)"  title="Detail" style="cursor: pointer;"></i>
+                    </td> 
+                  </tr>
+                  <tr *ngIf="applicationForms.length == 0">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>No record(s) found</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>

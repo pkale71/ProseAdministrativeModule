@@ -9,6 +9,7 @@ let uploads = require('./util/multerConfig.js');
 let errorCodes = require('./util/errorCodes');
 let errorCode = new errorCodes();
 let dbConn = require('./util/dbConnection.js');
+global.baseDir = __dirname;
 // let https = require('https');
 
 ////////Create Server
@@ -60,7 +61,7 @@ if(dbConn)
 
                         ///////Start Server        
                         app.listen(port, host, () => {
-                            commonFunction.createRequiredDir(process.cwd());
+                            commonFunction.createRequiredDir(global.baseDir);
                             console.log(`Server is running on ${apiBaseUrl}, Started On : ` + result[0].startedOn);
                         });
                     });
